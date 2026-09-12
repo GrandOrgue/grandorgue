@@ -33,7 +33,6 @@ private:
     GOSoundSamplerList &list,
     bool isToDropOld,
     GOSoundBufferMutable &outBuffer);
-  void DoNewRound() override { m_ActiveCount.store(0); }
 
 public:
   GOSoundGroupTask(
@@ -45,6 +44,35 @@ public:
   void EnsureBufferReady(
     bool isToComplete, GOSchedulerThread *pThread = nullptr) override;
 
+  /**
+   * Unlike the base implementation, does not return until the round has
+   * actually reached RUN_STATE_DONE.
+   *
+   * This task mixes in ProcessList() outside m_mutex, so the mutex NewRound()
+   * takes does not exclude a worker that is still mixing. Without waiting
+   * here, NewRound() could reset the round under such a worker, which would
+   * then merge the previous period into the new period's buffer, mark the
+   * fresh round done before anything was mixed into it, and underflow
+   * m_ActiveCount. Waiting makes "the round is over" true by the time
+   * GOScheduler::CompleteRoundList() returns, which is what NewRound()
+   * relies on.
+   *
+   * Normally free: GetAudioOutput() has already driven this task to
+   * RUN_STATE_DONE before NextPeriod() is entered, so the wait returns at
+   * once. It only really blocks for an audio group whose scale factors are
+   * zero in every output, which is the case nothing else waits for.
+   */
+  void CompleteRound() override;
+
+private:
+  /**
+   * Resets the active-worker count for the next round. Asserts first that the
+   * round protocol really brought this task to rest, which the mutex
+   * NewRound() holds cannot guarantee on its own - see the .cpp.
+   */
+  void DoNewRound() override;
+
+public:
   void DiscardContent() override;
   void Add(GOSoundSampler *sampler);
   void WaitAndDiscardContent();

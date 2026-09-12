@@ -75,6 +75,14 @@ private:
    * round without leaking state from the previous one. */
   void TestCooperativeNewRoundAllowsFreshRound();
 
+  /**
+   * CompleteRound() must not return while a thread is still inside its share
+   * of the round. That is the invariant NewRound() depends on and cannot
+   * enforce itself: the share runs outside m_mutex, so the mutex NewRound()
+   * takes would not keep such a thread out of a round being reset.
+   */
+  void TestCooperativeCompleteRoundWaitsForInFlightWork();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
