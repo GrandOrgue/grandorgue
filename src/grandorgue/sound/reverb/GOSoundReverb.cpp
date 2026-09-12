@@ -188,11 +188,14 @@ void GOSoundReverb::Setup(
 void GOSoundReverb::Reset() {
   for (unsigned i = 0; i < m_engine.size(); i++)
     m_engine[i]->reset();
+  m_HasContent.store(false);
 }
 
 void GOSoundReverb::Process(float *output_buffer, unsigned n_frames) {
   if (!m_engine.size())
     return;
+
+  m_HasContent.store(true);
 
   for (unsigned i = 0; i < m_channels; i++) {
     float *const pGoData = output_buffer + i;
