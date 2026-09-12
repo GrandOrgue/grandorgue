@@ -44,10 +44,13 @@ void GOMidiPlayingObject::AfterMidiLoaded() {
       // devices are left alone: they are the user's own choices.
       GOMidiReceiver *pRecv = GetMidiReceiver();
       const GOMidiReceiver *pInitialRecv = pInitialObj->GetMidiReceiver();
+      const unsigned webRemoteId
+        = r_OrganModel.GetConfig().GetWebRemoteDeviceId();
 
-      if (pRecv && pInitialRecv)
-        pRecv->AddMissingEventsFrom(
-          *pInitialRecv, r_OrganModel.GetConfig().GetWebRemoteDeviceId());
+      // id 0 would mean "any device" and is only there if the config was
+      // never loaded
+      if (pRecv && pInitialRecv && webRemoteId)
+        pRecv->AddMissingEventsFrom(*pInitialRecv, webRemoteId);
     }
   }
 }

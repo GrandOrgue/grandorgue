@@ -124,8 +124,10 @@ function render() {
       e.preventDefault();
       if (editing) return openEditor(i);
       el.classList.add('down');
-      el.setPointerCapture(e.pointerId);
       noteOn(b);
+      // capture so the release lands on us even if the finger slides off.
+      // Can throw if the pointer is already gone, and by then we don't care.
+      try { el.setPointerCapture(e.pointerId); } catch (err) {}
     });
     // pointerup can be lost (page scroll, browser gesture...) so release on
     // everything that might mean "finger is gone". Only send the off if we
