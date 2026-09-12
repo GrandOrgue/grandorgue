@@ -6,6 +6,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/AddLinkerOption.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyWxTranslations.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/CopyDependencies.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/AddCpuOptions.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake/EmbedTextFile.cmake)
 
 find_package(wxWidgets REQUIRED html net adv core base)
 include(${wxWidgets_USE_FILE})
@@ -179,6 +180,7 @@ midi/ports/GOMidiPortFactory.cpp
 midi/ports/GOMidiRtPortFactory.cpp
 midi/ports/GOMidiRtInPort.cpp
 midi/ports/GOMidiRtOutPort.cpp
+midi/ports/GOMidiWebInPort.cpp
 midi/GOMidiInputMerger.cpp
 midi/GOMidiListener.cpp
 midi/GOMidiOutputMerger.cpp
@@ -257,6 +259,9 @@ if (USE_INTERNAL_ZITACONVOLVER)
   list(APPEND grandorgue_src ${CMAKE_SOURCE_DIR}/submodules/ZitaConvolver/source/zita-convolver.cc)
 endif()
 
+# the page served by the Web Remote MIDI device
+EMBEDTEXTFILE(grandorgue_src resource/web-remote.html GOMidiWebRemotePage)
+
 add_library(golib STATIC ${grandorgue_src})
 set(go_libs ${wxWidgets_LIBRARIES} ${YAML_CPP_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES} CURL::libcurl)
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR})
@@ -284,4 +289,9 @@ endif()
 if (GO_USE_JACK)
    add_definitions(-DGO_USE_JACK)
    target_link_libraries(golib PkgConfig::JACK)
+endif ()
+
+if (WIN32)
+   # sockets for the Web Remote
+   target_link_libraries(golib ws2_32)
 endif ()
