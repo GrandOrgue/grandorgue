@@ -152,8 +152,31 @@ void GOTestWebRemoteDefaults::TestKeepsMappingsFromOtherDevices() {
     "the Web Remote event should be added after it");
 }
 
+// what AfterMidiLoaded() relies on for organs that already have their own MIDI
+void GOTestWebRemoteDefaults::TestAddMissingEventsFrom() {
+  GOMidiReceiver initial(MIDI_RECV_SETTER);
+  GOMidiReceiver organ(MIDI_RECV_SETTER);
+
+  initial.GetEvent(initial.AddNewEvent()).deviceId = 5;
+  initial.GetEvent(initial.AddNewEvent()).deviceId = 7;
+  initial.GetEvent(1).type = MIDI_M_NOTE;
+  initial.GetEvent(0).type = MIDI_M_NOTE;
+  organ.GetEvent(organ.AddNewEvent()).deviceId = 3;
+  organ.GetEvent(0).type = MIDI_M_NOTE;
+
+  GOAssert(organ.AddMissingEventsFrom(initial, 7), "device 7 should be added");
+  GOAssert(
+    organ.GetEventCount() == 2 && organ.GetEvent(1).deviceId == 7,
+    "only the event of device 7 should be appended");
+  GOAssert(
+    !organ.AddMissingEventsFrom(initial, 7),
+    "a second pass should not add it again");
+  GOAssert(organ.GetEventCount() == 2, "and should leave the list untouched");
+}
+
 void GOTestWebRemoteDefaults::run() {
   GO_RUN_TEST(TestSetterButtonsAreMapped())
   GO_RUN_TEST(TestOtherButtonsAreNot())
   GO_RUN_TEST(TestKeepsMappingsFromOtherDevices())
+  GO_RUN_TEST(TestAddMissingEventsFrom())
 }

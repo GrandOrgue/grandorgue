@@ -733,15 +733,6 @@ static int web_remote_note(
   return note < 0 ? -1 : WEB_REMOTE_FIRST_NOTE + note;
 }
 
-static bool has_event_from_device(
-  const GOMidiReceiver &recv, unsigned deviceId) {
-  bool isFound = false;
-
-  for (unsigned n = recv.GetEventCount(), i = 0; i < n && !isFound; i++)
-    isFound = recv.GetEvent(i).deviceId == deviceId;
-  return isFound;
-}
-
 // Setter buttons that don't listen to the Web Remote yet get wired to its
 // notes, next to whatever other MIDI they already have (a piston on the
 // console keeps working). So the page works out of the box, also with configs
@@ -752,13 +743,15 @@ void GOConfig::FillWebRemoteDefaults() {
   const unsigned webRemoteId
     = m_MidiMap.EnsureLogicalName(GOMidiWebInPort::DEVICE_NAME);
 
+  m_WebRemoteDeviceId = webRemoteId;
+
   for (unsigned l = getMidiBuiltinCount(), i = 0; i < l; i++) {
     const GOElementCreator::ButtonDefinitionEntry *pButtonDef
       = INTERNAL_MIDI_DESCS[i].p_ButtonDef;
     const int note = web_remote_note(pButtonDef);
     GOMidiReceiver &recv = *m_InitialMidiObjects[i]->GetMidiReceiver();
 
-    if (note >= 0 && !has_event_from_device(recv, webRemoteId)) {
+    if (note >= 0 && !recv.HasEventFromDevice(webRemoteId)) {
       GOMidiReceiverEventPattern &e = recv.GetEvent(recv.AddNewEvent());
 
       // Pistons follow the note: on while the finger is down. Set is a

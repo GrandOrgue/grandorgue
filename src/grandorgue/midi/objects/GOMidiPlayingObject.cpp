@@ -9,6 +9,8 @@
 
 #include <wx/intl.h>
 
+#include "config/GOConfig.h"
+#include "midi/elements/GOMidiReceiver.h"
 #include "model/GOOrganModel.h"
 
 GOMidiPlayingObject::GOMidiPlayingObject(
@@ -31,10 +33,21 @@ const GOMidiObject *GOMidiPlayingObject::FindInitialMidiObject() const {
 }
 
 void GOMidiPlayingObject::AfterMidiLoaded() {
-  if (!IsMidiConfigured()) {
-    const GOMidiObject *pInitialObj = FindInitialMidiObject();
+  const GOMidiObject *pInitialObj = FindInitialMidiObject();
 
-    if (pInitialObj)
+  if (pInitialObj) {
+    if (!IsMidiConfigured())
       CopyMidiSettingFrom(*pInitialObj);
+    else if (!IsReadOnly()) {
+      // Already configured objects still pick up the Web Remote events, so
+      // the phone also works with organs set up before it existed. Other
+      // devices are left alone: they are the user's own choices.
+      GOMidiReceiver *pRecv = GetMidiReceiver();
+      const GOMidiReceiver *pInitialRecv = pInitialObj->GetMidiReceiver();
+
+      if (pRecv && pInitialRecv)
+        pRecv->AddMissingEventsFrom(
+          *pInitialRecv, r_OrganModel.GetConfig().GetWebRemoteDeviceId());
+    }
   }
 }

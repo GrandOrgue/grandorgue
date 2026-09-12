@@ -113,6 +113,9 @@ private:
   void LoadOrgans(GOConfigReader &cfg);
   void SaveOrgans(GOConfigWriter &cfg);
 
+  // filled by FillWebRemoteDefaults()
+  unsigned m_WebRemoteDeviceId = 0;
+
   void LoadDefaults();
   void FillWebRemoteDefaults();
 
@@ -271,6 +274,7 @@ public:
   }
 
   GOMidiMap &GetMidiMap() { return m_MidiMap; }
+  unsigned GetWebRemoteDeviceId() const { return m_WebRemoteDeviceId; }
   const GOMidiMap &GetMidiMap() const { return m_MidiMap; }
 
   GOTemperamentList &GetTemperaments() { return m_Temperaments; }
