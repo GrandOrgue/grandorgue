@@ -8,9 +8,11 @@
 #ifndef GOMIDIWEBINPORT_H
 #define GOMIDIWEBINPORT_H
 
-#include <atomic>
 #include <cstdint>
+#include <mutex>
+#include <set>
 #include <string>
+#include <vector>
 
 #include "GOMidiInPort.h"
 #include "threading/GOThread.h"
@@ -22,9 +24,13 @@ class GOConfig;
  *
  * The page it serves (resource/web-remote.html) shows a grid of buttons that
  * can be opened from a phone or tablet on the same network. Pressing a button
- * posts a raw MIDI message to /midi and we feed it into GrandOrgue exactly as
- * if it came from a hardware controller, so the usual "Listen for event"
+ * posts a MIDI channel message to /midi and we feed it into GrandOrgue exactly
+ * as if it came from a hardware controller, so the usual "Listen for event"
  * workflow works for mapping the buttons to pistons, stops, Set, etc.
+ *
+ * There is no authentication: anyone on the network can push the buttons.
+ * Only short channel messages are accepted, nothing that could reconfigure
+ * GrandOrgue.
  */
 class GOMidiWebInPort : public GOMidiInPort, private GOThread {
 private:
@@ -32,12 +38,18 @@ private:
   // the listening socket; -1 when not listening (also matches INVALID_SOCKET
   // on windows once cast). Kept as intptr_t to avoid winsock in the header.
   intptr_t m_ListenSock = -1;
-  // connections being served right now, so Close() can wait for them
-  std::atomic<unsigned> m_NClients{0};
+  // connections being served right now, so Close() can cut them short and
+  // wait for their threads
+  std::mutex m_ClientsMutex;
+  std::set<intptr_t> m_Clients;
+  // Receive() is not thread safe and every connection has its own thread
+  std::mutex m_ReceiveMutex;
 
   void Entry() override;
   void ServeClient(intptr_t sock);
   bool HandleMidiPost(const std::string &body);
+  bool RegisterClient(intptr_t sock);
+  void UnregisterClient(intptr_t sock);
 
 public:
   static const wxString PORT_NAME;
@@ -45,6 +57,14 @@ public:
 
   GOMidiWebInPort(GOMidiSystem *midi, GOConfig &config);
   ~GOMidiWebInPort();
+
+  /**
+   * Parse a /midi body: hex bytes separated by whitespace, e.g. "9F 64 7F".
+   * Only a single, well formed channel message is accepted.
+   * @return whether outMsg holds a message worth forwarding
+   */
+  static bool parseMidiBody(
+    const std::string &body, std::vector<unsigned char> &outMsg);
 
   bool IsToAutoEnable() const override { return false; }
   bool Open(unsigned id, int channelShift) override;
