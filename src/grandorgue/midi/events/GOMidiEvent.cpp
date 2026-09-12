@@ -141,7 +141,8 @@ void GOMidiEvent::FromMidi(
           | ((msg[11] & 0x7F) << 8) | (msg[12] & 0x7F));
         break;
       }
-      if ((msg[4] & 0xF0) == 0x10) {
+      // shortest valid one is F0 7D 47 4F 1c vv vv F7
+      if ((msg[4] & 0xF0) == 0x10 && msg.size() >= 8) {
         wxCharBuffer b(msg.size() - 7);
         char *buf = b.data();
         for (unsigned i = 0; i < msg.size() - 8; i++)
