@@ -20,6 +20,8 @@ private:
   void TestRodgersStopChange();
   void TestRodgersStopChangeEmptyData();
   void TestRodgersStopChangeTooShort();
+  void TestGoSetup();
+  void TestGoSetupTooShort();
 
 public:
   std::string GetName() override { return TEST_NAME; }
