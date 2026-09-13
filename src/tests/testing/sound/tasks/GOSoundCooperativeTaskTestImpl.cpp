@@ -6,6 +6,10 @@
 
 #include "GOSoundCooperativeTaskTestImpl.h"
 
+#include <cassert>
+#include <chrono>
+#include <thread>
+
 #include "threading/GOMutexLocker.h"
 
 long GOSoundCooperativeTaskTestImpl::DoOwnShare() {
@@ -26,6 +30,11 @@ long GOSoundCooperativeTaskTestImpl::DoOwnShare() {
     // sampler list.
     while (m_RemainingWorkItems.fetch_sub(1) > 0)
       nProcessedItems++;
+
+  if (shareSleepMicroseconds.load() > 0)
+    // linger outside any lock, as a worker inside ProcessList() does
+    std::this_thread::sleep_for(
+      std::chrono::microseconds(shareSleepMicroseconds.load()));
 
   return nProcessedItems;
 }
@@ -114,6 +123,22 @@ void GOSoundCooperativeTaskTestImpl::Run(GOSchedulerThread *pThread) {
       }
     }
   }
+}
+
+void GOSoundCooperativeTaskTestImpl::CompleteRound() {
+  GOSoundTaskBase::CompleteRound();
+  WaitUntilDone();
+}
+
+// Mirrors GOSoundGroupTask::DoNewRound(), so that this double breaks wherever
+// the production task would: the round protocol, not m_mutex, is what has to
+// guarantee no worker is still inside its share by the time NewRound() runs.
+void GOSoundCooperativeTaskTestImpl::DoNewRound() {
+  assert(m_ActiveCount.load() == 0);
+  assert(
+    m_RunState.load() == RUN_STATE_NOT_STARTED
+    || m_RunState.load() == RUN_STATE_DONE);
+  m_ActiveCount.store(0);
 }
 
 void GOSoundCooperativeTaskTestImpl::WaitUntilDone() {

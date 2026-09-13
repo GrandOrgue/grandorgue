@@ -7,6 +7,8 @@
 
 #include "GOSoundGroupTask.h"
 
+#include <cassert>
+
 #include "scheduler/GOSchedulerThread.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "threading/GOMutexLocker.h"
@@ -100,19 +102,26 @@ void GOSoundGroupTask::Run(GOSchedulerThread *pThread) {
       ProcessList(m_Active, false, localBuffer);
       ProcessList(m_Release, true, localBuffer);
 
+      // Blocking on purpose, unlike every other GOMutexLocker in this class:
+      // this thread already incremented m_ActiveCount above and computed its
+      // share into localBuffer, so merging it and (if this turns out to be
+      // the last share) publishing RUN_STATE_DONE must not be skippable via
+      // pThread->ShouldStop() - a stopping worker bailing here would either
+      // drop its own share silently (the merge is skipped) or, worse,
+      // publish RUN_STATE_DONE while another thread is still concurrently
+      // merging its own share under the lock, since the two would no longer
+      // be serialised against each other at all.
       GOMutexLocker locker(
-        m_mutex, false, "GOSoundGroupTask::Run.afterProcess", pThread);
+        m_mutex, false, "GOSoundGroupTask::Run.afterProcess");
 
-      if (locker.IsLocked()) {
-        if (m_RunState.load() == RUN_STATE_IN_PROGRESS) {
-          // The first thread is finished. Assign the result to the common
-          // buffer
-          CopyFrom(localBuffer);
-          m_RunState.store(RUN_STATE_PARTLY_DONE);
-        } else
-          // not the first thread. Add the result to the common buffer
-          AddFrom(localBuffer);
-      }
+      if (m_RunState.load() == RUN_STATE_IN_PROGRESS) {
+        // The first thread is finished. Assign the result to the common
+        // buffer
+        CopyFrom(localBuffer);
+        m_RunState.store(RUN_STATE_PARTLY_DONE);
+      } else
+        // not the first thread. Add the result to the common buffer
+        AddFrom(localBuffer);
       if (m_ActiveCount.fetch_sub(1) <= 1) {
         // the last thread
         m_RunState.store(RUN_STATE_DONE);
@@ -135,6 +144,28 @@ void GOSoundGroupTask::EnsureBufferReady(
            && (pThread == nullptr || !pThread->ShouldStop()))
       m_Condition.WaitOrStop("GOSoundGroupTask::EnsureBufferReady", pThread);
   }
+}
+
+void GOSoundGroupTask::CompleteRound() {
+  // precisely the round deadline: pass it down, finish the round, and do not
+  // return until it is finished
+  EnsureBufferReady(true);
+}
+
+// Called under m_mutex from GOSoundTaskBase::NewRound(), before the round
+// state is reset, so the assertions still see the round that is ending. This
+// task mixes in ProcessList() outside m_mutex, so the mutex alone cannot keep
+// a worker out of a round being reset: the protocol must already have brought
+// the task to rest. Either it never ran this period (RUN_STATE_NOT_STARTED),
+// or CompleteRound() ran it to completion (RUN_STATE_DONE).
+void GOSoundGroupTask::DoNewRound() {
+  assert(m_ActiveCount.load() == 0);
+  assert(
+    m_RunState.load() == RUN_STATE_NOT_STARTED
+    || m_RunState.load() == RUN_STATE_DONE);
+  // not redundant with the assertion above: assert() is compiled out under
+  // NDEBUG, and resetting the counter is what this hook exists to do
+  m_ActiveCount.store(0);
 }
 
 void GOSoundGroupTask::WaitAndDiscardContent() {
