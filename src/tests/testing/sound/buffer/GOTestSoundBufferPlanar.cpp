@@ -131,7 +131,7 @@ void GOTestSoundBufferPlanar::TestEdgeCases() {
     channel0.GetData() == monoData.data(),
     "GetChannelBuffer(0) of a 1-channel buffer should point to the start");
 
-  // 4-channel buffer, the case GOSoundFilter cannot handle today
+  // 4-channel buffer, the case GOSoundOnePoleFilter cannot handle today
   const unsigned nChannels4 = 4;
   std::vector<GOSoundBuffer::Item> data4(nChannels4 * nFrames);
   fillWithSequential(data4.data(), data4.size(), 0.0f);
