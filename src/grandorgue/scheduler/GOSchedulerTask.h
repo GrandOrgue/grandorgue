@@ -51,6 +51,14 @@ public:
       has no accumulated content and is not mid-round */
   virtual bool IsEmpty() const = 0;
 
+  /** @return whether running this task can advance persistent state (e.g.
+      sampler streams, playback time) - i.e. whether dispatching it should
+      mark the owning round dirty (see GOScheduler::IsRoundDirty()). Default
+      true; override to false only for a task whose work is a cheap,
+      stateless prerequisite computation, unconditionally so regardless of
+      what the round actually contains */
+  virtual bool IsStateful() const { return true; }
+
   /** Processes the task, possibly partially, cooperatively with other threads
    */
   virtual void Run(GOSchedulerThread *pThread = nullptr) = 0;

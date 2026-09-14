@@ -143,7 +143,7 @@ GOSchedulerTask *GOScheduler::GetNextTask() {
       break;
     pResultTask = *m_Tasks[next];
   }
-  if (pResultTask)
+  if (pResultTask && pResultTask->IsStateful())
     m_IsRoundDirty.store(true);
   return pResultTask;
 }

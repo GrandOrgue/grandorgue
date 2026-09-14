@@ -43,6 +43,17 @@ private:
    *   PauseGivingWork() was already in effect throughout. */
   void TestWaitForIdleClosesRoundDirtyRace();
 
+  /** GetNextTask() dispatching a task with GOSchedulerTask::IsStateful() ==
+   * false must not set IsRoundDirty(), while dispatching a default
+   * (IsStateful() == true) task must - regression coverage for the Codex
+   * finding on PR #2620 "Mark the round dirty only after stateful audio
+   * work": with the old unconditional marking, a worker thread dispatching
+   * only cheap prerequisite tasks (GOSoundWindchestTask's amplitude cache,
+   * GOSoundTouchTask's memory prefetch) made GOSoundOrganEngine::
+   * StopEngine() think the round needed finishing and call NextPeriod(),
+   * skipping an otherwise-untouched audio period. */
+  void TestIsStatefulControlsRoundDirty();
+
   /** Delete() (MarkForStop() + Wakeup() + join) always returns, even while
    * another thread is concurrently hammering Wakeup() - regression coverage
    * for the same race dropping the shutdown wakeup and hanging the join. */

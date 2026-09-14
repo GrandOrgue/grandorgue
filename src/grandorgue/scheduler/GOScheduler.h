@@ -75,14 +75,18 @@ public:
   void ResumeGivingWork() { m_IsNotGivingWork.store(false); }
 
   /**
-   * Whether a worker thread has picked up a task via GetNextTask() since the
-   * last NewRound() - i.e. whether the round may already be mid-processing
-   * even though no synchronous caller (e.g. an audio output) has driven it.
-   * A worker that grabs a task this way can consume/mutate real content
-   * (sampler read positions, etc.) before any output ever enters the round,
-   * so this is not implied by any output-side counter - see
-   * GOSoundOrganEngine::StopEngine().
-   * @return true if the round has been touched by a worker thread
+   * Whether a worker thread has picked up a GOSchedulerTask::IsStateful()
+   * task via GetNextTask() since the last NewRound() - i.e. whether the
+   * round may already be mid-processing even though no synchronous caller
+   * (e.g. an audio output) has driven it. A worker that grabs such a task
+   * this way can consume/mutate real content (sampler read positions, etc.)
+   * before any output ever enters the round, so this is not implied by any
+   * output-side counter - see GOSoundOrganEngine::StopEngine(). Dispatching
+   * a task with IsStateful() == false (a cheap, stateless prerequisite
+   * computation) never sets this, even though the worker did pick up and
+   * run something.
+   * @return true if the round has been touched by a worker thread running
+   *   stateful work
    */
   bool IsRoundDirty() const { return m_IsRoundDirty.load(); }
 

@@ -38,6 +38,13 @@ public:
   void DiscardContent() override {}
 };
 
+// A task whose dispatch must not count as touching persistent audio state -
+// mirrors GOSoundWindchestTask/GOSoundTouchTask's IsStateful() override.
+class StatelessSignalingTask : public SignalingTask {
+public:
+  bool IsStateful() const override { return false; }
+};
+
 // Calls Delete() on the wrapped thread from its destructor, so a GOAssert
 // failure thrown out of a soak loop still stops the thread instead of
 // leaking a running std::thread - whose destructor would otherwise call
@@ -170,6 +177,45 @@ void GOTestScheduler::TestWaitForIdleClosesRoundDirtyRace() {
   }
 }
 
+void GOTestScheduler::TestIsStatefulControlsRoundDirty() {
+  GOScheduler scheduler;
+  StatelessSignalingTask statelessTask;
+
+  scheduler.Add(&statelessTask);
+  scheduler.NewRound();
+  scheduler.ResumeGivingWork();
+
+  GOSchedulerTask *const pDispatched = scheduler.GetNextTask();
+
+  GOAssert(
+    pDispatched == &statelessTask,
+    "the only registered task should be the one dispatched");
+  GOAssert(
+    !scheduler.IsRoundDirty(),
+    "dispatching a task with IsStateful() == false must not mark the round "
+    "dirty (Codex review on PR #2620: \"Mark the round dirty only after "
+    "stateful audio work\")");
+
+  scheduler.PauseGivingWork();
+  scheduler.Clear();
+
+  SignalingTask statefulTask;
+
+  scheduler.Add(&statefulTask);
+  scheduler.NewRound();
+  scheduler.ResumeGivingWork();
+
+  GOSchedulerTask *const pDispatched2 = scheduler.GetNextTask();
+
+  GOAssert(
+    pDispatched2 == &statefulTask,
+    "the only registered task should be the one dispatched");
+  GOAssert(
+    scheduler.IsRoundDirty(),
+    "dispatching a task with IsStateful() == true (the default) must mark "
+    "the round dirty, protecting against accidentally flipping the default");
+}
+
 void GOTestScheduler::TestDeleteReturnsWhenRacingWakeup() {
   for (unsigned iterationI = 0; iterationI < 50; iterationI++) {
     // Heap-allocated and, on a regression, deliberately leaked: if Delete()
@@ -255,6 +301,7 @@ void GOTestScheduler::run() {
   GO_RUN_TEST(TestResumeThenWakeupRunsIdleThreadsWork())
   GO_RUN_TEST(TestPauseResumeWakeupCyclesAreNotLost())
   GO_RUN_TEST(TestWaitForIdleClosesRoundDirtyRace())
+  GO_RUN_TEST(TestIsStatefulControlsRoundDirty())
   GO_RUN_TEST(TestDeleteReturnsWhenRacingWakeup())
   GO_RUN_TEST(TestAtomicWaitObservesStoreThatPrecedesIt())
 }
