@@ -18,8 +18,6 @@
 #include "config/GOConfig.h"
 #include "control/GOEventDistributor.h"
 #include "control/GOLabelControl.h"
-#include "gui/frames/GOMainWindowData.h"
-#include "gui/panels/GOGUIMouseState.h"
 #include "loader/GOFileStore.h"
 #include "loader/GOLoadedOrganInfo.h"
 #include "loader/GOProgressMonitor.h"
@@ -40,9 +38,7 @@ class GOConfigWriter;
 class GODialogSizeSet;
 class GODivisionalSetter;
 class GOElementCreator;
-class GOGuiImageCache;
 class GOGuiOrgan;
-class GOGUIPanel;
 class GOMidiEvent;
 class GOMidiPlayer;
 class GOMidiRecorder;
@@ -60,7 +56,8 @@ class GOOrganController : public GOEventDistributor,
                           public GOModificationProxy {
   // Exercises LoadOrganCoreData()/LoadObjects()/SaveOrganCoreData()/
   // ClearObjects()/ClearOrganCoreData() directly, bypassing Load()'s
-  // unconditional call to OnLoad() (which needs a real GUI display).
+  // unconditional call to LoadObjects() (which needs a live GUI display for
+  // its error path).
   friend class GOTestOrganController;
 
 private:
@@ -70,14 +67,12 @@ private:
   GOFileStore m_FileStore;
   bool m_Cacheable;
   bool m_IsOrganCoreDataLoaded;
-  bool m_IsOrganGuiLoaded;
   bool m_IsObjectsLoaded;
   GOSetter *m_setter;
   GODivisionalSetter *m_DivisionalSetter;
   GOAudioRecorder *m_AudioRecorder;
   GOMidiPlayer *m_MidiPlayer;
   GOMidiRecorder *m_MidiRecorder;
-  GOSizeKeeper m_StopWindowSizeKeeper;
   GOTimer *m_timer;
   GOButtonControl *p_OnStateButton;
   wxString m_Temperament;
@@ -94,20 +89,16 @@ private:
 
   GOVirtualCouplerController m_VirtualCouplers;
 
-  ptr_vector<GOGUIPanel> m_panels;
   ptr_vector<GOElementCreator> m_elementcreators;
 
   GOMidiSystem *m_midi;
   std::vector<bool> m_MidiSamplesetMatch;
   int m_SampleSetId1, m_SampleSetId2;
-  GOGUIMouseState m_MouseState;
 
   GOMemoryPool m_pool;
   GOSoundOrganEngine m_SoundEngine;
-  GOGuiImageCache *mp_ImageCache;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
-  GOMainWindowData m_MainWindowData;
 
   // if modified changes m_IsOrganModified then make a side effect
   void SetOrganModified(bool modified);
@@ -118,60 +109,55 @@ private:
   /** Reads the non-GUI ODF/CMB data (church info, model, element creators,
    * combinations) into this controller. Sets m_IsOrganCoreDataLoaded. */
   void LoadOrganCoreData(GOConfigReader &cfg);
-  /** Hook for a subclass to load GUI-only data, called after
-   * LoadOrganCoreData() and before the ODF/CMB unused-key report. Empty by
-   * default - a bare GOOrganController has no GUI. Overridden by
-   * GOGuiOrgan::Controller, which calls LoadOrganGuiData() below (still
-   * owned by this class) before building its own panel creators.
-   * @param cfg the config reader for the ODF/CMB currently being loaded,
-   *   the same one passed to LoadOrganCoreData() */
-  virtual void OnLoad(GOConfigReader &cfg) {}
   /** Loads pipe/sample data from the cache or, failing that, from the
    * sample files in parallel worker threads. Sets m_IsObjectsLoaded. */
   void LoadObjects(GOProgressMonitor &monitor);
   /** Writes the non-GUI organ state (church info, volume, temperament,
    * saveable objects, virtual couplers) to cfg. */
   void SaveOrganCoreData(GOConfigWriter &cfg);
-  /** Hook for a subclass to save GUI-only data, called after
-   * SaveOrganCoreData() and before the file is written. Empty by default.
-   * @param cfg the config writer Save() is assembling; core data has
-   *   already been written to it by the time this runs */
-  virtual void OnSave(GOConfigWriter &cfg);
   /** Undoes LoadObjects if it ran. Idempotent. */
   void ClearObjects();
-  /** Hook for a subclass to clear GUI-only data, called after
-   * ClearObjects() and before ClearOrganCoreData() (GUI data may reference
-   * core model objects that ClearOrganCoreData() frees). Empty by default.
-   * Overridden by GOGuiOrgan::Controller, which calls ClearOrganGuiData()
-   * below (still owned by this class) to clear its own panel creators. */
-  virtual void OnClear() {}
   /** Undoes LoadOrganCoreData if it ran. Idempotent. */
   void ClearOrganCoreData();
   GOHashType GenerateCacheHash();
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
 
-protected:
   /**
-   * Loads the GUI-only data still owned by this class (panels, image
-   * cache, main-window data, stop-window size) - everything OnLoad() used
-   * to do except building/running the panel creators, which
-   * GOGuiOrgan::Controller now owns and runs after this returns. Called
-   * from GOGuiOrgan::Controller::OnLoad(). Temporary: GOGuiOrgan will take
-   * over this data too once the ownership move is complete, at which point
-   * this method goes away.
-   * @param cfg the config reader for the ODF/CMB currently being loaded
+   * Hook for a subclass to load GUI-only data, called after
+   * LoadOrganCoreData() and before the ODF/CMB unused-key report. Empty by
+   * default - a bare GOOrganController has no GUI.
+   * @param cfg the config reader for the ODF/CMB currently being loaded,
+   *   the same one passed to LoadOrganCoreData()
    */
-  void LoadOrganGuiData(GOConfigReader &cfg);
-  /** Undoes LoadOrganGuiData(). Called from
-   * GOGuiOrgan::Controller::OnClear(). Temporary, see LoadOrganGuiData(). */
-  void ClearOrganGuiData();
+  virtual void OnLoad(GOConfigReader &cfg) {}
+  /**
+   * Hook for a subclass to sync any live UI state (e.g. window
+   * position/size) into its own data before Save() writes anything. Called
+   * first, before any config writer exists. Empty by default. Takes no
+   * parameters - it reads live state (e.g. window position) directly from
+   * whatever the subclass holds, not from anything Save() has yet.
+   */
+  virtual void BeforeSave() {}
+  /**
+   * Hook for a subclass to save GUI-only data, called after
+   * SaveOrganCoreData() and before the file is written. Empty by default.
+   * @param cfg the config writer Save() is assembling; core data has
+   *   already been written to it by the time this runs
+   */
+  virtual void OnSave(GOConfigWriter &cfg) {}
+  /**
+   * Hook for a subclass to clear GUI-only data, called after ClearObjects()
+   * and before ClearOrganCoreData() (GUI data may reference core model
+   * objects that ClearOrganCoreData() frees). Empty by default. Takes no
+   * parameters - it just tears down whatever the subclass loaded in
+   * OnLoad().
+   */
+  virtual void OnClear() {}
 
 public:
-  GOOrganController(GOConfig &config, bool isAppInitialized = false);
+  GOOrganController(GOConfig &config);
   virtual ~GOOrganController();
-
-  GOSizeKeeper &GetStopWindowSizeKeeper() { return m_StopWindowSizeKeeper; }
 
   // Returns organ modification flag
   bool IsOrganModified() const { return m_OrganModified; }
@@ -217,7 +203,8 @@ public:
   wxString ExportCombination(const wxString &fileName);
   void LoadCombination(const wxString &cmb);
   /**
-   * Writes the organ's core and GUI data to a config file.
+   * Writes the organ's core data (and, for GUI-aware subclasses, GUI data
+   * via OnSave()) to a config file.
    * @param path the file to write to; empty (the default) means the path
    *   this organ was loaded from (m_LoadedOrganInfo.settingsFilePath) - a
    *   default member expression can't be used here since default arguments
@@ -259,18 +246,13 @@ public:
 
   /* Access to internal ODF objects */
   GOSetter *GetSetter() const { return m_setter; }
-  GOGUIPanel *GetPanel(unsigned index) { return m_panels[index]; }
-  unsigned GetPanelCount() const { return m_panels.size(); }
-  void AddPanel(GOGUIPanel *panel) { m_panels.push_back(panel); }
   GOMemoryPool &GetMemoryPool() { return m_pool; }
   GOConfig &GetSettings() { return m_config; }
-  GOGuiImageCache &GetImageCache() const { return *mp_ImageCache; }
   void SetTemperament(const wxString &name);
   const wxString &GetTemperament() const { return m_Temperament; }
 
   GOLabelControl *GetPitchLabel() { return &m_PitchLabel; }
   GOLabelControl *GetTemperamentLabel() { return &m_TemperamentLabel; }
-  GOMainWindowData *GetMainWindowData() { return &m_MainWindowData; }
 
   /** @return the virtual coupler configuration for this organ, used by
    * GOGUICouplerPanel when building the coupler panel. */
@@ -342,8 +324,6 @@ public:
   const wxString &GetInfoFilename() const { return m_InfoFilename; }
 
   GOMidiSystem *GetMidi() { return m_midi; }
-
-  GOGUIMouseState &GetMouseState() { return m_MouseState; }
 
   /**
    * Return the Timer Manager for Metronome, Midi recorder, ...
