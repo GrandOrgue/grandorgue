@@ -23,6 +23,13 @@ public:
   GOSoundTouchTask(GOMemoryPool &pool);
 
   void CompleteRound() override;
+
+  /* DoRun() only prefetches pooled memory pages, never touching audio state,
+     so dispatching this task alone must not make
+     GOSoundOrganEngine::StopEngine() think the round needs finishing - same
+     reasoning as GOSoundWindchestTask::IsStateful() (Codex review on PR
+     #2620: "Mark the round dirty only after stateful audio work") */
+  bool IsStateful() const override { return false; }
 };
 
 #endif

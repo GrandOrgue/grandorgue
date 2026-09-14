@@ -68,6 +68,68 @@ private:
    */
   void TestReconnectAfterMidPeriodDisconnect();
 
+  /*
+   * With 2 outputs, only output 0 enters a period (mirroring a live reroute
+   * disconnecting between two outputs' callbacks): StopEngine() must finish
+   * that half-open period itself (GetSamplerPlayer().GetTime() advances by
+   * exactly one period), instead of letting the following StartEngine()'s
+   * unconditional NewRound() silently discard the already-computed round
+   * without ever advancing the sampler clock for it.
+   */
+  void TestStopEngineFinishesPartialPeriod();
+
+  /*
+   * With 1 aux thread, drives one period so the engine opens a fresh round
+   * and wakes the aux thread, then waits for GOScheduler::IsRoundDirty() to
+   * become true - proving a worker claimed a task for the new round before
+   * any output entered it (m_NCallbacksFinishedCurrPeriod == 0). StopEngine()
+   * must still finish that round (sampler clock advances by exactly one
+   * period) even though the earlier output-counter-only check would have
+   * missed it entirely.
+   */
+  void TestStopEngineFinishesWorkerStartedRound();
+
+  /*
+   * StopEngine() must not touch the sampler pool: a sample started before
+   * Stop is still checked out (GetUsedSamplerCount() unchanged) and can
+   * still be mixed after the following StartEngine() resumes.
+   */
+  void TestStopStartResumePreservesSamplers();
+
+  /*
+   * DestroyEngine() itself does not touch the pool - GetUsedSamplerCount()
+   * stays at whatever it was before Destroy; reclaiming (GetUsedSamplerCount()
+   * back to 0) happens on the following BuildEngine(). A polyphony limit
+   * lowered after Destroy still takes effect on that next BuildEngine(),
+   * since the pool's shrink-on-return happens there rather than in
+   * DestroyEngine().
+   */
+  void TestDestroyRebuildReclaimsAndResizesPool();
+
+  /* AudioGroupRoutingChange::IsEmpty() is true default-constructed, false
+   * once PrepareSoundRoutingFor() actually builds a task. */
+  void TestAudioGroupRoutingChangeIsEmpty();
+
+  /*
+   * HasSoundRoutingFor() is false for a pair with no task and true once
+   * PrepareSoundRoutingFor() has built its grid cells - even before
+   * CommitSoundRoutingFor() registers them with the scheduler, since Has()
+   * only reflects grid population.
+   */
+  void TestHasSoundRoutingFor();
+
+  /*
+   * PrepareSoundRoutingFor() for a pair with no existing cell builds it
+   * (and its detached-release cell) without touching the scheduler or any
+   * GOSoundGroupTask while the engine keeps running; CommitSoundRoutingFor()
+   * under a suspend/resume then makes the pair actually usable - a sample
+   * started on it afterwards does not hit GetWindchestGroupTask()'s
+   * assert(pTask). A second PrepareSoundRoutingFor() for the same pair,
+   * even without an intervening Commit, does not try to build again (the
+   * grid cell built by the first call already makes Has() true).
+   */
+  void TestPrepareAndCommitSoundRoutingFor();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

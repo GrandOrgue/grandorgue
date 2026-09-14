@@ -6,6 +6,10 @@
 
 #include "GOSoundCooperativeTaskTestImpl.h"
 
+#include <cassert>
+#include <chrono>
+#include <thread>
+
 #include "threading/GOMutexLocker.h"
 
 long GOSoundCooperativeTaskTestImpl::DoOwnShare() {
@@ -27,14 +31,19 @@ long GOSoundCooperativeTaskTestImpl::DoOwnShare() {
     while (m_RemainingWorkItems.fetch_sub(1) > 0)
       nProcessedItems++;
 
+  if (shareSleepMicroseconds.load() > 0)
+    // linger outside any lock, as a worker inside ProcessList() does
+    std::this_thread::sleep_for(
+      std::chrono::microseconds(shareSleepMicroseconds.load()));
+
   return nProcessedItems;
 }
 
-// Mirrors what GOSoundGroupTask does under m_mutex once a thread has finished
-// its share: the first one to arrive copies its result in, everyone after it
-// adds to what is already there. The linear pass over m_MergeBuffer is there
-// so that the section costs what a buffer merge costs; with an empty buffer
-// it degenerates to the bookkeeping alone.
+// Mirrors what GOSoundWindchestGroupTask does under m_mutex once a thread has
+// finished its share: the first one to arrive copies its result in, everyone
+// after it adds to what is already there. The linear pass over m_MergeBuffer is
+// there so that the section costs what a buffer merge costs; with an empty
+// buffer it degenerates to the bookkeeping alone.
 void GOSoundCooperativeTaskTestImpl::MergeOwnShare(
   long localValue, bool isFirst) {
   const float share = static_cast<float>(localValue);
@@ -50,8 +59,8 @@ void GOSoundCooperativeTaskTestImpl::MergeOwnShare(
   }
 }
 
-// Structurally mirrors GOSoundGroupTask::Run(), including the fact that the
-// active-thread bookkeeping sits outside the IsLocked() check.
+// Structurally mirrors GOSoundWindchestGroupTask::Run(), including the fact
+// that the active-thread bookkeeping sits outside the IsLocked() check.
 void GOSoundCooperativeTaskTestImpl::Run(GOSchedulerThread *pThread) {
   if (m_RunState.load() < RUN_STATE_DONE) {
     bool isParticipating = false;
@@ -76,11 +85,11 @@ void GOSoundCooperativeTaskTestImpl::Run(GOSchedulerThread *pThread) {
           // this point after the last worker finished the round and published
           // RUN_STATE_DONE from inside the mutex. Joining then would raise
           // m_ActiveCount on a round already declared over, which is what
-          // DoNewRound() asserts against. GOSoundGroupTask is safe from this
-          // for a reason that does not carry over to a work quota: its
-          // condition is m_Active.Peek() || m_Release.Peek(), and both lists
-          // are drained by the time the round is done, so a late thread finds
-          // nothing to help with and leaves.
+          // DoNewRound() asserts against. GOSoundWindchestGroupTask is safe
+          // from this for a reason that does not carry over to a work quota:
+          // its condition is m_Active.Peek() || m_Release.Peek(), and both
+          // lists are drained by the time the round is done, so a late thread
+          // finds nothing to help with and leaves.
           isParticipating = true;
 
         if (isParticipating)
@@ -116,9 +125,24 @@ void GOSoundCooperativeTaskTestImpl::Run(GOSchedulerThread *pThread) {
   }
 }
 
+void GOSoundCooperativeTaskTestImpl::CompleteRound() {
+  GOSoundTaskBase::CompleteRound();
+  WaitUntilDone();
+}
+
+// Mirrors GOSoundWindchestGroupTask::DoNewRound(), so that this double breaks
+// wherever the production task would: the round protocol, not m_mutex, is what
+// has to guarantee no worker is still inside its share by the time NewRound()
+// runs. As there, the m_RunState half of the assertion below is trivially
+// true (NewRound() has already reset it by the time this runs); m_ActiveCount
+// is the assertion that actually matters.
 void GOSoundCooperativeTaskTestImpl::DoNewRound() {
+  assert(m_ActiveCount.load() == 0);
+  assert(
+    m_RunState.load() == RUN_STATE_NOT_STARTED
+    || m_RunState.load() == RUN_STATE_DONE);
   m_ActiveCount.store(0);
-  // Mirrors GOSoundGroupTask::DoNewRound(): wakes anyone parked in
+  // Mirrors GOSoundWindchestGroupTask::DoNewRound(): wakes anyone parked in
   // EnsureBufferReady() on the round being superseded.
   m_Condition.Broadcast();
 }

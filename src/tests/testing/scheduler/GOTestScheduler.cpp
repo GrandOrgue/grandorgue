@@ -38,6 +38,13 @@ public:
   void DiscardContent() override {}
 };
 
+// A task whose dispatch must not count as touching persistent audio state -
+// mirrors GOSoundWindchestTask/GOSoundTouchTask's IsStateful() override.
+class StatelessSignalingTask : public SignalingTask {
+public:
+  bool IsStateful() const override { return false; }
+};
+
 // Calls Delete() on the wrapped thread from its destructor, so a GOAssert
 // failure thrown out of a soak loop still stops the thread instead of
 // leaking a running std::thread - whose destructor would otherwise call
@@ -64,12 +71,12 @@ void GOTestScheduler::TestResumeThenWakeupRunsIdleThreadsWork() {
 
   scheduler.Add(&task);
 
-  // Mirrors GOSoundOrganEngine::StopEngine() then the fixed StartEngine():
-  // pause, wait for the thread to park, then make a fresh round available
-  // and explicitly wake it. Regression coverage for the "wake aux workers on
-  // resume" fix: without the final Wakeup(), the thread would stay parked on
-  // its condition variable forever - GetNextTask() returning real work is
-  // not, by itself, enough to bring an idle thread back.
+  /* Mirrors GOSoundOrganEngine::StopEngine() then the fixed StartEngine():
+     pause, wait for the thread to park, then make a fresh round available
+     and explicitly wake it. Regression coverage for the "wake aux workers on
+     resume" fix: without the final Wakeup(), the thread would stay parked on
+     its condition variable forever - GetNextTask() returning real work is
+     not, by itself, enough to bring an idle thread back. */
   scheduler.PauseGivingWork();
   thread.WaitForIdle();
 
@@ -124,6 +131,89 @@ void GOTestScheduler::TestPauseResumeWakeupCyclesAreNotLost() {
           "followed by NewRound()/ResumeGivingWork()/Wakeup() - this is the "
           "GOSchedulerThread::Wakeup()/Entry() lost-wakeup race");
   }
+}
+
+void GOTestScheduler::TestWaitForIdleClosesRoundDirtyRace() {
+  SignalingTask task;
+  GOScheduler scheduler;
+  GOSchedulerThread thread(&scheduler);
+  SchedulerThreadGuard guard(thread);
+
+  thread.Run();
+  thread.WaitForIdle();
+  scheduler.Add(&task);
+
+  for (unsigned cycleI = 0; cycleI < 500; cycleI++) {
+    task.wasRun.store(false);
+    scheduler.NewRound();
+    scheduler.ResumeGivingWork();
+
+    /* Wakeup() races the worker's GetNextTask() dispatch against
+       PauseGivingWork() below with no synchronization between them - this is
+       exactly the window Codex flagged: the worker may already have passed
+       the m_IsNotGivingWork check and be about to dispatch (and mark dirty)
+       the task when PauseGivingWork() runs. */
+    thread.Wakeup();
+    scheduler.PauseGivingWork();
+
+    /* The fix this protects: only trust IsRoundDirty() after every worker
+       thread has gone idle. GOSchedulerThread::Entry() only reports idle
+       once its GetNextTask()/Run() loop returns null - i.e. after it has
+       both stopped picking up new work and finished running (and marking
+       dirty) any task it had already grabbed - so this closes the race
+       regardless of how PauseGivingWork() above happened to interleave with
+       the dispatch. */
+    thread.WaitForIdle();
+
+    GOAssert(
+      scheduler.IsRoundDirty() == task.wasRun.load(),
+      "cycle " + std::to_string(cycleI)
+        + ": after WaitForIdle(), IsRoundDirty() must exactly reflect "
+          "whether the task actually ran this round, even when "
+          "PauseGivingWork() raced the worker's dispatch - a caller that "
+          "checked IsRoundDirty() before WaitForIdle() (the bug "
+          "GOSoundOrganEngine::StopEngine() used to have) could observe "
+          "this as false while the task was already in flight");
+  }
+}
+
+void GOTestScheduler::TestIsStatefulControlsRoundDirty() {
+  GOScheduler scheduler;
+  StatelessSignalingTask statelessTask;
+
+  scheduler.Add(&statelessTask);
+  scheduler.NewRound();
+  scheduler.ResumeGivingWork();
+
+  GOSchedulerTask *const pDispatched = scheduler.GetNextTask();
+
+  GOAssert(
+    pDispatched == &statelessTask,
+    "the only registered task should be the one dispatched");
+  GOAssert(
+    !scheduler.IsRoundDirty(),
+    "dispatching a task with IsStateful() == false must not mark the round "
+    "dirty (Codex review on PR #2620: \"Mark the round dirty only after "
+    "stateful audio work\")");
+
+  scheduler.PauseGivingWork();
+  scheduler.Clear();
+
+  SignalingTask statefulTask;
+
+  scheduler.Add(&statefulTask);
+  scheduler.NewRound();
+  scheduler.ResumeGivingWork();
+
+  GOSchedulerTask *const pDispatched2 = scheduler.GetNextTask();
+
+  GOAssert(
+    pDispatched2 == &statefulTask,
+    "the only registered task should be the one dispatched");
+  GOAssert(
+    scheduler.IsRoundDirty(),
+    "dispatching a task with IsStateful() == true (the default) must mark "
+    "the round dirty, protecting against accidentally flipping the default");
 }
 
 void GOTestScheduler::TestDeleteReturnsWhenRacingWakeup() {
@@ -210,6 +300,8 @@ void GOTestScheduler::TestAtomicWaitObservesStoreThatPrecedesIt() {
 void GOTestScheduler::run() {
   GO_RUN_TEST(TestResumeThenWakeupRunsIdleThreadsWork())
   GO_RUN_TEST(TestPauseResumeWakeupCyclesAreNotLost())
+  GO_RUN_TEST(TestWaitForIdleClosesRoundDirtyRace())
+  GO_RUN_TEST(TestIsStatefulControlsRoundDirty())
   GO_RUN_TEST(TestDeleteReturnsWhenRacingWakeup())
   GO_RUN_TEST(TestAtomicWaitObservesStoreThatPrecedesIt())
 }

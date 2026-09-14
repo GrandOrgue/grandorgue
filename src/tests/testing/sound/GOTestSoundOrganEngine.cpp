@@ -15,8 +15,12 @@
 #include <mutex>
 #include <thread>
 
+#include "model/GOWindchest.h"
 #include "sound/GOSoundOrganEngine.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/providers/GOSoundProviderSynthedTrem.h"
+
+#include "GOOrganController.h"
 
 #include "GOTestScope.h"
 
@@ -360,6 +364,323 @@ void GOTestSoundOrganEngine::TestReconnectAfterMidPeriodDisconnect() {
   StopAndDestroyEngine();
 }
 
+void GOTestSoundOrganEngine::TestStopEngineFinishesPartialPeriod() {
+  GOSoundOrganEngine &engine = BuildAndStartEngine(
+    /* nAudioGroups */ 1, /* nAuxThreads */ 0, /* nOutputs */ 2);
+
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  const uint64_t timeBefore = engine.GetSamplerPlayer().GetTime();
+
+  /* Only output 0 enters this period; output 1 never does - mirrors a live
+     reroute (EnsureSoundRoutingFor) disconnecting between the two outputs'
+     callbacks. Output 0's ProcessAudioCallback() already drove the shared
+     group/windchest tasks and computed a full round for this period. */
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+    engine.ProcessAudioCallback(0, buf0);
+  }
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+
+  /* StopEngine() must close out that half-open period itself: without the
+     fix, StartEngine()'s unconditional NewRound() would discard the already-
+     computed round without ever calling AdvanceTime() for it, leaving the
+     sampler clock one period behind what the samplers actually did. */
+  engine.StopEngine();
+
+  GOAssert(
+    engine.GetSamplerPlayer().GetTime() == timeBefore + N_SAMPLES_PER_BUFFER,
+    "StopEngine() must finish a half-open period (one output already ran, "
+    "another never entered) so the sampler clock advances exactly one "
+    "period, instead of discarding it silently");
+
+  engine.StartEngine();
+  GOAssert(engine.IsWorking(), "Engine should be WORKING after resume");
+
+  /* A fresh, full period across both outputs afterwards must behave
+     normally - the round StopEngine() closed out must not leave stale state
+     behind for the next one. */
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+    const bool didAdvanceAfter0 = engine.ProcessAudioCallback(0, buf0);
+    const bool didAdvanceAfter1 = engine.ProcessAudioCallback(1, buf1);
+
+    GOAssert(
+      !didAdvanceAfter0 && didAdvanceAfter1,
+      "Period after resume: only the last output should advance the period");
+  }
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+  StopAndDestroyEngine();
+}
+
+void GOTestSoundOrganEngine::TestStopEngineFinishesWorkerStartedRound() {
+  GOSoundOrganEngine &engine = BuildAndStartEngine(
+    /* nAudioGroups */ 1, /* nAuxThreads */ 1, /* nOutputs */ 1);
+
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  /* Drive one full period so the engine opens a fresh round and wakes the
+     aux thread (ProcessAudioCallback()'s isLastFinished branch) - leaving
+     m_NCallbacksFinishedCurrPeriod at 0 for the new period even though the
+     aux thread may already be mid-flight processing it. */
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+    engine.ProcessAudioCallback(0, buf);
+  }
+
+  const uint64_t timeBefore = engine.GetSamplerPlayer().GetTime();
+
+  /* Bounded wait for the aux thread to actually claim a task for the new
+     round via GetNextTask(), mirroring TestDisconnectWithXrunDeadlock's
+     pattern - this is exactly what GOScheduler::IsRoundDirty() exists to
+     detect: no output has entered this period at all
+     (m_NCallbacksFinishedCurrPeriod == 0), yet a worker already has. */
+  const auto deadline
+    = std::chrono::steady_clock::now() + std::chrono::seconds(1);
+
+  while (!engine.GetScheduler().IsRoundDirty()
+         && std::chrono::steady_clock::now() < deadline)
+    std::this_thread::yield();
+
+  GOAssert(
+    engine.GetScheduler().IsRoundDirty(),
+    "sanity check: the aux thread should have claimed a task for the new "
+    "round within 1s");
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+
+  /* StopEngine() must finish this worker-started round, even though no
+     output ever entered it (m_NCallbacksFinishedCurrPeriod == 0) - the gap
+     Codex flagged as a follow-up on the partial-period fix ("Reconcile
+     worker-started rounds before restarting"). */
+  engine.StopEngine();
+
+  GOAssert(
+    engine.GetSamplerPlayer().GetTime() == timeBefore + N_SAMPLES_PER_BUFFER,
+    "StopEngine() must finish a round a worker thread already started, even "
+    "with no output ever entering it, instead of discarding it silently");
+
+  engine.StartEngine();
+  GOAssert(engine.IsWorking(), "Engine should be WORKING after resume");
+
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+    const bool didAdvance = engine.ProcessAudioCallback(0, buf);
+
+    GOAssert(
+      didAdvance, "single output should advance the period after resume");
+  }
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+  StopAndDestroyEngine();
+}
+
+void GOTestSoundOrganEngine::TestStopStartResumePreservesSamplers() {
+  controller->AddWindchest(new GOWindchest(*controller));
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(1, 0, 1);
+
+  // No pipe exists on windchest 1, so BuildEngine did not build a grid cell
+  // for it - route it explicitly before starting a sample there.
+  GOSoundOrganEngine::AudioGroupRoutingChange routingChange
+    = engine.PrepareSoundRoutingFor({{1, 0}});
+
+  engine.StopEngine();
+  engine.CommitSoundRoutingFor(std::move(routingChange));
+  engine.StartEngine();
+
+  GOSoundProviderSynthedTrem provider;
+
+  provider.Create(controller->GetMemoryPool(), 100, 100, 100, 0);
+
+  GOSoundSampler *pSampler
+    = engine.GetSamplerPlayer().StartPipeSample(&provider, 1, 0, 80, 0, 0);
+
+  GOAssert(pSampler, "Sample should have started");
+
+  const unsigned usedBeforeStop = engine.GetUsedSamplerCount();
+
+  engine.StopEngine();
+  GOAssert(
+    !engine.IsIdle() && !engine.IsWorking(),
+    "Engine should be BUILT after StopEngine");
+  GOAssert(
+    engine.GetUsedSamplerCount() == usedBeforeStop,
+    "Pool usage must not change across StopEngine - samplers are not "
+    "returned, only dispatch stops");
+
+  engine.StartEngine();
+  GOAssert(engine.IsWorking(), "Engine should be WORKING after resume");
+  GOAssert(
+    engine.GetUsedSamplerCount() == usedBeforeStop,
+    "Resumed sample must still be checked out of the pool");
+
+  StopAndDestroyEngine();
+}
+
+void GOTestSoundOrganEngine::TestDestroyRebuildReclaimsAndResizesPool() {
+  static constexpr unsigned FIRST_LIMIT = 4;
+
+  controller->AddWindchest(new GOWindchest(*controller));
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(1, 0, 1);
+
+  engine.SetHardPolyphony(FIRST_LIMIT);
+
+  // No pipe exists on windchest 1, so BuildEngine did not build a grid cell
+  // for it - route it explicitly before starting samples there.
+  GOSoundOrganEngine::AudioGroupRoutingChange routingChange
+    = engine.PrepareSoundRoutingFor({{1, 0}});
+
+  engine.StopEngine();
+  engine.CommitSoundRoutingFor(std::move(routingChange));
+  engine.StartEngine();
+
+  GOSoundProviderSynthedTrem provider;
+
+  provider.Create(controller->GetMemoryPool(), 100, 100, 100, 0);
+  for (unsigned i = 0; i < FIRST_LIMIT; i++)
+    GOAssert(
+      engine.GetSamplerPlayer().StartPipeSample(&provider, 1, 0, 80, 0, 0),
+      "Sample should have started within the polyphony limit");
+
+  StopAndDestroyEngine();
+  GOAssert(
+    engine.GetUsedSamplerCount() == FIRST_LIMIT,
+    "DestroyEngine must not itself touch the pool - reclaiming happens on "
+    "the following BuildEngine, not here");
+
+  engine.SetHardPolyphony(FIRST_LIMIT / 2);
+  BuildAndStartEngine(1, 0, 1);
+  GOAssert(
+    engine.GetUsedSamplerCount() == 0,
+    "The following BuildEngine must reclaim every checked-out sampler");
+  GOAssert(
+    engine.GetHardPolyphony() == FIRST_LIMIT / 2,
+    "A lowered polyphony limit must still take effect across a rebuild, "
+    "now that the pool shrink happens in BuildEngine rather than "
+    "DestroyEngine");
+
+  StopAndDestroyEngine();
+}
+
+void GOTestSoundOrganEngine::TestAudioGroupRoutingChangeIsEmpty() {
+  GOSoundOrganEngine::AudioGroupRoutingChange defaultChange;
+
+  GOAssert(
+    defaultChange.IsEmpty(),
+    "A default-constructed AudioGroupRoutingChange should be empty");
+
+  controller->AddWindchest(new GOWindchest(*controller));
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(2, 0, 1);
+  GOSoundOrganEngine::AudioGroupRoutingChange realChange
+    = engine.PrepareSoundRoutingFor({{1, 1}});
+
+  GOAssert(
+    !realChange.IsEmpty(),
+    "A PrepareSoundRoutingFor() call that actually builds a task should not "
+    "be empty");
+
+  engine.StopEngine();
+  engine.CommitSoundRoutingFor(std::move(realChange));
+  engine.StartEngine();
+
+  StopAndDestroyEngine();
+}
+
+void GOTestSoundOrganEngine::TestHasSoundRoutingFor() {
+  controller->AddWindchest(new GOWindchest(*controller));
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(2, 0, 1);
+
+  GOAssert(
+    !engine.HasSoundRoutingFor(1, 1),
+    "A pair with no task should not be routable yet");
+
+  GOSoundOrganEngine::AudioGroupRoutingChange change
+    = engine.PrepareSoundRoutingFor({{1, 1}});
+
+  GOAssert(
+    engine.HasSoundRoutingFor(1, 1),
+    "HasSoundRoutingFor() should reflect grid population as soon as "
+    "PrepareSoundRoutingFor() has built its cells, even before "
+    "CommitSoundRoutingFor() registers them with the scheduler");
+
+  engine.StopEngine();
+  engine.CommitSoundRoutingFor(std::move(change));
+  engine.StartEngine();
+
+  GOAssert(
+    engine.HasSoundRoutingFor(1, 1),
+    "HasSoundRoutingFor() should stay true after Commit");
+
+  StopAndDestroyEngine();
+}
+
+void GOTestSoundOrganEngine::TestPrepareAndCommitSoundRoutingFor() {
+  controller->AddWindchest(new GOWindchest(*controller));
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(2, 0, 1);
+
+  GOSoundOrganEngine::AudioGroupRoutingChange change
+    = engine.PrepareSoundRoutingFor({{1, 1}});
+
+  GOAssert(
+    !change.IsEmpty(),
+    "Preparing a genuinely missing pair should not be empty");
+
+  // A second Prepare for the same pair, without an intervening Commit, must
+  // not try to build the cell again - the grid cell built by the first call
+  // already makes Has() true.
+  GOSoundOrganEngine::AudioGroupRoutingChange secondChange
+    = engine.PrepareSoundRoutingFor({{1, 1}});
+
+  GOAssert(
+    secondChange.IsEmpty(),
+    "A repeated PrepareSoundRoutingFor() for an already-built pair should "
+    "find nothing left to do");
+
+  engine.StopEngine();
+  engine.CommitSoundRoutingFor(std::move(change));
+  engine.StartEngine();
+
+  GOSoundProviderSynthedTrem provider;
+
+  provider.Create(controller->GetMemoryPool(), 100, 100, 100, 0);
+
+  GOSoundSampler *pSampler
+    = engine.GetSamplerPlayer().StartPipeSample(&provider, 1, 1, 80, 0, 0);
+
+  GOAssert(
+    pSampler,
+    "Starting a sample on a pair made routable via Prepare/Commit must not "
+    "hit GetWindchestGroupTask()'s assert(pTask)");
+
+  StopAndDestroyEngine();
+}
+
 void GOTestSoundOrganEngine::run() {
   GO_RUN_TEST(TestSingleOutputLifecycle())
   GO_RUN_TEST(TestTwoOutputsLifecycle())
@@ -369,4 +690,11 @@ void GOTestSoundOrganEngine::run() {
   GO_RUN_TEST(TestMultipleConfigsAsyncCallbacks())
   GO_RUN_TEST(TestDisconnectWithXrunDeadlock())
   GO_RUN_TEST(TestReconnectAfterMidPeriodDisconnect())
+  GO_RUN_TEST(TestStopEngineFinishesPartialPeriod())
+  GO_RUN_TEST(TestStopEngineFinishesWorkerStartedRound())
+  GO_RUN_TEST(TestStopStartResumePreservesSamplers())
+  GO_RUN_TEST(TestDestroyRebuildReclaimsAndResizesPool())
+  GO_RUN_TEST(TestAudioGroupRoutingChangeIsEmpty())
+  GO_RUN_TEST(TestHasSoundRoutingFor())
+  GO_RUN_TEST(TestPrepareAndCommitSoundRoutingFor())
 }

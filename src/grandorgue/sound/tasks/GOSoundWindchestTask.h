@@ -33,6 +33,13 @@ public:
 
   void CompleteRound() override {}
 
+  /* DoRun() only multiplies and caches an amplitude, never touching
+     sampler/stream state, so dispatching this task alone must not make
+     GOSoundOrganEngine::StopEngine() think the round needs finishing (Codex
+     review on PR #2620: "Mark the round dirty only after stateful audio
+     work") */
+  bool IsStateful() const override { return false; }
+
   void Init(ptr_vector<GOSoundTremulantTask> &tremulantTasks);
 
   float GetWindchestAmplitude() const {

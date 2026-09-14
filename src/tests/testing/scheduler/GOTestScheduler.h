@@ -26,6 +26,34 @@ private:
    * race in GOSchedulerThread::Wakeup()/Entry(). */
   void TestPauseResumeWakeupCyclesAreNotLost();
 
+  /** Racing PauseGivingWork() against a just-woken thread's GetNextTask()
+   * dispatch, then reading IsRoundDirty() only after WaitForIdle() returns,
+   * must never observe a stale reading - regression coverage for two Codex
+   * findings on PR #2620 that both require PauseGivingWork() to run before
+   * WaitForIdle() in GOSoundOrganEngine::StopEngine():
+   * - "Close the race before marking a dispatched round dirty": a worker
+   *   thread can pass the m_IsNotGivingWork check just before
+   *   PauseGivingWork() takes effect, so a caller that reads IsRoundDirty()
+   *   immediately after pausing - instead of after WaitForIdle() - can see an
+   *   in-flight dispatch as not-yet-happened.
+   * - "Pause dispatch before trusting WaitForIdle": GOSchedulerThread::
+   *   Entry() can report idle only transiently, immediately starting a fresh
+   *   GetNextTask() pass, if a Wakeup() was already pending when it parked -
+   *   so WaitForIdle() alone does not guarantee no further dispatch unless
+   *   PauseGivingWork() was already in effect throughout. */
+  void TestWaitForIdleClosesRoundDirtyRace();
+
+  /** GetNextTask() dispatching a task with GOSchedulerTask::IsStateful() ==
+   * false must not set IsRoundDirty(), while dispatching a default
+   * (IsStateful() == true) task must - regression coverage for the Codex
+   * finding on PR #2620 "Mark the round dirty only after stateful audio
+   * work": with the old unconditional marking, a worker thread dispatching
+   * only cheap prerequisite tasks (GOSoundWindchestTask's amplitude cache,
+   * GOSoundTouchTask's memory prefetch) made GOSoundOrganEngine::
+   * StopEngine() think the round needed finishing and call NextPeriod(),
+   * skipping an otherwise-untouched audio period. */
+  void TestIsStatefulControlsRoundDirty();
+
   /** Delete() (MarkForStop() + Wakeup() + join) always returns, even while
    * another thread is concurrently hammering Wakeup() - regression coverage
    * for the same race dropping the shutdown wakeup and hanging the join. */

@@ -51,6 +51,18 @@ public:
       has no accumulated content and is not mid-round */
   virtual bool IsEmpty() const = 0;
 
+  /** @return whether the next Run() on this task can advance persistent
+      state (e.g. sampler streams, playback time) - i.e. whether dispatching
+      it should mark the owning round dirty (see GOScheduler::
+      IsRoundDirty()). Checked once, right when the task is dispatched (see
+      GOScheduler::GetNextTask()), so an override may either answer
+      unconditionally (a task whose work is always a cheap, stateless
+      prerequisite computation, e.g. GOSoundWindchestTask) or reflect
+      whatever makes the upcoming dispatch a no-op this particular time (e.g.
+      GOSoundTremulantTask, whose answer tracks whether it currently has
+      anything queued to process). Default true */
+  virtual bool IsStateful() const { return true; }
+
   /** Processes the task, possibly partially, cooperatively with other threads
    */
   virtual void Run(GOSchedulerThread *pThread = nullptr) = 0;
