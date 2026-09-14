@@ -9,6 +9,7 @@
 #include <atomic>
 #include <chrono>
 #include <format>
+#include <memory>
 #include <thread>
 #include <vector>
 
@@ -315,6 +316,82 @@ void GOTestSoundTaskBase::TestCooperativeNewRoundAllowsFreshRound() {
     "the second round's result must not be mixed with the first round's");
 }
 
+void GOTestSoundTaskBase::TestEnsureBufferReadyDoesNotHangOnRaceWithNewRound() {
+  // Owned via unique_ptr, not a stack variable: on a regression, the waiter
+  // thread below is stuck forever and must not be joined (that would just
+  // relocate the hang into this test - see TestDeleteReturnsWhenRacingWakeup
+  // in GOTestScheduler.cpp for the same rationale), so ownership has to be
+  // releasable into a deliberate, documented leak rather than freed by a
+  // destructor the detached thread could still be using.
+  auto pTask = std::make_unique<GOSoundCooperativeTaskTestImpl>();
+  auto pIsNewRoundDone = std::make_unique<std::atomic<bool>>(false);
+  auto pIsFinished = std::make_unique<std::atomic<bool>>(false);
+
+  GOSoundCooperativeTaskTestImpl *const pTaskRaw = pTask.get();
+  std::atomic<bool> *const pIsNewRoundDoneRaw = pIsNewRoundDone.get();
+  std::atomic<bool> *const pIsFinishedRaw = pIsFinished.get();
+
+  pTaskRaw->SetWorkItems(0);
+  pTaskRaw->Run(); // no work, no participants -> RUN_STATE_DONE immediately
+
+  GOAssert(
+    pTaskRaw->IsDone(),
+    "precondition: a work-free round must finish synchronously so the "
+    "later EnsureBufferReady() call's own Run() is the fast no-op the race "
+    "needs");
+
+  std::thread waiter([pTaskRaw, pIsNewRoundDoneRaw, pIsFinishedRaw]() {
+    pTaskRaw->EnsureBufferReady(nullptr, [pTaskRaw, pIsNewRoundDoneRaw]() {
+      // Lands exactly in the gap between EnsureBufferReady()'s Run() call
+      // (which just saw RUN_STATE_DONE and returned instantly) and its
+      // separate, later m_RunState re-check - deterministically, instead of
+      // relying on the ~2% chance this raced by luck against the real
+      // GOSoundGroupTask in production.
+      std::thread racer([pTaskRaw]() {
+        // Mirrors GOScheduler::NewRound() advancing GOScheduler::m_RoundCounter
+        // alongside the task-state reset it invalidates.
+        pTaskRaw->roundCounter.AdvanceRound();
+        pTaskRaw->NewRound();
+      });
+
+      racer.join();
+      pIsNewRoundDoneRaw->store(true);
+    });
+    pIsFinishedRaw->store(true);
+  });
+
+  const auto deadline
+    = std::chrono::steady_clock::now() + std::chrono::seconds(2);
+
+  while (!pIsFinishedRaw->load() && std::chrono::steady_clock::now() < deadline)
+    std::this_thread::yield();
+
+  const bool didFinish = pIsFinishedRaw->load();
+
+  if (didFinish) {
+    waiter.join();
+  } else {
+    // The waiter is parked in EnsureBufferReady() forever, still touching
+    // *pTask/*pIsNewRoundDone/*pIsFinished through the raw pointers above -
+    // release them from unique_ptr instead of letting the destructors run.
+    waiter.detach();
+    pTask.release();
+    pIsNewRoundDone.release();
+    pIsFinished.release();
+  }
+
+  GOAssert(
+    pIsNewRoundDoneRaw->load(),
+    "precondition: the racing NewRound() must have completed before "
+    "EnsureBufferReady() re-checks m_RunState");
+  GOAssert(
+    didFinish,
+    "EnsureBufferReady() must not wait forever on a round that a "
+    "concurrent NewRound() reset between its own Run() call and its "
+    "separate m_RunState re-check - see the TOCTOU race documented on "
+    "GOSoundGroupTask::EnsureBufferReady()");
+}
+
 void GOTestSoundTaskBase::run() {
   GO_RUN_TEST(TestInitialState())
   GO_RUN_TEST(TestRunCallsDoRunOnce())
@@ -333,4 +410,5 @@ void GOTestSoundTaskBase::run() {
   GO_RUN_TEST(TestCooperativeThreadWithNoWorkExitsEarly())
   GO_RUN_TEST(TestCooperativeWaitOrStopBlocksUntilDone())
   GO_RUN_TEST(TestCooperativeNewRoundAllowsFreshRound())
+  GO_RUN_TEST(TestEnsureBufferReadyDoesNotHangOnRaceWithNewRound())
 }

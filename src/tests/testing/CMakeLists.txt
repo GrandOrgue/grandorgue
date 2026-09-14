@@ -8,6 +8,7 @@ set(go_tests
     model/GOTestOrganModel.cpp
     model/GOTestSwitch.cpp
     model/GOTestWindchest.cpp
+    scheduler/GOTestScheduler.cpp
     sound/buffer/GOTestPerfSoundBufferBase.cpp
     sound/buffer/GOTestPerfSoundBufferMutable.cpp
     sound/buffer/GOTestPerfSoundBufferPlanarMutable.cpp

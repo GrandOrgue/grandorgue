@@ -13,6 +13,8 @@
 
 #include "threading/GOMutex.h"
 
+#include "GORoundCounter.h"
+
 class GOSchedulerTask;
 
 class GOScheduler {
@@ -25,6 +27,7 @@ private:
   std::atomic_uint m_ItemCount;
   unsigned m_RepeatCount;
   GOMutex m_Mutex;
+  GORoundCounter m_RoundCounter;
 
   void Lock() { m_ItemCount.store(0); }
   void Unlock() { m_ItemCount.store(m_Tasks.size()); }
@@ -40,6 +43,10 @@ private:
 public:
   GOScheduler();
   ~GOScheduler();
+
+  /** @return the round counter, incremented every time NewRound() resets the
+   * registered tasks' per-round state */
+  const GORoundCounter &GetRoundCounter() const { return m_RoundCounter; }
 
   void SetRepeatCount(unsigned count);
 

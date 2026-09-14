@@ -10,6 +10,7 @@
 
 #include <atomic>
 
+#include "scheduler/GORoundCounter.h"
 #include "sound/playing/GOSoundSamplerList.h"
 #include "threading/GOCondition.h"
 
@@ -21,6 +22,7 @@ class GOSoundSamplerPlayer;
 
 class GOSoundGroupTask : public GOSoundBufferTaskBase {
 private:
+  const GORoundCounter &r_RoundCounter;
   GOSoundSamplerPlayer &r_SamplerPlayer;
   GOSoundSamplerList m_Active;
   GOSoundSamplerList m_Release;
@@ -33,11 +35,13 @@ private:
     GOSoundSamplerList &list,
     bool isToDropOld,
     GOSoundBufferMutable &outBuffer);
-  void DoNewRound() override { m_ActiveCount.store(0); }
+  void DoNewRound() override;
 
 public:
   GOSoundGroupTask(
-    GOSoundSamplerPlayer &samplerPlayer, unsigned nFramesPerBuffer);
+    const GORoundCounter &roundCounter,
+    GOSoundSamplerPlayer &samplerPlayer,
+    unsigned nFramesPerBuffer);
 
   unsigned GetCost() const override;
   bool IsEmpty() const override;

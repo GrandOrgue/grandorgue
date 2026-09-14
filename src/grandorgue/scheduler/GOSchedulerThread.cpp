@@ -12,61 +12,65 @@
 #include <wx/log.h>
 
 #include "scheduler/GOSchedulerTask.h"
-#include "threading/GOMutexLocker.h"
 
 #include "GOScheduler.h"
 
 GOSchedulerThread::GOSchedulerThread(GOScheduler *scheduler)
-  : GOThread(),
-    m_Scheduler(scheduler),
-    m_Condition(m_Mutex),
-    m_IdleStateReachedCondition(m_Mutex),
-    m_IsIdle(false) {
+  : GOThread(), m_Scheduler(scheduler) {
   wxLogDebug(wxT("Create Thread"));
 }
 
 void GOSchedulerThread::Entry() {
-  while (!ShouldStop()) {
-    bool shouldStop = false;
+  while (true) {
+    bool shouldStop;
 
     do {
+      shouldStop = ShouldStop();
+      if (shouldStop)
+        break;
+
       GOSchedulerTask *next = m_Scheduler->GetNextTask();
 
       if (next == NULL)
         break;
       next->Run(this);
-      shouldStop = ShouldStop();
-    } while (!shouldStop);
+    } while (true);
 
     if (shouldStop)
       break;
 
-    GOMutexLocker lock(m_Mutex, false, "GOSchedulerThread::Entry", this);
-    if (!lock.IsLocked() || ShouldStop())
-      break;
-    m_IsIdle = true;
-    m_IdleStateReachedCondition.Broadcast();
-    if (!m_Condition.WaitOrStop("GOSchedulerThread::Entry"))
-      break;
-    m_IsIdle = false;
-  }
+    // Toggled true/false once per pass, not just once before this loop
+    // exits for good: WaitForIdle() is called repeatedly over the thread's
+    // whole lifetime (e.g. once per StopEngine()), each time expecting to
+    // observe idle for that pass, then the thread keeps running afterwards
+    // (StartEngine() resumes it) - so "idle" must be reported and cleared on
+    // every parking cycle, not only at final shutdown.
+    m_IsIdle.store(true);
+    m_IsIdle.notify_all();
 
-  return;
+    while (!m_IsWakeupPending.exchange(false) && !ShouldStop())
+      m_IsWakeupPending.wait(false);
+
+    m_IsIdle.store(false);
+  }
 }
 
 void GOSchedulerThread::WaitForIdle() {
-  GOMutexLocker lock(m_Mutex, false, "GOSchedulerThread::WaitForIdle");
-  while (!m_IsIdle) {
-    m_IdleStateReachedCondition.Wait();
-  }
+  while (!m_IsIdle.load())
+    m_IsIdle.wait(false);
 }
 
-void GOSchedulerThread::Run() { Start(); }
+void GOSchedulerThread::Wakeup() {
+  m_IsWakeupPending.store(true);
+  m_IsWakeupPending.notify_one();
+}
 
-void GOSchedulerThread::Wakeup() { m_Condition.Signal(); }
+void GOSchedulerThread::MarkForStop() {
+  GOThread::MarkForStop();
+  Wakeup();
+}
 
 void GOSchedulerThread::Delete() {
   MarkForStop();
-  Wakeup();
   Wait();
 }

@@ -163,6 +163,12 @@ private:
   // is already a valid (though null) unique_ptr when passed by reference to
   // the player constructor.
   GOSoundSamplerPlayer m_SamplerPlayer;
+  // m_scheduler is constructed empty here, like mp_ReleaseTask/mp_TouchTask
+  // above; it is only populated by BuildEngine() [B10]. Declared before
+  // mp_AudioGroupTasks [B1] below so that it outlives every task holding a
+  // reference into it (GOSoundGroupTask::r_RoundCounter), since members are
+  // destroyed in reverse declaration order.
+  GOScheduler m_scheduler;
 
   /*
    * Configuration parameters
@@ -236,9 +242,10 @@ private:
   std::vector<std::unique_ptr<GOSoundWindchestTask>> mp_WindchestTasks;
   // [B9] Init(): connects mp_WindchestTasks [B8] to mp_TremulantTasks [B7]
   //
-  // [B10] m_scheduler: all tasks added; SetRepeatCount(m_NReleaseRepeats)
+  // [B10] m_scheduler (declared above, in the constructor-constants block):
+  // all tasks added; SetRepeatCount(m_NReleaseRepeats)
   //   — uses all tasks above + mp_ReleaseTask + mp_TouchTask (constructor)
-  GOScheduler m_scheduler;
+  //
   // [B11] mp_threads: worker threads created via BuildThreads(m_NAuxThreads)
   //   — uses m_scheduler [B10]
   std::vector<std::unique_ptr<GOSchedulerThread>> mp_threads;

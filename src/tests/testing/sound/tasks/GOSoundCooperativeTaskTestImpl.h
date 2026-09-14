@@ -8,8 +8,10 @@
 #define GOSOUNDCOOPERATIVETASKTESTIMPL_H
 
 #include <atomic>
+#include <functional>
 #include <vector>
 
+#include "scheduler/GORoundCounter.h"
 #include "scheduler/GOSchedulerThread.h"
 #include "sound/tasks/GOSoundTaskBase.h"
 #include "threading/GOCondition.h"
@@ -48,6 +50,13 @@ private:
   long DoOwnShare();
 
 public:
+  /** Owned rather than injected: this double already substitutes every
+   * collaborator with a local stand-in (no sampler player, no real buffers,
+   * no scheduler), so it mirrors the round-counter protocol, not production
+   * wiring. Advanced by the test alongside DoNewRound(), mirroring
+   * GOScheduler::NewRound() advancing GOScheduler::m_RoundCounter alongside
+   * the task-state reset it invalidates. */
+  GORoundCounter roundCounter;
   /** Stands in for the shared output buffer the real task mixes into */
   std::atomic<long> nSharedValue{0};
   /** Number of RUN_STATE_NOT_STARTED -> RUN_STATE_IN_PROGRESS transitions */
@@ -93,11 +102,25 @@ public:
   void Run(GOSchedulerThread *pThread = nullptr) override;
 
   /** Resets the active-worker count for the next round */
-  void DoNewRound() override { m_ActiveCount.store(0); }
+  void DoNewRound() override;
 
   /** Blocks the calling thread until the round becomes done, mirroring
    * GOSoundGroupTask::WaitAndDiscardContent() */
   void WaitUntilDone();
+
+  /** Mirrors GOSoundGroupTask::EnsureBufferReady() exactly, including its two
+   * separate m_RunState reads - once inside Run(), once right after - with
+   * nothing atomic tying them together. onAfterRun, if set, is called in
+   * that exact gap, letting a test deterministically land a concurrent
+   * NewRound() in the TOCTOU window instead of relying on it happening by
+   * chance the way it does against the real GOSoundGroupTask in production.
+   * pThread == nullptr (as in every other test in this file) means the wait
+   * loop below has no ShouldStop() fallback, matching GOSoundGroupTask's own
+   * `pThread == nullptr || !pThread->ShouldStop()` condition - so a round
+   * that NewRound() reset out from under this call is never left */
+  void EnsureBufferReady(
+    GOSchedulerThread *pThread = nullptr,
+    std::function<void()> onAfterRun = nullptr);
 };
 
 #endif /* GOSOUNDCOOPERATIVETASKTESTIMPL_H */
