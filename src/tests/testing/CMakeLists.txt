@@ -4,6 +4,8 @@ set(go_tests
     loader/GOTestOrganReader.cpp
     midi/GOTestMidiPlayerContent.cpp
     midi/GOTestMidiSendProxy.cpp
+    midi/GOTestMidiWebInPort.cpp
+    midi/GOTestWebRemoteDefaults.cpp
     model/GOTestDrawStop.cpp
     model/GOTestOrganModel.cpp
     model/GOTestSwitch.cpp
