@@ -28,13 +28,19 @@ private:
 
   /** Racing PauseGivingWork() against a just-woken thread's GetNextTask()
    * dispatch, then reading IsRoundDirty() only after WaitForIdle() returns,
-   * must never observe a stale reading - regression coverage for the race
-   * GOSoundOrganEngine::StopEngine() has to close (Codex review on PR #2620:
-   * "Close the race before marking a dispatched round dirty"): a worker
-   * thread can pass the m_IsNotGivingWork check just before
-   * PauseGivingWork() takes effect, so a caller that reads IsRoundDirty()
-   * immediately after pausing - instead of after WaitForIdle() - can see an
-   * in-flight dispatch as not-yet-happened. */
+   * must never observe a stale reading - regression coverage for two Codex
+   * findings on PR #2620 that both require PauseGivingWork() to run before
+   * WaitForIdle() in GOSoundOrganEngine::StopEngine():
+   * - "Close the race before marking a dispatched round dirty": a worker
+   *   thread can pass the m_IsNotGivingWork check just before
+   *   PauseGivingWork() takes effect, so a caller that reads IsRoundDirty()
+   *   immediately after pausing - instead of after WaitForIdle() - can see an
+   *   in-flight dispatch as not-yet-happened.
+   * - "Pause dispatch before trusting WaitForIdle": GOSchedulerThread::
+   *   Entry() can report idle only transiently, immediately starting a fresh
+   *   GetNextTask() pass, if a Wakeup() was already pending when it parked -
+   *   so WaitForIdle() alone does not guarantee no further dispatch unless
+   *   PauseGivingWork() was already in effect throughout. */
   void TestWaitForIdleClosesRoundDirtyRace();
 
   /** Delete() (MarkForStop() + Wakeup() + join) always returns, even while

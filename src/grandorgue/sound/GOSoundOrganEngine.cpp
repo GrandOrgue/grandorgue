@@ -426,17 +426,17 @@ void GOSoundOrganEngine::StartEngine() {
      m_NextItem ever gets zeroed. */
   m_scheduler.NewRound();
 
-  // [S2] Mirror of StopEngine()'s [S2] PauseGivingWork()
+  // [S2] Same-numbered pair with StopEngine()'s [S2] PauseGivingWork()
   m_scheduler.ResumeGivingWork();
 
-  /* [S3] Mirror of StopEngine()'s [S3] WaitForIdle(): mirrors the
-     end-of-period wakeup in ProcessAudioCallback() too - aux worker threads
-     are parked there by StopEngine()'s [S3] and only ever woken there or at
-     the end of a period. Without this, the round just made available above
-     sits unclaimed by any aux thread until the first post-resume period
-     happens to complete one on its own - so the entire first period after
-     any Stop/Start cycle (e.g. a live audio-group reroute) would run
-     synchronously on the audio callback thread alone. */
+  /* [S3] Same-numbered pair with StopEngine()'s [S3] WaitForIdle(): mirrors
+     the end-of-period wakeup in ProcessAudioCallback() too - aux worker
+     threads are parked there by StopEngine()'s [S3] and only ever woken
+     there or at the end of a period. Without this, the round just made
+     available above sits unclaimed by any aux thread until the first
+     post-resume period happens to complete one on its own - so the entire
+     first period after any Stop/Start cycle (e.g. a live audio-group
+     reroute) would run synchronously on the audio callback thread alone. */
   for (auto &pThread : mp_threads)
     pThread->Wakeup();
 
@@ -446,29 +446,37 @@ void GOSoundOrganEngine::StartEngine() {
 void GOSoundOrganEngine::StopEngine() {
   assert(m_LifecycleState.load() == LifecycleState::WORKING);
 
-  /* [S3] Mirror of StartEngine()'s [S3] Wakeup(): waits for every worker
-     thread to go idle before anything else runs, and intentionally runs
-     before PauseGivingWork() below rather than after. GOSchedulerThread::
-     Entry() only reports idle once its GetNextTask()/Run() loop returns
-     null, and while m_IsNotGivingWork is still false GetNextTask() keeps
-     handing out this round's remaining tasks instead of cutting them off
-     early - so every thread drains the round it already started (finishing,
-     and marking dirty, whatever it had grabbed) instead of being left with
-     undispatched tasks. This closes the race Codex flagged on PR #2620
-     ("Close the race before marking a dispatched round dirty"): a worker
-     that grabbed a task just before PauseGivingWork() took effect could
-     otherwise still be running it - with IsRoundDirty() not yet set - when
-     the check below ran. By the time this loop returns, no thread can still
-     be mid-Run(), so IsRoundDirty() below is race-free, and it's also safe
-     for NextPeriod()'s CompleteRound() to mutate task state next. */
+  /* [S2] Same-numbered pair with StartEngine()'s [S2] ResumeGivingWork().
+     Must run first, not after WaitForIdle() below: WaitForIdle()'s own
+     documented prerequisite (GOSchedulerThread.h "=== Prerequisites ===")
+     requires GetNextTask() to already always return nullptr, and
+     GOSchedulerThread::Entry() can report idle (m_IsIdle = true) only
+     transiently before immediately starting a fresh GetNextTask()/Run() pass
+     if a Wakeup() was already pending when it parked (e.g. one queued by the
+     last pre-disconnect audio callback) - m_IsWakeupPending.exchange(false)
+     then returns true without ever blocking on wait(). Without
+     PauseGivingWork() already in effect, that fresh pass could dispatch (and
+     mark dirty) a task after WaitForIdle() below has already returned,
+     exactly the race Codex flagged on PR #2620 ("Pause dispatch before
+     trusting WaitForIdle"). With it in effect, that pass gets nullptr
+     immediately and re-parks instead. */
+  m_scheduler.PauseGivingWork();
+
+  /* [S3] Same-numbered pair with StartEngine()'s [S3] Wakeup(). Cannot be
+     reversed with [S2] above to make this method an exact physical mirror of
+     StartEngine()'s NewRound()/ResumeGivingWork()/Wakeup() order: unlike
+     Wakeup(), which only needs to run after ResumeGivingWork() with no
+     prerequisite of its own, WaitForIdle() cannot safely run first - see
+     [S2]'s comment. By the time this loop returns, no thread can still be
+     mid-Run(), so IsRoundDirty() below is race-free, and it's also safe for
+     NextPeriod()'s CompleteRound() to mutate task state next. */
   for (auto &pThread : mp_threads)
     pThread->WaitForIdle();
 
-  // [S2] Mirror of StartEngine()'s [S2] ResumeGivingWork()
-  m_scheduler.PauseGivingWork();
-
-  /* [S1] Mirror of StartEngine()'s [S1] NewRound(): finishes the round
-     NewRound() would otherwise silently discard. A live reroute
+  /* [S1] Same-numbered pair with StartEngine()'s [S1] NewRound(): finishes
+     the round NewRound() would otherwise silently discard. Must run last -
+     needs the quiesced, race-free state [S2]/[S3] above guarantee (no thread
+     mid-Run(), IsRoundDirty() final). A live reroute
      (EnsureSoundRoutingFor) can disconnect mid-round in two independent
      ways, neither implying the other:
       (1) one output already ran ProcessAudioCallback() for this period
