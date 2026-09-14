@@ -96,6 +96,19 @@ public:
    * overrides the base class's round-state-only check, which cannot see
    * sampler-list content. Read without m_mutex, like every other IsEmpty(). */
   bool IsEmpty() const override;
+
+  /** @return whether this cell currently has a sampler queued - i.e.
+   * whether dispatching it would actually mix something instead of being a
+   * no-op. Same predicate as IsEmpty() (safe to read the same way, from any
+   * thread, at any time: plain atomic loads with no invariant that a
+   * concurrent Run() could invalidate), just inverted for
+   * GOSchedulerTask::IsStateful()'s sense. Without this, GOScheduler::
+   * GetNextTask() would mark the round dirty for an empty mixer's dispatch,
+   * letting GOSoundOrganEngine::StopEngine() call NextPeriod() and discard a
+   * note queued into a different, not-yet-dispatched cell after the round
+   * was sorted (Codex review on PR #2620: "Treat empty windchest mixers as
+   * stateless") */
+  bool IsStateful() const override { return !IsEmpty(); }
 };
 
 #endif

@@ -36,6 +36,13 @@ private:
    * DiscardContent(). */
   void TestIsEmptyTracksSamplerLists();
 
+  /** IsStateful() (checked by GOScheduler::GetNextTask() at dispatch time)
+   * is the exact inverse of IsEmpty() throughout - regression coverage for
+   * the Codex finding on PR #2620 "Treat empty windchest mixers as
+   * stateless": an empty cell must not make GOSoundOrganEngine::
+   * StopEngine() think the round needs finishing. */
+  void TestIsStatefulTracksSamplerLists();
+
   /** Run() with nothing queued still completes the round with exactly one
    * participant. */
   void TestRunWithNoSamplersReachesDone();

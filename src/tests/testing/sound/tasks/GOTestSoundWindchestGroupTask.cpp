@@ -102,6 +102,44 @@ void GOTestSoundWindchestGroupTask::TestIsEmptyTracksSamplerLists() {
   GOAssert(task.IsEmpty(), "DiscardContent() must clear the release sampler");
 }
 
+void GOTestSoundWindchestGroupTask::TestIsStatefulTracksSamplerLists() {
+  GOSoundWindchestGroupTestFixture fixture;
+  GOSoundWindchestGroupTask task(
+    fixture.roundCounter,
+    fixture.player,
+    fixture.GetWindchestTask(0),
+    N_SAMPLES_PER_BUFFER);
+
+  GOAssert(
+    !task.IsStateful(), "a freshly constructed task must not be stateful");
+
+  GOSoundSampler activeSampler = make_dummy_sampler(false);
+
+  task.Add(&activeSampler);
+  GOAssert(
+    task.IsStateful(),
+    "a task with a queued active sampler must be stateful, before Run() "
+    "ever mixes it");
+
+  task.DiscardContent();
+  GOAssert(
+    !task.IsStateful(),
+    "DiscardContent() clearing the active sampler must make the task not "
+    "stateful again");
+
+  GOSoundSampler releaseSampler = make_dummy_sampler(true);
+
+  task.Add(&releaseSampler);
+  GOAssert(
+    task.IsStateful(), "a task with a queued release sampler must be stateful");
+
+  task.DiscardContent();
+  GOAssert(
+    !task.IsStateful(),
+    "DiscardContent() clearing the release sampler must make the task not "
+    "stateful again");
+}
+
 void GOTestSoundWindchestGroupTask::TestRunWithNoSamplersReachesDone() {
   GOSoundWindchestGroupTestFixture fixture;
   GOSoundWindchestGroupTask task(
@@ -196,6 +234,7 @@ void GOTestSoundWindchestGroupTask::run() {
   TestInitialState();
   TestAddAndDiscardContentTrackCost();
   TestIsEmptyTracksSamplerLists();
+  TestIsStatefulTracksSamplerLists();
   TestRunWithNoSamplersReachesDone();
   TestCompleteRoundFinishesSynchronously();
   TestNewRoundAllowsFreshRound();
