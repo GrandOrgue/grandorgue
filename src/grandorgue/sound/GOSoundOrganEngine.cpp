@@ -414,26 +414,29 @@ void GOSoundOrganEngine::DestroyEngine() {
 
 void GOSoundOrganEngine::StartEngine() {
   assert(m_LifecycleState.load() == LifecycleState::BUILT);
-  /* May be the second NewRound() in a row if StopEngine() just closed a
-     half-open period via NextPeriod() (which itself ends with NewRound()):
-     harmless, not a second real round. Between that call and this one
-     nothing can touch scheduler state (PauseGivingWork() has been in effect
-     the whole time, so GetNextTask() never reaches m_NextItem), and every
-     task's NewRound()/DoNewRound() is idempotent on an already-fresh
-     (RUN_STATE_NOT_STARTED, m_ActiveCount==0) task. This call is required
-     here regardless: a genuine first StartEngine() after BuildEngine() (never
-     preceded by StopEngine()) is the only place m_NextItem ever gets
-     zeroed. */
+  /* [S1] May be the second NewRound() in a row if StopEngine()'s [S1] just
+     closed a half-open period via NextPeriod() (which itself ends with
+     NewRound()): harmless, not a second real round. Between that call and
+     this one nothing can touch scheduler state (PauseGivingWork() has been
+     in effect the whole time, so GetNextTask() never reaches m_NextItem),
+     and every task's NewRound()/DoNewRound() is idempotent on an
+     already-fresh (RUN_STATE_NOT_STARTED, m_ActiveCount==0) task. This call
+     is required here regardless: a genuine first StartEngine() after
+     BuildEngine() (never preceded by StopEngine()) is the only place
+     m_NextItem ever gets zeroed. */
   m_scheduler.NewRound();
+
+  // [S2] Mirror of StopEngine()'s [S2] PauseGivingWork()
   m_scheduler.ResumeGivingWork();
 
-  /* Mirrors the end-of-period wakeup in ProcessAudioCallback(): aux worker
-     threads are parked (WaitForIdle()'d) by StopEngine() and only ever woken
-     there or at the end of a period. Without this, the round just made
-     available above sits unclaimed by any aux thread until the first
-     post-resume period happens to complete one on its own - so the entire
-     first period after any Stop/Start cycle (e.g. a live audio-group
-     reroute) would run synchronously on the audio callback thread alone. */
+  /* [S3] Mirror of StopEngine()'s [S3] WaitForIdle(): mirrors the
+     end-of-period wakeup in ProcessAudioCallback() too - aux worker threads
+     are parked there by StopEngine()'s [S3] and only ever woken there or at
+     the end of a period. Without this, the round just made available above
+     sits unclaimed by any aux thread until the first post-resume period
+     happens to complete one on its own - so the entire first period after
+     any Stop/Start cycle (e.g. a live audio-group reroute) would run
+     synchronously on the audio callback thread alone. */
   for (auto &pThread : mp_threads)
     pThread->Wakeup();
 
@@ -443,10 +446,31 @@ void GOSoundOrganEngine::StartEngine() {
 void GOSoundOrganEngine::StopEngine() {
   assert(m_LifecycleState.load() == LifecycleState::WORKING);
 
+  /* [S3] Mirror of StartEngine()'s [S3] Wakeup(): waits for every worker
+     thread to go idle before anything else runs, and intentionally runs
+     before PauseGivingWork() below rather than after. GOSchedulerThread::
+     Entry() only reports idle once its GetNextTask()/Run() loop returns
+     null, and while m_IsNotGivingWork is still false GetNextTask() keeps
+     handing out this round's remaining tasks instead of cutting them off
+     early - so every thread drains the round it already started (finishing,
+     and marking dirty, whatever it had grabbed) instead of being left with
+     undispatched tasks. This closes the race Codex flagged on PR #2620
+     ("Close the race before marking a dispatched round dirty"): a worker
+     that grabbed a task just before PauseGivingWork() took effect could
+     otherwise still be running it - with IsRoundDirty() not yet set - when
+     the check below ran. By the time this loop returns, no thread can still
+     be mid-Run(), so IsRoundDirty() below is race-free, and it's also safe
+     for NextPeriod()'s CompleteRound() to mutate task state next. */
+  for (auto &pThread : mp_threads)
+    pThread->WaitForIdle();
+
+  // [S2] Mirror of StartEngine()'s [S2] ResumeGivingWork()
   m_scheduler.PauseGivingWork();
 
-  /* A live reroute (EnsureSoundRoutingFor) can disconnect mid-round in two
-     independent ways, neither implying the other:
+  /* [S1] Mirror of StartEngine()'s [S1] NewRound(): finishes the round
+     NewRound() would otherwise silently discard. A live reroute
+     (EnsureSoundRoutingFor) can disconnect mid-round in two independent
+     ways, neither implying the other:
       (1) one output already ran ProcessAudioCallback() for this period
           (samplers advanced, round tasks computed) while another hadn't
           entered yet - DisconnectFromEngine() only waits for callbacks
@@ -463,20 +487,14 @@ void GOSoundOrganEngine::StopEngine() {
           restarting"). This can happen with m_NCallbacksFinishedCurrPeriod
           still 0 (no output has entered this period's critical section yet).
      Either way, by the time we get here that's already settled - no callback
-     is running or can start one (p_OrganEngine is already null), and no
-     worker can grab more work (PauseGivingWork() above). Finish the round
-     exactly as the missing outputs' callbacks would have, so the sampler
-     clock and round state stay consistent instead of being silently
-     discarded by the next StartEngine()'s NewRound(). This must run after
-     PauseGivingWork(): GOScheduler::CompleteRound() doesn't need work being
-     given out (it drives each task directly, not via GetNextTask()), and
-     pausing first means the fresh round NewRound() leaves behind here isn't
-     picked up by anyone until StartEngine() resumes giving out work. */
+     is running or can start one (p_OrganEngine is already null), and [S3]
+     above already guarantees no worker is mid-Run() and IsRoundDirty() is
+     final. Finish the round exactly as the missing outputs' callbacks would
+     have, so the sampler clock and round state stay consistent instead of
+     being silently discarded by the next StartEngine()'s [S1] NewRound(). */
   if (m_NCallbacksFinishedCurrPeriod.load() > 0 || m_scheduler.IsRoundDirty())
     NextPeriod();
 
-  for (auto &pThread : mp_threads)
-    pThread->WaitForIdle();
   m_LifecycleState.store(LifecycleState::BUILT);
 }
 

@@ -126,6 +126,50 @@ void GOTestScheduler::TestPauseResumeWakeupCyclesAreNotLost() {
   }
 }
 
+void GOTestScheduler::TestWaitForIdleClosesRoundDirtyRace() {
+  SignalingTask task;
+  GOScheduler scheduler;
+  GOSchedulerThread thread(&scheduler);
+  SchedulerThreadGuard guard(thread);
+
+  thread.Run();
+  thread.WaitForIdle();
+  scheduler.Add(&task);
+
+  for (unsigned cycleI = 0; cycleI < 500; cycleI++) {
+    task.wasRun.store(false);
+    scheduler.NewRound();
+    scheduler.ResumeGivingWork();
+
+    /* Wakeup() races the worker's GetNextTask() dispatch against
+       PauseGivingWork() below with no synchronization between them - this is
+       exactly the window Codex flagged: the worker may already have passed
+       the m_IsNotGivingWork check and be about to dispatch (and mark dirty)
+       the task when PauseGivingWork() runs. */
+    thread.Wakeup();
+    scheduler.PauseGivingWork();
+
+    /* The fix this protects: only trust IsRoundDirty() after every worker
+       thread has gone idle. GOSchedulerThread::Entry() only reports idle
+       once its GetNextTask()/Run() loop returns null - i.e. after it has
+       both stopped picking up new work and finished running (and marking
+       dirty) any task it had already grabbed - so this closes the race
+       regardless of how PauseGivingWork() above happened to interleave with
+       the dispatch. */
+    thread.WaitForIdle();
+
+    GOAssert(
+      scheduler.IsRoundDirty() == task.wasRun.load(),
+      "cycle " + std::to_string(cycleI)
+        + ": after WaitForIdle(), IsRoundDirty() must exactly reflect "
+          "whether the task actually ran this round, even when "
+          "PauseGivingWork() raced the worker's dispatch - a caller that "
+          "checked IsRoundDirty() before WaitForIdle() (the bug "
+          "GOSoundOrganEngine::StopEngine() used to have) could observe "
+          "this as false while the task was already in flight");
+  }
+}
+
 void GOTestScheduler::TestDeleteReturnsWhenRacingWakeup() {
   for (unsigned iterationI = 0; iterationI < 50; iterationI++) {
     // Heap-allocated and, on a regression, deliberately leaked: if Delete()
@@ -210,6 +254,7 @@ void GOTestScheduler::TestAtomicWaitObservesStoreThatPrecedesIt() {
 void GOTestScheduler::run() {
   GO_RUN_TEST(TestResumeThenWakeupRunsIdleThreadsWork())
   GO_RUN_TEST(TestPauseResumeWakeupCyclesAreNotLost())
+  GO_RUN_TEST(TestWaitForIdleClosesRoundDirtyRace())
   GO_RUN_TEST(TestDeleteReturnsWhenRacingWakeup())
   GO_RUN_TEST(TestAtomicWaitObservesStoreThatPrecedesIt())
 }

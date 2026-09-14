@@ -26,6 +26,17 @@ private:
    * race in GOSchedulerThread::Wakeup()/Entry(). */
   void TestPauseResumeWakeupCyclesAreNotLost();
 
+  /** Racing PauseGivingWork() against a just-woken thread's GetNextTask()
+   * dispatch, then reading IsRoundDirty() only after WaitForIdle() returns,
+   * must never observe a stale reading - regression coverage for the race
+   * GOSoundOrganEngine::StopEngine() has to close (Codex review on PR #2620:
+   * "Close the race before marking a dispatched round dirty"): a worker
+   * thread can pass the m_IsNotGivingWork check just before
+   * PauseGivingWork() takes effect, so a caller that reads IsRoundDirty()
+   * immediately after pausing - instead of after WaitForIdle() - can see an
+   * in-flight dispatch as not-yet-happened. */
+  void TestWaitForIdleClosesRoundDirtyRace();
+
   /** Delete() (MarkForStop() + Wakeup() + join) always returns, even while
    * another thread is concurrently hammering Wakeup() - regression coverage
    * for the same race dropping the shutdown wakeup and hanging the join. */
