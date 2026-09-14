@@ -30,6 +30,15 @@ public:
 
   bool IsEmpty() const override { return m_Samplers.IsEmpty(); }
 
+  /* DoRun() is a no-op (m_amplitude = 1, no sampler touched) whenever
+     m_Samplers is empty - the exact same condition IsEmpty() above already
+     tests. Unlike GOSoundWindchestTask/GOSoundTouchTask, this is not
+     unconditional: reusing that predicate here means IsStateful() tracks
+     whether the upcoming dispatch will actually process a sampler, not just
+     whether this task type sometimes can (Codex review on PR #2620: "Avoid
+     dirtying rounds for no-op stateful task runs") */
+  bool IsStateful() const override { return !m_Samplers.IsEmpty(); }
+
   void DiscardContent() override { m_Samplers.Clear(); }
   void Add(GOSoundSampler *sampler);
 
