@@ -26,6 +26,13 @@ void GOSoundCallbackConnector::ConnectToEngine(GOSoundOrganEngine &engine) {
 
 void GOSoundCallbackConnector::DisconnectFromEngine(
   GOSoundOrganEngine &engine) {
+  /* Must run before the gate below is cleared: AudioCallback() bails
+     immediately on a null p_OrganEngine, so clearing it first would stop
+     the very callbacks this wait is waiting for and guarantee a timeout
+     every time. */
+  if (engine.IsStreaming())
+    engine.EnsureStreamingDisableAllowed();
+
   // Signal callbacks to stop by clearing the engine pointer
   p_OrganEngine.store(nullptr);
 

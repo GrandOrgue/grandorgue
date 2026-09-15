@@ -9,6 +9,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <cstdint>
 #include <thread>
 
 #include "sound/GOSoundOrganEngine.h"
@@ -196,10 +197,107 @@ void GOTestSoundCallbackConnector::TestDisconnectWaitsAsyncCallbacks() {
   StopAndDestroyEngine();
 }
 
+void GOTestSoundCallbackConnector::TestGracefulDisconnectDoesNotCutPeriod() {
+  GOSoundOrganEngine &engine = BuildAndStartEngine(
+    /* nAudioGroups */ 1, /* nAuxThreads */ 0, /* nOutputs */ 2);
+
+  m_connector.ConnectToEngine(engine);
+
+  const uint64_t timeBeforePeriod = engine.GetTime();
+
+  // Unlike GOSoundOrganEngine::ProcessAudioCallback(),
+  // GOSoundCallbackConnector::AudioCallback() always returns true (it is the
+  // audio-port "keep the stream open" signal, not a period-advance flag), so
+  // the period boundary is observed via engine.GetTime() below instead.
+  GO_DECLARE_LOCAL_SOUND_BUFFER(buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+  m_connector.AudioCallback(0, buf0);
+
+  GOAssert(
+    engine.GetTime() == timeBeforePeriod,
+    "output 0 of 2 alone should not advance the period");
+
+  std::atomic_bool isDisconnectStarted{false};
+  const auto disconnectStartTime = std::chrono::steady_clock::now();
+  std::chrono::steady_clock::duration disconnectDuration{};
+
+  std::thread disconnectThread([&]() {
+    isDisconnectStarted.store(true);
+    m_connector.DisconnectFromEngine(engine);
+    disconnectDuration = std::chrono::steady_clock::now() - disconnectStartTime;
+  });
+
+  while (!isDisconnectStarted.load())
+    std::this_thread::yield();
+  // Give EnsureStreamingDisableAllowed() time to publish the request flag
+  // and enqueue on the condition before output 1 is driven below.
+  std::this_thread::sleep_for(std::chrono::milliseconds(20));
+
+  // Output 1 completes the same period the graceful branch is waiting for -
+  // it must still get its real buffer, not the !IsStreaming() silence path.
+  GO_DECLARE_LOCAL_SOUND_BUFFER(buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+  m_connector.AudioCallback(1, buf1);
+
+  disconnectThread.join();
+
+  GOAssert(
+    disconnectDuration < std::chrono::milliseconds(500),
+    "a graceful disconnect with callbacks still arriving should not wait "
+    "anywhere near the 1s timeout");
+  GOAssert(
+    engine.GetTime() == timeBeforePeriod,
+    "the clock should not advance before StopEngine()");
+
+  engine.StopEngine();
+
+  GOAssert(
+    engine.GetTime() == timeBeforePeriod + N_SAMPLES_PER_BUFFER,
+    "StopEngine() should advance the clock by exactly the one period the "
+    "graceful branch signalled as complete");
+
+  engine.DestroyEngine();
+  GOAssert(engine.IsIdle(), "Engine should be IDLE after DestroyEngine");
+}
+
+void GOTestSoundCallbackConnector::TestDisconnectTimesOutWithoutCallbacks() {
+  // The engine is STREAMING but no audio callback ever arrives, so
+  // EnsureStreamingDisableAllowed() cannot see a period boundary and must
+  // fall back to its ~1s timeout.
+  GOSoundOrganEngine &engine = BuildAndStartEngine(
+    /* nAudioGroups */ 1, /* nAuxThreads */ 0, /* nOutputs */ 1);
+
+  m_connector.ConnectToEngine(engine);
+
+  const uint64_t timeBeforeStop = engine.GetTime();
+  const auto start = std::chrono::steady_clock::now();
+
+  m_connector.DisconnectFromEngine(engine);
+
+  const auto elapsed = std::chrono::steady_clock::now() - start;
+
+  GOAssert(
+    elapsed >= std::chrono::milliseconds(900),
+    "disconnecting a streaming engine with no callbacks should take "
+    "roughly the full timeout, not return early");
+
+  engine.StopEngine();
+
+  GOAssert(
+    engine.GetTime() == timeBeforeStop + N_SAMPLES_PER_BUFFER,
+    "StopEngine() should still advance the clock by one period after a "
+    "timeout fallback");
+
+  engine.DestroyEngine();
+  GOAssert(engine.IsIdle(), "Engine should be IDLE after DestroyEngine");
+}
+
 void GOTestSoundCallbackConnector::run() {
   GO_RUN_TEST(TestSilenceWithoutEngine())
   GO_RUN_TEST(TestConnectDisconnectLifecycle())
   GO_RUN_TEST(TestAsyncCallbacksXrun())
   GO_RUN_TEST(TestConnectDisconnectCyclesAsyncCallbacks())
   GO_RUN_TEST(TestDisconnectWaitsAsyncCallbacks())
+  GO_RUN_TEST(TestGracefulDisconnectDoesNotCutPeriod())
+  GO_RUN_TEST(TestDisconnectTimesOutWithoutCallbacks())
 }

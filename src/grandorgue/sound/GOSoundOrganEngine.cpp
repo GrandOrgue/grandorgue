@@ -21,6 +21,7 @@
 #include "tasks/GOSoundTremulantTask.h"
 #include "tasks/GOSoundWindchestTask.h"
 #include "threading/GOMutexLocker.h"
+#include "threading/threading_impl.h"
 
 #include "GOEvent.h"
 
@@ -377,6 +378,22 @@ void GOSoundOrganEngine::StopEngine() {
   m_scheduler.PauseGivingWork();
   for (auto &pThread : mp_threads)
     pThread->WaitForIdle();
+
+  /* AdvanceTime() for the period ProcessAudioCallback()'s graceful branch
+     signalled as complete (or, on a EnsureStreamingDisableAllowed() timeout,
+     for whatever period was in flight - the same order of drift a dead
+     device already implies). Not optional: skipping it would leave
+     m_CurrentTime a period behind on every graceful stop, compounding on
+     repeated Stop/Start cycles. Safe here and only here: PauseGivingWork()/
+     WaitForIdle() above guarantee nothing can still be advancing sampler
+     state concurrently. Never calls m_scheduler.CompleteRound()/NewRound():
+     the round already finished cooperatively during ProcessAudioCallback()
+     before the graceful branch ran (or, on timeout, forcing completion now
+     would render work whose result is then thrown away instead of played -
+     exactly what the graceful handshake exists to avoid); NewRound() is
+     redundant with StartEngine()'s own call. */
+  m_SamplerPlayer.AdvanceTime(m_NSamplesPerBuffer);
+
   m_LifecycleState.store(LifecycleState::BUILT);
 }
 
@@ -413,6 +430,35 @@ void GOSoundOrganEngine::SetStreaming(bool isActive) {
       // blocked at [W1]. Counters must be reset here (not just in the
       // constructor) because the engine may be reconnected without a full
       // rebuild, leaving counters dirty from the previous streaming session.
+      /* The graceful-stop handshake is reset on this edge and NOT on the
+         STREAMING → USED one, even though that is where the session it
+         belongs to ends and where "clean slate for next time" would look
+         more natural. The reason is the writer, not the readers:
+         m_IsStreamingDisableAllowed is written by the *audio* thread, in
+         ProcessAudioCallback()'s graceful branch, and
+         DisconnectFromEngine() calls SetStreaming(false) *before* it drains
+         the callbacks still in flight (it must: SetStreaming(false) is what
+         unblocks the ones parked at [W1], so the drain would otherwise
+         deadlock). A reset there could therefore be overwritten right after
+         it happened:
+           1. EnsureStreamingDisableAllowed() gives up on timeout while an
+              audio thread is already inside the graceful branch, blocked on
+              m_StreamingDisableAllowedMutex;
+           2. the control thread runs SetStreaming(false), resetting the
+              flag;
+           3. the audio thread finally gets the mutex and stores true;
+           4. the flag survives into the next streaming session, where
+              EnsureStreamingDisableAllowed() short-circuits on it and
+              disconnects mid-period - silently, since nothing reconciles
+              it.
+         On this edge no such writer exists: ConnectToEngine() has not
+         published p_OrganEngine yet, so no callback can be running, and the
+         previous session's callbacks were drained by
+         DisconnectFromEngine() long before. Leaving both flags set in the
+         meantime is harmless - see ProcessAudioCallback()'s graceful branch
+         for what a late callback does with them. */
+      m_IsStreamingDisableRequested.store(false);
+      m_IsStreamingDisableAllowed.store(false);
       m_NCallbacksEnteredCurrPeriod.store(0);
       m_NCallbacksFinishedCurrPeriod.store(0);
       for (OutputState &state : m_OutputStates) {
@@ -430,6 +476,49 @@ void GOSoundOrganEngine::SetStreaming(bool isActive) {
       }
     }
   }
+}
+
+void GOSoundOrganEngine::EnsureStreamingDisableAllowed() {
+  assert(IsStreaming());
+
+  bool isTimedOut = false;
+
+  /* The mutex is taken *before* the request flag is published, and the flag
+     is published under it. This is what makes the handshake free of lost
+     wakeups without relying on the predicate re-check alone: the audio
+     thread reads m_IsStreamingDisableRequested outside this mutex, but it
+     can only reach its own store()/Broadcast() by acquiring it. So either
+     it read the flag still false - then it took the ordinary branch, and
+     the *next* period boundary will answer us - or it read true, in which
+     case it blocks on this mutex until WaitWithTimeout() below has released
+     it, i.e. until we are already enqueued on the condition. Same idiom as
+     GOSoundCallbackConnector::AudioCallback()'s "ensure that the control
+     thread enters into Wait()".
+     Consequence: while callbacks keep arriving the answer comes within one
+     period (single-digit ms), so THREADING_WAIT_TIMEOUT only ever elapses
+     when the device has stopped calling back at all. */
+  GOMutexLocker lk(m_StreamingDisableAllowedMutex);
+
+  m_IsStreamingDisableRequested.store(true);
+
+  /* A loop, not a single wait: WaitWithTimeout() is a bare wait_for() and
+     reports SIGNAL_RECEIVED on a spurious wakeup too, and a single wait
+     would then report a graceful stop that never happened. Re-wait only
+     while a signal was actually reported; a genuine timeout leaves the
+     loop. */
+  while (!m_IsStreamingDisableAllowed.load() && !isTimedOut)
+    isTimedOut = !(
+      m_StreamingDisableAllowedCondition.WaitWithTimeout(
+        "GOSoundOrganEngine::EnsureStreamingDisableAllowed")
+      & GOCondition::SIGNAL_RECEIVED);
+
+  if (isTimedOut)
+    // Only remaining path where streaming is cut mid-period; must not be
+    // silent.
+    wxLogWarning(
+      "The audio device did not reach a period boundary within %d ms; "
+      "stopping the engine without a graceful stop point",
+      WAIT_TIMEOUT_MS);
 }
 
 /*
@@ -525,31 +614,57 @@ bool GOSoundOrganEngine::ProcessAudioCallback(
 
     // The last output to enter may not be the last to finish.
     if (isLastFinished) {
-      // Advance to the next period.
-      NextPeriod();
+      if (!m_IsStreamingDisableRequested.load()) {
+        // Advance to the next period.
+        NextPeriod();
 
-      // Wake up worker threads to start processing the new period.
-      for (auto &pThread : mp_threads)
-        pThread->Wakeup();
+        // Wake up worker threads to start processing the new period.
+        for (auto &pThread : mp_threads)
+          pThread->Wakeup();
 
-      // Reset per-period counters.
-      m_NCallbacksEnteredCurrPeriod.store(0);
-      m_NCallbacksFinishedCurrPeriod.store(0);
+        // Reset per-period counters.
+        m_NCallbacksEnteredCurrPeriod.store(0);
+        m_NCallbacksFinishedCurrPeriod.store(0);
 
-      // Mark all outputs as not yet processed for the new period and wake up
-      // callbacks waiting at [W1]. Each output's mutex must be held when
-      // writing isFinishedCurrPeriod, because another thread may be
-      // reading it at [W1] under that mutex.
-      for (OutputState &otherState : m_OutputStates) {
-        // The current output's mutex is already held (locker above), so
-        // try_lock=true prevents re-locking and deadlocking; all other outputs
-        // are locked unconditionally (try_lock=false).
-        GOMutexLocker otherLocker(otherState.mutex, &otherState == &state);
+        // Mark all outputs as not yet processed for the new period and wake
+        // up callbacks waiting at [W1]. Each output's mutex must be held
+        // when writing isFinishedCurrPeriod, because another thread may be
+        // reading it at [W1] under that mutex.
+        for (OutputState &otherState : m_OutputStates) {
+          // The current output's mutex is already held (locker above), so
+          // try_lock=true prevents re-locking and deadlocking; all other
+          // outputs are locked unconditionally (try_lock=false).
+          GOMutexLocker otherLocker(otherState.mutex, &otherState == &state);
 
-        otherState.isFinishedCurrPeriod = false;
-        otherState.condition.Signal();
+          otherState.isFinishedCurrPeriod = false;
+          otherState.condition.Signal();
+        }
+        isNewPeriod = true;
+      } else if (!m_IsStreamingDisableAllowed.load()) {
+        /* A graceful stop was requested and this period genuinely finished
+           for real (every output already got its buffer via the counter
+           above) - nothing to force, nothing to discard. Just answer the
+           control thread waiting in EnsureStreamingDisableAllowed().
+           Deliberately does *not* call NextPeriod() or reset
+           isFinishedCurrPeriod / signal [W1]: calling NextPeriod() here
+           would wake worker threads into a new round that StopEngine()'s
+           PauseGivingWork() might not stop before they start real work on
+           it - rendering a round whose result is then thrown away instead
+           of played, which is exactly what this handshake exists to avoid.
+           AdvanceTime() for this period happens once, later, in
+           StopEngine(), after PauseGivingWork()/WaitForIdle() have made it
+           safe. Not resetting isFinishedCurrPeriod is what keeps every
+           later callback of this session parked at [W1] until
+           SetStreaming(false) broadcasts.
+           GOMutexLocker is only here because GOCondition needs a paired
+           mutex for a bounded wait; it is taken while this output's
+           state.mutex is held, so it is the inner mutex of the pair - see
+           the lock-order note on m_StreamingDisableAllowedMutex. */
+        GOMutexLocker stopLocker(m_StreamingDisableAllowedMutex);
+
+        m_IsStreamingDisableAllowed.store(true);
+        m_StreamingDisableAllowedCondition.Broadcast();
       }
-      isNewPeriod = true;
     }
   } else
     // SetStreaming(false) unblocked [W1]; engine is no longer STREAMING.

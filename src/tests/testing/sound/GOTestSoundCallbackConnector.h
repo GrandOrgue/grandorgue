@@ -19,6 +19,9 @@ private:
   void TestAsyncCallbacksXrun();
   void TestConnectDisconnectCyclesAsyncCallbacks();
   void TestDisconnectWaitsAsyncCallbacks();
+  void TestGracefulDisconnectDoesNotCutPeriod();
+  // Deliberately slow (~1s): exercises the timeout fallback.
+  void TestDisconnectTimesOutWithoutCallbacks();
 
 public:
   std::string GetName() override { return TEST_NAME; }
