@@ -21,6 +21,7 @@
 #include "tasks/GOSoundTremulantTask.h"
 #include "tasks/GOSoundWindchestTask.h"
 #include "threading/GOMutexLocker.h"
+#include "threading/threading_impl.h"
 
 #include "GOEvent.h"
 
@@ -355,18 +356,13 @@ void GOSoundOrganEngine::DestroyEngine() {
 
 void GOSoundOrganEngine::StartEngine() {
   assert(m_LifecycleState.load() == LifecycleState::BUILT);
-  m_scheduler.NewRound();
+
   m_scheduler.ResumeGivingWork();
 
-  // Mirrors the end-of-period wakeup in ProcessAudioCallback(): aux worker
-  // threads are parked (WaitForIdle()'d) by StopEngine() and only ever woken
-  // there or at the end of a period. Without this, the round just made
-  // available above sits unclaimed by any aux thread until the first
-  // post-resume period happens to complete one on its own - so the entire
-  // first period after any Stop/Start cycle would run synchronously on the
-  // audio callback thread alone.
-  for (auto &pThread : mp_threads)
-    pThread->Wakeup();
+  // Unlike finishing a period, starting one never requires a prior finished
+  // period - so a fresh start can owe an open round the same way a graceful
+  // stop does, and SetStreaming(true) opens it the same way either time.
+  m_IsToStartPeriod.store(true);
 
   m_LifecycleState.store(LifecycleState::WORKING);
 }
@@ -377,6 +373,21 @@ void GOSoundOrganEngine::StopEngine() {
   m_scheduler.PauseGivingWork();
   for (auto &pThread : mp_threads)
     pThread->WaitForIdle();
+
+  // Any period was already finished by FinishPeriod() the moment it
+  // genuinely ended, in ProcessAudioCallback(). Only a period aborted
+  // mid-flight by a EnsureStreamingDisableAllowed() timeout can still be
+  // dirty here (or an engine that never streamed, where this is a no-op) -
+  // abandon it: unlike a reconnect, which lets such a period play out to
+  // completion, StopEngine() discards it, so counters and per-output flags
+  // must both go back to their fresh-period state.
+  ResetPeriodCounters();
+  for (OutputState &state : m_OutputStates) {
+    GOMutexLocker locker(state.mutex);
+
+    state.isFinishedCurrPeriod = false;
+  }
+
   m_LifecycleState.store(LifecycleState::BUILT);
 }
 
@@ -408,18 +419,39 @@ void GOSoundOrganEngine::SetStreaming(bool isActive) {
 
   if (newState != oldState) {
     if (isActive) {
-      // USED → STREAMING: reset period counters and per-output wait flags so
-      // the first callback of each output in the new streaming session is not
-      // blocked at [W1]. Counters must be reset here (not just in the
-      // constructor) because the engine may be reconnected without a full
-      // rebuild, leaving counters dirty from the previous streaming session.
-      m_NCallbacksEnteredCurrPeriod.store(0);
-      m_NCallbacksFinishedCurrPeriod.store(0);
-      for (OutputState &state : m_OutputStates) {
-        GOMutexLocker locker(state.mutex);
+      // USED → STREAMING
+      // Start the period a graceful stop left pending (m_IsToStartPeriod),
+      // unless StartEngine() already has - never FinishPeriod() again, that
+      // already ran when the boundary was detected. That period was fully
+      // delivered to every output, so it must not be replayed: reset every
+      // output's wait flag along with it, opening a genuinely new period.
+      // Done here, before ConnectToEngine() publishes p_OrganEngine, so it
+      // happens before any callback of the new session can run - giving
+      // worker threads a head start instead of making the first callback
+      // compute the round itself.
+      //
+      // If instead a timeout cut the previous session short, this is
+      // deliberately *not* touched: that period only reached some outputs,
+      // so a reconnect must let it play out to completion rather than
+      // discard it - only StopEngine() may do that.
+      if (m_IsToStartPeriod.exchange(false)) {
+        StartPeriod();
+        for (OutputState &state : m_OutputStates) {
+          GOMutexLocker locker(state.mutex);
 
-        state.isFinishedCurrPeriod = false;
+          state.isFinishedCurrPeriod = false;
+        }
       }
+
+      // The graceful-stop handshake flags are reset only on this edge, not
+      // on STREAMING → USED: SetStreaming(false) must unblock [W1] *before*
+      // DisconnectFromEngine() drains in-flight callbacks, so a reset there
+      // could race a late audio-thread store (after a timeout) and be
+      // silently overwritten. No such writer exists here: p_OrganEngine
+      // isn't published yet, and the previous session's callbacks are
+      // already drained.
+      m_IsStreamingDisableRequested.store(false);
+      m_IsStreamingDisableAllowed.store(false);
     } else {
       // STREAMING → USED: unblock any callbacks waiting at [W1] so they can
       // check IsStreaming() and exit gracefully.
@@ -430,6 +462,44 @@ void GOSoundOrganEngine::SetStreaming(bool isActive) {
       }
     }
   }
+}
+
+bool GOSoundOrganEngine::EnsureStreamingDisableAllowed() {
+  assert(IsStreaming());
+
+  bool isTimedOut = false;
+
+  /* The mutex is taken before the request flag is published, so the audio
+     thread either reads it still false (ordinary branch, next boundary will
+     answer us) or blocks on this mutex to store()/Broadcast() until we are
+     already enqueued on the condition below - no lost wakeup. Same idiom as
+     GOSoundCallbackConnector::AudioCallback()'s "ensure that the control
+     thread enters into Wait()". So the timeout only ever elapses once the
+     device has stopped calling back entirely. */
+  GOMutexLocker lk(m_StreamingDisableAllowedMutex);
+
+  m_IsStreamingDisableRequested.store(true);
+
+  /* A loop, not a single wait: WaitWithTimeout() is a bare wait_for() and
+     reports SIGNAL_RECEIVED on a spurious wakeup too, and a single wait
+     would then report a graceful stop that never happened. Re-wait only
+     while a signal was actually reported; a genuine timeout leaves the
+     loop. */
+  while (!m_IsStreamingDisableAllowed.load() && !isTimedOut)
+    isTimedOut = !(
+      m_StreamingDisableAllowedCondition.WaitWithTimeout(
+        "GOSoundOrganEngine::EnsureStreamingDisableAllowed")
+      & GOCondition::SIGNAL_RECEIVED);
+
+  if (isTimedOut)
+    // Only remaining path where streaming is cut mid-period; must not be
+    // silent.
+    wxLogWarning(
+      "The audio device did not reach a period boundary within %d ms; "
+      "stopping the engine without a graceful stop point",
+      WAIT_TIMEOUT_MS);
+
+  return !isTimedOut;
 }
 
 /*
@@ -450,8 +520,27 @@ static void atomic_fetch_max_relaxed(std::atomic<T> &maxValue, T value) {
     ;
 }
 
-void GOSoundOrganEngine::NextPeriod() {
+void GOSoundOrganEngine::ResetPeriodCounters() {
   assert(IsWorking());
+  m_NCallbacksEnteredCurrPeriod.store(0);
+  m_NCallbacksFinishedCurrPeriod.store(0);
+}
+
+void GOSoundOrganEngine::StartPeriod() {
+  assert(IsWorking());
+  m_scheduler.NewRound();
+
+  // Wake up worker threads to start processing the new round.
+  for (auto &pThread : mp_threads)
+    pThread->Wakeup();
+}
+
+void GOSoundOrganEngine::FinishPeriod() {
+  assert(IsWorking());
+
+  // A no-op for the output chain, already RUN_STATE_DONE by precondition
+  // (GOSoundGroupTask::Run() returns immediately once DONE); forces to
+  // completion whatever release/touch/recorder work the period still owed.
   m_scheduler.CompleteRound();
 
   // AdvanceTime advances m_CurrentTime and records peak used polyphony
@@ -477,7 +566,10 @@ void GOSoundOrganEngine::NextPeriod() {
     state.mp_task->ResetMeterInfo();
   }
 
-  m_scheduler.NewRound();
+  // Safe even when StartPeriod() won't follow right away (graceful-stop
+  // branch): entry into the critical section is gated by isFinishedCurrPeriod
+  // at [W1], which only StartPeriod()'s caller clears.
+  ResetPeriodCounters();
 }
 
 bool GOSoundOrganEngine::ProcessAudioCallback(
@@ -525,31 +617,51 @@ bool GOSoundOrganEngine::ProcessAudioCallback(
 
     // The last output to enter may not be the last to finish.
     if (isLastFinished) {
-      // Advance to the next period.
-      NextPeriod();
+      // The period is genuinely over either way - continuing or gracefully
+      // stopping - so finish it right here rather than deferring to
+      // StopEngine(): that is what lets pending release/touch/recorder work
+      // (CompleteRound(), inside FinishPeriod()) run even with no aux
+      // threads.
+      FinishPeriod();
 
-      // Wake up worker threads to start processing the new period.
-      for (auto &pThread : mp_threads)
-        pThread->Wakeup();
+      if (!m_IsStreamingDisableRequested.load()) {
+        // Open the next period's round for reuse.
+        StartPeriod();
 
-      // Reset per-period counters.
-      m_NCallbacksEnteredCurrPeriod.store(0);
-      m_NCallbacksFinishedCurrPeriod.store(0);
+        // Mark all outputs as not yet processed for the new period and wake
+        // up callbacks waiting at [W1]. Each output's mutex must be held
+        // when writing isFinishedCurrPeriod, because another thread may be
+        // reading it at [W1] under that mutex.
+        for (OutputState &otherState : m_OutputStates) {
+          // The current output's mutex is already held (locker above), so
+          // try_lock=true prevents re-locking and deadlocking; all other
+          // outputs are locked unconditionally (try_lock=false).
+          GOMutexLocker otherLocker(otherState.mutex, &otherState == &state);
 
-      // Mark all outputs as not yet processed for the new period and wake up
-      // callbacks waiting at [W1]. Each output's mutex must be held when
-      // writing isFinishedCurrPeriod, because another thread may be
-      // reading it at [W1] under that mutex.
-      for (OutputState &otherState : m_OutputStates) {
-        // The current output's mutex is already held (locker above), so
-        // try_lock=true prevents re-locking and deadlocking; all other outputs
-        // are locked unconditionally (try_lock=false).
-        GOMutexLocker otherLocker(otherState.mutex, &otherState == &state);
+          otherState.isFinishedCurrPeriod = false;
+          otherState.condition.Signal();
+        }
+        isNewPeriod = true;
+      } else if (!m_IsStreamingDisableAllowed.load()) {
+        /* A graceful stop was requested; the period is already finished
+           above, so just answer EnsureStreamingDisableAllowed(). Deliberately
+           does *not* call StartPeriod() or reset isFinishedCurrPeriod /
+           signal [W1]: opening a new round here could wake worker threads
+           into it before StopEngine()'s PauseGivingWork() stops them,
+           wasting a round nobody will play - what this handshake exists to
+           avoid. The round stays complete-but-unrenewed until StartEngine()
+           or SetStreaming(true) renews it (m_IsToStartPeriod, set below).
+           Not resetting isFinishedCurrPeriod keeps later callbacks parked at
+           [W1] until SetStreaming(false) broadcasts.
+           GOMutexLocker: GOCondition needs a paired mutex; it is the inner
+           mutex of the pair (this output's state.mutex is already held) -
+           see the lock-order note on m_StreamingDisableAllowedMutex. */
+        GOMutexLocker stopLocker(m_StreamingDisableAllowedMutex);
 
-        otherState.isFinishedCurrPeriod = false;
-        otherState.condition.Signal();
+        m_IsStreamingDisableAllowed.store(true);
+        m_IsToStartPeriod.store(true);
+        m_StreamingDisableAllowedCondition.Broadcast();
       }
-      isNewPeriod = true;
     }
   } else
     // SetStreaming(false) unblocked [W1]; engine is no longer STREAMING.

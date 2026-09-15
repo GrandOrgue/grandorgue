@@ -219,7 +219,7 @@ private:
   std::vector<OutputState> m_OutputStates;
   // [B3] m_MeterInfo: per-channel peak levels for the meter display
   //   — uses nTotalChannels accumulated over m_OutputStates [B2]
-  //   — audio thread: NextPeriod() writes via atomic_fetch_max_relaxed()
+  //   — audio thread: FinishPeriod() writes via atomic_fetch_max_relaxed()
   //   — GUI thread: GetMeterInfo() reads and resets it when it succeeds in
   //     try-locking m_LifecycleMutex; otherwise the poll is skipped and the
   //     peaks stay accumulated until the next one
@@ -268,10 +268,94 @@ private:
   std::atomic_uint m_NCallbacksFinishedCurrPeriod;
 
   /*
+   * Graceful-stop handshake, meaningful only while IsStreaming(). Lets the
+   * control thread wait for the audio thread to reach a genuine period
+   * boundary (every output already has real audio for the current period)
+   * before disconnecting, instead of cutting a period short for whichever
+   * outputs have not been called back yet. Reset by SetStreaming(true), not
+   * SetStreaming(false) - see the comment at the reset site.
+   */
+
+  /** Set by the control thread in EnsureStreamingDisableAllowed(), read by
+   * the audio thread in ProcessAudioCallback(). */
+  std::atomic_bool m_IsStreamingDisableRequested{false};
+
+  /** The one piece of state going the other way: written by the audio
+   * thread when it recognises a natural period boundary, read by the
+   * control thread. */
+  std::atomic_bool m_IsStreamingDisableAllowed{false};
+
+  /* Lock order: OutputState::mutex -> m_StreamingDisableAllowedMutex, never
+     the other way round. The audio thread takes this mutex while already
+     holding its output's state.mutex; no control-thread path may take a
+     state.mutex while holding this one (SetStreaming() takes the state
+     mutexes only after EnsureStreamingDisableAllowed() has returned and
+     released this one). */
+  GOMutex m_StreamingDisableAllowedMutex;
+  GOCondition m_StreamingDisableAllowedCondition{
+    m_StreamingDisableAllowedMutex};
+
+  /** A round is owed and not yet opened. Set either by the audio thread,
+   * when a graceful stop lands on a genuine period boundary (the period is
+   * finished right there, FinishPeriod(), but its round deliberately left
+   * un-renewed so StopEngine() has nothing to throw away), or by
+   * StartEngine(), unconditionally - a fresh start owes a round the same
+   * way. Consumed by SetStreaming(true) alone (StartPeriod() - never
+   * FinishPeriod() again, that already ran if this is the graceful case).
+   *
+   * Consumed in SetStreaming(true) rather than the new session's first
+   * callback so no callback can be running yet when it fires: this avoids
+   * both a cold-start callback computing the round's DSP itself and a
+   * second output racing in to copy a stale buffer - both otherwise
+   * possible only on a bare reconnect with no StopEngine()/StartEngine(),
+   * which the application never does anyway. */
+  std::atomic_bool m_IsToStartPeriod{false};
+
+  /*
    * Private helpers for functions called from GOSoundSystem
    */
 
-  void NextPeriod();
+  /**
+   * @brief Opens a fresh period: no callback has entered or finished it yet.
+   *
+   * Called from FinishPeriod() and from StopEngine(), when it abandons a
+   * period a timeout cut short. Not called from SetStreaming(true): a
+   * reconnect must let such a period play out rather than reset it.
+   */
+  void ResetPeriodCounters();
+
+  /**
+   * @brief Opens a round for reuse: starts a fresh round and wakes the
+   * worker threads for it.
+   *
+   * Called right after FinishPeriod() at the ordinary period boundary
+   * (ProcessAudioCallback(), audio thread), or alone later to open a round
+   * left pending by StartEngine() or a graceful stop (SetStreaming(true),
+   * control thread - see m_IsToStartPeriod). Requires the round's outputs to
+   * already be RUN_STATE_DONE, like FinishPeriod(); see
+   * GOSoundGroupTask::Run()'s cooperative protocol.
+   */
+  void StartPeriod();
+
+  /**
+   * @brief Finishes the period that has just ended: forces to completion any
+   * release/touch/recorder work its round still owed (CompleteRound() - a
+   * no-op for the output chain, already RUN_STATE_DONE by precondition; see
+   * GOSoundGroupTask::Run()'s cooperative protocol), advances the sampler
+   * clock by one buffer, accumulates peak levels into m_MeterInfo, and opens
+   * the counters for the next period.
+   *
+   * Never calls NewRound(): renewing the round is StartPeriod()'s job,
+   * right after at the ordinary boundary, or later via SetStreaming(true)
+   * after a graceful stop (see m_IsToStartPeriod).
+   *
+   * Called unconditionally the moment every output has real audio for the
+   * period (ProcessAudioCallback(), audio thread), regardless of what
+   * happens to the round next; never for a period that never reached every
+   * output (a EnsureStreamingDisableAllowed() timeout), which would run the
+   * clock ahead of the sound actually played.
+   */
+  void FinishPeriod();
 
 public:
   /*
@@ -432,9 +516,27 @@ public:
   void SetUsed(bool isUsed);
 
   /** Switches between USED and STREAMING; called from GOSoundSystem.
-   *  SetStreaming(false) broadcasts all output conditions to unblock any
-   *  callbacks waiting at [W1]. */
+   *  SetStreaming(true) opens the round owed by StartEngine() or by a
+   *  previous graceful stop (see m_IsToStartPeriod), resetting per-output
+   *  wait state for it - but never a period a timeout merely interrupted,
+   *  which is left to play out on reconnect instead. SetStreaming(false)
+   *  broadcasts to unblock any callbacks waiting at [W1]. */
   void SetStreaming(bool isActive);
+
+  /**
+   * @brief Waits for the current period to genuinely finish - every output
+   * already has real audio for it - before a graceful disconnect.
+   *
+   * Must be called before SetStreaming(false), while still IsStreaming().
+   * Idempotent within one streaming session. Called from
+   * GOSoundCallbackConnector::DisconnectFromEngine().
+   *
+   * @return true if a genuine boundary was reached: FinishPeriod() already
+   * finished that period, but its round is left unstarted - see
+   * m_IsToStartPeriod. false if the wait timed out instead, cutting
+   * streaming mid-period.
+   */
+  bool EnsureStreamingDisableAllowed();
 
   /*
    * Public lifecycle functions
@@ -465,12 +567,15 @@ public:
   void DestroyEngine();
 
   /**
-   * @brief Starts a new round and resumes dispatching work to worker
-   * threads.
+   * @brief Resumes dispatching work to worker threads and marks a round as
+   * owed (m_IsToStartPeriod), for SetStreaming(true) to open.
    *
    * Safe to call after BuildEngine() (fresh start) or after StopEngine()
    * (resume: task content — active/releasing samplers — was left untouched
    * by StopEngine(), so sounding notes continue). BUILT → WORKING.
+   *
+   * Never finishes or accounts a period - that already happened, if at all,
+   * before StopEngine() was called.
    */
   void StartEngine();
 
@@ -480,6 +585,16 @@ public:
    *
    * A subsequent StartEngine() resumes rather than restarts. WORKING →
    * BUILT.
+   *
+   * Neither finishes a period nor opens a round: FinishPeriod() already ran
+   * unconditionally the moment the period genuinely ended
+   * (ProcessAudioCallback()). Opening the round is SetStreaming(true)'s job
+   * - see m_IsToStartPeriod.
+   *
+   * A period that never reached every output (a EnsureStreamingDisableAllowed()
+   * timeout) never ran FinishPeriod() either; unlike a reconnect, which lets
+   * such a period play out to completion, this abandons it - resetting both
+   * the counters and every output's wait flag (ResetPeriodCounters()).
    */
   void StopEngine();
 
@@ -498,7 +613,8 @@ public:
    * @param outputIndex  Zero-based index of the audio output device.
    * @param outBuffer    Buffer to fill with audio data for this device.
    * @return true if all outputs have been processed and a new period has been
-   * started (NextPeriod was invoked and worker threads were woken up).
+   * started (FinishPeriod() and StartPeriod() were invoked and worker
+   * threads were woken up).
    */
   bool ProcessAudioCallback(
     unsigned outputIndex, GOSoundBufferMutable &outBuffer);
