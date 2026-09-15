@@ -268,6 +268,34 @@ private:
   std::atomic_uint m_NCallbacksFinishedCurrPeriod;
 
   /*
+   * Graceful-stop handshake, meaningful only while IsStreaming(). Lets the
+   * control thread wait for the audio thread to reach a genuine period
+   * boundary (every output already has real audio for the current period)
+   * before disconnecting, instead of cutting a period short for whichever
+   * outputs have not been called back yet. Reset by SetStreaming(true), not
+   * SetStreaming(false) - see the comment at the reset site.
+   */
+
+  /** Set by the control thread in EnsureStreamingDisableAllowed(), read by
+   * the audio thread in ProcessAudioCallback(). */
+  std::atomic_bool m_IsStreamingDisableRequested{false};
+
+  /** The one piece of state going the other way: written by the audio
+   * thread when it recognises a natural period boundary, read by the
+   * control thread. */
+  std::atomic_bool m_IsStreamingDisableAllowed{false};
+
+  /* Lock order: OutputState::mutex -> m_StreamingDisableAllowedMutex, never
+     the other way round. The audio thread takes this mutex while already
+     holding its output's state.mutex; no control-thread path may take a
+     state.mutex while holding this one (SetStreaming() takes the state
+     mutexes only after EnsureStreamingDisableAllowed() has returned and
+     released this one). */
+  GOMutex m_StreamingDisableAllowedMutex;
+  GOCondition m_StreamingDisableAllowedCondition{
+    m_StreamingDisableAllowedMutex};
+
+  /*
    * Private helpers for functions called from GOSoundSystem
    */
 
@@ -435,6 +463,19 @@ public:
    *  SetStreaming(false) broadcasts all output conditions to unblock any
    *  callbacks waiting at [W1]. */
   void SetStreaming(bool isActive);
+
+  /**
+   * @brief Waits for the current period to genuinely finish - every output
+   * already has real audio for it - before a graceful disconnect.
+   *
+   * Only finishes the period already in flight; it never starts a new one
+   * (no NextPeriod() call here - see the .cpp for why). Must be called
+   * before SetStreaming(false), while still IsStreaming(). Idempotent
+   * within one streaming session: a second call sees the previous call's
+   * result already published and returns immediately. Called from
+   * GOSoundCallbackConnector::DisconnectFromEngine().
+   */
+  void EnsureStreamingDisableAllowed();
 
   /*
    * Public lifecycle functions
