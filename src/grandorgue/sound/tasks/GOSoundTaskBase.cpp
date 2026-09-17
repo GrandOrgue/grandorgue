@@ -35,10 +35,16 @@ void GOSoundTaskBase::CompleteRound() {
   Run();
 }
 
+// Everything is reset first and the round state is published last, because
+// Run()'s fast path reads m_RunState outside m_mutex: storing
+// RUN_STATE_NOT_STARTED any earlier would advertise the task as claimable
+// while m_IsToComplete or a subclass counter still held the previous round's
+// value. DoNewRound() therefore runs before any of it is cleared and sees the
+// ending round whole, which is what lets a subclass assert on it.
 void GOSoundTaskBase::NewRound() {
   GOMutexLocker locker(m_mutex);
 
+  DoNewRound();
   m_IsToComplete.store(false);
   m_RunState.store(RUN_STATE_NOT_STARTED);
-  DoNewRound();
 }
