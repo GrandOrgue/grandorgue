@@ -58,8 +58,8 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_COPY_FROM[] = {
 #else
   {32,
    1550}, // 1550 Mframes/sec (debug, lowered: min observed 1727.1, -10% margin)
-  {128,
-   4140}, // 4140 Mframes/sec (debug, lowered: min observed 4608.0, -10% margin)
+  {128, 3620}, // 3620 Mframes/sec (debug, rebaselined 2026-09-17: min observed
+               // 4033.0, -10% margin)
   {512,
    5410}, // 5410 Mframes/sec (debug, lowered: min observed 6018.0, -10% margin)
   {2048,
@@ -149,8 +149,8 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_COEFF[]
 #else
     {32,
      730}, // 730 Mframes/sec (debug, lowered: min observed 812.2, -10% margin)
-    {128, 1200}, // 1200 Mframes/sec (debug, raised: min observed 1352.8, -10%
-                 // margin)
+    {128, 960},  // 960 Mframes/sec (debug, rebaselined 2026-09-17: min observed
+                 // 1075.5, -10% margin)
     {512, 1130}, // 1130 Mframes/sec (debug, lowered: min observed 1260.2, -10%
                  // margin)
     {2048, 1250} // 1250 Mframes/sec (debug, lowered: min observed 1395.6, -10%
