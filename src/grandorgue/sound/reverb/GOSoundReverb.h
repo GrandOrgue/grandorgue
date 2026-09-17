@@ -8,6 +8,7 @@
 #ifndef GOSOUNDREVERB_H
 #define GOSOUNDREVERB_H
 
+#include <atomic>
 #include <string>
 #include <vector>
 
@@ -73,6 +74,10 @@ public:
 private:
   unsigned m_channels;
   ptr_vector<Convproc> m_engine;
+  // Whether Process() has run the convolution engine since the last Reset():
+  // a caller cannot otherwise tell if a decaying tail is still buffered
+  // inside Convproc, since it exposes no "am I silent yet" query.
+  std::atomic_bool m_HasContent{false};
 
   void Cleanup();
 
@@ -85,6 +90,12 @@ public:
     const ReverbConfig &config,
     unsigned nSamplesPerBuffer,
     unsigned sampleRate);
+
+  /** @return whether Process() has run the convolution engine since the
+   * last Reset() - i.e. whether a caller-visible tail may still be
+   * buffered. Conservative: never cleared just because the tail has
+   * numerically decayed to silence. */
+  bool HasContent() const { return m_HasContent.load(); }
 
   void Process(float *output_buffer, unsigned n_frames);
 };
