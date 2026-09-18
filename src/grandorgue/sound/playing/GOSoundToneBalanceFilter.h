@@ -62,14 +62,18 @@ public:
      * *p_coeffs directly. Caller must check IsToApply() first - this does
      * not skip work on its own. */
     inline void ProcessBuffer(GOSoundBufferMutable &outBuffer) {
+      const unsigned nFrames = outBuffer.GetNFrames();
       const unsigned nChannels = outBuffer.GetNChannels();
       float *pData = outBuffer.GetData();
-      unsigned channel = 0;
 
-      for (unsigned n = outBuffer.GetNItems(); n > 0;
-           n--, pData++, channel = (channel + 1) % nChannels)
-        *pData = GOSoundOnePoleFilter::processSample(
-          *p_coeffs, *pData, m_state[channel]);
+      for (unsigned nFramesLeft = nFrames; nFramesLeft; nFramesLeft--) {
+        float *pState = m_state;
+
+        for (unsigned nChannelsLeft = nChannels; nChannelsLeft;
+             pState++, pData++, nChannelsLeft--)
+          *pData
+            = GOSoundOnePoleFilter::processSample(*p_coeffs, *pData, *pState);
+      }
     }
   };
 
