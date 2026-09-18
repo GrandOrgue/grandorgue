@@ -19,7 +19,7 @@
 #endif
 #include <jack/jack.h>
 
-#include "sound/buffer/GOSoundBufferManaged.h"
+#include "sound/buffer/GOSoundBufferPlanarManaged.h"
 #endif
 
 #include "GOSoundPort.h"
@@ -37,7 +37,10 @@ public:
 private:
   jack_client_t *mp_JackClient = nullptr;
   std::vector<jack_port_t *> mp_JackOutPorts;
-  GOSoundBufferManaged m_GoBuffer;
+  // JACK is natively planar (one mono port per channel); this planar buffer
+  // is what GOSoundPort::AudioCallback() fills, then jackProcessCallback()
+  // copies each contiguous channel straight into its JACK port buffer
+  GOSoundBufferPlanarManaged m_GoBuffer;
   bool m_IsOpen = false;
   bool m_IsStarted = false;
 

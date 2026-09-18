@@ -16,12 +16,30 @@
 #include "threading/GOMutex.h"
 
 #include "GOSoundTaskBase.h"
+#include "GOWaveTypes.h"
 
 class GOSchedulerThread;
 class GOSoundBufferTaskBase;
-struct struct_WAVE;
 
 class GOSoundRecorderTask : public GOSoundTaskBase {
+public:
+#pragma pack(push, 1)
+  /** The canonical 44-byte PCM WAV header this task writes: RIFF chunk, WAVE
+   * type, fmt chunk, data chunk header (no sample data). */
+  struct PcmWaveHeader {
+    GO_WAVECHUNKHEADER riffHeader;
+    GO_WAVETYPEFIELD riffIdent;
+    GO_WAVECHUNKHEADER formatHeader;
+    GO_WAVEFORMATPCM formatBlock;
+    GO_WAVECHUNKHEADER dataHeader;
+  };
+#pragma pack(pop)
+
+  /** Size, in bytes, of the WAV header written by Open()/Close() before the
+   * sample data - exposed so tests can locate the data section without
+   * hardcoding the value. */
+  static constexpr unsigned WAV_HEADER_SIZE = sizeof(PcmWaveHeader);
+
 private:
   wxFile m_file;
   GOMutex m_lock;
@@ -37,7 +55,7 @@ private:
 
   void SetupBuffer();
   template <class T> void ConvertData();
-  struct_WAVE generateHeader(unsigned datasize);
+  PcmWaveHeader generateHeader(unsigned datasize);
 
   bool DoRun(GOSchedulerThread *pThread) override;
 

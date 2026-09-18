@@ -11,7 +11,7 @@
 #include <wx/log.h>
 
 #include "sound/GOSoundOrganEngine.h"
-#include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "threading/GOMutexLocker.h"
 
 void GOSoundCallbackConnector::ConnectToEngine(GOSoundOrganEngine &engine) {
@@ -48,7 +48,7 @@ void GOSoundCallbackConnector::DisconnectFromEngine(
 }
 
 bool GOSoundCallbackConnector::AudioCallback(
-  unsigned devIndex, GOSoundBufferMutable &outBuffer) {
+  unsigned devIndex, GOSoundBufferPlanarMutable &outBuffer) {
   bool wasEntered = false;
   const unsigned nSamples = outBuffer.GetNFrames();
 

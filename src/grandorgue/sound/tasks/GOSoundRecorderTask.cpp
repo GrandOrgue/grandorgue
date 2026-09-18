@@ -7,25 +7,14 @@
 
 #include "GOSoundRecorderTask.h"
 
+#include <cassert>
+
 #include <wx/intl.h>
 #include <wx/log.h>
 
 #include "threading/GOMutexLocker.h"
 
 #include "GOSoundBufferTaskBase.h"
-#include "GOWaveTypes.h"
-
-#pragma pack(push, 1)
-
-struct struct_WAVE {
-  GO_WAVECHUNKHEADER riffHeader;
-  GO_WAVETYPEFIELD riffIdent;
-  GO_WAVECHUNKHEADER formatHeader;
-  GO_WAVEFORMATPCM formatBlock;
-  GO_WAVECHUNKHEADER dataHeader;
-};
-
-#pragma pack(pop)
 
 GOSoundRecorderTask::GOSoundRecorderTask()
   : GOSoundTaskBase(PRIORITY_AUDIORECORDER, false),
@@ -48,8 +37,9 @@ GOSoundRecorderTask::~GOSoundRecorderTask() {
     delete[] m_Buffer;
 }
 
-struct_WAVE GOSoundRecorderTask::generateHeader(unsigned datasize) {
-  struct_WAVE WAVE = {
+GOSoundRecorderTask::PcmWaveHeader GOSoundRecorderTask::generateHeader(
+  unsigned datasize) {
+  PcmWaveHeader WAVE = {
     {WAVE_TYPE_RIFF, datasize + 36},
     WAVE_TYPE_WAVE,
     {WAVE_TYPE_FMT, 16},
@@ -64,7 +54,7 @@ struct_WAVE GOSoundRecorderTask::generateHeader(unsigned datasize) {
 }
 
 void GOSoundRecorderTask::Open(wxString filename) {
-  struct_WAVE WAVE = generateHeader(0);
+  PcmWaveHeader WAVE = generateHeader(0);
 
   Close();
 
@@ -96,7 +86,7 @@ void GOSoundRecorderTask::Close() {
   }
   if (!m_file.IsOpened())
     return;
-  struct_WAVE WAVE = generateHeader(m_BufferPos);
+  PcmWaveHeader WAVE = generateHeader(m_BufferPos);
   m_file.Seek(0);
   m_file.Write(&WAVE, sizeof(WAVE));
   m_file.Flush();
@@ -122,6 +112,10 @@ void GOSoundRecorderTask::SetOutputs(
 }
 
 void GOSoundRecorderTask::SetupBuffer() {
+  // Close() must run before m_Channels is recomputed below: it finalises the
+  // WAV header through generateHeader(), which reads m_Channels, so a
+  // recording spanning a device reconfiguration must be closed out under the
+  // channel count it was recorded with, not the new one.
   Close();
   if (m_Buffer)
     delete[] m_Buffer;
@@ -143,19 +137,19 @@ static inline int float_to_fixed(float f, unsigned fractional_bits) {
   return f_exp;
 }
 
-static void convertValue(float value, GOInt24LE &result) {
+static inline void convertValue(float value, GOInt24LE &result) {
   result = float_to_fixed(value, 23);
 }
 
-static void convertValue(float value, GOInt16LE &result) {
+static inline void convertValue(float value, GOInt16LE &result) {
   result = float_to_fixed(value, 15);
 }
 
-static void convertValue(float value, GOInt8 &result) {
+static inline void convertValue(float value, GOInt8 &result) {
   result = (unsigned char)(float_to_fixed(value, 7) + 128);
 }
 
-static void convertValue(float value, float &result) { result = value; }
+static inline void convertValue(float value, float &result) { result = value; }
 
 template <class T> void GOSoundRecorderTask::ConvertData() {
   unsigned start_pos = 0;
@@ -165,16 +159,21 @@ template <class T> void GOSoundRecorderTask::ConvertData() {
     GOSoundBufferTaskBase *pOutput = m_Outputs[i];
 
     pOutput->EnsureBufferReady(m_IsToComplete.load());
+    assert(pOutput->GetNFrames() == m_SamplesPerBuffer);
 
     const unsigned nChannels = pOutput->GetNChannels();
-    float *pData = pOutput->GetData();
-    unsigned pos = start_pos;
-    unsigned inc = m_Channels - nChannels;
 
-    for (unsigned j = 0; j < m_SamplesPerBuffer; j++) {
-      for (unsigned k = 0; k < nChannels; k++, pData++)
-        convertValue(*pData, buf[pos++]);
-      pos += inc;
+    // gather each output task's channels, which are contiguous, and scatter
+    // them into the interleaved WAV frame at the appropriate channel offset;
+    // the m_Channels stride skips over the other outputs' channels within
+    // each frame, so per-output channel counts may differ
+    for (unsigned channelI = 0; channelI < nChannels; channelI++) {
+      float *pData = pOutput->GetChannelBuffer(channelI).GetData();
+      T *pBuf = buf + start_pos + channelI;
+
+      for (unsigned nFramesRest = m_SamplesPerBuffer; nFramesRest;
+           nFramesRest--, pData++, pBuf += m_Channels)
+        convertValue(*pData, *pBuf);
     }
     start_pos += nChannels;
   }

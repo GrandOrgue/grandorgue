@@ -8,6 +8,7 @@
 #include "GOSoundReverb.h"
 
 #include <algorithm>
+#include <cassert>
 #include <memory>
 #include <new>
 
@@ -16,6 +17,8 @@
 
 #include "config/GOConfig.h"
 #include "files/GOStandardFile.h"
+#include "sound/buffer/GOSoundBufferMutableMono.h"
+#include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/playing/GOSoundResample.h"
 
 #include "GOWave.h"
@@ -135,6 +138,7 @@ GOSoundReverb::IRData GOSoundReverb::loadIRData(
 void GOSoundReverb::Setup(
   const ReverbConfig &config, unsigned nSamplesPerBuffer, unsigned sampleRate) {
   Cleanup();
+  m_FramesPerBuffer = nSamplesPerBuffer;
 
   if (!config.isEnabled)
     return;
@@ -191,39 +195,31 @@ void GOSoundReverb::Reset() {
   m_HasContent.store(false);
 }
 
-void GOSoundReverb::Process(float *output_buffer, unsigned n_frames) {
+void GOSoundReverb::Process(GOSoundBufferPlanarMutable &buffer) {
   if (!m_engine.size())
     return;
+
+  assert(buffer.GetNFrames() == m_FramesPerBuffer);
+  assert(buffer.GetNChannels() == m_channels);
+
+  const unsigned nFrames = buffer.GetNFrames();
 
   m_HasContent.store(true);
 
   for (unsigned i = 0; i < m_channels; i++) {
-    float *const pGoData = output_buffer + i;
-    // because output_buffer is interleaved
     Convproc *const pConvProc = m_engine[i];
 
     if (pConvProc->state() != Convproc::ST_WAIT)
       pConvProc->check_stop();
 
     if (pConvProc->state() == Convproc::ST_PROC) {
-      // fill the convolver input buffer with the GO data
-      float *pGoFrom = pGoData;
-      float *pConvTo = pConvProc->inpdata(0);
+      GOSoundBufferMutableMono channelBuffer = buffer.GetChannelBuffer(i);
+      GOSoundBufferMutableMono convInBuffer(pConvProc->inpdata(0), nFrames);
+      GOSoundBufferMutableMono convOutBuffer(pConvProc->outdata(0), nFrames);
 
-      for (unsigned j = 0; j < n_frames; j++) {
-        *(pConvTo++) = *pGoFrom;
-        pGoFrom += m_channels;
-      }
+      convInBuffer.CopyFrom(channelBuffer);
       pConvProc->process(false);
-
-      // fill the GO buffer with the convolver output
-      float *pGoTo = pGoData;
-      float *pConvFrom = pConvProc->outdata(0);
-
-      for (unsigned j = 0; j < n_frames; j++) {
-        *pGoTo = *(pConvFrom++);
-        pGoTo += m_channels;
-      }
+      channelBuffer.CopyFrom(convOutBuffer);
     }
   }
 }

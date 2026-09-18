@@ -120,11 +120,11 @@ void GOSoundGroupTask::Run(GOSchedulerThread *pThread) {
       if (m_RunState.load() == RUN_STATE_IN_PROGRESS) {
         // The first thread is finished. Assign the result to the common
         // buffer
-        CopyFrom(localBuffer);
+        DeinterleaveFrom(localBuffer);
         m_RunState.store(RUN_STATE_PARTLY_DONE);
       } else
         // not the first thread. Add the result to the common buffer
-        AddFrom(localBuffer);
+        AddDeinterleavedFrom(localBuffer);
       if (m_ActiveCount.fetch_sub(1) <= 1) {
         // the last thread
         m_RunState.store(RUN_STATE_DONE);

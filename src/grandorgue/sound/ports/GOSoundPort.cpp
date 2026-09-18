@@ -10,7 +10,7 @@
 #include <wx/intl.h>
 #include <wx/thread.h>
 
-#include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/interfaces/GOSoundCallbackConnector.h"
 
 GOSoundPort::GOSoundPort(
@@ -48,7 +48,7 @@ void GOSoundPort::SetActualLatency(double latency) {
   m_ActualLatency = latency * 1000;
 }
 
-bool GOSoundPort::AudioCallback(GOSoundBufferMutable &outputBuffer) {
+bool GOSoundPort::AudioCallback(GOSoundBufferPlanarMutable &outputBuffer) {
   return r_CallbackConnector.AudioCallback(m_Index, outputBuffer);
 }
 
