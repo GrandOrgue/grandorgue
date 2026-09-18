@@ -12,7 +12,7 @@
 #include <thread>
 
 #include "sound/GOSoundOrganEngine.h"
-#include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/interfaces/GOSoundCallbackConnector.h"
 
 #include "GOTestScope.h"
@@ -43,7 +43,7 @@ void GOTestSoundCallbackConnector::TestSilenceWithoutEngine() {
 
   auto threadBody = [&]() {
     for (unsigned iterI = 0; iterI < 100; ++iterI) {
-      GO_DECLARE_LOCAL_SOUND_BUFFER(
+      GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
         buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
       m_connector.AudioCallback(0, buf);
@@ -107,7 +107,7 @@ void GOTestSoundCallbackConnector::TestAsyncCallbacksXrun() {
 
   auto threadBody = [&]() {
     while (isRunning.load()) {
-      GO_DECLARE_LOCAL_SOUND_BUFFER(
+      GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
         buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
       m_connector.AudioCallback(0, buf);
@@ -138,7 +138,7 @@ void GOTestSoundCallbackConnector::TestConnectDisconnectCyclesAsyncCallbacks() {
 
   auto threadBody = [&]() {
     while (isRunning.load()) {
-      GO_DECLARE_LOCAL_SOUND_BUFFER(
+      GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
         buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
       m_connector.AudioCallback(0, buf);
@@ -171,7 +171,7 @@ void GOTestSoundCallbackConnector::TestDisconnectWaitsAsyncCallbacks() {
 
   auto threadBody = [&]() {
     while (isRunning.load()) {
-      GO_DECLARE_LOCAL_SOUND_BUFFER(
+      GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
         buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
       m_connector.AudioCallback(0, buf);

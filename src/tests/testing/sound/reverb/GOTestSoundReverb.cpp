@@ -9,6 +9,7 @@
 
 #include <cmath>
 
+#include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/reverb/GOSoundReverb.h"
 
 const std::string GOTestSoundReverb::TEST_NAME = "GOTestSoundReverb";
@@ -113,9 +114,10 @@ void GOTestSoundReverb::TestHasContentTracksProcessAndReset() {
     !reverb.HasContent(),
     "a freshly set-up reverb must not report content before Process() runs");
 
-  float buffer[N_FRAMES] = {};
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(buffer, 1, N_FRAMES);
 
-  reverb.Process(buffer, N_FRAMES);
+  buffer.FillWithSilence();
+  reverb.Process(buffer);
 
   GOAssert(
     reverb.HasContent(),

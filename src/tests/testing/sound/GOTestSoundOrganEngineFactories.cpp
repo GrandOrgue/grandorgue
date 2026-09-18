@@ -28,19 +28,12 @@ public:
   StubGroupTask(unsigned nFrames, float leftValue, float rightValue)
     : GOSoundBufferTaskBase(PRIORITY_AUDIOGROUP, false, 2, nFrames) {
     for (unsigned frameI = 0; frameI < nFrames; frameI++) {
-      GetData()[GetItemIndex(frameI, 0)] = leftValue;
-      GetData()[GetItemIndex(frameI, 1)] = rightValue;
+      GetChannelBuffer(0).GetData()[frameI] = leftValue;
+      GetChannelBuffer(1).GetData()[frameI] = rightValue;
     }
   }
 
-  unsigned GetPriority() const override { return PRIORITY_AUDIOGROUP; }
-  unsigned GetCost() const override { return 0; }
-  bool IsRepeatable() const override { return false; }
-  void Run(GOSchedulerThread * = nullptr) override {}
-  void CompleteRound() override {}
   void EnsureBufferReady(bool, GOSchedulerThread * = nullptr) override {}
-  void NewRound() override {}
-  void DiscardContent() override {}
 };
 
 std::vector<float> convertGainsToScaleFactors(const std::vector<float> &gains) {
@@ -85,19 +78,18 @@ void GOTestSoundOrganEngineFactories::TestDownmixGainsWithTwoGroups() {
   downmixTask.SetOutputs({&group0, &group1});
   downmixTask.Run();
 
-  const float *pData = downmixTask.GetData();
   const float expectedLeft = GROUP0_LEFT + GROUP1_LEFT;
   const float expectedRight = GROUP0_RIGHT + GROUP1_RIGHT;
 
   for (unsigned frameI = 0; frameI < N_FRAMES; frameI++) {
     GOAssert(
-      pData[downmixTask.GetItemIndex(frameI, 0)] == expectedLeft,
+      downmixTask.GetChannelBuffer(0).GetData()[frameI] == expectedLeft,
       std::format(
         "2 groups, frame {}: downmix L should be group0.left + group1.left, "
         "not a group0.left + group1.right mixup",
         frameI));
     GOAssert(
-      pData[downmixTask.GetItemIndex(frameI, 1)] == expectedRight,
+      downmixTask.GetChannelBuffer(1).GetData()[frameI] == expectedRight,
       std::format(
         "2 groups, frame {}: downmix R should be group0.right + "
         "group1.right, not a group0.left + group1.right mixup",

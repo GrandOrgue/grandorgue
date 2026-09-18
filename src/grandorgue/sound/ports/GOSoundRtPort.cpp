@@ -12,7 +12,7 @@
 
 #include "GOSoundPortFactory.h"
 #include "config/GODeviceNamePattern.h"
-#include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/buffer/GOSoundBufferPlanarMutable.h"
 
 const wxString GOSoundRtPort::PORT_NAME = wxT("RtAudio");
 const wxString GOSoundRtPort::PORT_NAME_OLD = wxT("Rt");
@@ -71,6 +71,12 @@ void GOSoundRtPort::Open() {
   // the next flag causes Rt/Core forces setting the buffer size to 15
   // and the sound distortion https://github.com/oleg68/GrandOrgue/issues/54
   // aOptions.flags = RTAUDIO_MINIMIZE_LATENCY;
+  // Ask for a planar (channel-major) callback buffer: RtAudio's
+  // non-interleaved layout is one contiguous channel-major block, so the
+  // callback can wrap it directly as GOSoundBufferPlanarMutable with no copy.
+  // Use |= rather than = so a future flag added above (e.g. re-enabling
+  // RTAUDIO_MINIMIZE_LATENCY) composes instead of silently dropping this one.
+  aOptions.flags |= RTAUDIO_NONINTERLEAVED;
   aOptions.numberOfBuffers
     = (m_Latency * m_SampleRate) / (m_SamplesPerBuffer * 1000);
   aOptions.streamName = "GrandOrgue";
@@ -86,6 +92,11 @@ void GOSoundRtPort::Open() {
     &Callback,
     this,
     &aOptions));
+  // openStream() does not report back whether RTAUDIO_NONINTERLEAVED was
+  // honored - only numberOfBuffers is written back via aOptions. Backends
+  // that lack native non-interleaved support (e.g. some ALSA configurations)
+  // emulate it internally instead of failing, so there is nothing to verify
+  // here.
   m_nBuffers = aOptions.numberOfBuffers;
   if (samples_per_buffer != m_SamplesPerBuffer) {
     if (samples_per_buffer != m_SamplesPerBuffer)
@@ -135,10 +146,13 @@ int GOSoundRtPort::Callback(
   RtAudioStreamStatus status,
   void *userData) {
   GOSoundRtPort *port = (GOSoundRtPort *)userData;
-  GOSoundBufferMutable outputBufferMutable(
+  // outputBuffer is RtAudio's RTAUDIO_NONINTERLEAVED layout: one contiguous
+  // channel-major block, i.e. exactly a GOSoundBufferPlanarMutable - wrap it
+  // directly, no copy needed.
+  GOSoundBufferPlanarMutable outputBufferPlanar(
     (float *)outputBuffer, port->m_Channels, nFrames);
 
-  return port->AudioCallback(outputBufferMutable) ? 0 : 1;
+  return port->AudioCallback(outputBufferPlanar) ? 0 : 1;
 }
 
 static wxString compose_device_name(

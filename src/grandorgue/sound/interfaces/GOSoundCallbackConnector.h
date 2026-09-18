@@ -13,7 +13,7 @@
 #include "threading/GOCondition.h"
 #include "threading/GOMutex.h"
 
-class GOSoundBufferMutable;
+class GOSoundBufferPlanarMutable;
 class GOSoundOrganEngine;
 
 /**
@@ -109,7 +109,7 @@ public:
    * callback threads.
    * @return always true (keep the audio stream running)
    */
-  bool AudioCallback(unsigned devIndex, GOSoundBufferMutable &outBuffer);
+  bool AudioCallback(unsigned devIndex, GOSoundBufferPlanarMutable &outBuffer);
 };
 
 #endif
