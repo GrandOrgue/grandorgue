@@ -64,12 +64,20 @@ public:
     inline void ProcessBuffer(GOSoundBufferMutable &outBuffer) {
       const unsigned nChannels = outBuffer.GetNChannels();
       float *pData = outBuffer.GetData();
-      unsigned channel = 0;
+      float *pState = m_state;
+      unsigned nChannels = outBuffer.GetNChannels();
+      unsigned nChannelsLeft = nChannels;
 
-      for (unsigned n = outBuffer.GetNItems(); n > 0;
-           n--, pData++, channel = (channel + 1) % nChannels)
-        *pData = GOSoundOnePoleFilter::processSample(
-          *p_coeffs, *pData, m_state[channel]);
+      for (unsigned nItemsLeft = outBuffer.GetNItems(); nItemsLeft > 0;
+           nItemsLeft--, pData++) {
+        *pData
+          = GOSoundOnePoleFilter::processSample(*p_coeffs, *pData, *pState++);
+
+        if (!(nChannelsLeft--)) {
+          pState = m_state;
+          nChannelsLeft = nChannels;
+        }
+      }
     }
   };
 
