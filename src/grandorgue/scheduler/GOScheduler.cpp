@@ -16,6 +16,7 @@ GOScheduler::GOScheduler()
   : m_Work(),
     m_Tasks(),
     m_IsNotGivingWork(false),
+    m_NextItem(0),
     m_ItemCount(0),
     m_RepeatCount(0) {}
 
@@ -156,15 +157,14 @@ void GOScheduler::CompleteRound() {
 }
 
 GOSchedulerTask *GOScheduler::GetNextTask() {
-  do {
-    if (m_IsNotGivingWork.load()) {
-      return nullptr;
-    }
-    unsigned next = m_NextItem.fetch_add(1);
+  GOSchedulerTask *pResultTask = nullptr;
+
+  while (!pResultTask && !m_IsNotGivingWork.load()) {
+    const unsigned next = m_NextItem.fetch_add(1);
+
     if (next >= m_ItemCount)
-      return nullptr;
-    GOSchedulerTask *item = *m_Tasks[next];
-    if (item)
-      return item;
-  } while (true);
+      break;
+    pResultTask = *m_Tasks[next];
+  }
+  return pResultTask;
 }

@@ -457,8 +457,8 @@ void GOTestPerfSoundTaskBase::TestPerfCooperativeRoundLatency() {
     // pass through the entry section every round.
     task.SetWorkItemsPerThread(N_WORK_ITEMS_PER_THREAD);
     // One stereo buffer of the calibration period, so that the merge section
-    // holds the mutex for as long as GOSoundGroupTask's does. This is the
-    // whole point of the scenario: today the entry section waits behind the
+    // holds the mutex for as long as GOSoundWindchestGroupTask's does. This is
+    // the whole point of the scenario: today the entry section waits behind the
     // merge because both take the same mutex.
     task.SetMergeItems(2 * static_cast<unsigned>(N_FRAMES_PER_BUFFER));
 
