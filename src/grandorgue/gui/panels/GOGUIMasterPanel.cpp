@@ -117,6 +117,16 @@ GOGUIPanel *GOGUIMasterPanel::CreateMasterPanel(GOConfigReader &cfg) {
   button->Init(cfg, wxT("SetterMasterTransposeUp"), 3, 102);
   panel->AddControl(button);
 
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(wxT("VolumeDown")), false);
+  button->Init(cfg, wxT("SetterMasterVolumeDown"), 5, 102);
+  panel->AddControl(button);
+
+  button = new GOGUIButton(
+    panel, m_OrganController->GetButtonControl(wxT("VolumeUp")), false);
+  button->Init(cfg, wxT("SetterMasterVolumeUp"), 7, 102);
+  panel->AddControl(button);
+
   PosDisplay
     = new GOGUILabel(panel, m_OrganController->GetLabel(wxT("OrganNameLabel")));
   PosDisplay->Init(cfg, wxT("SetterMasterName"), 180, 230, wxEmptyString, 5);

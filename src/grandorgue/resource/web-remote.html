@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>GrandOrgue Remote</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; background: #1c1a17; color: #eee; font-family: system-ui, sans-serif; }
+  body { display: flex; flex-direction: column; user-select: none; -webkit-user-select: none; }
+  header { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #262320; border-bottom: 1px solid #000; }
+  header h1 { font-size: 16px; font-weight: 600; margin: 0; flex: 1; }
+  #dot { width: 10px; height: 10px; border-radius: 50%; background: #666; }
+  #dot.ok { background: #4c4; }
+  #dot.err { background: #e44; }
+  header button { background: #3a3630; color: #eee; border: 1px solid #555; border-radius: 6px; padding: 6px 12px; font-size: 14px; }
+  header button.on { background: #b8862b; color: #111; border-color: #b8862b; }
+  main { flex: 1; overflow: auto; padding: 12px; display: grid; gap: 10px; align-content: start;
+         grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .btn { position: relative; height: 84px; border-radius: 10px; border: 1px solid #111; touch-action: none;
+         background: linear-gradient(#f3e9d2, #d8c9a3); color: #2a2318; box-shadow: 0 4px 0 #6e5c3a, 0 5px 8px rgba(0,0,0,.5);
+         display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
+  .btn.down { transform: translateY(4px); box-shadow: 0 0 0 #6e5c3a; background: linear-gradient(#d8c9a3, #c4b28a); }
+  .btn .label { font-size: 18px; font-weight: 600; text-align: center; padding: 0 6px; word-break: break-word; }
+  .btn .info { position: absolute; bottom: 4px; right: 8px; font-size: 10px; opacity: .55; }
+  .btn.add { background: none; border: 2px dashed #555; color: #888; box-shadow: none; }
+  body.edit .btn { outline: 2px dashed #b8862b; outline-offset: -2px; }
+  dialog { background: #2b2825; color: #eee; border: 1px solid #555; border-radius: 10px; padding: 16px; width: min(92vw, 320px); }
+  dialog::backdrop { background: rgba(0,0,0,.6); }
+  dialog label { display: block; font-size: 13px; opacity: .8; margin: 10px 0 4px; }
+  dialog input { width: 100%; font-size: 16px; padding: 8px; border-radius: 6px; border: 1px solid #555; background: #1c1a17; color: #eee; }
+  .row { display: flex; gap: 10px; }
+  .row > * { flex: 1; }
+  .actions { display: flex; gap: 8px; margin-top: 16px; }
+  .actions button { flex: 1; padding: 10px; border-radius: 6px; border: 0; font-size: 15px; }
+  #save { background: #b8862b; color: #111; }
+  #del { background: #833; color: #eee; }
+  #cancel { background: #444; color: #eee; }
+  #hint { padding: 8px 14px; font-size: 12px; opacity: .6; text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body>
+<header>
+  <div id="dot"></div>
+  <h1>GrandOrgue Remote</h1>
+  <button id="edit">Edit</button>
+</header>
+<main id="grid"></main>
+<div id="hint">
+  <b>Set</b> arms Memory Set: tap it, tap a number or piston to store the current stops there, tap Set again to leave.
+  Without Set, numbers recall. <b>&lt;</b> and <b>&gt;</b> step through the memory, <b>Cancel</b> clears all stops.
+  To remap a button, hold it while using "Listen for event" in GrandOrgue.
+</div>
+
+<dialog id="dlg">
+  <form method="dialog">
+    <label>Label</label>
+    <input id="f-label" maxlength="20" autocomplete="off">
+    <div class="row">
+      <div><label>Note (0-127)</label><input id="f-note" type="number" min="0" max="127"></div>
+      <div><label>Channel (1-16)</label><input id="f-ch" type="number" min="1" max="16"></div>
+    </div>
+    <div class="actions">
+      <button id="del" type="button">Delete</button>
+      <button id="cancel" type="button">Cancel</button>
+      <button id="save" type="submit">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+// Every button is just a MIDI note on a channel. What it does is decided on
+// the GrandOrgue side. The defaults below (channel 16, notes 100 and up: out
+// of the way of any real keyboard, in case a manual listens to "Any device")
+// match the initial MIDI config GrandOrgue ships with, so out of the box they drive
+// the Combination Setter: Set, General Cancel, digits 0-9, previous/next,
+// volume down/up.
+// Anything else is mapped with "Listen for event". If you change these notes,
+// change web_remote_note() in GOConfig.cpp too.
+const KEY = 'go-remote-buttons';
+const defaults = ['Set', 'Cancel', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '<', '>', 'Vol -', 'Vol +']
+  .map((label, i) => ({ label, note: 100 + i, ch: 16 }));
+
+let buttons = load();
+let editing = false;
+let editIndex = -1;
+
+const grid = document.getElementById('grid');
+const dot = document.getElementById('dot');
+const dlg = document.getElementById('dlg');
+const fLabel = document.getElementById('f-label');
+const fNote = document.getElementById('f-note');
+const fCh = document.getElementById('f-ch');
+
+function load() {
+  try {
+    const v = JSON.parse(localStorage.getItem(KEY));
+    if (Array.isArray(v) && v.length) return v;
+  } catch (e) {}
+  return defaults.map(b => ({ ...b }));
+}
+function save() { localStorage.setItem(KEY, JSON.stringify(buttons)); }
+
+const hex = n => n.toString(16).padStart(2, '0');
+function send(bytes) {
+  fetch('/midi', { method: 'POST', body: bytes.map(hex).join(' '), keepalive: true })
+    .then(r => dot.className = r.ok ? 'ok' : 'err')
+    .catch(() => dot.className = 'err');
+}
+const noteOn = b => send([0x90 | (b.ch - 1), b.note, 127]);
+const noteOff = b => send([0x80 | (b.ch - 1), b.note, 0]);
+
+function render() {
+  grid.innerHTML = '';
+  buttons.forEach((b, i) => {
+    const el = document.createElement('div');
+    el.className = 'btn';
+    el.innerHTML = `<div class="label"></div><div class="info"></div>`;
+    el.querySelector('.label').textContent = b.label;
+    el.querySelector('.info').textContent = `${b.note} / ch${b.ch}`;
+
+    el.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      if (editing) return openEditor(i);
+      el.classList.add('down');
+      noteOn(b);
+      // capture so the release lands on us even if the finger slides off.
+      // Can throw if the pointer is already gone, and by then we don't care.
+      try { el.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+    // pointerup can be lost (page scroll, browser gesture...) so release on
+    // everything that might mean "finger is gone". Only send the off if we
+    // are actually down, otherwise we'd spam note-offs.
+    const release = () => {
+      if (!el.classList.contains('down')) return;
+      el.classList.remove('down');
+      noteOff(b);
+    };
+    ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(ev => el.addEventListener(ev, release));
+    grid.appendChild(el);
+  });
+
+  if (editing) {
+    const add = document.createElement('div');
+    add.className = 'btn add';
+    add.innerHTML = '<div class="label">+</div>';
+    add.addEventListener('click', () => openEditor(-1));
+    grid.appendChild(add);
+
+    const reset = document.createElement('div');
+    reset.className = 'btn add';
+    reset.innerHTML = '<div class="label">Reset</div>';
+    reset.addEventListener('click', () => {
+      if (!confirm('Restore the default buttons?')) return;
+      buttons = defaults.map(b => ({ ...b }));
+      save(); render();
+    });
+    grid.appendChild(reset);
+  }
+}
+
+function openEditor(i) {
+  editIndex = i;
+  const b = i >= 0 ? buttons[i] : { label: '', note: nextFreeNote(), ch: 16 };
+  fLabel.value = b.label;
+  fNote.value = b.note;
+  fCh.value = b.ch;
+  document.getElementById('del').style.display = i >= 0 ? '' : 'none';
+  dlg.showModal();
+}
+function nextFreeNote() {
+  const used = new Set(buttons.map(b => b.note));
+  let n = 100;
+  while (used.has(n) && n < 127) n++;
+  return n;
+}
+
+dlg.querySelector('form').addEventListener('submit', () => {
+  const b = {
+    label: fLabel.value.trim() || '?',
+    note: Math.min(127, Math.max(0, +fNote.value || 0)),
+    ch: Math.min(16, Math.max(1, +fCh.value || 1)),
+  };
+  if (editIndex >= 0) buttons[editIndex] = b; else buttons.push(b);
+  save(); render();
+});
+document.getElementById('del').addEventListener('click', () => {
+  buttons.splice(editIndex, 1);
+  save(); render(); dlg.close();
+});
+document.getElementById('cancel').addEventListener('click', () => dlg.close());
+
+document.getElementById('edit').addEventListener('click', e => {
+  editing = !editing;
+  e.target.classList.toggle('on', editing);
+  e.target.textContent = editing ? 'Done' : 'Edit';
+  document.body.classList.toggle('edit', editing);
+  render();
+});
+
+// no gestures while playing: a pinch zoom mid-piece would be annoying
+document.addEventListener('gesturestart', e => e.preventDefault());
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+render();
+</script>
+</body>
+</html>

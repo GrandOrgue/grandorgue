@@ -64,7 +64,7 @@ void GOSettingsMidiDeviceList::RefreshDevices(
                            port->GetDefaultRegEx(),
                            portName,
                            apiName,
-                           isToAutoEnable,
+                           isToAutoEnable && port->IsToAutoEnable(),
                            physicalName);
 
       m_ListedConfs.push_back(pConfTmp);
