@@ -215,7 +215,8 @@ void GOTestSoundCallbackConnector::TestGracefulDisconnectDoesNotCutPeriod() {
   // GOSoundCallbackConnector::AudioCallback() always returns true (it is the
   // audio-port "keep the stream open" signal, not a period-advance flag), so
   // the period boundary is observed via engine.GetTime() below instead.
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(0, buf0);
 
@@ -241,7 +242,8 @@ void GOTestSoundCallbackConnector::TestGracefulDisconnectDoesNotCutPeriod() {
 
   // Output 1 completes the same period the graceful branch is waiting for -
   // it must still get its real buffer, not the !IsStreaming() silence path.
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(1, buf1);
 
@@ -293,9 +295,9 @@ void GOTestSoundCallbackConnector::
   const unsigned nOrdinaryPeriods = 2;
 
   for (unsigned periodI = 0; periodI < nOrdinaryPeriods; ++periodI) {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     m_connector.AudioCallback(0, buf0);
@@ -308,7 +310,8 @@ void GOTestSoundCallbackConnector::
   // ~1s timeout. With 0 aux threads, the recorder task can only ever run via
   // CompleteRound(), so this is the deterministic case for the bug this test
   // targets: StopEngine() finalizing this last period without running it.
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf0g, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf0g, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(0, buf0g);
 
@@ -323,7 +326,8 @@ void GOTestSoundCallbackConnector::
     std::this_thread::yield();
   std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf1g, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf1g, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(1, buf1g);
 
@@ -411,7 +415,8 @@ void GOTestSoundCallbackConnector::TestBareReconnectAfterGracefulDisconnect() {
   // period - same technique as TestGracefulDisconnectDoesNotCutPeriod, needed
   // so the disconnect lands exactly on the period boundary instead of the
   // ~1s timeout.
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(0, buf0);
 
@@ -426,7 +431,8 @@ void GOTestSoundCallbackConnector::TestBareReconnectAfterGracefulDisconnect() {
     std::this_thread::yield();
   std::this_thread::sleep_for(std::chrono::milliseconds(20));
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(1, buf1);
 
@@ -457,11 +463,13 @@ void GOTestSoundCallbackConnector::TestBareReconnectAfterGracefulDisconnect() {
     "reconnecting must not account the graceful period a second time - it "
     "was already finished before the reconnect, above");
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf0b, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf0b, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(0, buf0b);
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf1b, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf1b, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(1, buf1b);
 
@@ -484,7 +492,8 @@ void GOTestSoundCallbackConnector::TestBareReconnectAfterTimeout() {
   // Drive only output 0; output 1 never arrives, so
   // EnsureStreamingDisableAllowed() falls back to its ~1s timeout without a
   // graceful boundary - m_IsToStartPeriod stays unset.
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(0, buf0);
   m_connector.DisconnectFromEngine(engine);
@@ -500,7 +509,8 @@ void GOTestSoundCallbackConnector::TestBareReconnectAfterTimeout() {
   // never arrived, is needed to finish it.
   m_connector.ConnectToEngine(engine);
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(1, buf1);
 
@@ -512,9 +522,9 @@ void GOTestSoundCallbackConnector::TestBareReconnectAfterTimeout() {
   uint64_t previousTime = engine.GetTime();
 
   for (unsigned periodI = 0; periodI < 3; ++periodI) {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf0i, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf1i, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     m_connector.AudioCallback(0, buf0i);
@@ -540,9 +550,9 @@ void GOTestSoundCallbackConnector::TestSuspendResumeCycle() {
   for (unsigned cycleI = 0; cycleI < 3; ++cycleI) {
     m_connector.ConnectToEngine(engine);
 
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     m_connector.AudioCallback(0, buf0);
@@ -566,7 +576,7 @@ void GOTestSoundCallbackConnector::TestSuspendResumeCycle() {
   // already-supported Suspend/Resume path rather than new coverage.
   m_connector.ConnectToEngine(engine);
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
     buf0Partial, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(0, buf0Partial); // output 1 never arrives
@@ -581,8 +591,10 @@ void GOTestSoundCallbackConnector::TestSuspendResumeCycle() {
   engine.StartEngine();
   m_connector.ConnectToEngine(engine);
 
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf0R, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-  GO_DECLARE_LOCAL_SOUND_BUFFER(buf1R, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf0R, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+    buf1R, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
   m_connector.AudioCallback(0, buf0R);
   m_connector.AudioCallback(1, buf1R);
