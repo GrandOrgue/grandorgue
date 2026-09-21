@@ -340,7 +340,7 @@ void GOTestSoundOrganEngine::TestReconnectAfterMidPeriodDisconnect() {
   engine.SetStreaming(true);
 
   {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf2, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     const bool didAdvance = engine.ProcessAudioCallback(2, buf2);
