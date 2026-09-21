@@ -51,7 +51,14 @@ if ! dpkg -l "${DEB_PACKAGES_FROM_MSYS2[@]}" &>/dev/null; then
   # Download packages from MSYS2 repositories and convert them to .deb.
   rm -rf ./msys2
   mkdir msys2
-  msys2dl make-deb --output ./msys2 --env mingw64 -- "${PACKAGES_FROM_MSYS2[@]}"
+  # Exclude gcc-libs: it is an empty transitional metapackage pulled in
+  # transitively (e.g. via readline->termcap), and msys2dl treats its
+  # versioned CONFLICTS (e.g. "gcc-libs<16.2.0-4", declared by the
+  # libgcc/libstdc++/libatomic/libgomp/libquadmath split) as unconditional,
+  # so it reports a conflict even though the installed gcc-libs is the
+  # newer, compatible version. Excluding it is safe since it carries no
+  # files of its own.
+  msys2dl make-deb --output ./msys2 --env mingw64 --exclude mingw-w64-x86_64-gcc-libs -- "${PACKAGES_FROM_MSYS2[@]}"
   sudo dpkg -i msys2/*.deb
 fi
 
