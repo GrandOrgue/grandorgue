@@ -14,7 +14,7 @@
 
 #include "config/GOConfig.h"
 #include "model/GOWindchest.h"
-#include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "sound/providers/GOSoundProviderWave.h"
 
@@ -131,7 +131,7 @@ void GOPerfTestApp::RunTest(
       engine.SetStreaming(true);
 
       std::vector<GOSoundSampler *> handles;
-      float output_buffer[samples_per_frame * 2];
+      GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(outputBuffer, 2, samples_per_frame)
       GOSoundSamplerPlayer &samplerPlayer = engine.GetSamplerPlayer();
 
       for (GOSoundProvider *pPipe : pipes) {
@@ -147,12 +147,10 @@ void GOPerfTestApp::RunTest(
       wxMilliClock_t diff;
       unsigned batch_size = 1 * engine.GetSampleRate() / samples_per_frame;
       unsigned blocks = 0;
-      GOSoundBufferMutable outputBufferMutable(
-        output_buffer, 2, samples_per_frame);
 
       do {
         for (unsigned i = 0; i < batch_size; i++) {
-          engine.ProcessAudioCallback(0, outputBufferMutable);
+          engine.ProcessAudioCallback(0, outputBuffer);
           blocks++;
         }
         end = getCPUTime();

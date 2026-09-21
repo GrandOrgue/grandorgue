@@ -8,14 +8,19 @@
 #ifndef GOSOUNDBUFFERTASKBASE_H
 #define GOSOUNDBUFFERTASKBASE_H
 
-#include "sound/buffer/GOSoundBufferManaged.h"
+#include "sound/buffer/GOSoundBufferPlanarManaged.h"
 
 #include "GOSoundTaskBase.h"
 
 class GOSchedulerThread;
 
+/**
+ * Base class for scheduler tasks that own a planar (channel-major) output
+ * buffer, filled by Run()/DoRun() and consumed once EnsureBufferReady()
+ * returns.
+ */
 class GOSoundBufferTaskBase : public GOSoundTaskBase,
-                              public GOSoundBufferManaged {
+                              public GOSoundBufferPlanarManaged {
 public:
   GOSoundBufferTaskBase(
     TaskPriority priority,
@@ -23,7 +28,7 @@ public:
     unsigned nChannels,
     unsigned nFrames)
     : GOSoundTaskBase(priority, isRepeatable),
-      GOSoundBufferManaged(nChannels, nFrames) {}
+      GOSoundBufferPlanarManaged(nChannels, nFrames) {}
 
   virtual void EnsureBufferReady(
     bool isToComplete, GOSchedulerThread *pThread = nullptr)

@@ -16,6 +16,7 @@
 
 class Convproc;
 class GOConfig;
+class GOSoundBufferPlanarMutable;
 
 class GOSoundReverb {
 public:
@@ -73,6 +74,9 @@ public:
 
 private:
   unsigned m_channels;
+  // the frame count Process() must be called with, matching what was passed
+  // to Convproc::configure() in Setup() - Process() asserts against this
+  unsigned m_FramesPerBuffer = 0;
   ptr_vector<Convproc> m_engine;
   // Whether Process() has run the convolution engine since the last Reset():
   // a caller cannot otherwise tell if a decaying tail is still buffered
@@ -97,7 +101,12 @@ public:
    * numerically decayed to silence. */
   bool HasContent() const { return m_HasContent.load(); }
 
-  void Process(float *output_buffer, unsigned n_frames);
+  /**
+   * Runs the convolution reverb in place over a planar output buffer, one
+   * channel of the Convproc engine per channel of the buffer.
+   * @param buffer The output buffer to convolve in place
+   */
+  void Process(GOSoundBufferPlanarMutable &buffer);
 };
 
 #endif

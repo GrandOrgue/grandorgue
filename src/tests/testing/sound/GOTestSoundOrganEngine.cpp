@@ -16,7 +16,7 @@
 #include <thread>
 
 #include "sound/GOSoundOrganEngine.h"
-#include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/buffer/GOSoundBufferPlanarMutable.h"
 
 #include "GOTestScope.h"
 
@@ -74,7 +74,8 @@ void GOTestSoundOrganEngine::TestSingleOutputLifecycle() {
     /* nAudioGroups */ 1, /* nAuxThreads */ 0, /* nOutputs */ 1);
 
   for (unsigned periodI = 0; periodI < 5; ++periodI) {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+      buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
     const bool didAdvance = engine.ProcessAudioCallback(0, buf);
 
     GOAssert(
@@ -91,9 +92,9 @@ void GOTestSoundOrganEngine::TestTwoOutputsLifecycleWith(
   GOSoundOrganEngine &engine = BuildStartAndConnectEngine(nAudioGroups, 0, 2);
 
   for (unsigned periodI = 0; periodI < 5; ++periodI) {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     const bool didAdvanceAfter0 = engine.ProcessAudioCallback(0, buf0);
@@ -172,7 +173,7 @@ void GOTestSoundOrganEngine::TestBuildStopCyclesAsyncCallbacksXrun() {
 
     auto threadBody = [&]() {
       while (isRunning.load()) {
-        GO_DECLARE_LOCAL_SOUND_BUFFER(
+        GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
           buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
         engine.ProcessAudioCallback(0, buf);
@@ -206,7 +207,7 @@ void GOTestSoundOrganEngine::TestMultipleConfigsAsyncCallbacks() {
     for (unsigned outputI = 0; outputI < cfg.nOutputs; ++outputI) {
       threads.emplace_back([&, outputI]() {
         for (unsigned periodI = 0; periodI < N_PERIODS; ++periodI) {
-          GO_DECLARE_LOCAL_SOUND_BUFFER(
+          GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
             buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
           engine.ProcessAudioCallback(outputI, buf);
@@ -230,9 +231,9 @@ void GOTestSoundOrganEngine::TestDisconnectWithXrunDeadlock() {
 
   // Period 0: complete normally so the engine is ready for period 1.
   {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     engine.ProcessAudioCallback(0, buf0);
@@ -242,7 +243,7 @@ void GOTestSoundOrganEngine::TestDisconnectWithXrunDeadlock() {
   // Period 1, output 0 (first call) — marks state.wait=true for output 0.
   // Output 1 is not yet processed, so the period has not advanced.
   {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     engine.ProcessAudioCallback(0, buf0);
@@ -263,7 +264,7 @@ void GOTestSoundOrganEngine::TestDisconnectWithXrunDeadlock() {
       if (!isStopping.load()) {
         ++nActiveCallbacks;
 
-        GO_DECLARE_LOCAL_SOUND_BUFFER(
+        GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
           buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
         engine.ProcessAudioCallback(0, buf); // blocks at [W1]
@@ -318,9 +319,9 @@ void GOTestSoundOrganEngine::TestReconnectAfterMidPeriodDisconnect() {
   engine.SetStreaming(true);
 
   {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     engine.ProcessAudioCallback(0, buf0);
@@ -351,11 +352,11 @@ void GOTestSoundOrganEngine::TestReconnectAfterMidPeriodDisconnect() {
   }
 
   for (unsigned periodI = 0; periodI < 5; ++periodI) {
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf0, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf1, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
-    GO_DECLARE_LOCAL_SOUND_BUFFER(
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
       buf2, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
 
     const bool didAdvanceAfter0 = engine.ProcessAudioCallback(0, buf0);

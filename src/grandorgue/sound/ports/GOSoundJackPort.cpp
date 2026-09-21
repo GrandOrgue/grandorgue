@@ -60,9 +60,9 @@ int GOSoundJackPort::jackProcessCallback(jack_nframes_t nFrames, void *pData) {
       GOSoundBufferMutableMono monoBuffer(pOut, nFrames);
 
       if (pPort->m_IsStarted)
-        // copy samples from the interleaved pPort->m_GoBuffer to the non
-        // interleaved jack buffer
-        monoBuffer.CopyChannelFrom(pPort->m_GoBuffer, channelI);
+        // both pPort->m_GoBuffer's channel and the JACK port buffer are
+        // contiguous, so this is a straight per-channel copy
+        monoBuffer.CopyFrom(pPort->m_GoBuffer.GetChannelBuffer(channelI));
       else
         // wipe the jack buffer
         monoBuffer.FillWithSilence();

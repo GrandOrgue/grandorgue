@@ -35,6 +35,7 @@ set(go_tests
     sound/tasks/GOSoundTaskTestImpl.cpp
     sound/tasks/GOTestPerfSoundTaskBase.cpp
     sound/tasks/GOTestSoundOutputTask.cpp
+    sound/tasks/GOTestSoundRecorderTask.cpp
     sound/tasks/GOTestSoundTaskBase.cpp
     GOTestNameMap.cpp
     GOTestOrganController.cpp

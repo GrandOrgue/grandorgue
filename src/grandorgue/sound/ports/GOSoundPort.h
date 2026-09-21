@@ -14,7 +14,7 @@
 
 #include "config/GOPortsConfig.h"
 
-class GOSoundBufferMutable;
+class GOSoundBufferPlanarMutable;
 class GOSoundCallbackConnector;
 
 class GOSoundPort {
@@ -30,7 +30,7 @@ protected:
   int m_ActualLatency;
 
   void SetActualLatency(double latency);
-  bool AudioCallback(GOSoundBufferMutable &outputBuffer);
+  bool AudioCallback(GOSoundBufferPlanarMutable &outputBuffer);
 
 public:
   GOSoundPort(

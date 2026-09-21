@@ -8,6 +8,7 @@
 #include "GOSoundOutputTask.h"
 
 #include <algorithm>
+#include <cassert>
 
 #include "scheduler/GOSchedulerThread.h"
 #include "sound/reverb/GOSoundReverb.h"
@@ -38,6 +39,7 @@ void GOSoundOutputTask::SetOutputs(
   std::vector<GOSoundBufferTaskBase *> outputs) {
   m_Outputs = outputs;
   m_OutputCount = m_Outputs.size() * 2;
+  assert(m_ScaleFactors.size() == GetNChannels() * m_OutputCount);
 }
 
 bool GOSoundOutputTask::DoRun(GOSchedulerThread *pThread) {
@@ -72,28 +74,25 @@ bool GOSoundOutputTask::DoRun(GOSchedulerThread *pThread) {
     }
 
   if (!isStopped) {
-    m_Reverb->Process(GetData(), GetNFrames());
+    m_Reverb->Process(*this);
 
-    /* Clamp the output and put the maximum amplitude to m_MeterInfo */
-    float *pData = GetData();
-    unsigned nChannelsRest = nChannels;
-    float *pMeterInfo = m_MeterInfo.data();
+    /* Clamp the output and put the maximum amplitude to m_MeterInfo, one
+     * contiguous channel at a time */
+    for (unsigned channelI = 0; channelI < nChannels; channelI++) {
+      float *pData = GetChannelBuffer(channelI).GetData();
+      float meter = m_MeterInfo[channelI];
 
-    for (unsigned nItemsRest = GetNItems(); nItemsRest; nItemsRest--, pData++) {
-      float f = std::clamp(*pData, CLAMP_MIN, CLAMP_MAX);
-      float absF = std::abs(f);
+      for (unsigned nFramesRest = GetNFrames(); nFramesRest;
+           nFramesRest--, pData++) {
+        float f = std::clamp(*pData, CLAMP_MIN, CLAMP_MAX);
+        float absF = std::abs(f);
 
-      if (f != *pData)
-        *pData = f;
-      if (absF > *pMeterInfo)
-        *pMeterInfo = absF;
-
-      // Move to next channel (circular: after last channel, wrap to first)
-      pMeterInfo++;
-      if (!--nChannelsRest) {
-        nChannelsRest = nChannels;
-        pMeterInfo = m_MeterInfo.data();
+        if (f != *pData)
+          *pData = f;
+        if (absF > meter)
+          meter = absF;
       }
+      m_MeterInfo[channelI] = meter;
     }
   }
 
