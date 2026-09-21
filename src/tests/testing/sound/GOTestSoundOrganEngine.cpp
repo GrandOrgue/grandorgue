@@ -330,12 +330,25 @@ void GOTestSoundOrganEngine::TestReconnectAfterMidPeriodDisconnect() {
   engine.SetStreaming(false);
   engine.SetUsed(false);
 
-  // Second streaming session: SetStreaming(true) must reset the dirty counters.
-  // Without the reset, output 0 alone would advance the period (dirty counter
-  // makes nCallbacksFinished reach nOutputs after just one call), leaving
-  // outputs 1 and 2 blocked at [W1] with wasProcessedInCurrentPeriod=true.
+  // Second streaming session: without an intervening StopEngine(), the
+  // interrupted period is preserved rather than discarded - SetStreaming(true)
+  // must not touch its counters or outputs 0/1's wait flags, so only the
+  // missing output (2) is needed to finish it. Calling 0 or 1 again first
+  // would block at [W1] until 2 arrives, exactly as it would mid-session.
   engine.SetUsed(true);
   engine.SetStreaming(true);
+
+  {
+    GO_DECLARE_LOCAL_SOUND_BUFFER(
+      buf2, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+    const bool didAdvance = engine.ProcessAudioCallback(2, buf2);
+
+    GOAssert(
+      didAdvance,
+      "output 2 alone completes the period interrupted before the "
+      "disconnect");
+  }
 
   for (unsigned periodI = 0; periodI < 5; ++periodI) {
     GO_DECLARE_LOCAL_SOUND_BUFFER(

@@ -104,6 +104,10 @@ private:
 
   GOMemoryPool m_pool;
   GOSoundOrganEngine m_SoundEngine;
+  /** Non-owning; set in StartOrgan(), cleared in StopOrgan(). Doubles as the
+   * "organ is started" guard: SuspendOrgan()/ResumeOrgan() may only be
+   * called while it is non-null. */
+  GOSoundSystem *p_SoundSystem = nullptr;
   GOGuiImageCache *mp_ImageCache;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
@@ -250,6 +254,21 @@ public:
    * system, and tears down audio tasks.
    */
   void StopOrgan(GOSoundSystem &soundSystem);
+
+  /**
+   * Quiesces the sound engine for a live reconfiguration that needs it held
+   * still (e.g. rebuilding audio-routing tasks while pipes keep sounding):
+   * drains in-flight audio callbacks, then stops the engine. Sounding notes
+   * are preserved - only the engine's own processing pauses. Must be paired
+   * with ResumeOrgan(); may only be called while the organ is started (see
+   * p_SoundSystem).
+   */
+  void SuspendOrgan();
+
+  /** Undoes SuspendOrgan(): restarts the engine and reconnects audio
+   * callbacks. */
+  void ResumeOrgan();
+
   GOSoundOrganEngine &GetSoundEngine() { return m_SoundEngine; }
   void Update();
   void Reset();
