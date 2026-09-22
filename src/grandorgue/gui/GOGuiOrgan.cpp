@@ -10,12 +10,12 @@
 #include <wx/app.h>
 
 #include "config/GOConfig.h"
-#include "config/GOConfigReader.h"
 #include "document-base/GODocumentView.h"
 #include "frames/GOAppWindow.h"
 #include "gui/dialogs/GOMidiObjectstDialog.h"
 #include "gui/dialogs/midi-event/GOMidiEventDialog.h"
 #include "gui/dialogs/organ-settings/GOOrganSettingsDialog.h"
+#include "gui/frames/GOMainWindowData.h"
 #include "gui/frames/GOStopsWindow.h"
 #include "gui/panels/GOGUIBankedGeneralsPanel.h"
 #include "gui/panels/GOGUICouplerManualsAndVolumePanel.h"
@@ -36,8 +36,9 @@
 
 #include "GOEvent.h"
 #include "GOOrgan.h"
-#include "GOOrganController.h"
 #include "go_ids.h"
+
+static const wxString WX_ORGAN = wxT("Organ");
 
 GOGuiOrgan::GOGuiOrgan(
   GOResizable *pMainWindow, GOConfig &config, GOMidiSystem &midi)
@@ -45,7 +46,6 @@ GOGuiOrgan::GOGuiOrgan(
     r_config(config),
     r_MidiSystem(midi),
     m_OrganFileReady(false),
-    m_OrganController(NULL),
     m_listener() {
   m_listener.Register(&r_MidiSystem);
 }
@@ -55,21 +55,113 @@ GOGuiOrgan::~GOGuiOrgan() {
   CloseOrgan();
 }
 
-bool GOGuiOrgan::IsModified() const {
-  return m_OrganController && m_OrganController->IsOrganModified();
+/*
+ * lifecycle-hook bodies
+ */
+
+void GOGuiOrgan::LoadOrganGui(GOConfigReader &cfg) {
+  m_IsOrganGuiLoaded = true;
+  mp_ImageCache.emplace(mp_controller->GetFileStore());
+
+  unsigned nPanels = cfg.ReadInteger(
+    ODFSetting, WX_ORGAN, wxT("NumberOfPanels"), 0, 100, false);
+
+  m_PanelCreators.push_back(
+    new GOGUICouplerPanel(*this, mp_controller->GetVirtualCouplers()));
+  m_PanelCreators.push_back(new GOGUICouplerManualsAndVolumePanel(*this));
+  m_PanelCreators.push_back(new GOGUIMetronomePanel(*this));
+  m_PanelCreators.push_back(new GOGUICrescendoPanel(*this));
+  m_PanelCreators.push_back(new GOGUIDivisionalsPanel(*this));
+  m_PanelCreators.push_back(new GOGUIBankedGeneralsPanel(*this));
+  m_PanelCreators.push_back(new GOGUISequencerPanel(*this));
+  m_PanelCreators.push_back(new GOGUIMasterPanel(*this));
+  m_PanelCreators.push_back(new GOGUIRecorderPanel(*this));
+
+  mp_controller->GetPitchLabel()->Load(
+    cfg, wxT("SetterMasterPitch"), _("organ pitch"));
+  mp_controller->GetTemperamentLabel()->Load(
+    cfg, wxT("SetterMasterTemperament"), _("temperament"));
+  mp_MainWindowData.emplace(*mp_controller, wxT("MainWindow"));
+  mp_MainWindowData->Load(cfg);
+
+  m_panels.resize(0);
+  m_panels.push_back(
+    new GOGUIPanel(&*mp_controller, *mp_ImageCache, m_MouseState));
+  m_panels[0]->Load(cfg, wxT(""));
+
+  wxString buffer;
+
+  for (unsigned i = 0; i < nPanels; i++) {
+    buffer.Printf(wxT("Panel%03d"), i + 1);
+    m_panels.push_back(
+      new GOGUIPanel(&*mp_controller, *mp_ImageCache, m_MouseState));
+    m_panels[i + 1]->Load(cfg, buffer);
+  }
+
+  m_StopWindowSizeKeeper.Load(cfg, wxT("Stops"));
+
+  for (GOGUIPanelCreator *pPanelCreator : m_PanelCreators)
+    pPanelCreator->CreatePanels(cfg);
+
+  for (GOGUIPanel *pPanel : m_panels)
+    pPanel->Layout();
 }
 
-GOGuiImageCache &GOGuiOrgan::GetImageCache() {
-  return m_OrganController->GetImageCache();
+void GOGuiOrgan::SyncState() {
+  if (p_MainWindow)
+    mp_MainWindowData->SetWindowRect(p_MainWindow->GetPosSize());
+  for (GOGUIPanel *pPanel : m_panels)
+    pPanel->SetInitialOpenWindow(false);
+  GODocumentBase::SyncState();
 }
 
-GOGUIMouseState &GOGuiOrgan::GetMouseState() {
-  return m_OrganController->GetMouseState();
+void GOGuiOrgan::SaveOrganGui(GOConfigWriter &cfg) {
+  m_StopWindowSizeKeeper.Save(cfg);
 }
 
-void GOGuiOrgan::AddPanel(GOGUIPanel *panel) {
-  m_OrganController->AddPanel(panel);
+void GOGuiOrgan::ClearOrganGui() {
+  if (m_IsOrganGuiLoaded) {
+    m_panels.clear();
+    m_PanelCreators.clear();
+    mp_MainWindowData.reset();
+    mp_ImageCache.reset();
+    m_IsOrganGuiLoaded = false;
+  }
 }
+
+void GOGuiOrgan::CloseOrgan() {
+  m_listener.SetCallback(NULL);
+  // m_sound.CloseSound();
+  CloseWindows();
+  wxTheApp->ProcessPendingEvents();
+
+  m_OrganFileReady = false;
+  GOMutexLocker locker(m_lock);
+
+  mp_controller.reset();
+
+  wxCommandEvent event(wxEVT_WINTITLE, 0);
+  event.SetString(wxEmptyString);
+  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+}
+
+/*
+ * the rest - unrelated to the load/save lifecycle
+ */
+
+void GOGuiOrgan::OnMidiEvent(const GOMidiEvent &event) {
+  GOMutexLocker locker(m_lock);
+
+  if (!m_OrganFileReady)
+    return;
+
+  if (mp_controller)
+    mp_controller->ProcessMidi(event);
+}
+
+/*
+ * lifecycle methods
+ */
 
 GOOrganController *GOGuiOrgan::LoadOrgan(
   const GOOrgan &organ,
@@ -80,28 +172,28 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
   GOConfig &cfg = r_config;
 
   CloseOrgan();
-  m_OrganController = new Controller(cfg, *this);
-  wxString error = m_OrganController->Load(organ, cmb, isGuiOnly, monitor);
+  mp_controller.emplace(cfg, *this);
+
+  wxString error = mp_controller->Load(organ, cmb, isGuiOnly, monitor);
 
   if (error.IsEmpty()) {
-    cfg.AddOrgan(m_OrganController->GetOrganInfo());
+    cfg.AddOrgan(mp_controller->GetOrganInfo());
     cfg.Flush();
     {
       wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
-      event.SetInt(m_OrganController->GetGain());
+      event.SetInt(mp_controller->GetGain());
       wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
     }
 
     wxCommandEvent event(wxEVT_WINTITLE, 0);
-    event.SetString(m_OrganController->GetOrganName());
+    event.SetString(mp_controller->GetOrganName());
     wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
 
-    for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)
-      if (m_OrganController->GetPanel(i)->InitialOpenWindow())
+    for (unsigned i = 0; i < GetPanelCount(); i++)
+      if (GetPanel(i)->InitialOpenWindow())
         ShowPanel(i);
 
-    const GOLogicalRect &mRect(
-      m_OrganController->GetMainWindowData()->GetWindowRect());
+    const GOLogicalRect &mRect(GetMainWindowData()->GetWindowRect());
 
     if (!mRect.IsEmpty() && p_MainWindow)
       p_MainWindow->SetPosSize(mRect);
@@ -109,25 +201,29 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
     m_OrganFileReady = true;
     m_listener.SetCallback(this);
     if (!cmb.IsEmpty())
-      m_OrganController->SetOrganModified();
+      mp_controller->SetOrganModified();
   } else {
     if (error != wxT("!")) {
       wxLogError(wxT("%s\n"), error.c_str());
       GOMessageBox(error, _("Load error"), wxOK | wxICON_ERROR, NULL);
     }
-    CloseOrgan(); // also clears m_OrganController
+    CloseOrgan(); // also clears mp_controller
   }
-  return m_OrganController;
+  return mp_controller ? &*mp_controller : nullptr;
 }
 
 bool GOGuiOrgan::UpdateCache(bool compress, GOProgressMonitor &monitor) {
-  if (!m_OrganController)
+  if (!mp_controller)
     return false;
-  return m_OrganController->UpdateCache(compress, monitor);
+  return mp_controller->UpdateCache(compress, monitor);
 }
 
+/*
+ * the rest, callee-first
+ */
+
 void GOGuiOrgan::ShowPanel(unsigned id) {
-  GOGUIPanel *panel = m_OrganController->GetPanel(id);
+  GOGUIPanel *panel = GetPanel(id);
 
   if (!showWindow(GOGuiOrgan::PANEL, panel)) {
     registerWindow(
@@ -135,95 +231,28 @@ void GOGuiOrgan::ShowPanel(unsigned id) {
   }
 }
 
-void GOGuiOrgan::SyncState() {
-  if (p_MainWindow)
-    m_OrganController->GetMainWindowData()->SetWindowRect(
-      p_MainWindow->GetPosSize());
-  for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)
-    m_OrganController->GetPanel(i)->SetInitialOpenWindow(false);
-  GODocumentBase::SyncState();
-}
-
-bool GOGuiOrgan::Save(const wxString &path) {
-  SyncState();
-  return m_OrganController->Save(path);
-}
-
-void GOGuiOrgan::LoadOrganGui(GOConfigReader &cfg) {
-  m_PanelCreators.push_back(
-    new GOGUICouplerPanel(*this, m_OrganController->GetVirtualCouplers()));
-  m_PanelCreators.push_back(new GOGUICouplerManualsAndVolumePanel(*this));
-  m_PanelCreators.push_back(new GOGUIMetronomePanel(*this));
-  m_PanelCreators.push_back(new GOGUICrescendoPanel(*this));
-  m_PanelCreators.push_back(new GOGUIDivisionalsPanel(*this));
-  m_PanelCreators.push_back(new GOGUIBankedGeneralsPanel(*this));
-  m_PanelCreators.push_back(new GOGUISequencerPanel(*this));
-  m_PanelCreators.push_back(new GOGUIMasterPanel(*this));
-  m_PanelCreators.push_back(new GOGUIRecorderPanel(*this));
-
-  for (unsigned i = 0; i < m_PanelCreators.size(); i++)
-    m_PanelCreators[i]->CreatePanels(cfg);
-
-  for (unsigned i = 0; i < m_OrganController->GetPanelCount(); i++)
-    m_OrganController->GetPanel(i)->Layout();
-}
-
-void GOGuiOrgan::ClearOrganGui() { m_PanelCreators.clear(); }
-
-void GOGuiOrgan::CloseOrgan() {
-  m_listener.SetCallback(NULL);
-  // m_sound.CloseSound();
-  CloseWindows();
-  wxTheApp->ProcessPendingEvents();
-
-  m_OrganFileReady = false;
-  GOMutexLocker locker(m_lock);
-  if (m_OrganController) {
-    m_OrganController->Clear();
-    delete m_OrganController;
-    m_OrganController = 0;
-  }
-
-  wxCommandEvent event(wxEVT_WINTITLE, 0);
-  event.SetString(wxEmptyString);
-  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-}
-
-void GOGuiOrgan::OnMidiEvent(const GOMidiEvent &event) {
-  GOMutexLocker locker(m_lock);
-
-  if (!m_OrganFileReady)
-    return;
-
-  if (m_OrganController)
-    m_OrganController->ProcessMidi(event);
-}
-
 void GOGuiOrgan::ShowOrganSettingsDialog() {
-  if (!showWindow(GOGuiOrgan::ORGAN_DIALOG, NULL) && m_OrganController) {
+  if (!showWindow(GOGuiOrgan::ORGAN_DIALOG, NULL) && mp_controller) {
     registerWindow(
       GOGuiOrgan::ORGAN_DIALOG,
       NULL,
-      new GOOrganSettingsDialog(*m_OrganController, this, nullptr));
+      new GOOrganSettingsDialog(*mp_controller, this, nullptr));
   }
 }
 
 void GOGuiOrgan::ShowMidiList() {
-  if (!showWindow(GOGuiOrgan::MIDI_LIST, NULL) && m_OrganController) {
+  if (!showWindow(GOGuiOrgan::MIDI_LIST, NULL) && mp_controller) {
     registerWindow(
       GOGuiOrgan::MIDI_LIST,
       nullptr,
-      new GOMidiObjectsDialog(this, nullptr, *m_OrganController));
+      new GOMidiObjectsDialog(this, nullptr, *mp_controller));
   }
 }
 
 void GOGuiOrgan::ShowStops() {
-  if (!showWindow(GOGuiOrgan::STOPS, NULL) && m_OrganController) {
+  if (!showWindow(GOGuiOrgan::STOPS, NULL) && mp_controller) {
     auto stopsWindow = new GOStopsWindow(
-      this,
-      nullptr,
-      m_OrganController->GetStopWindowSizeKeeper(),
-      *m_OrganController);
+      this, nullptr, GetStopWindowSizeKeeper(), *mp_controller);
 
     registerWindow(
       GOGuiOrgan::STOPS,
@@ -234,7 +263,7 @@ void GOGuiOrgan::ShowStops() {
 
 void GOGuiOrgan::ShowMIDIEventDialog(
   GOMidiObject &obj, GOMidiDialogListener *pDialogListener) {
-  if (!showWindow(GOGuiOrgan::MIDI_EVENT, &obj) && m_OrganController) {
+  if (!showWindow(GOGuiOrgan::MIDI_EVENT, &obj) && mp_controller) {
     const wxString title = wxString::Format(
       _("MIDI-Settings for %s - %s"), obj.GetMidiTypeName(), obj.GetName());
     const wxString dialogSelector
@@ -244,13 +273,13 @@ void GOGuiOrgan::ShowMIDIEventDialog(
       this,
       NULL,
       title,
-      m_OrganController->GetSettings(),
+      mp_controller->GetSettings(),
       dialogSelector,
       obj,
       true,
       pDialogListener);
-    dlg->RegisterMIDIListener(m_OrganController->GetMidi());
-    dlg->SetModificationListener(m_OrganController);
+    dlg->RegisterMIDIListener(mp_controller->GetMidi());
+    dlg->SetModificationListener(&*mp_controller);
     registerWindow(GOGuiOrgan::MIDI_EVENT, &obj, dlg);
   }
 }
