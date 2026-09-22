@@ -209,11 +209,12 @@ model/GOWindchest.cpp
 modification/GOModificationProxy.cpp
 scheduler/GOScheduler.cpp
 scheduler/GOSchedulerThread.cpp
+sound/dsp-kernels/GOSoundOnePoleFilter.cpp
+sound/dsp-kernels/GOSoundResample.cpp
 sound/interfaces/GOSoundCallbackConnector.cpp
 sound/playing/GOSoundAudioSection.cpp
 sound/playing/GOSoundFader.cpp
 sound/playing/GOSoundReleaseAlignTable.cpp
-sound/playing/GOSoundResample.cpp
 sound/playing/GOSoundSamplerPlayer.cpp
 sound/playing/GOSoundSamplerPool.cpp
 sound/playing/GOSoundStream.cpp
@@ -240,7 +241,6 @@ sound/tasks/GOSoundTouchTask.cpp
 sound/tasks/GOSoundTremulantTask.cpp
 sound/tasks/GOSoundWindchestTask.cpp
 sound/GOSoundDevInfo.cpp
-sound/GOSoundOnePoleFilter.cpp
 sound/GOSoundOrganEngine.cpp
 sound/GOSoundSystem.cpp
 updater/GOUpdateChecker.cpp

@@ -8,7 +8,7 @@
 #ifndef GOSOUNDTONEBALANCEFILTER_H_
 #define GOSOUNDTONEBALANCEFILTER_H_
 
-#include "sound/GOSoundOnePoleFilter.h"
+#include "sound/dsp-kernels/GOSoundOnePoleFilter.h"
 
 class GOSoundToneBalanceFilter {
 public:
