@@ -15,6 +15,8 @@
 #include "sound/tasks/GOSoundBufferTaskBase.h"
 #include "sound/tasks/GOSoundRecorderTask.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundRecorderTask::TEST_NAME
   = "GOTestSoundRecorderTask";
 
@@ -123,6 +125,44 @@ void GOTestSoundRecorderTask::TestGathersDistinctChannelCountsInOrder() {
   }
 }
 
+void GOTestSoundRecorderTask::TestDiscardContentClosesOpenRecording() {
+  StubBufferTask stub(1);
+  GOSoundRecorderTask recorder;
+
+  recorder.SetSampleRate(44100);
+  recorder.SetBytesPerSample(4);
+  recorder.SetOutputs({&stub}, N_SAMPLES_PER_BUFFER);
+
+  const wxString path = wxFileName::CreateTempFileName(wxT("goRecTest"));
+
+  recorder.Open(path);
+  GOAssert(recorder.IsOpen(), "recorder should be open after Open()");
+  GOAssert(
+    !recorder.IsEmpty(),
+    "an open recorder must not be IsEmpty(), matching GOScheduler::Add()'s "
+    "assertion");
+
+  recorder.DiscardContent();
+
+  GOAssert(
+    !recorder.IsOpen(),
+    "DiscardContent() must close an open recording, not just reset the "
+    "round, so a task deregistered mid-recording is safe to Add() back");
+  GOAssert(
+    recorder.IsEmpty(),
+    "after DiscardContent() the recorder must be IsEmpty(), as "
+    "GOScheduler::Add() requires");
+
+  wxFile file(path);
+
+  GOAssert(
+    file.IsOpened() && file.Length() > 0,
+    "DiscardContent() must finalize the WAV header, like a normal Close()");
+  file.Close();
+  wxRemoveFile(path);
+}
+
 void GOTestSoundRecorderTask::run() {
-  TestGathersDistinctChannelCountsInOrder();
+  GO_RUN_TEST(TestGathersDistinctChannelCountsInOrder())
+  GO_RUN_TEST(TestDiscardContentClosesOpenRecording())
 }

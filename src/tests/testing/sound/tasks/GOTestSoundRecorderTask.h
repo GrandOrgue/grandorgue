@@ -28,6 +28,11 @@ private:
    * ConvertData<T>() inverted for Stage 3. */
   void TestGathersDistinctChannelCountsInOrder();
 
+  /** DiscardContent() must close an open recording, not just reset the
+   * round: a task deregistered mid-recording and later Add()'d back must
+   * start a fresh recording rather than keep appending to the old file. */
+  void TestDiscardContentClosesOpenRecording();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
