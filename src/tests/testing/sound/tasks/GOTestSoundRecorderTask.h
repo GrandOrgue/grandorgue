@@ -30,7 +30,10 @@ private:
 
   /** DiscardContent() must close an open recording, not just reset the
    * round: a task deregistered mid-recording and later Add()'d back must
-   * start a fresh recording rather than keep appending to the old file. */
+   * start a fresh recording rather than keep appending to the old file.
+   * Verifies the recorded buffer's data survives into a correctly finalized
+   * WAV header, and that the underlying file descriptor is actually
+   * released, not just the recording flag. */
   void TestDiscardContentClosesOpenRecording();
 
 public:
