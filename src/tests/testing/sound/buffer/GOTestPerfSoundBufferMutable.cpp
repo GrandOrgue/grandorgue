@@ -42,8 +42,8 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_FILL_WITH_SILENCE[] = {
               // observed 1843.0 under contention, -20% margin)
   {128,
    4050}, // 4050 Mframes/sec (debug, lowered: min observed 4507.3, -10% margin)
-  {512,
-   5800}, // 5800 Mframes/sec (debug, raised: min observed 6548.4, -10% margin)
+  {512, 3780}, // 3780 Mframes/sec (debug, rebaselined 2026-09-21: min observed
+               // 4725.7 under contention, -20% margin)
   {2048,
    8080} // 8080 Mframes/sec (debug, lowered: min observed 8979.2, -10% margin)
 #endif

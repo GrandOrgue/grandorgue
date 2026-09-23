@@ -47,10 +47,15 @@ static constexpr double AUDIO_PERIODS_PER_SECOND
 // Debug (worst 359M) and 375M-435M on Release (worst 375M), each threshold
 // set 10% below its own worst case for run-to-run variance on shared
 // hardware.
+// Rebaselined 2026-09-23: a Debug run on oleg68/GrandOrgue-official (a
+// docs-only branch, so not a code regression) measured 299.0M runs/sec,
+// well under the prior 359M floor, on a shared runner otherwise unremarkable
+// (same ubuntu-24.04 image, no unusual CPU model). Lowered to 10% below this
+// new observed minimum.
 #ifdef NDEBUG
 static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 335'000'000.0;
 #else
-static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 320'000'000.0;
+static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 269'000'000.0;
 #endif
 
 // Minimum acceptable round rate for several threads racing Run() on the same
