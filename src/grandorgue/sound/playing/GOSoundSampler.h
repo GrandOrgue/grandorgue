@@ -8,7 +8,7 @@
 #ifndef GOSOUNDSAMPLER_H_
 #define GOSOUNDSAMPLER_H_
 
-#include "sound/GOSoundOnePoleFilter.h"
+#include "sound/dsp-kernels/GOSoundOnePoleFilter.h"
 
 #include "GOBool3.h"
 #include "GOSoundFader.h"

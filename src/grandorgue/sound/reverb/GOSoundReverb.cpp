@@ -19,7 +19,7 @@
 #include "files/GOStandardFile.h"
 #include "sound/buffer/GOSoundBufferMutableMono.h"
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
-#include "sound/playing/GOSoundResample.h"
+#include "sound/dsp-kernels/GOSoundResample.h"
 
 #include "GOWave.h"
 #include "zita-convolver.h"

@@ -13,9 +13,9 @@
 #include <memory>
 #include <vector>
 
+#include "sound/dsp-kernels/GOSoundResample.h"
 #include "sound/interfaces/GOSoundSamplerPlayerInterface.h"
 
-#include "GOSoundResample.h"
 #include "GOSoundSamplerPool.h"
 #include "ptrvector.h"
 

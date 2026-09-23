@@ -13,6 +13,11 @@
 
 #include "sound/buffer/GOSoundBufferMutable.h"
 
+/**
+ * A stateless DSP kernel: a one-pole IIR filter (low-pass, high-pass, low
+ * shelf or high shelf), its coefficients held here and its running state
+ * held separately in a per-user FilterState.
+ */
 class GOSoundOnePoleFilter {
 public:
   enum class Type : uint8_t {
