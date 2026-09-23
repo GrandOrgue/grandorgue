@@ -10,7 +10,6 @@
 
 #include "GOTestSoundBufferBase.h"
 
-class GOSoundBufferMutable;
 class GOSoundBufferMutableMono;
 
 class GOTestSoundBufferMutableMono : public GOTestSoundBufferBase {
@@ -21,10 +20,6 @@ private:
     GOSoundBufferMutableMono &monoBuffer,
     const GOSoundBuffer &srcBuffer,
     unsigned channelI);
-  void TestCopyMonoToChannel(
-    GOSoundBufferMutableMono &monoBuffer,
-    GOSoundBufferMutable &dstBuffer,
-    unsigned channelI);
   void TestAddMonoFromChannel(
     GOSoundBufferMutableMono &monoBuffer,
     const GOSoundBuffer &srcBuffer,
@@ -33,7 +28,6 @@ private:
   void TestConstructorAndBasicProperties();
   void TestGetSubBuffer();
   void TestCopyChannelFrom();
-  void TestCopyChannelTo();
   void TestAddChannelFrom();
   void TestInvalidBuffer();
   void TestEdgeCases();

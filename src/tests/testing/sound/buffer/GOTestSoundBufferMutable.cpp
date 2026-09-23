@@ -9,7 +9,9 @@
 
 #include <cmath>
 #include <format>
+#include <vector>
 
+#include "sound/buffer/GOSoundBufferMono.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
 
 #include "GOTestScope.h"
@@ -349,6 +351,34 @@ void GOTestSoundBufferMutable::TestCopyChannelFrom() {
   AssertChannelEqual("CopyChannelFrom ch2->ch1", srcBuffer, 2, dstBuffer, 1);
 }
 
+void GOTestSoundBufferMutable::TestCopyChannelFromMono() {
+  const unsigned dstNChannels = 2;
+  const unsigned nFrames = 4;
+
+  std::vector<GOSoundBuffer::Item> monoData(nFrames);
+
+  fillWithSequential(monoData.data(), nFrames, 1.0f);
+
+  GOSoundBufferMono monoBuffer(monoData.data(), nFrames);
+
+  GO_DECLARE_LOCAL_SOUND_BUFFER(dstBuffer, dstNChannels, nFrames)
+
+  dstBuffer.FillWithSilence();
+
+  // Should behave exactly like the 3-argument CopyChannelFrom() with
+  // srcChannel=0
+  dstBuffer.CopyChannelFromMono(monoBuffer, 1);
+
+  AssertChannelEqual("CopyChannelFromMono", monoBuffer, 0, dstBuffer, 1);
+  for (unsigned frameI = 0; frameI < nFrames; ++frameI)
+    AssertChannelItemEqual(
+      "CopyChannelFromMono",
+      frameI,
+      0,
+      0.0f,
+      dstBuffer.GetData()[frameI * dstNChannels + 0]);
+}
+
 void GOTestSoundBufferMutable::TestAddChannelFrom() {
   const unsigned nChannels = 2;
   const unsigned nFrames = 3;
@@ -672,6 +702,7 @@ void GOTestSoundBufferMutable::run() {
   GO_RUN_TEST(TestCompatibilityChecks())
   GO_RUN_TEST(TestComplexOperations())
   GO_RUN_TEST(TestCopyChannelFrom())
+  GO_RUN_TEST(TestCopyChannelFromMono())
   GO_RUN_TEST(TestAddChannelFrom())
   GO_RUN_TEST(TestAddChannelFromWithCoefficient())
   GO_RUN_TEST(TestCrossChannelOperations())
