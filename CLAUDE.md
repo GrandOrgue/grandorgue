@@ -405,6 +405,24 @@ Key CMake options (see `CMakeLists.txt` for full list):
 - Use `assert()` to check invariants, especially in real-time audio code
 - Add documentation for all new classes, functions, and methods in header files
 
+### Commit Messages and Pull Requests
+
+- Commit message subject lines and PR titles must start with a past-tense
+  verb (e.g. `Added`, `Fixed`, `Moved`, `Reduced`, `Introduced`, `Corrected`)
+  - ✅ `Fixed heap overflow in audio output task`
+  - ❌ `Fix heap overflow in audio output task`
+- A PR's title and description must match the subject and body of its
+  first ("main") commit verbatim, not a separate "Summary/Test plan"
+  template. Later commits in the same PR (review feedback, fixups) don't
+  need to be reflected in the PR title/description, but must themselves
+  start with a past-tense verb.
+- If the change is accompanied by a `CHANGELOG.md` entry, the first
+  commit's subject line must repeat that changelog line verbatim,
+  including its trailing issue/discussion URL, but without the leading
+  `- ` bullet marker
+  - Changelog: `- Fixed heap overflow and wrong channel metering in audio output task https://github.com/GrandOrgue/grandorgue/issues/2531`
+  - Commit subject: `Fixed heap overflow and wrong channel metering in audio output task https://github.com/GrandOrgue/grandorgue/issues/2531`
+
 ## Important Patterns
 
 ### Buffer Handling
