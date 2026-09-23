@@ -15,6 +15,7 @@ set(go_tests
     sound/buffer/GOTestSoundBuffer.cpp
     sound/buffer/GOTestSoundBufferBase.cpp
     sound/buffer/GOTestSoundBufferManaged.cpp
+    sound/buffer/GOTestSoundBufferMono.cpp
     sound/buffer/GOTestSoundBufferMutable.cpp
     sound/buffer/GOTestSoundBufferMutableMono.cpp
     sound/buffer/GOTestSoundBufferPlanar.cpp
