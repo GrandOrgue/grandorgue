@@ -45,6 +45,8 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
       if (HAVE_GET_CLIENT_INFO_CARD)
         add_definitions(-DHAVE_GET_CLIENT_INFO_CARD)
       endif ()
+      include("${RTMIDI_SRC_DIR}/tests/AlsaHotplug.cmake")
+      rtmidi_add_hotplug_test(RtMidi "${RTMIDI_SRC_DIR}")
    endif ()
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
