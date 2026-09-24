@@ -374,6 +374,13 @@ void GOTestSoundOutputTask::
   fillChannel(input, 1, 0.0f);
   input.GetChannelBuffer(0).GetData()[0] = 1.0f;
   output.Run();
+  // Without this, GOSoundTaskBase::IsEmpty() would still read false from
+  // the completed round alone (see
+  // TestIsEmptyStaysFalseAfterSilentRoundUntilNewRound), masking a broken
+  // m_Reverb->HasContent() check below. NewRound() only resets that base
+  // round state - GOSoundOutputTask has no DoNewRound() override, so the
+  // reverb tail and meter are untouched.
+  output.NewRound();
 
   // ResetMeterInfo() alone stands in for GOSoundOrganEngine::NextPeriod(),
   // which calls it every period regardless of deregistration - it must not
