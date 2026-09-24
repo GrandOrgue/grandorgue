@@ -278,11 +278,15 @@ void GOTestSoundOutputTask::TestIdentityMixPreservesPerFrameLayout() {
   }
 }
 
-void GOTestSoundOutputTask::TestDiscardContentResetsReverbTail() {
-  ReverbStubBufferTask input;
+// A unit impulse near the end of channel 0's buffer, everything else
+// silent: the 10-sample IR's tail spills past the buffer boundary into the
+// next round.
+static constexpr unsigned IMPULSE_FRAME = REVERB_N_SAMPLES_PER_BUFFER - 4;
 
-  GOSoundOutputTask output(
-    N_CHANNELS, makeIdentityScaleFactors(), REVERB_N_SAMPLES_PER_BUFFER);
+// Configures output's reverb with the fixture IR shared by this file's
+// reverb tests, and routes input into it.
+static void setup_reverb_output(
+  GOSoundBufferTaskBase &input, GOSoundOutputTask &output) {
   const GOSoundReverb::ReverbConfig config = {
     .isEnabled = true,
     .isDirect = false,
@@ -296,27 +300,40 @@ void GOTestSoundOutputTask::TestDiscardContentResetsReverbTail() {
 
   output.SetupReverb(config, REVERB_N_SAMPLES_PER_BUFFER, TEST_IR_SAMPLE_RATE);
   output.SetOutputs({&input});
+}
 
-  // A unit impulse near the end of channel 0's buffer, everything else
-  // silent: the 10-sample IR's tail spills past the buffer boundary into
-  // the next round.
-  constexpr unsigned IMPULSE_FRAME = REVERB_N_SAMPLES_PER_BUFFER - 4;
-
+// Fires the impulse round and returns with the IR tail still entirely
+// unplayed, pending inside the convolution engine.
+static void fire_impulse_round(
+  ReverbStubBufferTask &input, GOSoundOutputTask &output) {
   fillChannel(input, 0, 0.0f);
   fillChannel(input, 1, 0.0f);
   input.GetChannelBuffer(0).GetData()[IMPULSE_FRAME] = 1.0f;
   output.Run();
   input.GetChannelBuffer(0).GetData()[IMPULSE_FRAME] = 0.0f;
+}
+
+void GOTestSoundOutputTask::TestDiscardContentResetsReverbTail() {
+  // Control instance, never discarded: establishes that, left alone, the
+  // pending tail from the impulse round does bleed into a later round with
+  // silent input - so the fixture actually exercises the regression this
+  // test is meant to catch.
+  ReverbStubBufferTask controlInput;
+  GOSoundOutputTask control(
+    N_CHANNELS, makeIdentityScaleFactors(), REVERB_N_SAMPLES_PER_BUFFER);
+
+  setup_reverb_output(controlInput, control);
+  fire_impulse_round(controlInput, control);
 
   bool wasTailObserved = false;
 
   for (unsigned roundI = 0; roundI < 8 && !wasTailObserved; roundI++) {
-    output.NewRound();
-    output.Run();
+    control.NewRound();
+    control.Run();
     for (unsigned frameI = 0;
          frameI < REVERB_N_SAMPLES_PER_BUFFER && !wasTailObserved;
          frameI++)
-      wasTailObserved = getChannelSample(output, 0, frameI) != 0.0f;
+      wasTailObserved = getChannelSample(control, 0, frameI) != 0.0f;
   }
 
   GOAssert(
@@ -324,15 +341,27 @@ void GOTestSoundOutputTask::TestDiscardContentResetsReverbTail() {
     "sanity check: the IR tail must bleed into a later round with silent "
     "input");
 
-  output.DiscardContent();
+  // Test instance: DiscardContent() runs right after the impulse round,
+  // before any further Run() call has a chance to play out (and thereby
+  // drain) the pending tail on its own - so the rounds checked below can
+  // only stay silent because DiscardContent() actually reset the
+  // convolution engine's state, not because the tail had already finished
+  // playing out naturally.
+  ReverbStubBufferTask testInput;
+  GOSoundOutputTask test(
+    N_CHANNELS, makeIdentityScaleFactors(), REVERB_N_SAMPLES_PER_BUFFER);
+
+  setup_reverb_output(testInput, test);
+  fire_impulse_round(testInput, test);
+  test.DiscardContent();
 
   bool wasTailObservedAfterDiscard = false;
 
   for (unsigned roundI = 0; roundI < 8; roundI++) {
-    output.NewRound();
-    output.Run();
+    test.NewRound();
+    test.Run();
     for (unsigned frameI = 0; frameI < REVERB_N_SAMPLES_PER_BUFFER; frameI++)
-      if (getChannelSample(output, 0, frameI) != 0.0f)
+      if (getChannelSample(test, 0, frameI) != 0.0f)
         wasTailObservedAfterDiscard = true;
   }
 
@@ -342,7 +371,7 @@ void GOTestSoundOutputTask::TestDiscardContentResetsReverbTail() {
     "convolution tail does not bleed into rounds run after the task is "
     "reused without another SetupReverb() call");
   GOAssert(
-    output.GetMeterInfo()[0] == 0.0f,
+    test.GetMeterInfo()[0] == 0.0f,
     "DiscardContent() must also reset the meter, as before");
 }
 
