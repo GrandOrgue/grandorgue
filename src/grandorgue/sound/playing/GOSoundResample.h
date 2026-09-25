@@ -2,7 +2,7 @@
  * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -114,21 +114,23 @@ public:
    * - void Seek(unsigned index, uint8_t channel) - sets the vector to the index
    *   position in the input stream for the specified channel. The
    *   implementation may restrict moving the position only forward
-   * - void NextSample() - returns the next sample of the same channel. The
+   * - void NextItem() - returns the next sample of the same channel. The
    *   implementation must provide sufficient number of samples required by
    *   the certain resampling algorithm.
    *
    * These methods are not virtual for a better performance. Their
    * implementation is substituted inline from the subclasses by a resampler.
    */
-  template <uint8_t nChannels> struct FloatingSampleVector {
+  template <uint8_t nChannels> struct FloatingFrameVector {
     static constexpr uint8_t m_NChannels = nChannels;
   };
 
   /**
    * A vector of continous samples in a memory region referenced by a pointer.
-   * SampleT - a type of one sample. Usually int8_t, int16_t, GOInt24, or float
-   * ResT - a type of one sample returned by NextSample(). Usually int or float
+   * SrcItemT - a type of one sample. Usually int8_t, int16_t, GOInt24, or
+   * float
+   * ResItemT - a type of one sample returned by NextItem(). Usually int or
+   * float
    * nChannels - number of channels in the source stream
    *
    * If nChannels>1 it asumes that samples are interleaving for several channels
@@ -137,16 +139,16 @@ public:
    *     - 1 left
    *     - 1 right
    *     - ...
-   * For the performance reason this NextSample() does not check for the bounds.
+   * For the performance reason this NextItem() does not check for the bounds.
    * The calling program must ensure that there are sufficient number of samples
    */
-  template <class SampleT, class ResT, uint8_t nChannels>
-  class PtrSampleVector : public FloatingSampleVector<nChannels> {
+  template <class SrcItemT, class ResItemT, uint8_t nChannels>
+  class PtrFrameVector : public FloatingFrameVector<nChannels> {
   private:
     // points to the first sample of the 0-channel in the input stream
-    const SampleT *p_StartPtr;
+    const SrcItemT *p_StartPtr;
     // points to the current sample in the vector
-    const SampleT *p_CurrPtr;
+    const SrcItemT *p_CurrPtr;
 
   protected:
     /**
@@ -155,7 +157,7 @@ public:
      * @param endPtr the end pointer
      * @return are there more samples in the vector
      */
-    inline bool IsBefore(const SampleT *endPtr) const {
+    inline bool IsBefore(const SrcItemT *endPtr) const {
       return p_CurrPtr < endPtr;
     }
 
@@ -164,7 +166,7 @@ public:
      * Construct the vector with some start pointer.
      * @param ptr a pointer to the first (0 left) sample
      */
-    inline PtrSampleVector(const SampleT *ptr) : p_StartPtr(ptr) {}
+    inline PtrFrameVector(const SrcItemT *ptr) : p_StartPtr(ptr) {}
 
     /**
      * Moves the current sample pointer to the specified position in the input
@@ -180,8 +182,8 @@ public:
      * pointer to the next sample of the same channel
      * @return the sample
      */
-    inline ResT NextSample() {
-      ResT res = (ResT)*p_CurrPtr;
+    inline ResItemT NextItem() {
+      ResItemT res = (ResItemT)*p_CurrPtr;
       p_CurrPtr += nChannels;
       return res;
     }
@@ -189,18 +191,18 @@ public:
 
   /**
    * A vector of continous samples in memory with checking for bounds on
-   * NextSample().
+   * NextItem().
    * This checking reduces the performance dramatically so it is intended to use
    * only in not realtime cases (for example, on loading, but not when playing)
    */
-  template <class SampleT, class ResT, uint8_t nChannels>
-  class BoundedPtrSampleVector
-    : public PtrSampleVector<SampleT, ResT, nChannels> {
+  template <class SrcItemT, class ResItemT, uint8_t nChannels>
+  class BoundedPtrFrameVector
+    : public PtrFrameVector<SrcItemT, ResItemT, nChannels> {
   private:
     /**
      * Points to the end of the memory region
      */
-    const SampleT *p_EndPtr;
+    const SrcItemT *p_EndPtr;
 
   public:
     /**
@@ -209,14 +211,14 @@ public:
      * @param ptr - a pointer to the first sample in the region
      * @param len - a number of samples of each channels
      */
-    inline BoundedPtrSampleVector(const SampleT *ptr, unsigned len)
-      : PtrSampleVector<SampleT, ResT, nChannels>(ptr),
+    inline BoundedPtrFrameVector(const SrcItemT *ptr, unsigned len)
+      : PtrFrameVector<SrcItemT, ResItemT, nChannels>(ptr),
         p_EndPtr(ptr + nChannels * len) {}
 
-    inline ResT NextSample() {
-      return PtrSampleVector<SampleT, ResT, nChannels>::IsBefore(p_EndPtr)
-        ? PtrSampleVector<SampleT, ResT, nChannels>::NextSample()
-        : (ResT)0;
+    inline ResItemT NextItem() {
+      return PtrFrameVector<SrcItemT, ResItemT, nChannels>::IsBefore(p_EndPtr)
+        ? PtrFrameVector<SrcItemT, ResItemT, nChannels>::NextItem()
+        : (ResItemT)0;
     }
   };
 
@@ -256,15 +258,15 @@ public:
      *   given number of samples
      * @param resamplingPos A resampling position in the input stream. It is
      *   advanced during this call
-     * @param sV a floating sample vector linked to the input stream
+     * @param fV a floating sample vector linked to the input stream
      * @param pOut a pointer to the output sample buffer in interleaving format.
      *   Must have at least nOutChannels*nOutSamples length
      * @param nOutSamples a number of output samples of each channel
      */
-    template <class SampleVectorT, uint8_t nOutChannels>
+    template <class FrameVectorT, uint8_t nOutChannels>
     inline void ResampleBlock(
       ResamplingPosition &resamplingPos,
-      SampleVectorT &sV,
+      FrameVectorT &fV,
       float *pOut,
       unsigned nOutSamples) const {
       for (unsigned i = 0; i < nOutSamples; i++, resamplingPos.Inc()) {
@@ -272,15 +274,15 @@ public:
         float outSample = 0.0f;
 
         for (uint8_t ch = 0; ch < nOutChannels; ch++) {
-          if (ch < SampleVectorT::m_NChannels) {
+          if (ch < FrameVectorT::m_NChannels) {
             const float *pCoef = coefs;
 
-            sV.Seek(resamplingPos.GetIndex(), ch);
+            fV.Seek(resamplingPos.GetIndex(), ch);
             // calculate the next output sample as a scalar production of the
             // input sample vector and the vector of coefficients
             outSample = 0.0f;
             for (unsigned j = 0; j < nPoints; j++)
-              outSample += sV.NextSample() * *(pCoef++);
+              outSample += fV.NextItem() * *(pCoef++);
           }
           /* else copy the calculated sample from the previous channel. It is
            * useful only for resampling a mono stream to a stereo one */
