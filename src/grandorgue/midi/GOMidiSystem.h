@@ -9,6 +9,7 @@
 #define GOMIDISYSTEM_H
 
 #include <wx/event.h>
+#include <wx/timer.h>
 
 #include "config/GOPortsConfig.h"
 #include "ports/GOMidiPortFactory.h"
@@ -18,6 +19,7 @@ class GOMidiEvent;
 class GOMidiPort;
 class GOMidiListener;
 class GOMidiMap;
+class GOMidiDeviceConfigList;
 class GOConfig;
 class GOOrganController;
 class GOMidiWxEvent;
@@ -28,6 +30,8 @@ class GOMidiWxEvent;
  */
 
 class GOMidiSystem : public wxEvtHandler {
+  friend class GOTestMidiSystem;
+
 private:
   GOConfig &m_config;
   GOMidiMap &m_MidiMap;
@@ -38,6 +42,17 @@ private:
   int m_transpose;
   std::vector<GOMidiListener *> m_Listeners;
   GOMidiPortFactory m_MidiFactory;
+  wxTimer m_DiscoveryTimer;
+
+  bool HasPendingDevices(
+    const GOMidiDeviceConfigList &configs,
+    const ptr_vector<GOMidiPort> &ports) const;
+  void DiscoverDevices();
+  void OnDiscoveryTimer(wxTimerEvent &event);
+
+  // Discovery opens only inactive, configured ports. Explicit Open() must
+  // still reopen active ports to apply settings and reset MIDI state.
+  void OpenDevices(bool onlyInactive);
 
 public:
   GOMidiSystem(GOConfig &settings);
