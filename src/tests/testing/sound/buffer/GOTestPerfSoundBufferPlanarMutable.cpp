@@ -108,10 +108,11 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM_COEFF[] = {
   {2048, 4350} // widened to -20% margin: CI runner variance exceeds 10%
                // (observed as low as 4836.7 on 2026-08-26/28)
 #else
-  {32, 540},   // debug, lowered: min observed 594.6, -10% margin
-  {128, 610},  // debug, lowered: min observed 677.0, -10% margin
-  {512, 630},  // debug, lowered: min observed 696.1, -10% margin
-  {2048, 640}  // debug, lowered: min observed 706.4, -10% margin
+  {32, 380},   // debug, rebaselined 2026-09-25 after adding a size barrier to
+               // defeat constant-folding: min observed 422.2, -10% margin
+  {128, 450},  // debug, rebaselined 2026-09-25: min observed 509.2, -10% margin
+  {512, 480},  // debug, rebaselined 2026-09-25: min observed 533.9, -10% margin
+  {2048, 490}  // debug, rebaselined 2026-09-25: min observed 544.4, -10% margin
 #endif
 };
 
@@ -143,10 +144,10 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM[] = {
   {32, 670}, // debug, rebaselined 2026-09-01: min observed 833.8
              // under contention, -20% margin
   {128, 920}, // debug, rebaselined 2026-09-04: min observed 1155.3, -20% margin
-  {512, 1020},   // debug, rebaselined 2026-09-01: min observed 1270.6
-                 // under contention, -20% margin
-  {2048, 1080}   // debug, rebaselined 2026-09-01: min observed 1352.8
-                 // under contention, -20% margin
+  {512, 1020}, // debug, rebaselined 2026-09-01: min observed 1270.6
+               // under contention, -20% margin
+  {2048, 1080} // debug, rebaselined 2026-09-01: min observed 1352.8
+               // under contention, -20% margin
 #endif
 };
 
@@ -163,14 +164,14 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_COEFF[]
     {2048, 7200} // rebaselined 2026-09-01: min observed 9009.1 under
                  // contention, -20% margin
 #else
-    {32, 750},   // debug, lowered: min observed 834.1, -10%
-                 // margin
-    {128, 1100}, // debug, lowered: min observed 1205.3, -10%
-                 // margin
-    {512, 1200}, // debug, lowered: min observed 1339.1, -10%
-                 // margin
-    {2048, 1250} // debug, lowered: min observed 1398.8, -10%
-                 // margin
+    {32, 730}, // debug, rebaselined 2026-09-25 after adding a size barrier to
+               // defeat constant-folding: min observed 814.0, -10% margin
+    {128,
+     860}, // debug, rebaselined 2026-09-25: min observed 960.1, -10% margin
+    {512,
+     910}, // debug, rebaselined 2026-09-25: min observed 1016.1, -10% margin
+    {2048,
+     940}     // debug, rebaselined 2026-09-25: min observed 1050.8, -10% margin
 #endif
 };
 
@@ -184,10 +185,10 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_DEINTERLEAVE_FROM[] = {
   {512, 1120}, // rebaselined 2026-09-04: min observed 1406.1, -20% margin
   {2048, 1100} // rebaselined 2026-09-04: min observed 1376.5, -20% margin
 #else
-  {32, 380},     // debug, lowered: min observed 422.5, -10% margin
-  {128, 550},    // debug, lowered: min observed 606.2, -10% margin
-  {512, 600},    // debug, lowered: min observed 669.7, -10% margin
-  {2048, 630}    // debug, lowered: min observed 696.3, -10% margin
+  {32, 380},  // debug, lowered: min observed 422.5, -10% margin
+  {128, 550}, // debug, lowered: min observed 606.2, -10% margin
+  {512, 600}, // debug, lowered: min observed 669.7, -10% margin
+  {2048, 630} // debug, lowered: min observed 696.3, -10% margin
 #endif
 };
 
@@ -205,10 +206,10 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_DEINTERLEAVE_FROM[]
     {2048, 1610} // rebaselined 2026-09-01: min observed 2013.1 under
                  // contention, -20% margin
 #else
-    {32, 380},   // debug, lowered: min observed 426.2, -10% margin
-    {128, 540},  // debug, lowered: min observed 605.2, -10% margin
-    {512, 600},  // debug, lowered: min observed 668.9, -10% margin
-    {2048, 630}  // debug, lowered: min observed 696.7, -10% margin
+    {32, 380},  // debug, lowered: min observed 426.2, -10% margin
+    {128, 540}, // debug, lowered: min observed 605.2, -10% margin
+    {512, 600}, // debug, lowered: min observed 668.9, -10% margin
+    {2048, 630} // debug, lowered: min observed 696.7, -10% margin
 #endif
 };
 
@@ -220,10 +221,10 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_INTERLEAVE_TO[] = {
   {512, 1070}, // rebaselined 2026-09-04: min observed 1343.8, -20% margin
   {2048, 1090} // rebaselined 2026-09-04: min observed 1374.5, -20% margin
 #else
-  {32, 420},     // debug, lowered: min observed 462.9, -10% margin
-  {128, 560},    // debug, lowered: min observed 625.9, -10% margin
-  {512, 610},    // debug, lowered: min observed 674.8, -10% margin
-  {2048, 630}    // debug, lowered: min observed 699.3, -10% margin
+  {32, 420},    // debug, lowered: min observed 462.9, -10% margin
+  {128, 560},   // debug, lowered: min observed 625.9, -10% margin
+  {512, 610},   // debug, lowered: min observed 674.8, -10% margin
+  {2048, 630}   // debug, lowered: min observed 699.3, -10% margin
 #endif
 };
 
@@ -316,8 +317,20 @@ void GOTestPerfSoundBufferPlanarMutable::TestPerfAddFromWithCoefficient() {
 
     constexpr float coeff = 0.5f;
 
-    RunAndEvaluateTest("AddFrom+coeff", baseline, [&dstBuffer, &srcBuffer]() {
-      dstBuffer.AddFrom(srcBuffer, coeff);
+    // Opaque view with a size the optimizer can no longer prove constant -
+    // without this, the compiler fully unrolls AddFrom() into straight-line
+    // scalar code instead of the packed vector loop real (runtime-sized)
+    // buffers get, making this test measure a code path production traffic
+    // never actually takes.
+    unsigned nFrames = GOTestPerfOpaqueSize(baseline.m_BufferSize);
+
+    GOSoundBufferPlanarMutable srcView(
+      srcBuffer.GetData(), NUM_CHANNELS, nFrames);
+    GOSoundBufferPlanarMutable dstView(
+      dstBuffer.GetData(), NUM_CHANNELS, nFrames);
+
+    RunAndEvaluateTest("AddFrom+coeff", baseline, [&dstView, &srcView]() {
+      dstView.AddFrom(srcView, coeff);
     });
   }
 }
@@ -377,9 +390,17 @@ void GOTestPerfSoundBufferPlanarMutable::
 
     constexpr float coeff = 0.5f;
 
+    // See TestPerfAddFromWithCoefficient() above for why this view exists.
+    unsigned nFrames = GOTestPerfOpaqueSize(baseline.m_BufferSize);
+
+    GOSoundBufferPlanarMutable srcView(
+      srcBuffer.GetData(), NUM_CHANNELS, nFrames);
+    GOSoundBufferPlanarMutable dstView(
+      dstBuffer.GetData(), NUM_CHANNELS, nFrames);
+
     RunAndEvaluateTest(
-      "AddChannelFrom+coeff", baseline, [&dstBuffer, &srcBuffer]() {
-        dstBuffer.AddChannelFrom(srcBuffer, 0, 1, coeff);
+      "AddChannelFrom+coeff", baseline, [&dstView, &srcView]() {
+        dstView.AddChannelFrom(srcView, 0, 1, coeff);
       });
   }
 }
