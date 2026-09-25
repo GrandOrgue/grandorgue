@@ -93,13 +93,15 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM_COEFF[] = {
   {512, 4220}, // 4220 Mframes/sec (lowered: min observed 4689.3, -10% margin)
   {2048, 4300} // 4300 Mframes/sec (lowered: min observed 4781.1, -10% margin)
 #else
-  {32, 450}, // 450 Mframes/sec (debug, raised: min observed 506.4, -10% margin)
-  {128,
-   470}, // 470 Mframes/sec (debug, raised: min observed 533.3, -10% margin)
-  {512,
-   500}, // 500 Mframes/sec (debug, raised: min observed 557.2, -10% margin)
-  {2048,
-   430} // 430 Mframes/sec (debug, lowered: min observed 478.3, -10% margin)
+  {32, 430},  // 430 Mframes/sec (debug, rebaselined 2026-09-25 after adding a
+              // size barrier to defeat constant-folding: min observed 487.1,
+              // -10% margin)
+  {128, 450}, // 450 Mframes/sec (debug, rebaselined 2026-09-25: min observed
+              // 510.5, -10% margin)
+  {512, 480}, // 480 Mframes/sec (debug, rebaselined 2026-09-25: min observed
+              // 534.6, -10% margin)
+  {2048, 470} // 470 Mframes/sec (debug, rebaselined 2026-09-25: min observed
+              // 533.2, -10% margin)
 #endif
 };
 
@@ -147,14 +149,15 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_COEFF[]
     {512, 2050}, // 2050 Mframes/sec (lowered: min observed 2284.6, -10% margin)
     {2048, 2200} // 2200 Mframes/sec (lowered: min observed 2458.4, -10% margin)
 #else
-    {32,
-     730}, // 730 Mframes/sec (debug, lowered: min observed 812.2, -10% margin)
-    {128, 960},  // 960 Mframes/sec (debug, rebaselined 2026-09-17: min observed
-                 // 1075.5, -10% margin)
-    {512, 1130}, // 1130 Mframes/sec (debug, lowered: min observed 1260.2, -10%
-                 // margin)
-    {2048, 1250} // 1250 Mframes/sec (debug, lowered: min observed 1395.6, -10%
-                 // margin)
+    {32, 1130},  // 1130 Mframes/sec (debug, rebaselined 2026-09-25 after adding
+                 // a size barrier to defeat constant-folding: min observed
+                 // 1259.2, -10% margin)
+    {128, 1300}, // 1300 Mframes/sec (debug, rebaselined 2026-09-25: min
+                 // observed 1450.0, -10% margin)
+    {512, 1480}, // 1480 Mframes/sec (debug, rebaselined 2026-09-25: min
+                 // observed 1656.6, -10% margin)
+    {2048, 1420} // 1420 Mframes/sec (debug, rebaselined 2026-09-25: min
+                 // observed 1587.4, -10% margin)
 #endif
 };
 
@@ -300,8 +303,18 @@ void GOTestPerfSoundBufferMutable::TestPerfAddFromWithCoefficient() {
 
     constexpr float coeff = 0.5f;
 
-    RunAndEvaluateTest("AddFrom+coeff", baseline, [&dstBuffer, &srcBuffer]() {
-      dstBuffer.AddFrom(srcBuffer, coeff);
+    // Opaque view with a size the optimizer can no longer prove constant -
+    // without this, the compiler fully unrolls AddFrom() into straight-line
+    // scalar code instead of the packed vector loop real (runtime-sized)
+    // buffers get, making this test measure a code path production traffic
+    // never actually takes.
+    unsigned nFrames = GOTestPerfOpaqueSize(baseline.m_BufferSize);
+
+    GOSoundBufferMutable srcView(srcBuffer.GetData(), NUM_CHANNELS, nFrames);
+    GOSoundBufferMutable dstView(dstBuffer.GetData(), NUM_CHANNELS, nFrames);
+
+    RunAndEvaluateTest("AddFrom+coeff", baseline, [&dstView, &srcView]() {
+      dstView.AddFrom(srcView, coeff);
     });
   }
 }
@@ -362,9 +375,15 @@ void GOTestPerfSoundBufferMutable::TestPerfAddChannelFromWithCoefficient() {
 
     constexpr float coeff = 0.5f;
 
+    // See TestPerfAddFromWithCoefficient() above for why this view exists.
+    unsigned nFrames = GOTestPerfOpaqueSize(baseline.m_BufferSize);
+
+    GOSoundBufferMutable srcView(srcBuffer.GetData(), NUM_CHANNELS, nFrames);
+    GOSoundBufferMutable dstView(dstBuffer.GetData(), NUM_CHANNELS, nFrames);
+
     RunAndEvaluateTest(
-      "AddChannelFrom+coeff", baseline, [&dstBuffer, &srcBuffer]() {
-        dstBuffer.AddChannelFrom(srcBuffer, 0, 1, coeff);
+      "AddChannelFrom+coeff", baseline, [&dstView, &srcView]() {
+        dstView.AddChannelFrom(srcView, 0, 1, coeff);
       });
   }
 }
