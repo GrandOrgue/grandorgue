@@ -178,7 +178,7 @@ void GOSoundProvider::SetToneBalanceValue(int8_t value) {
 }
 
 void GOSoundProvider::SetToneBalanceFilterSamplerate(unsigned samplerate) {
-  m_ToneBalance.SetFilterSamplerate(samplerate);
+  m_ToneBalance.SetSamplerate(samplerate);
   m_ToneBalance.Init(m_ToneBalanceValue);
 }
 
