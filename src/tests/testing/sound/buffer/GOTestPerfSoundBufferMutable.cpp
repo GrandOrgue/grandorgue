@@ -454,7 +454,7 @@ void GOTestPerfSoundBufferMutable::run() {
 #else
   std::cout << "Build mode: Debug\n";
 #endif
-  std::cout << "Testing with " << NUM_ITERATIONS
+  std::cout << "Testing with " << GetNumIterations()
             << " iterations per buffer size\n";
   std::cout << "Buffer configuration: " << NUM_CHANNELS
             << " channels (stereo)\n";
