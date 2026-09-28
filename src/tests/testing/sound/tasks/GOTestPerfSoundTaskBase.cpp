@@ -39,23 +39,21 @@ static constexpr double AUDIO_PERIODS_PER_SECOND
 // Minimum acceptable throughput of the uncontended hot path: a repeatable
 // task that is already done for this round and is being repeatedly polled
 // by a worker thread with nothing better to do, as GOSchedulerThread does
-// while looking for work. Calibrated from the CI history of this test on
-// GitHub Actions' shared ubuntu-latest runners (github.com/oleg68/
-// GrandOrgue-official, Build workflow, "tests (perf, ...)" jobs, 16 Debug/
-// Release runs between 2026-08-04 and 2026-08-28), separately per build
-// type since they don't share a noise floor: observed 359M-493M runs/sec on
-// Debug (worst 359M) and 375M-435M on Release (worst 375M), each threshold
-// set 10% below its own worst case for run-to-run variance on shared
-// hardware.
-// Rebaselined 2026-09-23: a Debug run on oleg68/GrandOrgue-official (a
-// docs-only branch, so not a code regression) measured 299.0M runs/sec,
-// well under the prior 359M floor, on a shared runner otherwise unremarkable
-// (same ubuntu-24.04 image, no unusual CPU model). Lowered to 10% below this
-// new observed minimum.
+// while looking for work.
+// Rebaselined 2026-09-28: calibrated from 38 successful Build-workflow runs
+// with perf jobs across both GrandOrgue/grandorgue and oleg68/
+// GrandOrgue-official (2026-09-09 to 2026-09-26, ~35 distinct branches/PRs,
+// shared ubuntu-latest runners) plus 3 local Debug and 3 local Release runs,
+// separately per build type since they don't share a noise floor: worst
+// observed was 360.6M runs/sec on Debug (run 35066145714 on GrandOrgue/
+// grandorgue) and 380.1M runs/sec on Release (run 35065323812 on oleg68/
+// GrandOrgue-official) - both from CI, well below any local run. Each
+// threshold set 10% below its own worst case for run-to-run variance on
+// shared hardware.
 #ifdef NDEBUG
-static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 335'000'000.0;
+static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 342'000'000.0;
 #else
-static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 269'000'000.0;
+static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 324'000'000.0;
 #endif
 
 // Minimum acceptable round rate for several threads racing Run() on the same
@@ -68,13 +66,17 @@ static constexpr double MIN_CONTENDED_ROUNDS_PER_SECOND
 
 // Minimum acceptable aggregate throughput of the cooperative protocol, now
 // that each thread works its own quota instead of draining one shared
-// counter. Calibrated from 6 local Debug runs: worst observed was ~532M
-// items/sec (nThreads=1), halved for a 2x margin. With the shared-counter
-// artifact gone, throughput scales up with thread count (~740M at 1 thread
-// to ~3.9G at 8) rather than collapsing, so the worst case is now the
-// single-threaded one.
-// TODO: recalibrate once this test has run on CI hardware.
-static constexpr double MIN_COOPERATIVE_ITEMS_PER_SECOND = 250'000'000.0;
+// counter. With the shared-counter artifact gone, throughput scales up with
+// thread count (~460M-850M at 1 thread to ~3.1G-4.9G at 8 across local and
+// CI runs) rather than collapsing, so the worst case is the single-threaded
+// one.
+// Rebaselined 2026-09-28: calibrated from the same 38 CI runs (both repos)
+// plus 3 local Debug and 3 local Release runs used for
+// MIN_UNCONTENDED_RUNS_PER_SECOND above. Worst observed was 461.5M
+// items/sec (Release, nThreads=1, run 36014208781 on GrandOrgue/grandorgue),
+// below any Debug or local observation. Threshold set 10% below this worst
+// case; not split by build type since the constant is shared between them.
+static constexpr double MIN_COOPERATIVE_ITEMS_PER_SECOND = 415'000'000.0;
 
 // Maximum acceptable cost of the round protocol itself - the m_mutex
 // acquisitions in Run() and NewRound() - with barrier and thread scheduling
@@ -109,32 +111,40 @@ static constexpr double MAX_NEXT_PERIOD_PEAK_MICROSECONDS
 
 // Maximum acceptable mean and worst-case latency of one CompleteRound() +
 // NewRound() pair on the cooperative task, measured on the thread standing in
-// for the audio thread while workers race Run() on the same round. Budgeted
-// exactly like the non-cooperative pair above - half a period for the mean,
-// ten periods for the tail - but kept as separate constants because this is
-// the go/no-go gate for replacing the cooperative entry section with a
-// lock-free one, and the two sides of that comparison must not share a
-// threshold with a scenario the change does not touch.
-// Six local Debug runs give a mean of 0.5-0.9 us that does not grow from 1 to
-// 8 threads, of which roughly 0.2 us is the merge pass itself, and peaks of
-// 6-49 us. So the entry section this measures costs a fraction of a
-// microsecond even fully contended: whatever replaces it has very little to
-// win, and this is the number that has to show otherwise.
-// TODO: recalibrate once this test has run on CI hardware.
-static constexpr double MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS
-  = AUDIO_PERIOD_MICROSECONDS / 2.0;
-static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS
-  = AUDIO_PERIOD_MICROSECONDS * 10.0;
+// for the audio thread while workers race Run() on the same round. Kept as
+// separate constants from the non-cooperative pair above - not sharing their
+// formula-derived budget - because this is the go/no-go gate for replacing
+// the cooperative entry section with a lock-free one, and the two sides of
+// that comparison must not share a threshold with a scenario the change does
+// not touch.
+// Rebaselined 2026-09-28: calibrated from the same 38 CI runs (both repos)
+// plus 3 local Debug and 3 local Release runs used for
+// MIN_UNCONTENDED_RUNS_PER_SECOND above. Worst observed mean was 1.2 us
+// (Debug, nThreads=8, run 36256259176 on oleg68/GrandOrgue-official); worst
+// observed peak was 315.6 us (Release, nThreads=8, run 36256224129 on
+// oleg68/GrandOrgue-official) - a real outlier next to the mean, consistent
+// with the OS scheduling jitter seen elsewhere in this suite (see
+// TestPerfNextPeriodLatency). So the entry section this measures still costs
+// a fraction of a microsecond on average even fully contended, but its tail
+// can reach close to one audio period on shared CI hardware. Each threshold
+// set 10% above its own worst case for run-to-run variance; not split by
+// build type since the constant is shared between them.
+static constexpr double MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS = 1.5;
+static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS = 350.0;
 
 // Minimum acceptable round rate on the lazy-prerequisite path
 // (GOSoundWindchestTask::GetAmplitude() shape) with ~5us of work per
 // DoRun().
 // Unlike MIN_CONTENDED_ROUNDS_PER_SECOND this is NOT the 3000/sec real-time
 // figure: the timed loop includes a full barrier per round, which dominates.
-// Calibrated from 6 local Debug runs: worst observed was ~13986 rounds/sec
-// (doneWithinRound=false, nThreads=8), halved for a 2x margin.
-// TODO: recalibrate once this test has run on CI hardware.
-static constexpr double MIN_LAZY_ROUNDS_PER_SECOND = 7'000.0;
+// Rebaselined 2026-09-28: calibrated from the same 38 CI runs (both repos)
+// plus 3 local Debug and 3 local Release runs used for
+// MIN_UNCONTENDED_RUNS_PER_SECOND above. Worst observed was 8,513.7
+// rounds/sec (Release, doneWithinRound=false, nThreads=8, run 35843769751
+// on GrandOrgue/grandorgue), below any Debug or local observation.
+// Threshold set 10% below this worst case; not split by build type since the
+// constant is shared between them.
+static constexpr double MIN_LAZY_ROUNDS_PER_SECOND = 7'600.0;
 
 /**
  * Times nRounds barrier-synchronised rounds across nThreads threads.
