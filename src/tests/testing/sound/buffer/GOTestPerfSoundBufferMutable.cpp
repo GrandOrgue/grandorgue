@@ -145,20 +145,25 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_COEFF[]
   = {
 #ifdef NDEBUG
     {32, 1800},  // 1800 Mframes/sec (measured: 2016.6, with 10% margin)
-    {128, 1963}, // 1963 Mframes/sec (rebaselined 2026-09-28: min observed
-                 // 2181.2 under CI contention, -10% margin)
+    {128, 1900}, // 1900 Mframes/sec (rebaselined 2026-09-28: min observed
+                 // 2181.2 under CI contention, -10% margin, rounded down to 2
+                 // significant figures)
     {512, 2050}, // 2050 Mframes/sec (lowered: min observed 2284.6, -10% margin)
-    {2048, 1951} // 1951 Mframes/sec (rebaselined 2026-09-28: min observed
-                 // 2168.3 under CI contention, -10% margin)
+    {2048, 1900} // 1900 Mframes/sec (rebaselined 2026-09-28: min observed
+                 // 2168.3 under CI contention, -10% margin, rounded down to 2
+                 // significant figures)
 #else
-    {32, 928},   // 928 Mframes/sec (debug, rebaselined 2026-09-28: min
-                 // observed 1031.1 under CI contention, -10% margin)
+    {32, 920},   // 920 Mframes/sec (debug, rebaselined 2026-09-28: min
+                 // observed 1031.1 under CI contention, -10% margin, rounded
+                 // down to 2 significant figures)
     {128, 1300}, // 1300 Mframes/sec (debug, rebaselined 2026-09-25: min
                  // observed 1450.0, -10% margin)
-    {512, 1248}, // 1248 Mframes/sec (debug, rebaselined 2026-09-28: min
-                 // observed 1386.7 under CI contention, -10% margin)
-    {2048, 1268} // 1268 Mframes/sec (debug, rebaselined 2026-09-28: min
-                 // observed 1409.0 under CI contention, -10% margin)
+    {512, 1200}, // 1200 Mframes/sec (debug, rebaselined 2026-09-28: min
+                 // observed 1386.7 under CI contention, -10% margin, rounded
+                 // down to 2 significant figures)
+    {2048, 1200} // 1200 Mframes/sec (debug, rebaselined 2026-09-28: min
+                 // observed 1409.0 under CI contention, -10% margin, rounded
+                 // down to 2 significant figures)
 #endif
 };
 

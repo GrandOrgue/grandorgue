@@ -49,11 +49,11 @@ static constexpr double AUDIO_PERIODS_PER_SECOND
 // grandorgue) and 380.1M runs/sec on Release (run 35065323812 on oleg68/
 // GrandOrgue-official) - both from CI, well below any local run. Each
 // threshold set 10% below its own worst case for run-to-run variance on
-// shared hardware.
+// shared hardware, then rounded down to 2 significant figures.
 #ifdef NDEBUG
-static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 342'000'000.0;
+static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 340'000'000.0;
 #else
-static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 324'000'000.0;
+static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 320'000'000.0;
 #endif
 
 // Minimum acceptable round rate for several threads racing Run() on the same
@@ -75,8 +75,9 @@ static constexpr double MIN_CONTENDED_ROUNDS_PER_SECOND
 // MIN_UNCONTENDED_RUNS_PER_SECOND above. Worst observed was 461.5M
 // items/sec (Release, nThreads=1, run 36014208781 on GrandOrgue/grandorgue),
 // below any Debug or local observation. Threshold set 10% below this worst
-// case; not split by build type since the constant is shared between them.
-static constexpr double MIN_COOPERATIVE_ITEMS_PER_SECOND = 415'000'000.0;
+// case, then rounded down to 2 significant figures; not split by build type
+// since the constant is shared between them.
+static constexpr double MIN_COOPERATIVE_ITEMS_PER_SECOND = 410'000'000.0;
 
 // Maximum acceptable cost of the round protocol itself - the m_mutex
 // acquisitions in Run() and NewRound() - with barrier and thread scheduling

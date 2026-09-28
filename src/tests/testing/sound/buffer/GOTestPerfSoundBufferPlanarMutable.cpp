@@ -100,8 +100,9 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM[] = {
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM_COEFF[] = {
 #ifdef NDEBUG
-  {32, 2155},  // rebaselined 2026-09-28: min observed 2394.8 under CI
-               // contention, -10% margin
+  {32, 2100},  // rebaselined 2026-09-28: min observed 2394.8 under CI
+               // contention, -10% margin, rounded down to 2 significant
+               // figures
   {128, 3500}, // rebaselined 2026-09-01: min observed 4385.8 under
                // contention, -20% margin
   {512, 3700}, // rebaselined 2026-09-01: min observed 4627.1 under
@@ -119,8 +120,9 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM_COEFF[] = {
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_COPY_CHANNEL_FROM[] = {
 #ifdef NDEBUG
-  {32, 2703},   // rebaselined 2026-09-28: min observed 3003.4 under CI
-                // contention, -10% margin
+  {32, 2700},   // rebaselined 2026-09-28: min observed 3003.4 under CI
+                // contention, -10% margin, rounded down to 2 significant
+                // figures
   {128, 6570},  // rebaselined 2026-09-22: min observed 8222.2 under
                 // contention, -20% margin
   {512, 12330}, // rebaselined 2026-09-17: min observed 13700.6, -10% margin
