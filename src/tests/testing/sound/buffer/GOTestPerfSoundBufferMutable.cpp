@@ -145,19 +145,25 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_COEFF[]
   = {
 #ifdef NDEBUG
     {32, 1800},  // 1800 Mframes/sec (measured: 2016.6, with 10% margin)
-    {128, 2200}, // 2200 Mframes/sec (measured: 2425.6, with 10% margin)
+    {128, 1900}, // 1900 Mframes/sec (rebaselined 2026-09-28: min observed
+                 // 2181.2 under CI contention, -10% margin, rounded down to 2
+                 // significant figures)
     {512, 2050}, // 2050 Mframes/sec (lowered: min observed 2284.6, -10% margin)
-    {2048, 2200} // 2200 Mframes/sec (lowered: min observed 2458.4, -10% margin)
+    {2048, 1900} // 1900 Mframes/sec (rebaselined 2026-09-28: min observed
+                 // 2168.3 under CI contention, -10% margin, rounded down to 2
+                 // significant figures)
 #else
-    {32, 1130},  // 1130 Mframes/sec (debug, rebaselined 2026-09-25 after adding
-                 // a size barrier to defeat constant-folding: min observed
-                 // 1259.2, -10% margin)
+    {32, 920},   // 920 Mframes/sec (debug, rebaselined 2026-09-28: min
+                 // observed 1031.1 under CI contention, -10% margin, rounded
+                 // down to 2 significant figures)
     {128, 1300}, // 1300 Mframes/sec (debug, rebaselined 2026-09-25: min
                  // observed 1450.0, -10% margin)
-    {512, 1480}, // 1480 Mframes/sec (debug, rebaselined 2026-09-25: min
-                 // observed 1656.6, -10% margin)
-    {2048, 1420} // 1420 Mframes/sec (debug, rebaselined 2026-09-25: min
-                 // observed 1587.4, -10% margin)
+    {512, 1200}, // 1200 Mframes/sec (debug, rebaselined 2026-09-28: min
+                 // observed 1386.7 under CI contention, -10% margin, rounded
+                 // down to 2 significant figures)
+    {2048, 1200} // 1200 Mframes/sec (debug, rebaselined 2026-09-28: min
+                 // observed 1409.0 under CI contention, -10% margin, rounded
+                 // down to 2 significant figures)
 #endif
 };
 
