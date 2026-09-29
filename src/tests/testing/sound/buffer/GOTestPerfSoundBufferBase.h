@@ -21,6 +21,22 @@ struct GOTestPerfSoundBufferBaseline {
 };
 
 /**
+ * Passes bufferSize through an out-of-line, externally-defined function -
+ * one the caller's translation unit cannot see the body of - so the
+ * optimizer can no longer prove it a compile-time constant. Without this,
+ * the compiler fully unrolls the operation under test (e.g. AddFrom()) into
+ * straight-line scalar code instead of the packed vector loop real
+ * (runtime-sized) buffers get, making the test measure a code path
+ * production traffic never actually takes.
+ *
+ * This relies on nothing but ordinary extern linkage across translation
+ * units built without link-time optimization (the project does not enable
+ * LTO), unlike a GCC/Clang inline-asm register barrier, so it works with
+ * any compiler.
+ */
+unsigned GOTestPerfOpaqueSize(unsigned bufferSize);
+
+/**
  * Shared performance-test infrastructure for sound buffer classes.
  * GOTestPerfSoundBufferMutable (interleaved) and
  * GOTestPerfSoundBufferPlanarMutable (planar) both derive from this, so the

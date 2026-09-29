@@ -11,6 +11,11 @@
 #include <format>
 #include <iostream>
 
+// Deliberately not inline and not static, so it stays a real cross-TU call
+// (see GOTestPerfOpaqueSize() in the header) instead of being folded back
+// into a compile-time constant by the optimizer.
+unsigned GOTestPerfOpaqueSize(unsigned bufferSize) { return bufferSize; }
+
 double GOTestPerfSoundBufferBase::measure_performance(
   unsigned bufferSize,
   unsigned numIterations,
