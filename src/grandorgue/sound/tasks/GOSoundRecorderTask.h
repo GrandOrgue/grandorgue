@@ -67,6 +67,11 @@ public:
 
   void Open(wxString filename);
   bool IsOpen() const;
+  /** True while the underlying WAV file descriptor is still open,
+   * independent of the m_Recording flag IsOpen() reports - exposed so tests
+   * can verify Close()/DiscardContent() actually release the file handle
+   * rather than just resetting the recording flag. */
+  bool HasOpenFileHandle() const { return m_file.IsOpened(); }
   void Close();
   void SetSampleRate(unsigned sample_rate);
   /* 1 = 8 bit, 2 = 16 bit, 3 = 24 bit, 4 = float */
