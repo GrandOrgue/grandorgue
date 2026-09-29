@@ -42,9 +42,11 @@ constexpr const char *OUTPUT_32 = "Output:32";
 // so each concrete class keeps its own override.
 template <class Base>
 class TestMidiPort : public Base {
+protected:
+  const bool m_Available;
+
 public:
   unsigned m_Opens = 0;
-  bool m_Available;
 
   TestMidiPort(
     GOMidiSystem &midi,
