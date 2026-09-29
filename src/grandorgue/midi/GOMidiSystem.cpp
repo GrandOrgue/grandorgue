@@ -70,19 +70,22 @@ bool GOMidiSystem::HasPendingDevices(
   return std::ranges::any_of(
     configs,
     [this, &ports, &portsConfig](const GOMidiDeviceConfig *config) {
-      if (
-        !config->m_IsEnabled
-        || !portsConfig.IsEnabled(
-          config->GetPortName(), config->GetApiName()))
-        return false;
+      bool isPending = false;
 
-      const unsigned id
-        = m_MidiMap.GetDeviceIdByLogicalName(config->GetLogicalName());
-      return !std::ranges::any_of(
-        ports,
-        [id](const GOMidiPort *port) {
-          return port->IsActive() && port->GetID() == id;
-        });
+      if (
+        config->m_IsEnabled
+        && portsConfig.IsEnabled(
+          config->GetPortName(), config->GetApiName())) {
+        const unsigned id
+          = m_MidiMap.GetDeviceIdByLogicalName(config->GetLogicalName());
+
+        isPending = !std::ranges::any_of(
+          ports,
+          [id](const GOMidiPort *port) {
+            return port->IsActive() && port->GetID() == id;
+          });
+      }
+      return isPending;
     });
 }
 
