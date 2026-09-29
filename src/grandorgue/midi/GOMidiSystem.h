@@ -9,7 +9,6 @@
 #define GOMIDISYSTEM_H
 
 #include <wx/event.h>
-#include <wx/timer.h>
 
 #include "config/GOPortsConfig.h"
 #include "ports/GOMidiPortFactory.h"
@@ -23,6 +22,8 @@ class GOMidiDeviceConfigList;
 class GOConfig;
 class GOOrganController;
 class GOMidiWxEvent;
+class wxTimer;
+class wxTimerEvent;
 
 /**
  * This class represents a GrandOrgue-wide MIDI system. It may be used even
@@ -42,16 +43,44 @@ private:
   int m_transpose;
   std::vector<GOMidiListener *> m_Listeners;
   GOMidiPortFactory m_MidiFactory;
-  wxTimer m_DiscoveryTimer;
 
+  /**
+   * Periodically discovers configured MIDI ports that were unavailable
+   * when the MIDI system was opened
+   */
+  wxTimer *m_pDiscoveryTimer;
+
+  /**
+   * Whether a configured and enabled MIDI port in configs has no
+   * active port in ports
+   */
   bool HasPendingDevices(
     const GOMidiDeviceConfigList &configs,
     const ptr_vector<GOMidiPort> &ports) const;
+
+  /**
+   * Whether a configured and enabled MIDI input or output port has
+   * no active port
+   */
+  bool HasPendingDevices() const;
+
+  /**
+   * Opens inactive configured ports so that a port appearing after
+   * startup is used with its saved settings
+   */
   void DiscoverDevices();
+
+  /**
+   * Timer handler; stops discovery once all configured ports are
+   * active
+   */
   void OnDiscoveryTimer(wxTimerEvent &event);
 
-  // Discovery opens only inactive, configured ports. Explicit Open() must
-  // still reopen active ports to apply settings and reset MIDI state.
+  /**
+   * Discovery opens only inactive, configured ports. Explicit Open()
+   * must still reopen active ports to apply settings and reset MIDI
+   * state.
+   */
   void OpenDevices(bool onlyInactive);
 
 public:
