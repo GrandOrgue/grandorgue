@@ -121,6 +121,7 @@ void GOGuiOrgan::SaveOrganGui(GOConfigWriter &cfg) {
 
 void GOGuiOrgan::ClearOrganGui() {
   if (m_IsOrganGuiLoaded) {
+    m_MouseState.clear();
     m_panels.clear();
     m_PanelCreators.clear();
     mp_MainWindowData.reset();
