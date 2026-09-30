@@ -63,6 +63,10 @@ public:
    * GOSoundReverb::Setup() handles it, leaving the chain silently unloaded
    * (an empty impulse response) rather than propagating - and, unlike a
    * successful load, is retried on every subsequent call rather than cached.
+   *
+   * When m_config.isEnabled is false, the file is never touched at all - the
+   * same early-return behavior as GOSoundReverb::Setup() - and
+   * CreateTypedState() always builds a no-op state.
    */
   void EnsureSetup(
     unsigned nChannels, unsigned nFrames, unsigned sampleRate) override;

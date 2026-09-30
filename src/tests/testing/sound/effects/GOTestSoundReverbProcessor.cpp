@@ -170,10 +170,42 @@ void GOTestSoundReverbProcessor::TestMissingIrFileBuildsNoOpState() {
   GOAssert(true, "Reset() on a no-op state must not crash");
 }
 
+void GOTestSoundReverbProcessor::TestDisabledConfigBuildsNoOpState() {
+  GOSoundReverb::ReverbConfig config = make_config();
+
+  config.isEnabled = false;
+
+  GOSoundReverbProcessor processor(config);
+
+  processor.EnsureSetup(2, TEST_N_FRAMES, TEST_SAMPLE_RATE);
+
+  std::unique_ptr<GOSoundReverbProcessorState> pState
+    = processor.CreateTypedState();
+
+  GOAssert(
+    pState->mp_ConvprocsByChannel.empty(),
+    "a disabled config must build a no-op state (no Convproc engines) even "
+    "though a valid IR file is configured");
+
+  GOSoundProcessor &untypedProcessor = processor;
+  GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(buffer, 2, TEST_N_FRAMES);
+
+  for (unsigned itemI = 0; itemI < buffer.GetNItems(); itemI++)
+    buffer.GetData()[itemI] = 0.5f;
+  untypedProcessor.Process(*pState, buffer);
+
+  for (unsigned itemI = 0; itemI < buffer.GetNItems(); itemI++)
+    GOAssert(
+      buffer.GetData()[itemI] == 0.5f,
+      "Process() on a disabled processor's state must be a silent bypass, "
+      "leaving the buffer untouched");
+}
+
 void GOTestSoundReverbProcessor::run() {
   TestCreateTypedStateBuildsOneConvprocPerChannel();
   TestEnsureSetupReloadsOnFormatChange();
   TestProcessRunsAcrossSeveralRounds();
   TestResetDoesNotCrash();
   TestMissingIrFileBuildsNoOpState();
+  TestDisabledConfigBuildsNoOpState();
 }

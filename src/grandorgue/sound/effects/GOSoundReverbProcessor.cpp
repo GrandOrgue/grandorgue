@@ -30,15 +30,21 @@ void GOSoundReverbProcessor::EnsureSetup(
   const bool isSampleRateChanged
     = !m_IsSetupCalled || sampleRate != m_SampleRate;
 
-  if (isSampleRateChanged || !m_IsIRLoaded) {
-    try {
-      m_irData = GOSoundReverb::loadIRData(m_config, sampleRate);
-      m_IsIRLoaded = true;
-    } catch (wxString error) {
-      wxLogError(_("Reverb load error: %s"), error.c_str());
-      m_irData = GOSoundReverb::IRData();
-      m_IsIRLoaded = false;
+  // A disabled config never loads a file, so m_irData stays empty forever
+  // (CreateTypedState()'s no-op path) - mirrors GOSoundReverb::Setup().
+  if (m_config.isEnabled) {
+    if (isSampleRateChanged || !m_IsIRLoaded) {
+      try {
+        m_irData = GOSoundReverb::loadIRData(m_config, sampleRate);
+        m_IsIRLoaded = true;
+      } catch (wxString error) {
+        wxLogError(_("Reverb load error: %s"), error.c_str());
+        m_irData = GOSoundReverb::IRData();
+        m_IsIRLoaded = false;
+      }
     }
+  } else {
+    assert(!m_IsIRLoaded && m_irData.data.empty());
   }
   m_NChannels = nChannels;
   m_NFrames = nFrames;

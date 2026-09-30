@@ -51,6 +51,12 @@ private:
    * Process() on that state must be a silent bypass, not a crash. */
   void TestMissingIrFileBuildsNoOpState();
 
+  /** A config with isEnabled = false, even with a valid IR file configured,
+   * must never load it - CreateTypedState() must build a no-op state (an
+   * empty mp_ConvprocsByChannel), and Process() on it must be a silent
+   * bypass, the same as a missing/failed-to-load file. */
+  void TestDisabledConfigBuildsNoOpState();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
