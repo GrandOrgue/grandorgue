@@ -204,7 +204,7 @@ void GOMidiPlayer::PlayMidiEvent(const GOMidiEvent &e) {
   GOMidiSystem *pMidi = p_midi;
 
   if (pMidi)
-    pMidi->PlayEvent(e);
+    pMidi->Recv(e);
 }
 
 void GOMidiPlayer::StopPlaying() {
