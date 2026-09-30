@@ -537,9 +537,18 @@ void GOSoundingPipe::UpdateTuning() {
   m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);
 }
 
-void GOSoundingPipe::UpdateAudioGroup() {
-  m_AudioGroupID = p_OrganModel->GetConfig().GetAudioGroupId(
+unsigned GOSoundingPipe::GetEffectiveAudioGroupId() const {
+  return p_OrganModel->GetConfig().GetAudioGroupId(
     m_PipeConfigNode.GetEffectiveAudioGroup());
+}
+
+void GOSoundingPipe::UpdateAudioGroup() {
+  const unsigned newAudioGroupId = GetEffectiveAudioGroupId();
+
+  if (newAudioGroupId != m_AudioGroupID) {
+    p_OrganModel->AssertSoundRoutingFor(m_WindchestN, newAudioGroupId);
+    m_AudioGroupID = newAudioGroupId;
+  }
 }
 
 void GOSoundingPipe::UpdateReleaseTail() {

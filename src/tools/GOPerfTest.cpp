@@ -126,6 +126,11 @@ void GOPerfTestApp::RunTest(
         GOSoundOrganEngine::createDefaultOutputConfigs(),
         samples_per_frame,
         sample_rate);
+      // StartPipeSample() below always targets windchestN=1, audioGroup=0,
+      // but BuildEngine() only builds grid cells for pairs coming from the
+      // organ model's ranks/pipes - which this tool bypasses entirely. Build
+      // that one cell explicitly before the engine starts.
+      engine.CommitSoundRoutingFor(engine.PrepareSoundRoutingFor({{1, 0}}));
       engine.StartEngine();
       engine.SetUsed(true);
       engine.SetStreaming(true);

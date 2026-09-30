@@ -32,10 +32,11 @@ class GOSchedulerThread;
  * Run() and/or CompleteRound() directly instead of DoRun():
  *  - GOSoundReleaseTask is a drain loop that is never RUN_STATE_DONE within
  *    a round;
- *  - GOSoundGroupTask is a *cooperative* task: the scheduler may hand the
- *    same task to several worker threads at once (it is IsRepeatable()), and
- *    all of them race into Run() to jointly process one shared sampler list
- *    for this round, each contributing to one shared result buffer. This is
+ *  - GOSoundWindchestGroupTask is a *cooperative* task: the scheduler may
+ *    hand the same task to several worker threads at once (it is
+ *    IsRepeatable()), and all of them race into Run() to jointly process one
+ *    shared sampler list for this round, each contributing to one shared
+ *    result buffer. This is
  *    what the two extra RunState values, RUN_STATE_IN_PROGRESS and
  *    RUN_STATE_PARTLY_DONE, are for (see RunState below) - m_mutex still
  *    serialises the bookkeeping around each thread's own chunk of work, but
@@ -63,7 +64,11 @@ public:
     PRIORITY_TREMULANT = 10,
     /** Per-windchest enclosure/tremulant volume, read lazily by pipes */
     PRIORITY_WINDCHEST = 20,
-    /** Mixing the active samplers of one audio group into its buffer */
+    /** Mixing the active samplers of one (windchest, audio group) pair into
+     * its buffer */
+    PRIORITY_WINDCHESTMIX = 30,
+    /** Summing the windchest-group buffers of one audio group into its
+     * buffer */
     PRIORITY_AUDIOGROUP = 50,
     /** Mixing audio groups into the final device output, reverb, clipping */
     PRIORITY_AUDIOOUTPUT = 100,
@@ -83,7 +88,8 @@ public:
    * RUN_STATE_NOT_STARTED until some thread calls DoRun() successfully,
    * RUN_STATE_DONE from then on for the rest of the round.
    *
-   * A cooperative task (GOSoundGroupTask, which overrides Run() itself)
+   * A cooperative task (GOSoundWindchestGroupTask, which overrides Run()
+   * itself)
    * additionally uses RUN_STATE_IN_PROGRESS and RUN_STATE_PARTLY_DONE to let
    * several worker threads process the same round together instead of one
    * thread doing it alone while the rest wait idle:
