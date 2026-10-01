@@ -11,10 +11,11 @@
 #include <assert.h>
 #include <math.h>
 
+#include "sound/dsp-kernels/GOSoundResample.h"
+
 #include "GOBool3.h"
 #include "GOInt.h"
 #include "GOSoundCompressionCache.h"
-#include "GOSoundResample.h"
 #include "GOWave.h"
 
 class GOSoundAudioSection;

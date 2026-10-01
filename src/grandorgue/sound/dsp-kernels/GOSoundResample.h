@@ -2,7 +2,7 @@
  * GrandOrgue - free pipe organ simulator based on MyOrgan
  *
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -25,7 +25,8 @@
 #include <cstdint>
 
 /**
- * This class provides algorithms for resampling audio buffers
+ * A stateless DSP kernel: this class provides algorithms for resampling
+ * audio buffers
  * Now two algorithms are supported: Linear and Polyphase.
  * They calculate a next output sample based on a vector of a few continous
  * input samples.
