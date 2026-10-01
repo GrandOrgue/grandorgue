@@ -140,10 +140,10 @@ float *GOSoundResample::NewResampledMono(
   if (!out)
     return NULL;
 
-  BoundedPtrSampleVector<float, float, 1> w(data, len);
+  BoundedPtrFrameVector<float, float, 1> w(data, len);
   PolyphaseResampler resampler(*this);
 
-  resampler.ResampleBlock<BoundedPtrSampleVector<float, float, 1>, 1>(
+  resampler.ResampleBlock<BoundedPtrFrameVector<float, float, 1>, 1>(
     resamplingPos, w, out, new_len);
   len = new_len;
   return out;
