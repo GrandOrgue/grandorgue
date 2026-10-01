@@ -26,8 +26,10 @@
 #include "control/GOCallbackButtonControl.h"
 #include "control/GOElementCreator.h"
 #include "control/GOPushbuttonControl.h"
+#include "midi/elements/GOMidiReceiver.h"
 #include "midi/ports/GOMidiPort.h"
 #include "midi/ports/GOMidiPortFactory.h"
+#include "midi/ports/GOMidiWebInPort.h"
 #include "model/GOEnclosure.h"
 #include "model/GOManual.h"
 #include "settings/GOSettingEnum.cpp"
@@ -251,6 +253,14 @@ static const internal_midi_object_desc INTERNAL_MIDI_DESCS[] = {
    24,
    _("Transpose +"),
    GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_TRANSPOSE_UP},
+  {INITIAL_MASTER,
+   30,
+   _("Volume -"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_VOLUME_DOWN},
+  {INITIAL_MASTER,
+   31,
+   _("Volume +"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_VOLUME_UP},
   {INITIAL_METRONOME,
    25,
    _("On"),
@@ -356,6 +366,7 @@ GOConfig::GOConfig(
     Transpose(this, GENERAL, wxT("Transpose"), -11, 11, 0),
     IsToAutoAddMidi(this, MIDI_IN, wxT("IsToAutoAddMidi"), true),
     IsToCheckMidiOnStart(this, MIDI_IN, wxT("IsToCheckMidiOnStart"), true),
+    WebRemotePort(this, MIDI_IN, wxT("WebRemotePort"), 1, 65535, 8090),
     MidiRecorderOutputDevice(
       this, MIDI_OUT, wxT("MIDIRecorderDevice"), wxEmptyString),
     OrganPath(this, GENERAL, wxT("OrganPath"), wxEmptyString),
@@ -644,6 +655,7 @@ void GOConfig::Load() {
         if (pObj)
           pObj->LoadMidiObject(cfg, group, m_MidiMap);
       }
+    FillWebRemoteDefaults();
 
     long cpus = wxThread::GetCPUCount();
     if (cpus == -1)
@@ -684,6 +696,75 @@ void GOConfig::Load() {
   }
   if (!errMsg.empty())
     wxLogError(wxT("%s"), errMsg);
+}
+
+// The Web Remote page ships with Set, Cancel, 0-9, <, >, Vol- and Vol+ (see
+// resource/web-remote.html). They live on channel 16 from note 100 up: no
+// keyboard sends there, so a manual left on "Any device" can't pick them up
+// as keys by accident. MIDI notes stop at 127, so this is as far out of the
+// way as they can go.
+static const int WEB_REMOTE_CHANNEL = 16;
+static const int WEB_REMOTE_FIRST_NOTE = 100;
+
+// Which setter button each page button drives, as an offset from
+// WEB_REMOTE_FIRST_NOTE, or -1 for buttons the page doesn't have.
+static int web_remote_note(
+  const GOElementCreator::ButtonDefinitionEntry *pButtonDef) {
+  const GOElementCreator::ButtonDefinitionEntry *const pDefs
+    = GOSetter::P_BUTTON_DEFS;
+  int note = -1;
+
+  if (pButtonDef == pDefs + GOSetter::ID_SETTER_SET)
+    note = 0;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_GC)
+    note = 1;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_PREV)
+    note = 12;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_NEXT)
+    note = 13;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_VOLUME_DOWN)
+    note = 14;
+  else if (pButtonDef == pDefs + GOSetter::ID_SETTER_VOLUME_UP)
+    note = 15;
+  else
+    for (int digit = 0; digit <= 9 && note < 0; digit++)
+      if (pButtonDef == pDefs + GOSetter::ID_SETTER_L0 + digit)
+        note = 2 + digit;
+  return note < 0 ? -1 : WEB_REMOTE_FIRST_NOTE + note;
+}
+
+// Setter buttons that don't listen to the Web Remote yet get wired to its
+// notes, next to whatever other MIDI they already have (a piston on the
+// console keeps working). So the page works out of the box, also with configs
+// saved before the Web Remote existed. Deleting the Web Remote event just
+// brings it back on the next start; remap it to another note instead.
+// Harmless if the Web Remote device is never enabled.
+void GOConfig::FillWebRemoteDefaults() {
+  const unsigned webRemoteId
+    = m_MidiMap.EnsureLogicalName(GOMidiWebInPort::DEVICE_NAME);
+
+  m_WebRemoteDeviceId = webRemoteId;
+
+  for (unsigned l = getMidiBuiltinCount(), i = 0; i < l; i++) {
+    const GOElementCreator::ButtonDefinitionEntry *pButtonDef
+      = INTERNAL_MIDI_DESCS[i].p_ButtonDef;
+    const int note = web_remote_note(pButtonDef);
+    GOMidiReceiver &recv = *m_InitialMidiObjects[i]->GetMidiReceiver();
+
+    if (note >= 0 && !recv.HasEventFromDevice(webRemoteId)) {
+      GOMidiReceiverEventPattern &e = recv.GetEvent(recv.AddNewEvent());
+
+      // Pistons follow the note: on while the finger is down. Set is a
+      // toggle, so it flips on every tap instead, otherwise you'd have to
+      // hold it while pressing the other buttons.
+      e.type = pButtonDef->is_pushbutton ? MIDI_M_NOTE : MIDI_M_NOTE_ON;
+      e.deviceId = webRemoteId;
+      e.channel = WEB_REMOTE_CHANNEL;
+      e.key = note;
+      e.low_value = 0;
+      e.high_value = 1;
+    }
+  }
 }
 
 void GOConfig::LoadDefaults() {

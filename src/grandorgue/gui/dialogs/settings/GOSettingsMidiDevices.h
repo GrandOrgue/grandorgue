@@ -20,6 +20,7 @@ template <class T> class GOChoice;
 class wxButton;
 class wxCheckListBox;
 class wxChoice;
+class wxSpinCtrl;
 class GOMidiSystem;
 class GOMidiPort;
 class GOConfig;
@@ -29,6 +30,7 @@ class SettingsMidiDevices : public wxPanel, GOSettingsPorts {
     ID_INDEVICES = 200,
     ID_AUTO_ADD_MIDI,
     ID_CHECK_ON_STARTUP,
+    ID_WEB_REMOTE_PORT,
     ID_INCHANNELSHIFT,
     ID_INOUTDEVICE,
     ID_OUTDEVICES,
@@ -47,6 +49,7 @@ private:
 
   wxCheckBox *m_AutoAddInput;
   wxCheckBox *m_CheckOnStartup;
+  wxSpinCtrl *m_WebRemotePort;
   wxButton *m_InProperties;
   wxButton *m_InOutDevice;
   wxChoice *m_RecorderDevice;
