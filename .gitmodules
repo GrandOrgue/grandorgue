@@ -18,3 +18,9 @@
 [submodule "submodules/LibDwarfLite"]
 	path = submodules/LibDwarfLite
 	url = https://github.com/jeremy-rifkin/libdwarf-lite.git
+[submodule "wxMaterialDesignArtProvider"]
+	path = wxMaterialDesignArtProvider
+	url = https://github.com/perazz/wxMaterialDesignArtProvider
+[submodule "submodules/wxMaterialDesignArtProvider"]
+	path = submodules/wxMaterialDesignArtProvider
+	url = https://github.com/perazz/wxMaterialDesignArtProvider
