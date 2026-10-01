@@ -7,7 +7,7 @@
 
 #include "GOTestSoundOnePoleFilter.h"
 
-#include "sound/GOSoundOnePoleFilter.h"
+#include "sound/dsp-kernels/GOSoundOnePoleFilter.h"
 
 const std::string GOTestSoundOnePoleFilter::TEST_NAME
   = "GOTestSoundOnePoleFilter";

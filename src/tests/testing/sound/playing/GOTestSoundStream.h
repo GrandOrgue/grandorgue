@@ -10,7 +10,7 @@
 #include <memory>
 #include <string>
 
-#include "sound/playing/GOSoundResample.h"
+#include "sound/dsp-kernels/GOSoundResample.h"
 
 #include "GOMemoryPool.h"
 #include "GOTest.h"
