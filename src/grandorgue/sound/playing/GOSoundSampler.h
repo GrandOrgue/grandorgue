@@ -8,7 +8,7 @@
 #ifndef GOSOUNDSAMPLER_H_
 #define GOSOUNDSAMPLER_H_
 
-#include "sound/GOSoundOnePoleFilter.h"
+#include "sound/playing/GOSoundToneBalanceFilter.h"
 
 #include "GOBool3.h"
 #include "GOSoundFader.h"
@@ -25,7 +25,7 @@ struct GOSoundSampler {
   unsigned m_AudioGroupId;
   GOSoundStream stream;
   GOSoundFader fader;
-  GOSoundOnePoleFilter::FilterState toneBalanceFilterState;
+  GOSoundToneBalanceFilter::State toneBalanceFilterState;
   uint64_t time;
   unsigned velocity;
   unsigned delay;

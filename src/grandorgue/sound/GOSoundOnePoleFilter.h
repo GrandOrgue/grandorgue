@@ -8,11 +8,17 @@
 #ifndef GOSOUNDONEPOLEFILTER_H_
 #define GOSOUNDONEPOLEFILTER_H_
 
-#include <cmath>
 #include <cstdint>
 
-#include "sound/buffer/GOSoundBufferMutable.h"
-
+/**
+ * A one-pole (first-order) IIR filter: low-pass, high-pass, low-shelf, or
+ * high-shelf. Pure static utility - Type, Coeffs, computeCoeffs(), and
+ * processSample() are the only shared building blocks; each consumer
+ * (GOSoundToneBalanceFilter for the interleaved-stereo per-sampler case,
+ * sound/effects/GOSoundShelfFilterProcessor for the generic-channel
+ * windchest-effect case) owns its own Coeffs and its own per-channel state
+ * shaped for its own buffer format.
+ */
 class GOSoundOnePoleFilter {
 public:
   enum class Type : uint8_t {
@@ -22,48 +28,71 @@ public:
     TYPE_LOW_SHELF,
     TYPE_HIGH_SHELF
   };
-  class FilterState {
-  public:
-    FilterState() { Init(nullptr); }
-    void Init(const GOSoundOnePoleFilter *filter);
-    bool IsToApply() { return p_filter && p_filter->IsToApply(); }
-    inline void ProcessBuffer(GOSoundBufferMutable &outBuffer) {
-      float *pData = outBuffer.GetData();
-      const unsigned nFrames = outBuffer.GetNFrames();
-      float out[2];
 
-      for (unsigned int i = 0; i < nFrames; i++, pData += 2) {
-        out[0] = p_filter->m_B0 * pData[0] + m_state[0];
-        out[1] = p_filter->m_B0 * pData[1] + m_state[1];
-        m_state[0] = p_filter->m_B1 * pData[0] - p_filter->m_A1 * out[0];
-        m_state[1] = p_filter->m_B1 * pData[1] - p_filter->m_A1 * out[1];
+  /**
+   * Coefficients of one one-pole IIR filter, computed by computeCoeffs().
+   * Plain data, no virtuals - shared, read-only, safe to pass by const
+   * reference into processSample() from any thread.
+   */
+  struct Coeffs {
+    /** Direct-form-II-transposed feedforward/feedback coefficients. The
+     * defaults (b0=1, b1=0, a1=0) are a true identity filter - out = in,
+     * state stays exactly 0 forever - not all-zero: an all-zero b0 would
+     * make processSample() output silence instead of passthrough, a
+     * dangerous default for any caller that doesn't check isNoop first. */
+    double b0 = 1, b1 = 0, a1 = 0;
 
-        pData[0] = out[0];
-        pData[1] = out[1];
-      }
-    }
-
-  private:
-    float m_state[2];
-    const GOSoundOnePoleFilter *p_filter;
+    /** True iff this is the identity filter - set by computeCoeffs() for
+     * TYPE_NONE, sampleRate == 0, or (for the shelf types) gain == 0.
+     * Callers should check this before calling processSample() to skip
+     * work a passthrough filter doesn't need. Stored explicitly rather than
+     * re-derived from b0/b1/a1 (e.g. b0 == 1 && b1 == 0 && a1 == 0): for
+     * gain == 0 the shelf formulas only reduce to those exact values
+     * algebraically - relying on that in floating point would make isNoop
+     * depend on FP rounding instead of on the actual input conditions that
+     * caused it. */
+    bool isNoop = true;
   };
 
-private:
-  Type m_type;
-  unsigned m_samplerate;
+  /**
+   * Computes the coefficients of a one-pole filter of the given type. Pure
+   * function, no allocation/IO - cheap but not free (a handful of
+   * cos/sin/pow calls), so callers should call it only when type,
+   * frequency, gain, or sampleRate actually changed, not on every audio
+   * round.
+   * @param type Filter type; TYPE_NONE yields the identity Coeffs
+   * @param frequency Cutoff (LPF/HPF) or shelf corner frequency, in Hz
+   * @param gain Shelf gain in dB, ignored for LPF/HPF; 0 for a shelf type
+   *   yields the identity Coeffs, same as TYPE_NONE
+   * @param sampleRate Audio sample rate in Hz; 0 yields the identity Coeffs
+   *   (filter not usable without a valid sample rate)
+   * @param outCoeffs Receives the computed coefficients, with isNoop set
+   *   accordingly
+   */
+  static void computeCoeffs(
+    Type type,
+    double frequency,
+    double gain,
+    unsigned sampleRate,
+    Coeffs &outCoeffs);
 
-  // Calculated filter coefficients
-  double m_B0;
-  double m_B1;
-  double m_A1;
+  /**
+   * Applies one sample of the one-pole recurrence in place. inline, no
+   * virtual dispatch - safe to call from a per-sampler hot loop with zero
+   * overhead. Does not check c.isNoop itself - callers that want to skip
+   * no-op filters must check it before calling.
+   * @param c Coefficients to apply
+   * @param in Input sample
+   * @param ioState Carried filter state (one float per channel); updated in
+   *   place
+   * @return The filtered output sample
+   */
+  static inline float processSample(const Coeffs &c, float in, float &ioState) {
+    float out = c.b0 * in + ioState;
 
-public:
-  GOSoundOnePoleFilter();
-  void Init(Type type, double frequency, double gain = 0);
-  bool IsToApply() const { return static_cast<bool>(m_type); }
-  void SetSamplerate(unsigned samplerate) {
-    m_samplerate = samplerate;
-    m_type = Type::TYPE_NONE;
+    ioState = c.b1 * in - c.a1 * out;
+
+    return out;
   }
 };
 
