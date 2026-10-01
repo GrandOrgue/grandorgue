@@ -9,6 +9,7 @@
 #define GOSOUNDBUFFERMUTABLE_H
 
 #include "GOSoundBuffer.h"
+#include "GOSoundBufferMono.h"
 
 #include <cstring> // For std::memset, std::memcpy
 #include <initializer_list>
@@ -261,6 +262,31 @@ public:
       pDst += dstNChannels;
       pSrc += srcNChannels;
     }
+  }
+
+  /**
+   * Copy audio data from a read-only mono buffer into one channel of this
+   * buffer. Both buffers must have the same number of frames. A convenience
+   * wrapper around the 3-argument CopyChannelFrom() above for a source that
+   * is statically known to have exactly one channel, so srcChannel is
+   * always 0.
+   *
+   * Deliberately named differently from CopyChannelFrom(): naming it
+   * CopyChannelFrom(mono, dstChannel) would collide with
+   * GOSoundBufferMutableMono::CopyChannelFrom(buffer, srcChannel), whose
+   * same-shaped 2-argument overload gives its second argument the opposite
+   * meaning. Because that method hides this class's overloads by name on a
+   * GOSoundBufferMutableMono receiver, the identical call text would
+   * silently resolve to different behaviour depending only on whether the
+   * receiver's *static* type is GOSoundBufferMutable or
+   * GOSoundBufferMutableMono.
+   *
+   * @param srcBuffer Mono buffer to copy from
+   * @param dstChannel Destination channel index (0-based)
+   */
+  inline void CopyChannelFromMono(
+    const GOSoundBufferMono &srcBuffer, unsigned dstChannel) {
+    CopyChannelFrom(srcBuffer, 0, dstChannel);
   }
 
   /**
