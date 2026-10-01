@@ -10,7 +10,10 @@
 #include <cassert>
 
 #include "scheduler/GOSchedulerThread.h"
+#include "sound/GOSoundDefs.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
+#include "sound/processing/GOSoundProcessingChain.h"
+#include "sound/processing/GOSoundProcessingChainState.h"
 #include "threading/GOMutexLocker.h"
 
 #include "GOSoundWindchestTask.h"
@@ -20,16 +23,49 @@ GOSoundWindchestGroupTask::GOSoundWindchestGroupTask(
   GOSoundSamplerPlayer &samplerPlayer,
   GOSoundWindchestTask &windchestTask,
   unsigned nFramesPerBuffer)
-  : GOSoundBufferTaskBase(PRIORITY_WINDCHESTMIX, true, 2, nFramesPerBuffer),
+  : GOSoundBufferTaskBase(
+    PRIORITY_WINDCHESTMIX, true, MAX_OUTPUT_CHANNELS, nFramesPerBuffer),
     r_RoundCounter(roundCounter),
     r_SamplerPlayer(samplerPlayer),
     r_WindchestTask(windchestTask),
     m_Condition(m_mutex),
+    mp_ChainState(windchestTask.GetChain().CreateState()),
     m_ActiveCount(0) {}
+
+// The destructor body is empty (= default), but it must be defined here (not
+// in the header) so that std::unique_ptr can call the complete destructor of
+// its managed type (GOSoundProcessingChainState), which is only
+// forward-declared in the header file.
+GOSoundWindchestGroupTask::~GOSoundWindchestGroupTask() = default;
+
+void GOSoundWindchestGroupTask::OnMixed() {
+  // Lazy prerequisite: a round with zero samplers never otherwise triggers
+  // r_WindchestTask to run (nothing calls its GetAmplitude()), but a
+  // stateful processor in the chain (e.g. a reverb tail) still needs
+  // current parameters and must still run. GetAmplitude() is already the
+  // established way to force that windchest task to completion, and is
+  // already called concurrently from here (via ProcessList()) and from
+  // other audio groups of the same windchest, so this adds no new
+  // concurrency concern.
+  r_WindchestTask.GetAmplitude();
+  mp_ChainState->Process(*this);
+}
+
+void GOSoundWindchestGroupTask::PublishDone() {
+  // The caller must already hold m_mutex - GetLockerInfo() is non-null only
+  // between a successful Lock and its matching Unlock, so this catches a
+  // caller that forgot to acquire it (it cannot catch a caller holding some
+  // *other* thread's lock instead, but every call site in this file locks
+  // m_mutex itself immediately beforehand).
+  assert(m_mutex.GetLockerInfo());
+  m_RunState.store(RUN_STATE_DONE);
+  m_Condition.Broadcast();
+}
 
 void GOSoundWindchestGroupTask::DiscardContent() {
   m_Active.Clear();
   m_Release.Clear();
+  mp_ChainState->Reset();
 }
 
 void GOSoundWindchestGroupTask::Add(GOSoundSampler *sampler) {
@@ -104,7 +140,8 @@ void GOSoundWindchestGroupTask::Run(GOSchedulerThread *pThread) {
     if (isParticipating) {
       // several threads may process the same list in parallel helping each
       // other; at first, they fill their's own buffer instances
-      GO_DECLARE_LOCAL_SOUND_BUFFER(localBuffer, 2, GetNFrames())
+      GO_DECLARE_LOCAL_SOUND_BUFFER(
+        localBuffer, MAX_OUTPUT_CHANNELS, GetNFrames())
 
       localBuffer.FillWithSilence();
       ProcessList(m_Active, false, localBuffer);
@@ -122,6 +159,9 @@ void GOSoundWindchestGroupTask::Run(GOSchedulerThread *pThread) {
       GOMutexLocker locker(
         m_mutex, false, "GOSoundWindchestGroupTask::Run.afterProcess");
 
+      // try_lock=false and no pThread above: Lock() always succeeds.
+      assert(locker.IsLocked());
+
       if (m_RunState.load() == RUN_STATE_IN_PROGRESS) {
         // The first thread is finished. Assign the result to the common
         // buffer
@@ -131,9 +171,14 @@ void GOSoundWindchestGroupTask::Run(GOSchedulerThread *pThread) {
         // not the first thread. Add the result to the common buffer
         AddDeinterleavedFrom(localBuffer);
       if (m_ActiveCount.fetch_sub(1) <= 1) {
-        // the last thread
-        m_RunState.store(RUN_STATE_DONE);
-        m_Condition.Broadcast();
+        // Exactly one thread ever observes <= 1 here (fetch_sub is atomic
+        // and started from a known participant count), so running the chain
+        // itself is not a race.
+        OnMixed();
+
+        // Must run under m_mutex (still held here) - a missed Broadcast() is
+        // never retried, unlike GOSoundTaskBase::Run()'s unlocked store.
+        PublishDone();
       }
     }
   }
