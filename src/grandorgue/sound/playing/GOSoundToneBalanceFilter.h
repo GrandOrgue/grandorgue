@@ -8,8 +8,8 @@
 #ifndef GOSOUNDTONEBALANCEFILTER_H_
 #define GOSOUNDTONEBALANCEFILTER_H_
 
-#include "sound/GOSoundOnePoleFilter.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/dsp-kernels/GOSoundOnePoleFilter.h"
 
 /**
  * Maps a tone-balance knob value (-99..99: negative darkens via a low-pass
