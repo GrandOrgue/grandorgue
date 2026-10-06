@@ -8,15 +8,16 @@
 #ifndef GOSOUNDTESTSIGNALS_H
 #define GOSOUNDTESTSIGNALS_H
 
+#include <cmath>
 #include <vector>
 
 class GOInt24;
 class GOSoundBufferPlanarMutable;
 
 /**
- * Generators of test signals shared by the sound tests. It is a collection of
- * static helpers, not a test: it is not named GOTest... because it is not run
- * by GOTestExe.
+ * Generators and measurements of test signals shared by the sound tests. It is
+ * a collection of static helpers, not a test: it is not named GOTest... because
+ * it is not run by GOTestExe.
  */
 class GOSoundTestSignals {
 public:
@@ -38,6 +39,24 @@ public:
    * @param outBuffer the buffer to fill
    */
   static void fillWithAlternatingSignal(GOSoundBufferPlanarMutable &outBuffer);
+
+  /**
+   * @param nFrames the length of the result
+   * @param amplitude the amplitude of the sine
+   * @param periodFrames the period of the sine, in frames
+   * @return nFrames of amplitude * sin(2 * pi * frameI / periodFrames)
+   */
+  static std::vector<float> makeSinePeriod(
+    unsigned nFrames, float amplitude, float periodFrames);
+
+  /**
+   * @param cents a pitch shift in cents
+   * @return the relative frequency deviation df/f of the shift: 2^(cents/1200)
+   *   - 1
+   */
+  static float centsToDeviation(float cents) {
+    return std::exp2(cents / 1200.0f) - 1.0f;
+  }
 };
 
 #endif /* GOSOUNDTESTSIGNALS_H */
