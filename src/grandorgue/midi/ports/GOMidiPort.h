@@ -50,6 +50,9 @@ public:
     const wxString &deviceName) const;
   unsigned GetID() const { return m_ID; }
   bool IsActive() const { return m_IsActive; }
+  // Whether "Auto add new devices" may enable this port on its own. Virtual
+  // devices that do something visible (like opening a network port) say no.
+  virtual bool IsToAutoEnable() const { return true; }
 
   virtual bool Open(unsigned id);
   virtual void Close() { m_ID = 0; }
