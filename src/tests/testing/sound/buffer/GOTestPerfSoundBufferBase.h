@@ -45,14 +45,21 @@ unsigned GOTestPerfOpaqueSize(unsigned bufferSize);
  */
 class GOTestPerfSoundBufferBase : public GOTest {
 protected:
-  // Number of iterations for performance tests
-  static constexpr unsigned NUM_ITERATIONS = 1000000;
-
   std::vector<std::string> m_failedTests;
 
   /**
+   * Number of iterations for performance tests. Overridable so a subclass
+   * with an unusually large number of Test*() cases (e.g. one covering
+   * several resampler/buffer-size combinations) can shorten its own total
+   * runtime without affecting every other perf-test subclass's measurement
+   * precision.
+   */
+  virtual unsigned GetNumIterations() const { return 1000000; }
+
+  /**
    * Measures performance of operation.
-   * @return Throughput in millions of frames per second
+   * @return Throughput in millions of units (see nUnitsPerFrame in
+   *   RunAndEvaluateTest()) per second
    */
   static double measure_performance(
     unsigned bufferSize,
@@ -60,14 +67,23 @@ protected:
     std::function<void()> operation);
 
   /**
-   * Runs operation NUM_ITERATIONS times, compares the measured throughput
+   * Runs operation GetNumIterations() times, compares the measured throughput
    * against baseline, prints a PASS/FAIL line, and records failures into
    * m_failedTests.
+   * @param nUnitsPerFrame scales baseline.m_BufferSize (a frame count) for
+   *   the throughput calculation - 1 (the default) means the measured
+   *   throughput is already in frames.
+   * @param isItemsPerSecond selects the printed unit label: false (the
+   *   default) prints Mframes/sec, unchanged from today for every existing
+   *   caller; a subclass passing true (with nUnitsPerFrame set to its own
+   *   nOutChannels) prints Mitems/sec instead.
    */
   void RunAndEvaluateTest(
     const std::string &functionName,
     const GOTestPerfSoundBufferBaseline &baseline,
-    std::function<void()> operation);
+    std::function<void()> operation,
+    unsigned nUnitsPerFrame = 1,
+    bool isItemsPerSecond = false);
 
   /**
    * Fails the GOTest (via GOAssert) listing every case recorded by
