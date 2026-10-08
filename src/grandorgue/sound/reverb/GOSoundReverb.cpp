@@ -17,6 +17,7 @@
 
 #include "config/GOConfig.h"
 #include "files/GOStandardFile.h"
+#include "sound/buffer/GOSoundBufferMono.h"
 #include "sound/buffer/GOSoundBufferMutableMono.h"
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/dsp-kernels/GOSoundResample.h"
@@ -215,7 +216,10 @@ void GOSoundReverb::Process(GOSoundBufferPlanarMutable &buffer) {
     if (pConvProc->state() == Convproc::ST_PROC) {
       GOSoundBufferMutableMono channelBuffer = buffer.GetChannelBuffer(i);
       GOSoundBufferMutableMono convInBuffer(pConvProc->inpdata(0), nFrames);
-      GOSoundBufferMutableMono convOutBuffer(pConvProc->outdata(0), nFrames);
+      // convOutBuffer is only ever read from below (CopyFrom); the convolver
+      // itself writes outdata(0) through its own raw pointer, not through
+      // this wrapper.
+      GOSoundBufferMono convOutBuffer(pConvProc->outdata(0), nFrames);
 
       convInBuffer.CopyFrom(channelBuffer);
       pConvProc->process(false);
