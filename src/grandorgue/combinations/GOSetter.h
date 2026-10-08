@@ -150,6 +150,10 @@ public:
     ID_SETTER_PITCH_P100,
     ID_SETTER_TRANSPOSE_DOWN,
     ID_SETTER_TRANSPOSE_UP,
+    /** Decreases the organ gain by 1 dB */
+    ID_SETTER_VOLUME_DOWN,
+    /** Increases the organ gain by 1 dB */
+    ID_SETTER_VOLUME_UP,
 
     ID_SETTER_ON,
     ID_SETTER_AUDIO_PANIC,
@@ -190,6 +194,8 @@ private:
   GOLabelControl m_BankDisplay;
   GOLabelControl m_CrescendoDisplay;
   GOLabelControl m_TransposeDisplay;
+  /** Shows the current organ gain in dB on the master panel */
+  GOLabelControl m_VolumeDisplay;
   GOLabelControl m_NameDisplay;
   GOEnclosure m_CrescendoCtrl;
 
@@ -276,6 +282,13 @@ public:
 
   static const wxString KEY_ON_STATE;
 
+  /** The name of the button decreasing the organ gain */
+  static const wxString KEY_VOLUME_DOWN;
+  /** The name of the button increasing the organ gain */
+  static const wxString KEY_VOLUME_UP;
+  /** The name of the label showing the organ gain */
+  static const wxString KEY_VOLUME_LABEL;
+
   static const wxString GROUP_REFRESH_FILES;
   static const wxString GROUP_PREV_FILE;
   static const wxString GROUP_CURR_FILE_NAME;
@@ -361,6 +374,8 @@ public:
   void ResetCmbButtons() { UpdateAllSetsButtonsLight(nullptr, -1); }
   void SetTranspose(int value);
   void UpdateTranspose();
+  /** Shows the current organ gain on the volume label */
+  void UpdateGain();
   void UpdateModified(bool modified);
 };
 

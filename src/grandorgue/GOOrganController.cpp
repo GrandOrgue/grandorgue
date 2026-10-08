@@ -320,10 +320,17 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
   /* load basic organ information */
   cfg.ReadString(CMBSetting, WX_ORGAN, WX_GRANDORGUE_VERSION, false);
 
+  // up to 100 for the volume in percent stored before switching to dB
   int volume = cfg.ReadInteger(
-    CMBSetting, WX_ORGAN, wxT("Volume"), -120, 100, false, m_config.Volume());
+    CMBSetting,
+    WX_ORGAN,
+    wxT("Volume"),
+    MIN_GAIN_DB,
+    100,
+    false,
+    m_config.Volume());
 
-  m_SoundEngine.SetGain(volume > 20 ? 0 : volume);
+  m_SoundEngine.SetGain(volume > MAX_GAIN_DB ? 0 : volume);
   m_Temperament
     = cfg.ReadString(CMBSetting, WX_ORGAN, wxT("Temperament"), false);
 
@@ -678,6 +685,16 @@ void GOOrganController::DeleteCache() {
 
 void GOOrganController::DeleteSettings() {
   wxRemoveFile(m_LoadedOrganInfo.settingsFilePath);
+}
+
+void GOOrganController::SetGain(int gain) {
+  const int newGain = std::clamp(gain, MIN_GAIN_DB, MAX_GAIN_DB);
+
+  if (newGain != m_SoundEngine.GetGain()) {
+    m_SoundEngine.SetGain(newGain);
+    m_setter->UpdateGain();
+    OnGainChanged(newGain);
+  }
 }
 
 void GOOrganController::SaveOrganCoreData(GOConfigWriter &cfg) {
