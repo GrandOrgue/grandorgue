@@ -60,6 +60,6 @@ void GOSoundOnePoleFilter::computeCoeffs(
     outCoeffs.b0 = b0 / a0;
     outCoeffs.b1 = b1 / a0;
     outCoeffs.a1 = a1 / a0;
-    outCoeffs.isNoop = false;
+    outCoeffs.isActive = true;
   }
 }

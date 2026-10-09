@@ -39,19 +39,19 @@ public:
      * defaults (b0=1, b1=0, a1=0) are a true identity filter - out = in,
      * state stays exactly 0 forever - not all-zero: an all-zero b0 would
      * make processSample() output silence instead of passthrough, a
-     * dangerous default for any caller that doesn't check isNoop first. */
+     * dangerous default for any caller that doesn't check isActive first. */
     double b0 = 1, b1 = 0, a1 = 0;
 
-    /** True iff this is the identity filter - set by computeCoeffs() for
-     * TYPE_NONE, sampleRate == 0, or (for the shelf types) gain == 0.
-     * Callers should check this before calling processSample() to skip
-     * work a passthrough filter doesn't need. Stored explicitly rather than
-     * re-derived from b0/b1/a1 (e.g. b0 == 1 && b1 == 0 && a1 == 0): for
-     * gain == 0 the shelf formulas only reduce to those exact values
-     * algebraically - relying on that in floating point would make isNoop
-     * depend on FP rounding instead of on the actual input conditions that
-     * caused it. */
-    bool isNoop = true;
+    /** True iff this filter changes the signal, i.e. it is not the identity
+     * filter. Set to false by computeCoeffs() for TYPE_NONE, sampleRate ==
+     * 0, or (for the shelf types) gain == 0. Callers should check this
+     * before calling processSample() to skip work a passthrough filter
+     * doesn't need. Stored explicitly rather than re-derived from b0/b1/a1
+     * (e.g. b0 != 1 || b1 != 0 || a1 != 0): for gain == 0 the shelf formulas
+     * only reduce to those exact values algebraically - relying on that in
+     * floating point would make isActive depend on FP rounding instead of on
+     * the actual input conditions that caused it. */
+    bool isActive = false;
   };
 
   /**
@@ -66,7 +66,7 @@ public:
    *   yields the identity Coeffs, same as TYPE_NONE
    * @param sampleRate Audio sample rate in Hz; 0 yields the identity Coeffs
    *   (filter not usable without a valid sample rate)
-   * @param outCoeffs Receives the computed coefficients, with isNoop set
+   * @param outCoeffs Receives the computed coefficients, with isActive set
    *   accordingly
    */
   static void computeCoeffs(
@@ -79,8 +79,8 @@ public:
   /**
    * Applies one sample of the one-pole recurrence in place. inline, no
    * virtual dispatch - safe to call from a per-sampler hot loop with zero
-   * overhead. Does not check c.isNoop itself - callers that want to skip
-   * no-op filters must check it before calling.
+   * overhead. Does not check c.isActive itself - callers that want to skip
+   * inactive filters must check it before calling.
    * @param c Coefficients to apply
    * @param in Input sample
    * @param ioState Carried filter state (one float per channel); updated in
