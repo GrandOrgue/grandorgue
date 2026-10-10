@@ -18,7 +18,7 @@ static void assert_is_identity(
   GOTestSoundOnePoleFilter &test,
   const GOSoundOnePoleFilter::Coeffs &c,
   const std::string &caseName) {
-  test.GOAssert(c.isNoop, caseName + ": isNoop must be true");
+  test.GOAssert(!c.isActive, caseName + ": isActive must be false");
   test.GOAssert(c.b0 == 1, caseName + ": b0 must be exactly 1");
   test.GOAssert(c.b1 == 0, caseName + ": b1 must be exactly 0");
   test.GOAssert(c.a1 == 0, caseName + ": a1 must be exactly 0");
@@ -55,7 +55,7 @@ void GOTestSoundOnePoleFilter::TestComputeCoeffsPerType() {
     GOSoundOnePoleFilter::Coeffs c;
 
     GOSoundOnePoleFilter::computeCoeffs(type, 1000, 6, TEST_SAMPLE_RATE, c);
-    GOAssert(!c.isNoop, "a configured filter must not be isNoop");
+    GOAssert(c.isActive, "a configured filter must be isActive");
     GOAssert(
       c.b0 != 1 || c.b1 != 0 || c.a1 != 0,
       "a configured filter's Coeffs must differ from the identity default");
@@ -68,7 +68,7 @@ void GOTestSoundOnePoleFilter::TestProcessSampleRecurrence() {
   c.b0 = 0.5;
   c.b1 = 0.25;
   c.a1 = -0.75;
-  c.isNoop = false;
+  c.isActive = true;
 
   float state = 0;
   float out0 = GOSoundOnePoleFilter::processSample(c, 1.0f, state);

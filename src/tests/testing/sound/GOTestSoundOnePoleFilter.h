@@ -21,12 +21,12 @@ class GOTestSoundOnePoleFilter : public GOTest {
 private:
   static const std::string TEST_NAME;
 
-  /** Every isNoop-triggering edge case (sampleRate == 0, TYPE_NONE, gain ==
-   * 0 for both shelf types) yields the exact identity Coeffs (b0=1, b1=0,
-   * a1=0, isNoop=true), not all-zero. */
+  /** Every edge case that makes the filter inactive (sampleRate == 0,
+   * TYPE_NONE, gain == 0 for both shelf types) yields the exact identity
+   * Coeffs (b0=1, b1=0, a1=0, isActive=false), not all-zero. */
   void TestComputeCoeffsIdentityEdgeCases();
 
-  /** Every non-noop Type produces a non-identity, isNoop==false Coeffs. */
+  /** Every active Type produces a non-identity, isActive==true Coeffs. */
   void TestComputeCoeffsPerType();
 
   /** processSample() follows the documented recurrence for a couple of

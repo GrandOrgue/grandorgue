@@ -54,8 +54,8 @@ public:
     void Init(const GOSoundToneBalanceFilter *filter);
 
     /** @return whether ProcessBuffer() would change the buffer - false
-     * when unbound or the bound Coeffs is isNoop */
-    bool IsToApply() { return p_coeffs && !p_coeffs->isNoop; }
+     * when unbound or the bound Coeffs is not isActive */
+    bool IsToApply() { return p_coeffs && p_coeffs->isActive; }
 
     /** Filters outBuffer in place, one interleaved stereo frame at a time,
      * via GOSoundOnePoleFilter::processSample() per channel, reading
@@ -86,8 +86,8 @@ public:
   void Init(int8_t value);
 
   /** @return whether this filter's Coeffs would change a buffer, i.e.
-   * !m_coeffs.isNoop */
-  bool IsToApply() const { return !m_coeffs.isNoop; }
+   * m_coeffs.isActive */
+  bool IsToApply() const { return m_coeffs.isActive; }
 
   /** Sets the sample rate used by subsequent Init() calls; resets this
    * instance to the identity filter until Init() is called again. */
