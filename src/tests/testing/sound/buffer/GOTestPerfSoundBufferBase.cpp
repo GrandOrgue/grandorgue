@@ -29,19 +29,24 @@ double GOTestPerfSoundBufferBase::measure_performance(
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = end - start;
 
-  // Calculate millions of frames per second
-  double totalFrames = static_cast<double>(bufferSize) * numIterations;
-  return (totalFrames / elapsed.count()) / 1e6;
+  // Calculate millions of units per second (bufferSize already carries
+  // whatever unit the caller wants - see RunAndEvaluateTest()'s
+  // nUnitsPerFrame)
+  double totalUnits = static_cast<double>(bufferSize) * numIterations;
+  return (totalUnits / elapsed.count()) / 1e6;
 }
 
 void GOTestPerfSoundBufferBase::RunAndEvaluateTest(
   const std::string &functionName,
   const GOTestPerfSoundBufferBaseline &baseline,
-  std::function<void()> operation) {
-  double mFramesPerSecond
-    = measure_performance(baseline.m_BufferSize, NUM_ITERATIONS, operation);
-  bool passed = mFramesPerSecond >= baseline.m_MFramesPerSecond;
-  double ratio = mFramesPerSecond / baseline.m_MFramesPerSecond;
+  std::function<void()> operation,
+  unsigned nUnitsPerFrame,
+  bool isItemsPerSecond) {
+  double mUnitsPerSecond = measure_performance(
+    baseline.m_BufferSize * nUnitsPerFrame, GetNumIterations(), operation);
+  bool passed = mUnitsPerSecond >= baseline.m_MFramesPerSecond;
+  double ratio = mUnitsPerSecond / baseline.m_MFramesPerSecond;
+  const char *unitLabel = isItemsPerSecond ? "Mitems/sec" : "Mframes/sec";
 
 #ifdef NDEBUG
   const char *buildMode = "Release";
@@ -50,12 +55,13 @@ void GOTestPerfSoundBufferBase::RunAndEvaluateTest(
 #endif
 
   std::string message = std::format(
-    "{:<7} {:<21} (size={:4}): {:8.1f} Mframes/sec (baseline: {:8.1f}, "
+    "{:<7} {:<21} (size={:4}): {:8.1f} {} (baseline: {:8.1f}, "
     "ratio: {:5.2f}x)",
     buildMode,
     functionName,
     baseline.m_BufferSize,
-    mFramesPerSecond,
+    mUnitsPerSecond,
+    unitLabel,
     baseline.m_MFramesPerSecond,
     ratio);
 
