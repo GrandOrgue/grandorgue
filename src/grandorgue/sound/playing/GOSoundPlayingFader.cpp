@@ -5,13 +5,13 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#include "GOSoundFader.h"
+#include "GOSoundPlayingFader.h"
 
 #include <algorithm>
 
 #include "sound/buffer/GOSoundBufferMutable.h"
 
-void GOSoundFader::Setup(
+void GOSoundPlayingFader::Setup(
   float targetVolume, float velocityVolume, unsigned nFramesToIncreaseIn) {
   m_TargetVolume = targetVolume;
 
@@ -30,7 +30,7 @@ void GOSoundFader::Setup(
 // if the external volume is changed, do it smoothly in this number of frames
 static constexpr unsigned EXTERNAL_VOLUME_CHANGE_FRAMES = 1024;
 
-void GOSoundFader::Process(
+void GOSoundPlayingFader::Process(
   float externalAmplitude, GOSoundBufferMutable &outBuffer) {
   float *pData = outBuffer.GetData();
   const unsigned nFrames = outBuffer.GetNFrames();
