@@ -27,52 +27,66 @@ const std::string GOTestPerfSoundPlayingFader::TEST_NAME
 // Every iteration refills the buffer with ones first (a repeated in-place
 // fade would drive the data to denormals); the refill is a part of the
 // measured time, equal before and after the refactoring of the fader.
+// Rebaselined 2026-10-31 against the CI runs of both repos from 2026-10-17..31
+// (all after commit 341191074 changed the iteration count): the Debug entries
+// are -10% of the worst throughput observed in that window, floored to 2
+// significant figures, and entries above that value were left unchanged; the
+// Release entries were already within margin.
 // Format: {buffer_size, min_MItems_per_second}.
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_CONSTANT_GAIN[] = {
 #ifdef NDEBUG
-  // Release, worst runs 4221/6816/702/668, minus 10%
-  {32, 3700},
-  {128, 6100},
-  {512, 630},
-  {2048, 600},
+  // Release, worst of the runs after the refactoring onto
+  // GOSoundLinearFaderCore, minus 10%
+  {32, 3000},
+  {128, 5300},
+  {512, 520},
+  {2048, 520},
 #else
-  // Debug, worst runs 1611/2285/484/557, minus 10%
-  {32, 1400},
-  {128, 2000},
-  {512, 430},
-  {2048, 500},
+  // Debug, worst of the runs after the refactoring onto
+  // GOSoundLinearFaderCore, minus 10%
+  {32, 870},
+  {128, 1100},
+  {512, 380},
+  {2048, 460},
 #endif
 };
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_RAMP[] = {
 #ifdef NDEBUG
-  // Release, worst runs 2979/3182/635/605, minus 10%
-  {32, 2600},
-  {128, 2500}, // a CI run 2782
-  {512, 570},
-  {2048, 540},
+  // Release, worst of the runs after the refactoring onto
+  // GOSoundLinearFaderCore, minus 10%: the gain of every frame is computed by
+  // the formula, slower than the former accumulation (on the same CI CPU:
+  // -32% on 32 frames, -12% on 128, -3..-5% on 512 and 2048)
+  {32, 1400},
+  {128, 2000},
+  {512, 460},
+  {2048, 460},
 #else
-  // Debug, worst runs 1378/1592/449/511, minus 10%
-  {32, 1200},
-  {128, 1400},
-  {512, 400},
-  {2048, 450},
+  // Debug, worst of the runs after the refactoring onto
+  // GOSoundLinearFaderCore, minus 10% (the unoptimised Debug build is
+  // slower, -20..-50% on the same CI CPU)
+  {32, 660},
+  {128, 880},
+  {512, 300},
+  {2048, 580},
 #endif
 };
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_GROWTH_TO_DECAY[] = {
 #ifdef NDEBUG
-  // Release, worst runs 3462/4625/1197/1114, minus 10%
-  {32, 3100},
-  {128, 4100},
+  // Release, worst of the runs after the refactoring onto
+  // GOSoundLinearFaderCore, minus 10%
+  {32, 2000},
+  {128, 3000},
   {512, 1000},
-  {2048, 1000},
+  {2048, 890},
 #else
-  // Debug, worst runs 1401/1943/783/881, minus 10%
-  {32, 1200},
-  {128, 1700},
-  {512, 700},
-  {2048, 790},
+  // Debug, worst of the runs after the refactoring onto
+  // GOSoundLinearFaderCore, minus 10%
+  {32, 560},
+  {128, 700},
+  {512, 540},
+  {2048, 650},
 #endif
 };
 
@@ -80,17 +94,19 @@ static constexpr GOTestPerfSoundBufferBaseline
   BASELINE_TARGET_REACHED_MID_BLOCK[]
   = {
 #ifdef NDEBUG
-    // Release, worst runs 2880/3199/637/585, minus 10%
-    {32, 2500},
-    {128, 2500}, // a CI run 2779
-    {512, 570},
-    {2048, 520},
-#else
-    // Debug, worst runs 1427/1619/450/514, minus 10%
-    {32, 1200},
-    {128, 1400},
-    {512, 400},
+    // Release, worst of the runs after the refactoring onto
+    // GOSoundLinearFaderCore, minus 10%
+    {32, 1500},
+    {128, 2000},
+    {512, 540},
     {2048, 460},
+#else
+    // Debug, worst of the runs after the refactoring onto
+    // GOSoundLinearFaderCore, minus 10%
+    {32, 540},
+    {128, 710},
+    {512, 300},
+    {2048, 370},
 #endif
 };
 
