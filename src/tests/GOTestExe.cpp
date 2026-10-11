@@ -42,7 +42,9 @@
 #include "testing/sound/buffer/GOTestSoundBufferPlanarMutable.h"
 #include "testing/sound/buffer/GOTestSoundTypedBufferLoopBase.h"
 #include "testing/sound/buffer/GOTestSoundTypedBufferLoopMonoManaged.h"
+#include "testing/sound/dsp-kernels/GOTestPerfSoundLinearFaderCore.h"
 #include "testing/sound/dsp-kernels/GOTestPerfSoundResample.h"
+#include "testing/sound/dsp-kernels/GOTestSoundLinearFaderCore.h"
 #include "testing/sound/dsp-kernels/GOTestSoundOnePoleFilter.h"
 #include "testing/sound/dsp-kernels/GOTestSoundResample.h"
 #include "testing/sound/effects/GOTestPerfSoundShelfFilterProcessor.h"
@@ -125,6 +127,8 @@ int main(int argc, char *argv[]) {
   GOTestSoundPlayingFader testSoundPlayingFader;
   GOTestPerfSoundPlayingFader testPerfSoundPlayingFader;
   GOTestSoundStream testSoundStream;
+  GOTestSoundLinearFaderCore testSoundLinearFaderCore;
+  GOTestPerfSoundLinearFaderCore testPerfSoundLinearFaderCore;
   GOTestSoundOnePoleFilter testSoundOnePoleFilter;
   GOTestSoundResample testSoundResample;
   GOTestPerfSoundResample testPerfSoundResample;
