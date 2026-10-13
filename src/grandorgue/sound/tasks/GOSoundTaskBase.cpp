@@ -18,8 +18,8 @@ GOSoundTaskBase::GOSoundTaskBase(TaskPriority priority, bool isRepeatable)
 
 // Only moves m_RunState between RUN_STATE_NOT_STARTED and RUN_STATE_DONE:
 // DoRun() runs entirely under m_mutex, so a cooperative subclass that needs
-// several threads inside DoRun() at once (e.g. GOSoundGroupTask) cannot fit
-// this default protocol and overrides Run() itself instead.
+// several threads inside DoRun() at once (e.g. GOSoundWindchestGroupTask)
+// cannot fit this default protocol and overrides Run() itself instead.
 void GOSoundTaskBase::Run(GOSchedulerThread *pThread) {
   if (m_RunState.load() < RUN_STATE_DONE) {
     GOMutexLocker locker(m_mutex, false, "GOSoundTaskBase::Run", pThread);

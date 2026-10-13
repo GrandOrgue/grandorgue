@@ -8,6 +8,8 @@
 #ifndef GOORGANCONTROLLER_H
 #define GOORGANCONTROLLER_H
 
+#include <set>
+#include <utility>
 #include <vector>
 
 #include <wx/filefn.h>
@@ -99,7 +101,9 @@ private:
   GOSoundOrganEngine m_SoundEngine;
   /** Non-owning; set in StartOrgan(), cleared in StopOrgan(). Doubles as the
    * "organ is started" guard: SuspendOrgan()/ResumeOrgan() may only be
-   * called while it is non-null. */
+   * called while it is non-null, and AssertSoundRoutingFor()/
+   * EnsureSoundRoutingFor() are no-ops while it is null - there is nothing
+   * to check against or to suspend/resume yet. */
   GOSoundSystem *p_SoundSystem = nullptr;
   GOLabelControl m_PitchLabel;
   GOLabelControl m_TemperamentLabel;
@@ -244,7 +248,9 @@ public:
 
   /**
    * Quiesces the sound engine for a live reconfiguration that needs it held
-   * still (e.g. rebuilding audio-routing tasks while pipes keep sounding):
+   * still - currently EnsureSoundRoutingFor(), which needs the scheduler and
+   * the GOSoundGroupTask input lists to stay put while pipes keep sounding
+   * (see GOSoundOrganEngine::CommitSoundRoutingFor()):
    * drains in-flight audio callbacks, then stops the engine. Sounding notes
    * are preserved - only the engine's own processing pauses. Must be paired
    * with ResumeOrgan(); may only be called while the organ is started (see
@@ -257,6 +263,20 @@ public:
   void ResumeOrgan();
 
   GOSoundOrganEngine &GetSoundEngine() { return m_SoundEngine; }
+
+  /**
+   * @see GOOrganModel::AssertSoundRoutingFor(). No-op while the sound engine
+   * does not exist yet (p_SoundSystem null, e.g. during initial
+   * PreparePlayback() at organ-load time) - there is nothing to check
+   * against.
+   */
+  void AssertSoundRoutingFor(
+    unsigned windchestN, unsigned audioGroupId) const override;
+
+  /** @see GOOrganModel::EnsureSoundRoutingFor(). */
+  void EnsureSoundRoutingFor(
+    const std::set<std::pair<unsigned, unsigned>> &pairs) override;
+
   void Update();
   void Reset();
   void ProcessMidi(const GOMidiEvent &event);

@@ -50,6 +50,7 @@ private:
   void TestCompatibilityChecks();
   void TestComplexOperations();
   void TestCopyChannelFrom();
+  void TestCopyChannelFromMono();
   void TestAddChannelFrom();
   void TestAddChannelFromWithCoefficient();
   void TestCrossChannelOperations();

@@ -11,6 +11,7 @@
 #include <cassert>
 
 #include "GOSoundBuffer.h"
+#include "GOSoundBufferMono.h"
 #include "GOSoundBufferMutable.h"
 
 /**
@@ -86,15 +87,13 @@ public:
   inline unsigned GetNBytes() const { return sizeof(Item) * GetNItems(); }
 
   /**
-   * A contiguous read-only view of one channel. A single channel has no
-   * interleaving to speak of, so this is a plain GOSoundBuffer(pData, 1,
-   * nFrames) - no new type needed.
+   * A contiguous read-only view of one channel.
    * @param channelI Channel index (0-based)
    * @return A read-only view of the frames of the given channel
    */
-  inline GOSoundBuffer GetChannelBuffer(unsigned channelI) const {
+  inline GOSoundBufferMono GetChannelBuffer(unsigned channelI) const {
     assert(channelI < m_NChannels);
-    return GOSoundBuffer(p_data + channelI * m_NFrames, 1, m_NFrames);
+    return GOSoundBufferMono(p_data + channelI * m_NFrames, m_NFrames);
   }
 
   /**

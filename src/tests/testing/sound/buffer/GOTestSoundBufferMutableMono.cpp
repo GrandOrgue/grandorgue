@@ -120,31 +120,6 @@ void GOTestSoundBufferMutableMono::TestCopyMonoFromChannel(
   }
 }
 
-void GOTestSoundBufferMutableMono::TestCopyMonoToChannel(
-  GOSoundBufferMutableMono &monoBuffer,
-  GOSoundBufferMutable &dstBuffer,
-  unsigned channelI) {
-  monoBuffer.CopyChannelTo(dstBuffer, channelI);
-
-  const unsigned dstNChannels = dstBuffer.GetNChannels();
-  const unsigned nFrames = monoBuffer.GetNFrames();
-
-  for (unsigned frameI = 0; frameI < nFrames; ++frameI) {
-    const float gotValue
-      = dstBuffer.GetData()[frameI * dstNChannels + channelI];
-    const float expectedValue = monoBuffer.GetData()[frameI];
-
-    GOAssert(
-      gotValue == expectedValue,
-      std::format(
-        "Channel {}, frame {} should be {} (got: {})",
-        channelI,
-        frameI,
-        expectedValue,
-        gotValue));
-  }
-}
-
 void GOTestSoundBufferMutableMono::TestAddMonoFromChannel(
   GOSoundBufferMutableMono &monoBuffer,
   const GOSoundBuffer &srcBuffer,
@@ -193,28 +168,6 @@ void GOTestSoundBufferMutableMono::TestCopyChannelFrom() {
   TestCopyMonoFromChannel(monoBuffer, srcBuffer, 0);
   TestCopyMonoFromChannel(monoBuffer, srcBuffer, 1);
   TestCopyMonoFromChannel(monoBuffer, srcBuffer, 2);
-}
-
-void GOTestSoundBufferMutableMono::TestCopyChannelTo() {
-  const unsigned dstNChannels = 3;
-  const unsigned nDstFrames = 4;
-  const unsigned dstNItems = dstNChannels * nDstFrames;
-
-  // Create mono source buffer
-  std::vector<GOSoundBuffer::Item> monoData(nDstFrames);
-
-  for (unsigned frameI = 0; frameI < nDstFrames; ++frameI)
-    monoData[frameI] = static_cast<float>((frameI + 1) * 10);
-
-  GOSoundBufferMutableMono monoBuffer(monoData.data(), nDstFrames);
-
-  // Create multi-channel destination buffer
-  std::vector<GOSoundBuffer::Item> dstData(dstNItems, 0.0f);
-  GOSoundBufferMutable dstBuffer(dstData.data(), dstNChannels, nDstFrames);
-
-  TestCopyMonoToChannel(monoBuffer, dstBuffer, 0);
-  TestCopyMonoToChannel(monoBuffer, dstBuffer, 1);
-  TestCopyMonoToChannel(monoBuffer, dstBuffer, 2);
 }
 
 void GOTestSoundBufferMutableMono::TestAddChannelFrom() {
@@ -315,7 +268,6 @@ void GOTestSoundBufferMutableMono::run() {
   GO_RUN_TEST(TestConstructorAndBasicProperties())
   GO_RUN_TEST(TestGetSubBuffer())
   GO_RUN_TEST(TestCopyChannelFrom())
-  GO_RUN_TEST(TestCopyChannelTo())
   GO_RUN_TEST(TestAddChannelFrom())
   GO_RUN_TEST(TestInvalidBuffer())
   GO_RUN_TEST(TestEdgeCases())

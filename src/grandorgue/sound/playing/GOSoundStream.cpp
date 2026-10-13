@@ -18,16 +18,16 @@
 
 template <class SampleT, uint8_t nChannels>
 class GOSoundStream::StreamPtrWindow
-  : public GOSoundResample::PtrSampleVector<SampleT, int, nChannels> {
+  : public GOSoundResample::PtrFrameVector<SampleT, int, nChannels> {
 public:
   inline StreamPtrWindow(GOSoundStream &stream)
-    : GOSoundResample::PtrSampleVector<SampleT, int, nChannels>(
+    : GOSoundResample::PtrFrameVector<SampleT, int, nChannels>(
       (SampleT *)stream.ptr) {}
 };
 
 template <bool format16, uint8_t nChannels>
 class GOSoundStream::StreamCacheWindow
-  : public GOSoundResample::FloatingSampleVector<nChannels> {
+  : public GOSoundResample::FloatingFrameVector<nChannels> {
 private:
   GOSoundCompressionCache &r_cache;
   uint8_t m_ChannelN;
@@ -44,7 +44,7 @@ public:
     m_curr = PREV;
   }
 
-  inline int NextSample() {
+  inline int NextItem() {
     int res;
 
     if (m_curr == PREV) {
@@ -61,7 +61,7 @@ public:
 
 template <bool format16, unsigned windowLen, uint8_t nChannels>
 class GOSoundStream::StreamCacheReadAheadWindow
-  : public GOSoundResample::PtrSampleVector<int, int, nChannels> {
+  : public GOSoundResample::PtrFrameVector<int, int, nChannels> {
 private:
   static constexpr unsigned WINDOW_SAMPLES = nChannels * windowLen;
   static constexpr unsigned BUFFER_SAMPLES = WINDOW_SAMPLES * 2;
@@ -72,7 +72,7 @@ private:
 
 public:
   inline StreamCacheReadAheadWindow(GOSoundStream &stream)
-    : GOSoundResample::PtrSampleVector<int, int, nChannels>(
+    : GOSoundResample::PtrFrameVector<int, int, nChannels>(
       stream.m_ReadAheadBuffer),
       r_cache(stream.cache),
       p_begin(stream.m_ReadAheadBuffer),
@@ -114,7 +114,7 @@ public:
     /* Now the ring buffer contains windowLen continous samples in the positions
      * from index % windowLen to index % windowLen + windowLen. So use Seek of
      * the parent class */
-    GOSoundResample::PtrSampleVector<int, int, nChannels>::Seek(
+    GOSoundResample::PtrFrameVector<int, int, nChannels>::Seek(
       index % windowLen, channelN);
   }
 };

@@ -17,13 +17,13 @@
 
 #include "loader/GOLoaderFilename.h"
 #include "model/GOCacheObject.h"
+#include "sound/dsp-kernels/GOSoundResample.h"
 
 #include "GOAlloc.h"
 #include "GOMemoryPool.h"
 #include "GOSampleStatistic.h"
 #include "GOSoundCompressionCache.h"
 #include "GOSoundReleaseAlignTable.h"
-#include "GOSoundResample.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846

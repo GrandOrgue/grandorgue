@@ -8,8 +8,9 @@
 #ifndef GOSOUNDSTREAM_H
 #define GOSOUNDSTREAM_H
 
+#include "sound/dsp-kernels/GOSoundResample.h"
+
 #include "GOSoundCompressionCache.h"
-#include "GOSoundResample.h"
 
 class GOSoundAudioSection;
 class GOSoundBufferMutable;
