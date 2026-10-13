@@ -364,6 +364,13 @@ Key CMake options (see `CMakeLists.txt` for full list):
 - **Two-line and multi-line methods** must be in `.cpp`
   - ✅ `void OnSoundClosing(...) override;` in `.h`, implementation in `.cpp`
   - ❌ Multi-line body in `.h`
+- **Exception**: templates, and methods explicitly declared `inline` in the
+  `.h` where inlining is needed for performance, may have multi-line
+  implementations in the header. Example: per-sample or per-frame DSP
+  routines in `sound/dsp-kernels/` that the callers must inline and vectorise
+  (e.g. `GOSoundOnePoleFilter::processSample()`, the `FloatingFrameVector`
+  templates of `GOSoundResample`); such a method is marked `inline` (or is a
+  template)
 
 ### Code Formatting
 
@@ -426,6 +433,11 @@ Key CMake options (see `CMakeLists.txt` for full list):
   - ✅ `GOSoundBufferManaged m_Buffer;`
   - ❌ `float *m_Buffer = new float[size]; ... delete m_Buffer;`
 - Use `assert()` to check invariants, especially in real-time audio code
+- Short-lived scratch buffers in the real-time path are placed on the stack
+  with variable-length arrays, usually via `GO_DECLARE_LOCAL_SOUND_BUFFER` /
+  `GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR`; their sizes are bounded by
+  `MAX_FRAME_SIZE`. This is an accepted idiom here and is preferred over heap
+  allocation in the audio callback
 - Add documentation for all new classes, functions, and methods in header files
 
 ### Commit Messages and Pull Requests
