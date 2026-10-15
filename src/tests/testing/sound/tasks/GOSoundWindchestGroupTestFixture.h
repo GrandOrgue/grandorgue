@@ -24,6 +24,8 @@
 #include "GOMemoryPool.h"
 #include "ptrvector.h"
 
+class GOSoundProcessingChain;
+
 /**
  * A minimal, standalone fixture for tests that construct
  * GOSoundWindchestGroupTask or GOSoundWindchestGroupTaskGrid directly,
@@ -58,12 +60,19 @@ private:
   ptr_vector<GOSoundTremulantTask> m_UnusedTremulantTasks;
   std::unique_ptr<GOSoundReleaseTask> m_UnusedReleaseTask;
 
-  // One distinct GOSoundWindchestTask per windchestIndex a test asks for,
-  // grown lazily by GetWindchestTask(). Distinct indices get distinct
-  // instances, matching GOSoundWindchestGroupTaskGrid::
-  // BuildWindchestGroupTask()'s documented precondition that the task
-  // passed for windchestIndex must be windchestIndex's own task.
+  /** One distinct GOSoundWindchestTask per windchestIndex in
+   * [0, N_WINDCHEST_TASKS), all pre-built by the constructor
+   * (GetWindchestTask() only reads this, never modifies it). Distinct indices
+   * get distinct instances, matching GOSoundWindchestGroupTaskGrid::
+   * BuildWindchestGroupTask()'s documented precondition that the task
+   * passed for windchestIndex must be windchestIndex's own task. */
+  static constexpr unsigned N_WINDCHEST_TASKS = 8;
   std::vector<std::unique_ptr<GOSoundWindchestTask>> m_WindchestTasksByIndex;
+
+  /** Extra windchest tasks built ad hoc by BuildWindchestTask(), kept alive
+   * for the fixture's lifetime; unlike m_WindchestTasksByIndex, not
+   * addressed by index. */
+  std::vector<std::unique_ptr<GOSoundWindchestTask>> m_BuiltWindchestTasks;
 
 public:
   GOSoundSamplerPlayer player;
@@ -82,9 +91,22 @@ public:
   // GOSoundWindchestGroupTaskGrid.h).
   ~GOSoundWindchestGroupTestFixture();
 
-  /** @return the distinct GOSoundWindchestTask for windchestIndex, creating
-   * it (and any lower not-yet-requested index) on first use. */
+  /** @return the distinct GOSoundWindchestTask pre-built for windchestIndex
+   * (see m_WindchestTasksByIndex); asserts windchestIndex < N_WINDCHEST_TASKS.
+   */
   GOSoundWindchestTask &GetWindchestTask(unsigned windchestIndex);
+
+  /**
+   * Builds a new GOSoundWindchestTask from pChain (EnsureSetup() is called
+   * on it here), kept alive for the fixture's lifetime. Unlike
+   * GetWindchestTask(), which only ever returns one of the empty-chain tasks
+   * pre-built by the constructor, this lets a test prove a specific
+   * processor actually runs.
+   * @param pChain the chain to build the task with; never null
+   * @return the newly built task
+   */
+  GOSoundWindchestTask &BuildWindchestTask(
+    std::unique_ptr<GOSoundProcessingChain> pChain);
 };
 
 #endif /* GOSOUNDWINDCHESTGROUPTESTFIXTURE_H */
