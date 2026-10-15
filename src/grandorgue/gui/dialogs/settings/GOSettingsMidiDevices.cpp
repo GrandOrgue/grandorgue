@@ -13,6 +13,7 @@
 #include <wx/gbsizer.h>
 #include <wx/numdlg.h>
 #include <wx/sizer.h>
+#include <wx/spinctrl.h>
 #include <wx/stattext.h>
 
 #include "config/GOConfig.h"
@@ -54,6 +55,36 @@ SettingsMidiDevices::SettingsMidiDevices(
     = new wxCheckBox(this, ID_CHECK_ON_STARTUP, _("Check on startup")),
     0,
     wxEXPAND | wxALL,
+    5);
+
+  wxBoxSizer *webRemoteSizer = new wxBoxSizer(wxHORIZONTAL);
+
+  webRemoteSizer->Add(
+    new wxStaticText(this, wxID_ANY, _("Web Remote port:")),
+    0,
+    wxALIGN_CENTER_VERTICAL | wxRIGHT,
+    5);
+  webRemoteSizer->Add(
+    m_WebRemotePort = new wxSpinCtrl(
+      this,
+      ID_WEB_REMOTE_PORT,
+      wxEmptyString,
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxSP_ARROW_KEYS,
+      1,
+      65535),
+    0,
+    wxALIGN_CENTER_VERTICAL);
+  midiPropSizer->Add(webRemoteSizer, 0, wxALL, 5);
+  midiPropSizer->Add(
+    new wxStaticText(
+      this,
+      wxID_ANY,
+      _("Enable the \"Web Remote\" input device below, then open\n"
+        "http://<this computer's IP>:<port> on your phone.")),
+    0,
+    wxLEFT | wxRIGHT | wxBOTTOM,
     5);
 
   box1->Add(midiPropSizer, 0, wxALL | wxALIGN_TOP, 5);
@@ -165,6 +196,7 @@ SettingsMidiDevices::SettingsMidiDevices(
 
   m_AutoAddInput->SetValue(isToAutoAddInput);
   m_CheckOnStartup->SetValue(m_config.IsToCheckMidiOnStart());
+  m_WebRemotePort->SetValue(m_config.WebRemotePort());
   m_AskMidiPlayerChannelMapping->SetValue(
     m_config.IsToAskMidiPlayerChannelMapping());
   m_MidiPlayerChannelMappingWithInputNumber->SetCurrentValue(
@@ -265,6 +297,7 @@ void SettingsMidiDevices::OnOutDevicesClick(wxCommandEvent &event) {
 bool SettingsMidiDevices::TransferDataFromWindow() {
   m_config.IsToAutoAddMidi(m_AutoAddInput->IsChecked());
   m_config.IsToCheckMidiOnStart(m_CheckOnStartup->IsChecked());
+  m_config.WebRemotePort(m_WebRemotePort->GetValue());
   m_config.IsToAskMidiPlayerChannelMapping(
     m_AskMidiPlayerChannelMapping->IsChecked());
   m_config.MidiPlayerChannelMappingWithInputNumber(
