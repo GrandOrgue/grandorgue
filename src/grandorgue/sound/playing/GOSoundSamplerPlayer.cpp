@@ -12,11 +12,12 @@
 #include <cmath>
 #include <cstdlib>
 
+#include "sound/GOSoundWindchestGroupTaskGrid.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/providers/GOSoundProvider.h"
-#include "sound/tasks/GOSoundGroupTask.h"
 #include "sound/tasks/GOSoundReleaseTask.h"
 #include "sound/tasks/GOSoundTremulantTask.h"
+#include "sound/tasks/GOSoundWindchestGroupTask.h"
 #include "sound/tasks/GOSoundWindchestTask.h"
 
 #include "GOSoundReleaseAlignTable.h"
@@ -27,11 +28,11 @@
  */
 
 GOSoundSamplerPlayer::GOSoundSamplerPlayer(
-  ptr_vector<GOSoundGroupTask> &audioGroupTasks,
+  GOSoundWindchestGroupTaskGrid &windchestGroupTaskGrid,
   std::vector<std::unique_ptr<GOSoundWindchestTask>> &windchestTasks,
   ptr_vector<GOSoundTremulantTask> &tremulantTasks,
   std::unique_ptr<GOSoundReleaseTask> &pReleaseTask)
-  : r_AudioGroupTasks(audioGroupTasks),
+  : r_WindchestGroupTaskGrid(windchestGroupTaskGrid),
     r_WindchestTasks(windchestTasks),
     r_TremulantTasks(tremulantTasks),
     rp_ReleaseTask(pReleaseTask),
@@ -63,7 +64,6 @@ void GOSoundSamplerPlayer::SetHardPolyphony(unsigned polyphony) {
 
 void GOSoundSamplerPlayer::Build(unsigned sampleRate) {
   assert(rp_ReleaseTask);
-  assert(r_AudioGroupTasks.size() > 0);
   assert(!r_WindchestTasks.empty());
   m_SampleRate = sampleRate;
 }
@@ -108,10 +108,13 @@ float GOSoundSamplerPlayer::GetRandomFactor() const {
 }
 
 void GOSoundSamplerPlayer::PassSampler(GOSoundSampler *sampler) {
-  int taskId = sampler->m_SamplerTaskId;
+  int taskId = sampler->m_MixWindchestTaskId;
 
   if (isWindchestTask(taskId))
-    r_AudioGroupTasks[sampler->m_AudioGroupId]->Add(sampler);
+    r_WindchestGroupTaskGrid
+      .GetWindchestGroupTask(
+        windchestTaskToIndex(taskId), sampler->m_AudioGroupId)
+      .Add(sampler);
   else
     r_TremulantTasks[tremulantTaskToIndex(taskId)]->Add(sampler);
 }
@@ -230,9 +233,10 @@ GOSoundSampler *GOSoundSamplerPlayer::CreateTaskSample(
       sampler->delay = delay_samples;
       sampler->time = start_time;
       sampler->toneBalanceFilterState.Init(
-        sampler->p_SoundProvider->GetToneBalance()->GetFilter());
+        sampler->p_SoundProvider->GetToneBalance());
       sampler->is_release = isRelease;
       sampler->m_SamplerTaskId = samplerTaskId;
+      sampler->m_MixWindchestTaskId = samplerTaskId;
       sampler->m_AudioGroupId = audioGroup;
       StartSampler(sampler);
     }
@@ -277,7 +281,7 @@ void GOSoundSamplerPlayer::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
         pSampler->is_release = false;
 
         new_sampler->toneBalanceFilterState.Init(
-          new_sampler->p_SoundProvider->GetToneBalance()->GetFilter());
+          new_sampler->p_SoundProvider->GetToneBalance());
 
         StartSampler(new_sampler);
       }
@@ -425,9 +429,17 @@ void GOSoundSamplerPlayer::CreateReleaseSampler(GOSoundSampler *handle) {
          * so put the release on the same windchest as the pipe (which
          * means it will still be affected by tremulants - yuck). */
         : handle->m_SamplerTaskId;
+      /* Unlike m_SamplerTaskId above, the mixing target always stays the
+       * true originating windchest, detached or not: a detached tail's
+       * fader volume is baked in via GetWindchestAmplitude() above (a
+       * scalar can be baked at release time), but the windchest's
+       * processing chain is state, not a scalar, and can only be applied
+       * by actually mixing through that windchest's own grid cell - see
+       * GOSoundSampler::m_MixWindchestTaskId. */
+      new_sampler->m_MixWindchestTaskId = handle->m_MixWindchestTaskId;
       new_sampler->m_AudioGroupId = handle->m_AudioGroupId;
       new_sampler->toneBalanceFilterState.Init(
-        new_sampler->p_SoundProvider->GetToneBalance()->GetFilter());
+        new_sampler->p_SoundProvider->GetToneBalance());
       StartSampler(new_sampler);
       handle->time = m_CurrentTime;
     }

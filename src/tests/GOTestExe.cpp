@@ -19,24 +19,31 @@
 #include "testing/midi/GOTestMidiSystem.h"
 #include "testing/model/GOTestDrawStop.h"
 #include "testing/model/GOTestOrganModel.h"
+#include "testing/model/GOTestPipeConfigTreeNode.h"
+#include "testing/model/GOTestSoundingPipe.h"
 #include "testing/model/GOTestSwitch.h"
 #include "testing/model/GOTestWindchest.h"
 #include "testing/scheduler/GOTestScheduler.h"
 #include "testing/sound/GOTestSoundCallbackConnector.h"
+#include "testing/sound/GOTestSoundOnePoleFilter.h"
 #include "testing/sound/GOTestSoundOrganEngine.h"
 #include "testing/sound/GOTestSoundOrganEngineFactories.h"
 #include "testing/sound/GOTestSoundOrganEngineStress.h"
+#include "testing/sound/GOTestSoundWindchestGroupTaskGrid.h"
 #include "testing/sound/buffer/GOTestPerfSoundBufferMutable.h"
 #include "testing/sound/buffer/GOTestPerfSoundBufferPlanarMutable.h"
 #include "testing/sound/buffer/GOTestSoundBuffer.h"
 #include "testing/sound/buffer/GOTestSoundBufferManaged.h"
+#include "testing/sound/buffer/GOTestSoundBufferMono.h"
 #include "testing/sound/buffer/GOTestSoundBufferMutable.h"
 #include "testing/sound/buffer/GOTestSoundBufferMutableMono.h"
 #include "testing/sound/buffer/GOTestSoundBufferPlanar.h"
 #include "testing/sound/buffer/GOTestSoundBufferPlanarManaged.h"
 #include "testing/sound/buffer/GOTestSoundBufferPlanarMutable.h"
+#include "testing/sound/effects/GOTestSoundReverbProcessor.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
+#include "testing/sound/playing/GOTestSoundToneBalanceFilter.h"
 #include "testing/sound/processing/GOTestSoundProcessingChain.h"
 #include "testing/sound/processing/GOTestSoundProcessorTyped.h"
 #include "testing/sound/reverb/GOTestSoundReverb.h"
@@ -44,6 +51,8 @@
 #include "testing/sound/tasks/GOTestSoundOutputTask.h"
 #include "testing/sound/tasks/GOTestSoundRecorderTask.h"
 #include "testing/sound/tasks/GOTestSoundTaskBase.h"
+#include "testing/sound/tasks/GOTestSoundWindchestGroupTask.h"
+#include "testing/sound/tasks/GOTestSoundWindchestTask.h"
 
 int main(int argc, char *argv[]) {
   /*
@@ -73,6 +82,8 @@ int main(int argc, char *argv[]) {
   GOTestOrganController testOrganController;
   GOTestDrawStop testDrawStop;
   GOTestOrganModel testOrganModel;
+  GOTestPipeConfigTreeNode testPipeConfigTreeNode;
+  GOTestSoundingPipe testSoundingPipe;
   GOTestSwitch testSwitch;
   GOTestWindchest testWindchest;
   GOTestScheduler testScheduler;
@@ -82,6 +93,7 @@ int main(int argc, char *argv[]) {
   GOTestMidiSystem testMidiSystem;
   GOTestSoundBuffer goTestSoundBuffer;
   GOTestSoundBufferManaged testSoundBufferManaged;
+  GOTestSoundBufferMono testSoundBufferMono;
   GOTestSoundBufferMutable testSoundBufferMutable;
   GOTestSoundBufferMutableMono testSoundBufferMutableMono;
   GOTestSoundBufferPlanar testSoundBufferPlanar;
@@ -97,10 +109,16 @@ int main(int argc, char *argv[]) {
   GOTestSoundOrganEngineStress testSoundOrganEngineStress;
   GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundStream testSoundStream;
+  GOTestSoundOnePoleFilter testSoundOnePoleFilter;
+  GOTestSoundToneBalanceFilter testSoundToneBalanceFilter;
   GOTestSoundReverb testSoundReverb;
+  GOTestSoundReverbProcessor testSoundReverbProcessor;
+  GOTestSoundWindchestGroupTaskGrid testSoundWindchestGroupTaskGrid;
   GOTestSoundTaskBase testSoundTaskBase;
+  GOTestSoundWindchestTask testSoundWindchestTask;
   GOTestSoundOutputTask testSoundOutputTask;
   GOTestSoundRecorderTask testSoundRecorderTask;
+  GOTestSoundWindchestGroupTask testSoundWindchestGroupTask;
   GOTestPerfSoundTaskBase testPerfSoundTaskBase;
   /* end of instanciation */
   GOTestResultCollection test_result_collection;

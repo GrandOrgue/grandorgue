@@ -25,8 +25,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "sound/GOSoundDefs.h"
-
 #ifndef M_PI
 #define M_PI 3.14159265358979323846264338327950288
 #endif
@@ -142,10 +140,10 @@ float *GOSoundResample::NewResampledMono(
   if (!out)
     return NULL;
 
-  BoundedPtrSampleVector<float, float, 1> w(data, len);
+  BoundedPtrFrameVector<float, float, 1> w(data, len);
   PolyphaseResampler resampler(*this);
 
-  resampler.ResampleBlock<BoundedPtrSampleVector<float, float, 1>, 1>(
+  resampler.ResampleBlock<BoundedPtrFrameVector<float, float, 1>, 1>(
     resamplingPos, w, out, new_len);
   len = new_len;
   return out;

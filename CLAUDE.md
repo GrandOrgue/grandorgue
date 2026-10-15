@@ -217,6 +217,29 @@ This pattern flows through: `GOSoundPort` → `GOSound` → `GOSoundEngine`
   - `modification/`: Organ modification tracking
   - `resource/`: Bundled resources
   - `sound/`: Audio engine and sound processing
+    - `dsp-kernels/`: Stateless computational cores (interpolation, filter
+      math). Depend on nothing in the composition/framework stack above
+      (`processing/`, `playing/`, `providers/`, `model/`) - the plain data
+      types in `buffer/` are the one allowed dependency, since `buffer/` is
+      itself a leaf with no dependency on anything else in the sound engine.
+    - `processing/`: DSP composition framework (processor/state interfaces,
+      chain lifecycle, parameter mapper interface). Contains no DSP math and
+      must not depend on `model/`.
+    - `effects/`: Concrete processors built on `processing/` and
+      `dsp-kernels/`.
+    - `mappers/`: Model-aware parameter mappers; the only place in this
+      stack allowed to see `model/`.
+    - `playing/`: Sampler-side playback (streams, samplers, faders, audio
+      sections).
+    - `providers/`: Audio sources feeding samplers.
+    - `tasks/`, `buffer/`, `ports/`, `interfaces/`: Scheduler tasks, buffer
+      wrappers, backends, contracts.
+    - `reverb/`: External-library (zita-convolver) integration, a category
+      of its own.
+
+    Placement rule: a new DSP class with no state ownership and no
+    framework ties goes in `dsp-kernels/`; a chainable stateful unit goes
+    in `effects/`; anything reading the organ model goes in `mappers/`.
   - `updater/`: ODF/CMB version updater
   - `yaml/`: YAML serialization utilities
 
@@ -341,6 +364,13 @@ Key CMake options (see `CMakeLists.txt` for full list):
 - **Two-line and multi-line methods** must be in `.cpp`
   - ✅ `void OnSoundClosing(...) override;` in `.h`, implementation in `.cpp`
   - ❌ Multi-line body in `.h`
+- **Exception**: templates, and methods explicitly declared `inline` in the
+  `.h` where inlining is needed for performance, may have multi-line
+  implementations in the header. Example: per-sample or per-frame DSP
+  routines in `sound/dsp-kernels/` that the callers must inline and vectorise
+  (e.g. `GOSoundOnePoleFilter::processSample()`, the `FloatingFrameVector`
+  templates of `GOSoundResample`); such a method is marked `inline` (or is a
+  template)
 
 ### Code Formatting
 
@@ -403,6 +433,11 @@ Key CMake options (see `CMakeLists.txt` for full list):
   - ✅ `GOSoundBufferManaged m_Buffer;`
   - ❌ `float *m_Buffer = new float[size]; ... delete m_Buffer;`
 - Use `assert()` to check invariants, especially in real-time audio code
+- Short-lived scratch buffers in the real-time path are placed on the stack
+  with variable-length arrays, usually via `GO_DECLARE_LOCAL_SOUND_BUFFER` /
+  `GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR`; their sizes are bounded by
+  `MAX_FRAME_SIZE`. This is an accepted idiom here and is preferred over heap
+  allocation in the audio callback
 - Add documentation for all new classes, functions, and methods in header files
 
 ### Commit Messages and Pull Requests

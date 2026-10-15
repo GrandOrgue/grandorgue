@@ -8,6 +8,8 @@
 #ifndef GOSOUNDWINDCHESTTASK_H
 #define GOSOUNDWINDCHESTTASK_H
 
+#include <memory>
+
 #include "model/GOWindchest.h"
 
 #include "GOSoundTaskBase.h"
@@ -15,6 +17,7 @@
 
 class GOSchedulerThread;
 class GOSoundOrganEngine;
+class GOSoundProcessingChain;
 class GOSoundTremulantTask;
 class GOWindchest;
 
@@ -24,12 +27,29 @@ private:
   float m_amplitude;
   GOWindchest *p_windchest;
   std::vector<GOSoundTremulantTask *> m_pTremulantTasks;
+  /** This windchest's processing chain, shared by every
+   * GOSoundWindchestGroupTask (audio group) of this windchest. Received
+   * already built and EnsureSetup() at construction (see the constructor's
+   * pChain parameter); never null. */
+  std::unique_ptr<GOSoundProcessingChain> mp_chain;
 
   bool DoRun(GOSchedulerThread *pThread) override;
 
 public:
+  /**
+   * @param soundEngine the owning engine, used for its overall amplitude
+   * @param pWindchest the model windchest this task tracks, or nullptr for
+   *   the synthetic detached-release windchest
+   * @param pChain this windchest's processing chain, taken over by this
+   *   task; never null (an unregistered windchest still gets a valid,
+   *   empty chain, built by the caller), and already EnsureSetup() by the
+   *   caller
+   */
   GOSoundWindchestTask(
-    GOSoundOrganEngine &soundEngine, GOWindchest *pWindchest);
+    GOSoundOrganEngine &soundEngine,
+    GOWindchest *pWindchest,
+    std::unique_ptr<GOSoundProcessingChain> pChain);
+  ~GOSoundWindchestTask();
 
   void CompleteRound() override {}
 
@@ -44,6 +64,10 @@ public:
       Run();
     return m_amplitude;
   }
+
+  /** @return this windchest's processing chain; never null (an unregistered
+   * windchest still gets a valid, empty chain). */
+  const GOSoundProcessingChain &GetChain() const { return *mp_chain; }
 };
 
 #endif

@@ -7,6 +7,8 @@
 
 #include "GOOrganSettingsPipesTab.h"
 
+#include <set>
+
 #include <wx/checkbox.h>
 #include <wx/choicdlg.h>
 #include <wx/choice.h>
@@ -115,6 +117,7 @@ END_EVENT_TABLE()
 GOOrganSettingsPipesTab::GOOrganSettingsPipesTab(
   GOOrganModel &organModel, GOOrganSettingsDialogBase *pDlg)
   : GOOrganSettingsTab(pDlg, WX_TAB_CODE, WX_TAB_TITLE),
+    r_OrganModel(organModel),
     r_config(organModel.GetConfig()),
     r_RootNode(organModel.GetRootPipeConfigNode()),
     p_LastTreeItemData(nullptr),
@@ -750,11 +753,15 @@ void GOOrganSettingsPipesTab::Load(bool isForce) {
   NotifyButtonStatesChanged();
 }
 
-void GOOrganSettingsPipesTab::UpdateAudioGroup(
-  const std::vector<wxString> &audio_group, unsigned &pos, wxTreeItemId item) {
+void GOOrganSettingsPipesTab::CollectAudioGroupAssignments(
+  const std::vector<wxString> &audio_group,
+  unsigned &pos,
+  wxTreeItemId item,
+  std::vector<std::pair<TreeItemData *, wxString>> &outAssignments) {
   TreeItemData *e = (TreeItemData *)m_Tree->GetItemData(item);
+
   if (e) {
-    e->r_config.SetAudioGroup(audio_group[pos]);
+    outAssignments.push_back({e, audio_group[pos]});
     pos++;
     if (pos >= audio_group.size())
       pos = 0;
@@ -763,7 +770,7 @@ void GOOrganSettingsPipesTab::UpdateAudioGroup(
   wxTreeItemIdValue it;
   wxTreeItemId child = m_Tree->GetFirstChild(item, it);
   while (child.IsOk()) {
-    UpdateAudioGroup(audio_group, pos, child);
+    CollectAudioGroupAssignments(audio_group, pos, child, outAssignments);
     child = m_Tree->GetNextChild(item, it);
   }
 }
@@ -966,9 +973,40 @@ void GOOrganSettingsPipesTab::DistributeAudio() {
 
   wxArrayTreeItemIds entries;
   m_Tree->GetSelections(entries);
+
+  // one (node, group name) entry per visited node, in round-robin order -
+  // walked exactly once, then reused below for both the pre-scan and the
+  // actual mutation
+  std::vector<std::pair<TreeItemData *, wxString>> itemGroupAssignments;
   unsigned pos = 0;
+
   for (unsigned i = 0; i < entries.size(); i++)
-    UpdateAudioGroup(group_list, pos, entries[i]);
+    CollectAudioGroupAssignments(
+      group_list, pos, entries[i], itemGroupAssignments);
+
+  // (windchestN, audioGroupId) pairs that need a routable task before any
+  // node's audio group actually changes
+  std::set<std::pair<unsigned, unsigned>> affectedWindchestGroups;
+
+  for (const auto &[pEntry, groupName] : itemGroupAssignments) {
+    // windchests reached by this node
+    std::set<unsigned> affectedWindchestNs;
+
+    r_OrganModel.CollectWindchestsForNode(pEntry->r_node, affectedWindchestNs);
+
+    // this node's target group, resolved to its numeric id
+    const unsigned audioGroupId = r_config.GetAudioGroupId(groupName);
+
+    for (unsigned windchestN : affectedWindchestNs)
+      affectedWindchestGroups.insert({windchestN, audioGroupId});
+  }
+  // make sure every pair collected above is routable before any node changes
+  r_OrganModel.EnsureSoundRoutingFor(affectedWindchestGroups);
+
+  // now safe to actually reassign every node to its recorded group
+  for (const auto &[pEntry, groupName] : itemGroupAssignments)
+    pEntry->r_config.SetAudioGroup(groupName);
+
   p_LastTreeItemData = NULL;
   Load(false);
 }
@@ -1117,6 +1155,35 @@ void GOOrganSettingsPipesTab::ApplyChanges() {
     GOMessageBox(
       _("ToneBalance value is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
+  }
+
+  if (m_AudioGroup->GetValue() != m_LastAudioGroup) {
+    const wxString newAudioGroup = m_AudioGroup->GetValue().Trim();
+    std::set<std::pair<unsigned, unsigned>> affectedWindchestGroups;
+
+    for (unsigned i = 0; i < entries.size(); i++) {
+      TreeItemData *e = (TreeItemData *)m_Tree->GetItemData(entries[i]);
+
+      if (e) {
+        // the group this entry will have once cleared: itself if set, else
+        // whatever it inherits from its parent - same rule
+        // GetEffectiveAudioGroup() applies, evaluated one level up since
+        // this node's own override is about to become empty
+        const wxString resolvedGroup = !newAudioGroup.IsEmpty()
+          ? newAudioGroup
+          : (
+            e->r_node.GetParent()
+              ? e->r_node.GetParent()->GetEffectiveAudioGroup()
+              : wxString(wxEmptyString));
+        const unsigned audioGroupId = r_config.GetAudioGroupId(resolvedGroup);
+        std::set<unsigned> affectedWindchestNs;
+
+        r_OrganModel.CollectWindchestsForNode(e->r_node, affectedWindchestNs);
+        for (unsigned windchestN : affectedWindchestNs)
+          affectedWindchestGroups.insert({windchestN, audioGroupId});
+      }
+    }
+    r_OrganModel.EnsureSoundRoutingFor(affectedWindchestGroups);
   }
 
   for (unsigned i = 0; i < entries.size(); i++) {
