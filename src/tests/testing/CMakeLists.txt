@@ -25,6 +25,7 @@ set(go_tests
     sound/buffer/GOTestSoundBufferPlanarMutable.cpp
     sound/dsp-kernels/GOTestSoundOnePoleFilter.cpp
     sound/effects/GOTestSoundReverbProcessor.cpp
+    sound/effects/GOTestSoundShelfFilterProcessor.cpp
     sound/GOTestSoundCallbackConnector.cpp
     sound/GOTestSoundOrganEngine.cpp
     sound/GOTestSoundOrganEngineBase.cpp

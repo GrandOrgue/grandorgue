@@ -213,6 +213,8 @@ sound/dsp-kernels/GOSoundOnePoleFilter.cpp
 sound/dsp-kernels/GOSoundResample.cpp
 sound/effects/GOSoundReverbProcessor.cpp
 sound/effects/GOSoundReverbProcessorState.cpp
+sound/effects/GOSoundShelfFilterProcessor.cpp
+sound/effects/GOSoundShelfFilterProcessorState.cpp
 sound/interfaces/GOSoundCallbackConnector.cpp
 sound/playing/GOSoundAudioSection.cpp
 sound/playing/GOSoundFader.cpp
