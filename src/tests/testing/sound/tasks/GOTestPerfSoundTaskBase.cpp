@@ -130,8 +130,13 @@ static constexpr double MAX_NEXT_PERIOD_PEAK_MICROSECONDS
 // can reach close to one audio period on shared CI hardware. Each threshold
 // set 10% above its own worst case for run-to-run variance; not split by
 // build type since the constant is shared between them.
+// Peak raised 2026-10-16: nThreads=1 reached 530.4 us (Release, run
+// 38365044054 on GrandOrgue/grandorgue) and 523.9 us (Release, run
+// 38912090895 on GrandOrgue/grandorgue) - the same scheduling jitter, even with
+// a single worker; set 10% above the new worst case, rounded up to 2
+// significant figures.
 static constexpr double MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS = 1.5;
-static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS = 350.0;
+static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS = 590.0;
 
 // Minimum acceptable round rate on the lazy-prerequisite path
 // (GOSoundWindchestTask::GetAmplitude() shape) with ~5us of work per
