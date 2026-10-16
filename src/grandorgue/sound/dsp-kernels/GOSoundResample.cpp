@@ -33,8 +33,9 @@ void GOSoundResample::ResamplingPosition::Init(
   float factor, unsigned startIndex, const ResamplingPosition *pOld) {
   m_index = startIndex;
   m_fraction = pOld ? pOld->m_fraction : 0;
-  m_FractionIncrement
-    = roundf(factor * (pOld ? pOld->m_FractionIncrement : UPSAMPLE_FACTOR));
+  m_FractionIncrement = pOld
+    ? (unsigned)roundf(factor * pOld->m_FractionIncrement)
+    : rateToFractionIncrement(factor);
 }
 
 static double sinc(const double arg) {
