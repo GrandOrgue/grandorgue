@@ -12,6 +12,8 @@
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/reverb/GOSoundReverb.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundReverb::TEST_NAME = "GOTestSoundReverb";
 
 // resources/test_ir.wav: 10 mono float32 samples, 0.1, 0.2, ..., 1.0, at
@@ -133,10 +135,10 @@ void GOTestSoundReverb::TestHasContentTracksProcessAndReset() {
 }
 
 void GOTestSoundReverb::run() {
-  TestLoadIRDataAppliesGain();
-  TestLoadIRDataTrimsOffsetAndLen();
-  TestLoadIRDataComputesDelayFromMs();
-  TestLoadIRDataPassesThroughIsDirect();
-  TestLoadIRDataThrowsOnMissingFile();
-  TestHasContentTracksProcessAndReset();
+  GO_RUN_TEST(TestLoadIRDataAppliesGain())
+  GO_RUN_TEST(TestLoadIRDataTrimsOffsetAndLen())
+  GO_RUN_TEST(TestLoadIRDataComputesDelayFromMs())
+  GO_RUN_TEST(TestLoadIRDataPassesThroughIsDirect())
+  GO_RUN_TEST(TestLoadIRDataThrowsOnMissingFile())
+  GO_RUN_TEST(TestHasContentTracksProcessAndReset())
 }

@@ -18,6 +18,7 @@
 #include "model/GOSwitch.h"
 
 #include "GOOrganController.h"
+#include "GOTestScope.h"
 
 // Loads the static ODF fixture fixtureName (from the fixtures/ directory next
 // to this file) into the controller, then constructs and loads a
@@ -106,6 +107,10 @@ std::string GOTestDivisionalSetter::TestWithoutPedal::TEST_NAME
   = CLASS_NAME + "::TestWithoutPedal";
 
 void GOTestDivisionalSetter::TestWithoutPedal::run() {
+  GO_RUN_TEST(TestSetAndRecall())
+}
+
+void GOTestDivisionalSetter::TestWithoutPedal::TestSetAndRecall() {
   // Reproduces https://github.com/GrandOrgue/grandorgue/discussions/2552:
   // on an organ without a Pedal, GetFirstManualIndex() == 1, which used to
   // make GODivisionalSetter::SwitchDivisionalTo misidentify the pressed
@@ -147,6 +152,10 @@ std::string GOTestDivisionalSetter::TestWithPedal::TEST_NAME
   = CLASS_NAME + "::TestWithPedal";
 
 void GOTestDivisionalSetter::TestWithPedal::run() {
+  GO_RUN_TEST(TestSetAndRecall())
+}
+
+void GOTestDivisionalSetter::TestWithPedal::TestSetAndRecall() {
   // Same scenario as TestWithoutPedal but with a Pedal present
   // (GetFirstManualIndex() == 0), which must keep working as before.
   const std::unique_ptr<GODivisionalSetter> pDivSetter
@@ -180,6 +189,10 @@ std::string GOTestDivisionalSetter::TestDivisionalCoupler::TEST_NAME
   = CLASS_NAME + "::TestDivisionalCoupler";
 
 void GOTestDivisionalSetter::TestDivisionalCoupler::run() {
+  GO_RUN_TEST(TestRecallThroughCoupler())
+}
+
+void GOTestDivisionalSetter::TestDivisionalCoupler::TestRecallThroughCoupler() {
   // Two manuals coupled by an engaged, bidirectional DivisionalCoupler.
   // GOSetter::ProcessPushDivisional only pushes into a coupled manual's
   // *existing* combination (GODivisionalSetter.cpp:396-415: pCoupledCmb must

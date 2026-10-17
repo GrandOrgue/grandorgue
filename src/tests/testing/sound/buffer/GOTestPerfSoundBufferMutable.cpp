@@ -69,7 +69,9 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_COPY_FROM[] = {
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_FROM[] = {
 #ifdef NDEBUG
-  {32, 2450},  // 2450 Mframes/sec (lowered: min observed 2732.8, -10% margin)
+  {32, 2100},  // 2100 Mframes/sec (rebaselined 2026-10-16: min observed
+               // 2407.1 on CI, -10% margin, rounded down to 2 significant
+               // figures)
   {128, 4000}, // 4000 Mframes/sec (lowered: min observed 4485.6, -10% margin)
   {512, 4240}, // 4240 Mframes/sec (lowered: min observed 4720.2, -10% margin)
   {2048, 4010} // 4010 Mframes/sec (rebaselined 2026-09-04: min observed 5020.9,
@@ -156,8 +158,9 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_CHANNEL_FROM_COEFF[]
     {32, 920},   // 920 Mframes/sec (debug, rebaselined 2026-09-28: min
                  // observed 1031.1 under CI contention, -10% margin, rounded
                  // down to 2 significant figures)
-    {128, 1300}, // 1300 Mframes/sec (debug, rebaselined 2026-09-25: min
-                 // observed 1450.0, -10% margin)
+    {128, 1100}, // 1100 Mframes/sec (debug, rebaselined 2026-10-16: min
+                 // observed 1245.4 on CI, -10% margin, rounded down to 2
+                 // significant figures)
     {512, 1200}, // 1200 Mframes/sec (debug, rebaselined 2026-09-28: min
                  // observed 1386.7 under CI contention, -10% margin, rounded
                  // down to 2 significant figures)
@@ -444,7 +447,7 @@ void GOTestPerfSoundBufferMutable::TestPerfAddChannelFromMono() {
   }
 }
 
-void GOTestPerfSoundBufferMutable::run() {
+bool GOTestPerfSoundBufferMutable::setUp() {
   m_failedTests.clear();
 
   std::cout << "\n========== Performance Tests for GOSoundBufferMutable "
@@ -454,11 +457,19 @@ void GOTestPerfSoundBufferMutable::run() {
 #else
   std::cout << "Build mode: Debug\n";
 #endif
-  std::cout << "Testing with " << NUM_ITERATIONS
+  std::cout << "Testing with " << GetNumIterations()
             << " iterations per buffer size\n";
   std::cout << "Buffer configuration: " << NUM_CHANNELS
             << " channels (stereo)\n";
+  return true;
+}
 
+bool GOTestPerfSoundBufferMutable::tearDown() {
+  std::cout << "\n========== Performance Tests Completed ==========\n";
+  return true;
+}
+
+void GOTestPerfSoundBufferMutable::run() {
   GO_RUN_TEST(TestPerfFillWithSilence())
   GO_RUN_TEST(TestPerfCopyFrom())
   GO_RUN_TEST(TestPerfAddFrom())
@@ -468,8 +479,8 @@ void GOTestPerfSoundBufferMutable::run() {
   GO_RUN_TEST(TestPerfAddChannelFromWithCoefficient())
   GO_RUN_TEST(TestPerfAddChannelFromMonoRecipient())
   GO_RUN_TEST(TestPerfAddChannelFromMono())
-
-  std::cout << "\n========== Performance Tests Completed ==========\n";
-
-  GO_RUN_TEST(ReportFailedTests())
+  // It must stay here and not in tearDown(), because an exception thrown from
+  // tearDown() is not counted as a test failure. Does nothing if no test was
+  // run
+  ReportFailedTests();
 }

@@ -83,7 +83,9 @@ private:
 public:
   GOTestPerfSoundTaskBase() : GOTest(GOTest::PERF) {}
   std::string GetName() override { return TEST_NAME; }
+  bool setUp() override;
   void run() override;
+  bool tearDown() override;
 };
 
 #endif /* GOTESTPERFSOUNDTASKBASE_H */

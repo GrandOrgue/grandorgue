@@ -2,11 +2,17 @@
 
 #include "model/GOSwitch.h"
 
+#include "GOTestScope.h"
+
 std::string GOTestDrawStop::CLASS_NAME = "GOTestDrawStop";
 std::string GOTestDrawStop::TestFunctions::TEST_NAME
   = CLASS_NAME + "::Functions";
 
 void GOTestDrawStop::TestFunctions::run() {
+  GO_RUN_TEST(TestLogicalFunctions())
+}
+
+void GOTestDrawStop::TestFunctions::TestLogicalFunctions() {
   GOSwitch sw1(*controller);
   GOSwitch sw2(*controller);
   GOSwitch sw3(*controller);
@@ -79,6 +85,10 @@ static wxString WX_EMPTY = wxEmptyString;
 static wxString WX_CRESCENDO_A = wxT("crescendo-a");
 
 void GOTestDrawStop::TestInternalState::run() {
+  GO_RUN_TEST(TestEngagedState())
+}
+
+void GOTestDrawStop::TestInternalState::TestEngagedState() {
   GOSwitch sw(*controller);
 
   GOAssert(!sw.IsEngaged(), "After init");
