@@ -27,6 +27,13 @@ private:
   int fail_count_ = 0;
   int success_count_ = 0;
 
+  /**
+   * Sets up, runs and tears down one test class, adding its results
+   * @param test the test class
+   * @param test_result_collection where to add the results
+   */
+  void RunTest(GOTest *test, GOTestResultCollection &test_result_collection);
+
 public:
   static GOTestCollection *Instance() {
     if (!go_test_collection)
