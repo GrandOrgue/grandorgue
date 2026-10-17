@@ -48,13 +48,39 @@ protected:
   std::vector<std::string> m_failedTests;
 
   /**
-   * Number of iterations for performance tests. Overridable so a subclass
-   * with an unusually large number of Test*() cases (e.g. one covering
-   * several resampler/buffer-size combinations) can shorten its own total
-   * runtime without affecting every other perf-test subclass's measurement
+   * The shortest planned duration of one measurement at the baseline
+   * throughput, seconds. A shorter window can be spoiled by a short scheduler
+   * or CPU-frequency hiccup that exceeds the 10% margin of the baseline.
+   */
+  static constexpr double MIN_MEASUREMENT_SECONDS = 0.3;
+
+  /**
+   * Number of frames processed by one measurement of a performance test. The
+   * number of iterations is this divided by the buffer size (see
+   * GetNIterations()), so every measurement lasts about the same time
+   * regardless of the buffer size: a small buffer gets many iterations and
+   * is not left with a window too short to measure reliably. The default is
+   * 1000000 iterations of a 128-frame buffer. A fast operation gets more
+   * frames than this, see GetNIterations(). Overridable so a subclass with
+   * an unusually large number of Test*() cases (e.g. one covering several
+   * resampler/buffer-size combinations) can shorten its own total runtime
+   * without affecting every other perf-test subclass's measurement
    * precision.
    */
-  virtual unsigned GetNumIterations() const { return 1000000; }
+  virtual unsigned GetNFrames() const { return 128000000; }
+
+  /**
+   * Returns the number of iterations of one measurement with a buffer of
+   * bufferSize frames: the number of frames divided by bufferSize, at least
+   * 1. The number of frames is GetNFrames(), but at least the number of frames
+   * that the code running at mFramesPerSecond processes in
+   * MIN_MEASUREMENT_SECONDS, so a fast operation is not left with a window too
+   * short to measure reliably.
+   * @param bufferSize the buffer size in frames
+   * @param mFramesPerSecond the expected throughput, millions of frames per
+   *   second
+   */
+  unsigned GetNIterations(unsigned bufferSize, double mFramesPerSecond) const;
 
   /**
    * Measures performance of operation.
@@ -67,9 +93,9 @@ protected:
     std::function<void()> operation);
 
   /**
-   * Runs operation GetNumIterations() times, compares the measured throughput
-   * against baseline, prints a PASS/FAIL line, and records failures into
-   * m_failedTests.
+   * Runs operation GetNIterations() times for the baseline's buffer size and
+   * throughput, compares the measured throughput against baseline, prints a
+   * PASS/FAIL line, and records failures into m_failedTests.
    * @param nUnitsPerFrame scales baseline.m_BufferSize (a frame count) for
    *   the throughput calculation - 1 (the default) means the measured
    *   throughput is already in frames.
