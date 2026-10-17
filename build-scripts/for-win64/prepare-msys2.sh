@@ -4,8 +4,8 @@
 # inside an MSYS2 MINGW64 shell. Meant to be run once via prepare-windows.cmd.
 
 # Accepts, in any order:
-#   wx32 or auto (default) - wxWidgets package version (see
-#     msys2-mingw64-packages.sh)
+#   wx32 or auto (default) - wxWidgets version. Only 3.2.11-1 is available
+#     for the MINGW64 environment (see msys2-mingw64-packages.sh)
 #   tests or notests (default) - also install gcovr for code coverage reports
 #   asan or noasan (default) - AddressSanitizer support; bundled with the
 #     mingw-w64-x86_64-gcc package, so this only accepts the keyword for
@@ -63,10 +63,13 @@ TOOLCHAIN_PACKAGES=(
 # Library packages GrandOrgue links against - shared with
 # prepare-debian-based.sh so both stay in sync.
 source "$BASE_DIR/msys2-mingw64-packages.sh"
-get_msys2_mingw64_lib_packages "$WX_VER"
 LIB_PACKAGES=("${MSYS2_MINGW64_LIB_PACKAGES[@]/#/mingw-w64-x86_64-}")
 
 pacman -S --needed --noconfirm "${TOOLCHAIN_PACKAGES[@]}" "${LIB_PACKAGES[@]}"
+
+# wxWidgets is no longer in the MSYS2 MINGW64 package database, so install
+# the pinned last MINGW64 packages directly
+pacman -U --needed --noconfirm "${MSYS2_MINGW64_WX_PACKAGE_URLS[@]}"
 
 if [[ "$INSTALL_TESTS" == "tests" ]]; then
 	pacman -S --needed --noconfirm mingw-w64-ucrt-x86_64-gcovr

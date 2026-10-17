@@ -33,9 +33,9 @@ pushd build/win64
 rm -rf *
 export LANG=C
 
-WX_CONFIG=$MINGW_DIR/bin/wx-config; export WX_CONFIG
-
 source $DIR/set-mingw-vars.sh
+
+WX_CONFIG=$MINGW_DIR/bin/wx-config; export WX_CONFIG
 
 CMAKE_WIN_PRMS="-DASIO_SDK_DIR=/usr/local/asio-sdk \
   -DCV2PDB_EXE=/usr/local/share/wine/cv2pdb/cv2pdb.exe \
