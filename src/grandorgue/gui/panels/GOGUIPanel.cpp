@@ -297,7 +297,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, const wxString &group) {
       panel_group,
       wxT("NumberOfEnclosures"),
       0,
-      m_OrganController->GetEnclosureCount());
+      m_OrganController->GetODFEnclosureCount());
     for (unsigned i = 0; i < NumberOfEnclosures; i++) {
       wxString buffer = wxString::Format(wxT("Enclosure%03d"), i + 1);
       unsigned enclosure_nb = cfg.ReadInteger(
@@ -305,7 +305,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, const wxString &group) {
         panel_group,
         buffer,
         1,
-        m_OrganController->GetEnclosureCount());
+        m_OrganController->GetODFEnclosureCount());
       buffer = wxString::Format(wxT("Enclosure%03d"), enclosure_nb);
       LoadControl(
         new GOGUIEnclosure(
@@ -605,7 +605,7 @@ void GOGUIPanel::Load(GOConfigReader &cfg, const wxString &group) {
         buffer,
         wxT("Enclosure"),
         1,
-        m_OrganController->GetEnclosureCount());
+        m_OrganController->GetODFEnclosureCount());
       LoadControl(
         new GOGUIEnclosure(
           this, m_OrganController->GetEnclosureElement(enclosure_nb - 1)),

@@ -40,6 +40,7 @@
 #include "midi/GOMidiRecorder.h"
 #include "midi/GOMidiSystem.h"
 #include "midi/events/GOMidiEvent.h"
+#include "midi/objects/GOMidiObjectContext.h"
 #include "model/GODivisionalCoupler.h"
 #include "model/GOEnclosure.h"
 #include "model/GOManual.h"
@@ -47,6 +48,7 @@
 #include "model/GOSoundingPipe.h"
 #include "model/GOSwitch.h"
 #include "model/GOTremulant.h"
+#include "model/GOWindchest.h"
 #include "sound/GOSoundSystem.h"
 #include "sound/playing/GOSoundReleaseAlignTable.h"
 #include "temperaments/GOTemperament.h"
@@ -62,6 +64,9 @@
 #include "GOOrgan.h"
 #include "GOTimer.h"
 #include "go_path.h"
+
+static const GOMidiObjectContext MIDI_CONTEXT_VOLUMES(
+  wxT("volumes"), _("volumes"));
 
 static const wxString WX_ORGAN = wxT("Organ");
 static const wxString WX_GRANDORGUE_VERSION = wxT("GrandOrgueVersion");
@@ -130,6 +135,12 @@ GOOrganController::~GOOrganController() {
     delete m_timer;
 }
 
+GOEnclosure *GOOrganController::GetInternalEnclosure(
+  unsigned windchestI) const {
+  assert(windchestI < mp_InternalEnclosures.size());
+  return mp_InternalEnclosures[windchestI];
+}
+
 void GOOrganController::ClearObjects() {
   if (m_IsObjectsLoaded) {
     m_Cacheable = false;
@@ -140,6 +151,9 @@ void GOOrganController::ClearObjects() {
 void GOOrganController::ClearOrganCoreData() {
   if (m_IsOrganCoreDataLoaded) {
     p_OnStateButton = nullptr;
+    // They refer to the enclosures that GOOrganModel::Cleanup() frees
+    p_MasterEnclosure = nullptr;
+    mp_InternalEnclosures.clear();
 
     // Just to be sure, that the sound providers are freed before the pool
     GOOrganModel::Cleanup();
@@ -220,6 +234,43 @@ GOHashType GOOrganController::GenerateCacheHash() {
   return hash.getHash();
 }
 
+void GOOrganController::InitInternalEnclosures(GOConfigReader &cfg) {
+  assert(!p_MasterEnclosure && mp_InternalEnclosures.empty());
+
+  const unsigned nWindchests = GetWindchestCount();
+  GOEnclosure *pMaster = new GOEnclosure(*this);
+
+  pMaster->SetContext(&MIDI_CONTEXT_VOLUMES);
+  pMaster->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
+  AddEnclosure(pMaster);
+  pMaster->SetElementId(GetRecorderElementID(wxT("SM")));
+  p_MasterEnclosure = pMaster;
+
+  mp_InternalEnclosures.reserve(nWindchests);
+  for (unsigned windchestI = 0; windchestI < nWindchests; ++windchestI) {
+    GOWindchest *pWindchest = GetWindchest(windchestI);
+    const wxString &hardName = pWindchest->GetHardName();
+    GOEnclosure *pEnc = new GOEnclosure(*this);
+
+    pWindchest->AddEnclosure(pMaster);
+    pEnc->SetContext(&MIDI_CONTEXT_VOLUMES);
+    pEnc->SetHardName(
+      hardName.IsEmpty()
+        ? wxString::Format(wxT("Windchest%03u"), windchestI + 1)
+        : hardName);
+    pEnc->Init(
+      cfg,
+      wxString::Format(wxT("SetterMaster%03d"), windchestI + 1),
+      pWindchest->GetName(),
+      127);
+    AddEnclosure(pEnc);
+    pEnc->SetElementId(
+      GetRecorderElementID(wxString::Format(wxT("SM%d"), windchestI)));
+    pWindchest->AddEnclosure(pEnc);
+    mp_InternalEnclosures.push_back(pEnc);
+  }
+}
+
 void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
   m_IsOrganCoreDataLoaded = true;
 
@@ -276,6 +327,13 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
 
   GOOrganModel::Load(cfg);
 
+  // The metronome's windchest and the internal enclosures must exist before
+  // LoadCmbButtons(); the GOMetronome itself is created below
+  const unsigned metronomeWindchestN
+    = AddWindchest(GOMetronome::createWindchest(cfg, *this).release());
+
+  InitInternalEnclosures(cfg);
+
   m_VirtualCouplers.Load(*this, cfg);
 
   GOOrganModel::LoadCmbButtons(cfg);
@@ -288,7 +346,7 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
   m_elementcreators.push_back(m_AudioRecorder);
   m_elementcreators.push_back(m_MidiPlayer);
   m_elementcreators.push_back(m_MidiRecorder);
-  m_elementcreators.push_back(new GOMetronome(this));
+  m_elementcreators.push_back(new GOMetronome(this, metronomeWindchestN));
 
   for (unsigned i = 0; i < m_elementcreators.size(); i++)
     m_elementcreators[i]->Load(cfg);

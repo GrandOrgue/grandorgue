@@ -54,7 +54,8 @@ GOOrganModel::GOOrganModel(GOConfig &config)
     m_OrganModelModified(false),
     m_FirstManual(0),
     m_ODFManualCount(0),
-    m_ODFRankCount(0) {
+    m_ODFRankCount(0),
+    m_ODFEnclosureCount(0) {
   RegisterCombinationButtonSet(this);
 }
 
@@ -105,11 +106,11 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   for (unsigned i = m_ODFManualCount, l = i + 4; i < l; i++)
     m_manuals.push_back(new GOManual(*this, i, &MIDI_CONTEXT_MANUALS));
 
-  unsigned NumberOfEnclosures
+  m_ODFEnclosureCount
     = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfEnclosures"), 0, 999);
 
   m_enclosures.resize(0);
-  for (unsigned i = 0; i < NumberOfEnclosures; i++) {
+  for (unsigned i = 0; i < m_ODFEnclosureCount; i++) {
     GOEnclosure *pEnclosure = new GOEnclosure(*this);
     unsigned num = i + 1;
 
