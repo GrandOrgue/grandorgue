@@ -17,6 +17,8 @@
 #include "sound/processing/GOSoundProcessingChain.h"
 #include "sound/processing/GOSoundProcessingChainState.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundProcessingChain::TEST_NAME
   = "GOTestSoundProcessingChain";
 
@@ -451,16 +453,16 @@ void GOTestSoundProcessingChain::TestChainReusableAfterAllStatesDestroyed() {
 }
 
 void GOTestSoundProcessingChain::run() {
-  TestEmptyChainLeavesBufferUntouched();
-  TestProcessorsRunInOrder();
-  TestEnsureSetupReachesEveryProcessor();
-  TestResetReachesEveryState();
-  TestEnsureParametersUpToDateReachesEveryMapper();
-  TestInsertProcessorInsertsAtPosition();
-  TestRemoveProcessorReturnsOwnershipAndShiftsOrder();
-  TestRemoveMapperAllowsRemovingItsProcessor();
-  TestClearChainRemovesProcessorsAndMappers();
-  TestIsValidReflectsChainState();
-  TestEnsureSetupNoOpDoesNotInvalidateState();
-  TestChainReusableAfterAllStatesDestroyed();
+  GO_RUN_TEST(TestEmptyChainLeavesBufferUntouched())
+  GO_RUN_TEST(TestProcessorsRunInOrder())
+  GO_RUN_TEST(TestEnsureSetupReachesEveryProcessor())
+  GO_RUN_TEST(TestResetReachesEveryState())
+  GO_RUN_TEST(TestEnsureParametersUpToDateReachesEveryMapper())
+  GO_RUN_TEST(TestInsertProcessorInsertsAtPosition())
+  GO_RUN_TEST(TestRemoveProcessorReturnsOwnershipAndShiftsOrder())
+  GO_RUN_TEST(TestRemoveMapperAllowsRemovingItsProcessor())
+  GO_RUN_TEST(TestClearChainRemovesProcessorsAndMappers())
+  GO_RUN_TEST(TestIsValidReflectsChainState())
+  GO_RUN_TEST(TestEnsureSetupNoOpDoesNotInvalidateState())
+  GO_RUN_TEST(TestChainReusableAfterAllStatesDestroyed())
 }

@@ -18,9 +18,13 @@
 #include "model/GOSoundingPipe.h"
 #include "model/GOWindchest.h"
 
+#include "GOTestScope.h"
+
 GOTestWindchest::~GOTestWindchest() {}
 
-void GOTestWindchest::run() {
+void GOTestWindchest::run() { GO_RUN_TEST(TestWindchestBasics()) }
+
+void GOTestWindchest::TestWindchestBasics() {
   std::string message;
   // Check the size of Windchest is correct
   unsigned w_size;

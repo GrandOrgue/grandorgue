@@ -16,6 +16,8 @@
 #include "model/GOWindchest.h"
 #include "model/pipe-config/GOPipeConfigTreeNode.h"
 
+#include "GOTestScope.h"
+
 GOTestOrganModel::~GOTestOrganModel() {}
 
 void GOTestOrganModel::TestAssertSoundRoutingForNoOpWithoutSoundSystem() {
@@ -60,9 +62,12 @@ void GOTestOrganModel::TestCollectWindchestsForNode() {
 }
 
 void GOTestOrganModel::run() {
-  TestAssertSoundRoutingForNoOpWithoutSoundSystem();
-  TestCollectWindchestsForNode();
+  GO_RUN_TEST(TestAssertSoundRoutingForNoOpWithoutSoundSystem())
+  GO_RUN_TEST(TestCollectWindchestsForNode())
+  GO_RUN_TEST(TestOrganModifiedFlag())
+}
 
+void GOTestOrganModel::TestOrganModifiedFlag() {
   std::string message;
   // Set OrganModel Modified
   this->controller->SetOrganModelModified(true);

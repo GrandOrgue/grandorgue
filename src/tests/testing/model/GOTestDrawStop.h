@@ -11,6 +11,11 @@ private:
   private:
     static std::string TEST_NAME;
 
+    /*
+     * AND, OR and XOR functions of a switch controlled by other switches.
+     */
+    void TestLogicalFunctions();
+
   public:
     virtual void run() override;
     std::string GetName() override { return TEST_NAME; }
@@ -19,6 +24,12 @@ private:
   class TestInternalState : public GOCommonControllerTest {
   private:
     static std::string TEST_NAME;
+
+    /*
+     * Engaging and disengaging a switch manually, by combinations and by
+     * crescendos.
+     */
+    void TestEngagedState();
 
   public:
     virtual void run() override;

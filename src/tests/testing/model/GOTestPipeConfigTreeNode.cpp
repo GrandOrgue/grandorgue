@@ -8,9 +8,15 @@
 
 #include "model/pipe-config/GOPipeConfigTreeNode.h"
 
+#include "GOTestScope.h"
+
 GOTestPipeConfigTreeNode::~GOTestPipeConfigTreeNode() {}
 
 void GOTestPipeConfigTreeNode::run() {
+  GO_RUN_TEST(TestChildInheritsAudioGroup())
+}
+
+void GOTestPipeConfigTreeNode::TestChildInheritsAudioGroup() {
   // GOPipeConfigNode itself requires a non-null GOPipeUpdateCallback for any
   // Set*() call (see GOPipeConfig::SetLargeMember()); GOPipeConfigTreeNode
   // supplies itself as that callback, so it is the node type usable

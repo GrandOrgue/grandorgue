@@ -14,6 +14,8 @@
 #include "sound/effects/GOSoundReverbProcessorState.h"
 #include "sound/processing/GOSoundProcessor.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundReverbProcessor::TEST_NAME
   = "GOTestSoundReverbProcessor";
 
@@ -202,10 +204,10 @@ void GOTestSoundReverbProcessor::TestDisabledConfigBuildsNoOpState() {
 }
 
 void GOTestSoundReverbProcessor::run() {
-  TestCreateTypedStateBuildsOneConvprocPerChannel();
-  TestEnsureSetupReloadsOnFormatChange();
-  TestProcessRunsAcrossSeveralRounds();
-  TestResetDoesNotCrash();
-  TestMissingIrFileBuildsNoOpState();
-  TestDisabledConfigBuildsNoOpState();
+  GO_RUN_TEST(TestCreateTypedStateBuildsOneConvprocPerChannel())
+  GO_RUN_TEST(TestEnsureSetupReloadsOnFormatChange())
+  GO_RUN_TEST(TestProcessRunsAcrossSeveralRounds())
+  GO_RUN_TEST(TestResetDoesNotCrash())
+  GO_RUN_TEST(TestMissingIrFileBuildsNoOpState())
+  GO_RUN_TEST(TestDisabledConfigBuildsNoOpState())
 }

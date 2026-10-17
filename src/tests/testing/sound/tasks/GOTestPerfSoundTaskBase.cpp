@@ -130,8 +130,13 @@ static constexpr double MAX_NEXT_PERIOD_PEAK_MICROSECONDS
 // can reach close to one audio period on shared CI hardware. Each threshold
 // set 10% above its own worst case for run-to-run variance; not split by
 // build type since the constant is shared between them.
+// Peak raised 2026-10-16: nThreads=1 reached 530.4 us (Release, run
+// 38365044054 on GrandOrgue/grandorgue) and 523.9 us (Release, run
+// 38912090895 on GrandOrgue/grandorgue) - the same scheduling jitter, even with
+// a single worker; set 10% above the new worst case, rounded up to 2
+// significant figures.
 static constexpr double MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS = 1.5;
-static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS = 350.0;
+static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS = 590.0;
 
 // Minimum acceptable round rate on the lazy-prerequisite path
 // (GOSoundWindchestTask::GetAmplitude() shape) with ~5us of work per
@@ -615,12 +620,20 @@ void GOTestPerfSoundTaskBase::TestPerfLazyPrerequisiteAccess() {
   }
 }
 
-void GOTestPerfSoundTaskBase::run() {
+bool GOTestPerfSoundTaskBase::setUp() {
   m_failedTests.clear();
 
   std::cout << "\n========== Performance Tests for GOSoundTaskBase "
                "==========\n";
+  return true;
+}
 
+bool GOTestPerfSoundTaskBase::tearDown() {
+  std::cout << "\n========== Performance Tests Completed ==========\n";
+  return true;
+}
+
+void GOTestPerfSoundTaskBase::run() {
   GO_RUN_TEST(TestPerfUncontendedRunThroughput())
   GO_RUN_TEST(TestPerfContendedRunLatency())
   GO_RUN_TEST(TestPerfCooperativeThroughput())
@@ -628,9 +641,9 @@ void GOTestPerfSoundTaskBase::run() {
   GO_RUN_TEST(TestPerfNextPeriodLatency())
   GO_RUN_TEST(TestPerfCooperativeRoundLatency())
   GO_RUN_TEST(TestPerfLazyPrerequisiteAccess())
-
-  std::cout << "\n========== Performance Tests Completed ==========\n";
-
+  // It must stay here and not in tearDown(), because an exception thrown from
+  // tearDown() is not counted as a test failure. Does nothing if no test was
+  // run
   if (!m_failedTests.empty()) {
     std::string errorMsg
       = std::format("{} performance test(s) failed:\n", m_failedTests.size());

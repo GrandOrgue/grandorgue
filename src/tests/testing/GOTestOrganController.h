@@ -23,7 +23,10 @@ public:
   std::string GetName();
 
 private:
-  void runImpl();
+  /*
+   * Loading, saving and clearing of the organ core data.
+   */
+  void TestOrganCoreData();
 };
 
 #endif /* GOTESTORGANCONTROLLER_H */
