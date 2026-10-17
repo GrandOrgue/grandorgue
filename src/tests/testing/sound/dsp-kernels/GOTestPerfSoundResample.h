@@ -22,11 +22,11 @@ class GOTestPerfSoundResample : public GOTestPerfSoundBufferBase {
 private:
   static const std::string TEST_NAME;
 
-  /** Fewer iterations than the base class default: this suite covers
-   * several buffer-size/resampler combinations, and a full run across all
-   * of them at the default iteration count would make it the slowest
-   * test in GOTestExe. */
-  unsigned GetNumIterations() const override { return 300000; }
+  /** Fewer frames than the base class default (300000 iterations of a
+   * 128-frame buffer): this suite covers several buffer-size/resampler
+   * combinations, and a full run across all of them at the default would
+   * make it the slowest test in GOTestExe. */
+  unsigned GetNFrames() const override { return 38400000; }
 
   /** LinearResampler::ResampleBlock(), mono float source to float. */
   void TestPerfResampleBlockMonoFloatLinear();

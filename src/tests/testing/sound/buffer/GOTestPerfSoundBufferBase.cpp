@@ -16,6 +16,12 @@
 // into a compile-time constant by the optimizer.
 unsigned GOTestPerfOpaqueSize(unsigned bufferSize) { return bufferSize; }
 
+unsigned GOTestPerfSoundBufferBase::GetNIterations(unsigned bufferSize) const {
+  const unsigned nIterations = GetNFrames() / bufferSize;
+
+  return nIterations ? nIterations : 1;
+}
+
 double GOTestPerfSoundBufferBase::measure_performance(
   unsigned bufferSize,
   unsigned numIterations,
@@ -43,7 +49,9 @@ void GOTestPerfSoundBufferBase::RunAndEvaluateTest(
   unsigned nUnitsPerFrame,
   bool isItemsPerSecond) {
   double mUnitsPerSecond = measure_performance(
-    baseline.m_BufferSize * nUnitsPerFrame, GetNumIterations(), operation);
+    baseline.m_BufferSize * nUnitsPerFrame,
+    GetNIterations(baseline.m_BufferSize),
+    operation);
   bool passed = mUnitsPerSecond >= baseline.m_MFramesPerSecond;
   double ratio = mUnitsPerSecond / baseline.m_MFramesPerSecond;
   const char *unitLabel = isItemsPerSecond ? "Mitems/sec" : "Mframes/sec";
