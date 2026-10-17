@@ -20,6 +20,7 @@
 
 #include "../processing/GOSoundProcessingTestImpls.h"
 #include "GOSoundWindchestGroupTestFixture.h"
+#include "GOTestScope.h"
 
 namespace {
 
@@ -347,15 +348,15 @@ void GOTestSoundWindchestGroupTask::TestDiscardContentResetsChainState() {
 }
 
 void GOTestSoundWindchestGroupTask::run() {
-  TestInitialState();
-  TestAddAndDiscardContentTrackCost();
-  TestIsEmptyTracksSamplerLists();
-  TestRunWithNoSamplersReachesDone();
-  TestCompleteRoundFinishesSynchronously();
-  TestNewRoundAllowsFreshRound();
-  TestWaitAndDiscardContentCompletes();
-  TestConcurrentRunWithQueuedSamplersReachesDone();
-  TestRunExecutesChainInOrder();
-  TestRunForcesWindchestTaskEvenWithNoSamplers();
-  TestDiscardContentResetsChainState();
+  GO_RUN_TEST(TestInitialState())
+  GO_RUN_TEST(TestAddAndDiscardContentTrackCost())
+  GO_RUN_TEST(TestIsEmptyTracksSamplerLists())
+  GO_RUN_TEST(TestRunWithNoSamplersReachesDone())
+  GO_RUN_TEST(TestCompleteRoundFinishesSynchronously())
+  GO_RUN_TEST(TestNewRoundAllowsFreshRound())
+  GO_RUN_TEST(TestWaitAndDiscardContentCompletes())
+  GO_RUN_TEST(TestConcurrentRunWithQueuedSamplersReachesDone())
+  GO_RUN_TEST(TestRunExecutesChainInOrder())
+  GO_RUN_TEST(TestRunForcesWindchestTaskEvenWithNoSamplers())
+  GO_RUN_TEST(TestDiscardContentResetsChainState())
 }

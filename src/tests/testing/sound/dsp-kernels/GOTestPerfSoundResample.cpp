@@ -14,6 +14,7 @@
 #include "sound/dsp-kernels/GOSoundResample.h"
 
 #include "GOInt.h"
+#include "GOTestScope.h"
 
 const std::string GOTestPerfSoundResample::TEST_NAME
   = "GOTestPerfSoundResample";
@@ -288,7 +289,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Polyphase() {
   }
 }
 
-void GOTestPerfSoundResample::run() {
+bool GOTestPerfSoundResample::setUp() {
   m_failedTests.clear();
 
   std::cout << "\n========== Performance Tests for GOSoundResample "
@@ -300,13 +301,21 @@ void GOTestPerfSoundResample::run() {
 #endif
   std::cout << "Testing with " << GetNumIterations()
             << " iterations per buffer size\n";
+  return true;
+}
 
-  TestPerfResampleBlockMonoFloatLinear();
-  TestPerfResampleBlockMonoFloatPolyphase();
-  TestPerfResampleBlockStereo24Linear();
-  TestPerfResampleBlockStereo24Polyphase();
-
-  std::cout << "\n========== Performance Tests Completed ==========\n";
-
+void GOTestPerfSoundResample::run() {
+  GO_RUN_TEST(TestPerfResampleBlockMonoFloatLinear())
+  GO_RUN_TEST(TestPerfResampleBlockMonoFloatPolyphase())
+  GO_RUN_TEST(TestPerfResampleBlockStereo24Linear())
+  GO_RUN_TEST(TestPerfResampleBlockStereo24Polyphase())
+  // It must stay here and not in tearDown(), because an exception thrown from
+  // tearDown() is not counted as a test failure. Does nothing if no test was
+  // run
   ReportFailedTests();
+}
+
+bool GOTestPerfSoundResample::tearDown() {
+  std::cout << "\n========== Performance Tests Completed ==========\n";
+  return true;
 }

@@ -17,6 +17,7 @@
 
 #include "GOOrgan.h"
 #include "GOOrganController.h"
+#include "GOTestScope.h"
 
 // Smallest ODF that survives LoadOrganCoreData() to completion: one
 // windchest group, one manual, no stops/couplers/tremulants/switches/ranks
@@ -38,7 +39,7 @@ std::string GOTestOrganController::GetName() { return name; }
 
 void GOTestOrganController::run() {
   try {
-    runImpl();
+    GO_RUN_TEST(TestOrganCoreData())
   } catch (const wxString &e) {
     throw GOTestException(
       std::string("Unexpected wxString exception: ") + e.ToStdString());
@@ -52,7 +53,7 @@ void GOTestOrganController::run() {
 // GOOrganController precisely so this test can call the non-cache phase
 // methods (LoadOrganCoreData/SaveOrganCoreData/ClearOrganCoreData)
 // directly, skipping the other phases entirely.
-void GOTestOrganController::runImpl() {
+void GOTestOrganController::TestOrganCoreData() {
   const GOOrgan organ(MINIMAL_ODF_PATH);
 
   GOOrganReader organReader(

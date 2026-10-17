@@ -15,6 +15,7 @@
 #include "loader/GOProgressMonitor.h"
 
 #include "GOOrgan.h"
+#include "GOTestScope.h"
 #include "go_path.h"
 
 namespace {
@@ -40,14 +41,14 @@ std::string GOTestOrganReader::GetName() { return name; }
 
 void GOTestOrganReader::run() {
   try {
-    runImpl();
+    GO_RUN_TEST(TestLoadedOrganInfo())
   } catch (const wxString &e) {
     throw GOTestException(
       std::string("Unexpected wxString exception: ") + e.ToStdString());
   }
 }
 
-void GOTestOrganReader::runImpl() {
+void GOTestOrganReader::TestLoadedOrganInfo() {
   GOConfig config(GetName(), "");
 
   // Without a call to config.Load(), OrganSettingsPath() defaults to an

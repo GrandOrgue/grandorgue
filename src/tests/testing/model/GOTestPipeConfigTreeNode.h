@@ -14,6 +14,11 @@ class GOTestPipeConfigTreeNode : public GOCommonControllerTest {
 private:
   std::string name = "GOTestPipeConfigTreeNode";
 
+  /*
+   * A child with no audio group of its own inherits its parent's.
+   */
+  void TestChildInheritsAudioGroup();
+
 public:
   GOTestPipeConfigTreeNode() { name = "GOTestPipeConfigTreeNode"; }
   virtual ~GOTestPipeConfigTreeNode();

@@ -11,6 +11,7 @@
 #include "sound/GOSoundWindchestGroupTaskGrid.h"
 #include "sound/tasks/GOSoundWindchestGroupTask.h"
 
+#include "GOTestScope.h"
 #include "tasks/GOSoundWindchestGroupTestFixture.h"
 
 const std::string GOTestSoundWindchestGroupTaskGrid::TEST_NAME
@@ -205,11 +206,11 @@ void GOTestSoundWindchestGroupTaskGrid::TestClearEmptiesTheGrid() {
 }
 
 void GOTestSoundWindchestGroupTaskGrid::run() {
-  TestResizeStartsEmpty();
-  TestHasBecomesTrueAfterBuild();
-  TestBuildDoesNotOverShare();
-  TestGetWindchestGroupTaskReturnsBuiltInstance();
-  TestGetInputsForGroupCollectsColumn();
-  TestForEachTaskVisitsEveryConstructedTask();
-  TestClearEmptiesTheGrid();
+  GO_RUN_TEST(TestResizeStartsEmpty())
+  GO_RUN_TEST(TestHasBecomesTrueAfterBuild())
+  GO_RUN_TEST(TestBuildDoesNotOverShare())
+  GO_RUN_TEST(TestGetWindchestGroupTaskReturnsBuiltInstance())
+  GO_RUN_TEST(TestGetInputsForGroupCollectsColumn())
+  GO_RUN_TEST(TestForEachTaskVisitsEveryConstructedTask())
+  GO_RUN_TEST(TestClearEmptiesTheGrid())
 }

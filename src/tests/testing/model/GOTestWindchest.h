@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2023-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,6 +16,12 @@ class GOTestWindchest : public GOCommonControllerTest {
 
 private:
   std::string name = "Windchest";
+
+  /*
+   * Windchest numbering, name, amplitude from an enclosure, tremulants, ranks
+   * and pipes.
+   */
+  void TestWindchestBasics();
 
 public:
   GOTestWindchest() { name = "GOTestWindchest"; }

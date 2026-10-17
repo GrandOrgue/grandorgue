@@ -19,6 +19,11 @@ private:
   private:
     static std::string TEST_NAME;
 
+    /*
+     * Setting and recalling a divisional on an organ without a Pedal.
+     */
+    void TestSetAndRecall();
+
   public:
     virtual void run() override;
     std::string GetName() override { return TEST_NAME; }
@@ -28,6 +33,11 @@ private:
   private:
     static std::string TEST_NAME;
 
+    /*
+     * Setting and recalling a divisional on an organ with a Pedal.
+     */
+    void TestSetAndRecall();
+
   public:
     virtual void run() override;
     std::string GetName() override { return TEST_NAME; }
@@ -36,6 +46,11 @@ private:
   class TestDivisionalCoupler : public GOCommonControllerTest {
   private:
     static std::string TEST_NAME;
+
+    /*
+     * Recalling a divisional pushes it into the coupled manuals.
+     */
+    void TestRecallThroughCoupler();
 
   public:
     virtual void run() override;

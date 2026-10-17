@@ -9,6 +9,8 @@
 #include "model/GORank.h"
 #include "model/GOSoundingPipe.h"
 
+#include "GOTestScope.h"
+
 GOTestSoundingPipe::~GOTestSoundingPipe() {}
 
 void GOTestSoundingPipe::TestAudioGroup() {
@@ -32,6 +34,8 @@ void GOTestSoundingPipe::TestAudioGroup() {
     "have run first");
 }
 
-void GOTestSoundingPipe::run() { TestAudioGroup(); }
+void GOTestSoundingPipe::run(){GO_RUN_TEST(TestAudioGroup())}
 
-std::string GOTestSoundingPipe::GetName() { return name; }
+std::string GOTestSoundingPipe::GetName() {
+  return name;
+}

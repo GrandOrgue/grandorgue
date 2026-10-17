@@ -620,12 +620,20 @@ void GOTestPerfSoundTaskBase::TestPerfLazyPrerequisiteAccess() {
   }
 }
 
-void GOTestPerfSoundTaskBase::run() {
+bool GOTestPerfSoundTaskBase::setUp() {
   m_failedTests.clear();
 
   std::cout << "\n========== Performance Tests for GOSoundTaskBase "
                "==========\n";
+  return true;
+}
 
+bool GOTestPerfSoundTaskBase::tearDown() {
+  std::cout << "\n========== Performance Tests Completed ==========\n";
+  return true;
+}
+
+void GOTestPerfSoundTaskBase::run() {
   GO_RUN_TEST(TestPerfUncontendedRunThroughput())
   GO_RUN_TEST(TestPerfContendedRunLatency())
   GO_RUN_TEST(TestPerfCooperativeThroughput())
@@ -633,9 +641,9 @@ void GOTestPerfSoundTaskBase::run() {
   GO_RUN_TEST(TestPerfNextPeriodLatency())
   GO_RUN_TEST(TestPerfCooperativeRoundLatency())
   GO_RUN_TEST(TestPerfLazyPrerequisiteAccess())
-
-  std::cout << "\n========== Performance Tests Completed ==========\n";
-
+  // It must stay here and not in tearDown(), because an exception thrown from
+  // tearDown() is not counted as a test failure. Does nothing if no test was
+  // run
   if (!m_failedTests.empty()) {
     std::string errorMsg
       = std::format("{} performance test(s) failed:\n", m_failedTests.size());

@@ -7,9 +7,13 @@
 #include "GOTestSwitch.h"
 #include "model/GOSwitch.h"
 
+#include "GOTestScope.h"
+
 GOTestSwitch::~GOTestSwitch() {}
 
-void GOTestSwitch::run() {
+void GOTestSwitch::run() { GO_RUN_TEST(TestGlobalSwitch()) }
+
+void GOTestSwitch::TestGlobalSwitch() {
   std::string message;
 
   // Check global Switch

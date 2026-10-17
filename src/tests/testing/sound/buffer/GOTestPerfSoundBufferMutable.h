@@ -28,7 +28,9 @@ private:
 
 public:
   std::string GetName() override { return TEST_NAME; }
+  bool setUp() override;
   void run() override;
+  bool tearDown() override;
 };
 
 #endif /* GOTESTPERFSOUNDBUFFERMUTABLE_H */
