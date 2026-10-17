@@ -1,11 +1,19 @@
 #!/bin/bash
 
-# $1 - wx package version: empty/auto or wx32 (see msys2-mingw64-packages.sh)
+# $1 - wx version: empty or auto. wxWidgets 3.3.4 from WxWidgetsCross is used
 
 set -e
 
 BASE_DIR=$(dirname $0)
 WX_VER=$1
+
+case "${WX_VER:-auto}" in
+auto) ;;
+*)
+  echo "Unsupported wx version $WX_VER: only auto is available" >&2
+  exit 1
+  ;;
+esac
 
 sudo dpkg --add-architecture i386
 sudo apt-get update
@@ -44,7 +52,6 @@ pushd deb
 # MSYS2 packages are built against newer libstdc++.
 # It will be downloaded as a dependency for the packages below.
 source $BASE_DIR/msys2-mingw64-packages.sh
-get_msys2_mingw64_lib_packages "$WX_VER"
 PACKAGES_FROM_MSYS2=("${MSYS2_MINGW64_LIB_PACKAGES[@]}")
 DEB_PACKAGES_FROM_MSYS2=("${PACKAGES_FROM_MSYS2[@]/%/-msys2-mingw64}")
 if ! dpkg -l "${DEB_PACKAGES_FROM_MSYS2[@]}" &>/dev/null; then
@@ -63,6 +70,26 @@ if ! dpkg -l "${DEB_PACKAGES_FROM_MSYS2[@]}" &>/dev/null; then
 fi
 
 popd
+
+# wxWidgets is no longer available in MSYS2 MINGW64, so use our own build
+# from https://github.com/GrandOrgue/WxWidgetsCross
+
+# remove the old wxWidgets from MSYS2 if it was installed earlier: it conflicts
+# with the new one
+OLD_WX_DEBS=$(dpkg-query -W -f='${Package}\n' 'wxwidgets3.2-*-msys2-mingw64' 2>/dev/null || true)
+if [[ -n "$OLD_WX_DEBS" ]]; then
+  sudo dpkg -r $OLD_WX_DEBS
+fi
+
+WX_CROSS_VERSION=3.3.4-1.go
+WX_CROSS_INSTALLED_VERSION=$(dpkg-query -W -f='${Version}' wxwidgets3-mingw-w64 2>/dev/null || true)
+
+if [[ "$WX_CROSS_INSTALLED_VERSION" != "$WX_CROSS_VERSION" ]]; then
+  rm -rf deb/wx
+  wget -P deb/wx \
+    https://github.com/GrandOrgue/WxWidgetsCross/releases/download/${WX_CROSS_VERSION}/wxwidgets3-mingw-w64_${WX_CROSS_VERSION}_all.deb
+  sudo DEBIAN_FRONTEND=noninteractive apt-get install -y ./deb/wx/*.deb
+fi
 
 # download and install ASIO sdk
 $BASE_DIR/download-asio-sdk.sh

@@ -5,24 +5,24 @@
 # cross-compiling mingw toolchain) and prepare-msys2.sh (installed directly
 # via pacman for a native build), so both stay in sync.
 #
-# $1 - wx package version: empty/auto or wx32 - wxwidgets3.2-msw.
-#      A wxwidgets3.3-msw package also exists in MSYS2, but only for the
-#      mingw-w64-ucrt-x86_64/mingw-w64-clang-x86_64 environments, not the
-#      classic mingw-w64-x86_64 (MINGW64) environment these scripts target
-#      (msys2_shell.cmd -mingw64), so it isn't offered as an option here.
+# MSYS2 is phasing out the classic MINGW64 environment and has already removed
+# all wxWidgets packages from its package database. So wxWidgets is not part
+# of MSYS2_MINGW64_LIB_PACKAGES:
+#  - the Linux cross-build installs wxWidgets 3.3.4 built by
+#    https://github.com/GrandOrgue/WxWidgetsCross
+#    (see prepare-debian-based.sh);
+#  - the native MSYS2 build installs the last MINGW64 packages of wxWidgets
+#    3.2.11-1 directly from the MSYS2 repository by pacman -U, using
+#    MSYS2_MINGW64_WX_PACKAGE_URLS (see prepare-msys2.sh).
+# Both are temporary until the migration to UCRT64
+# (https://github.com/GrandOrgue/grandorgue/issues/2671).
 
-get_msys2_mingw64_lib_packages() {
-	local wx_pkg
+MSYS2_MINGW64_LIB_PACKAGES=(curl-winssl fftw jack2 wavpack yaml-cpp)
 
-	case "${1:-auto}" in
-	auto | wx32)
-		wx_pkg=wxwidgets3.2-msw
-		;;
-	*)
-		echo "Unsupported wx version $1: only wx32 (wxwidgets3.2-msw) is available for the MINGW64 environment" >&2
-		return 1
-		;;
-	esac
-
-	MSYS2_MINGW64_LIB_PACKAGES=(curl-winssl fftw jack2 wavpack yaml-cpp "$wx_pkg")
-}
+# The pinned wxWidgets MINGW64 packages, only for the native build
+MSYS2_MINGW64_WX_PACKAGE_URLS=(
+	https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-wxwidgets3.2-common-3.2.11-1-any.pkg.tar.zst
+	https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-wxwidgets3.2-common-libs-3.2.11-1-any.pkg.tar.zst
+	https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-wxwidgets3.2-msw-3.2.11-1-any.pkg.tar.zst
+	https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-wxwidgets3.2-msw-libs-3.2.11-1-any.pkg.tar.zst
+)
