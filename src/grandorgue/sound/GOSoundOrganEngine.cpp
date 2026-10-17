@@ -12,6 +12,9 @@
 
 #include "buffer/GOSoundBufferPlanarMutable.h"
 #include "config/GOConfig.h"
+#include "effects/GOSoundShelfFilterProcessor.h"
+#include "mappers/GOSoundEnclosureShelfMapper.h"
+#include "model/GOEnclosure.h"
 #include "model/GOOrganModel.h"
 #include "model/GOWindchest.h"
 #include "processing/GOSoundProcessingChain.h"
@@ -180,18 +183,52 @@ void GOSoundOrganEngine::SetFromConfig(GOConfig &config) {
   SetNBytesPerSoundItem(config.WaveFormatBytesPerSample());
 }
 
+const GOSoundProcessingChain &GOSoundOrganEngine::GetWindchestChainAt(
+  unsigned windchestN) {
+  assert(!IsIdle());
+  // GetWindchestTaskAt() itself asserts windchestN < mp_WindchestTasks.size()
+  return GetWindchestTaskAt(windchestN).GetChain();
+}
+
 /*
  * Lifecycle functions
  */
 
-/** Builds and EnsureSetup()s an empty processing chain, for
- * GOSoundWindchestTask's constructor. A thin wrapper purely so the two-line
- * pattern below is not repeated at each of BuildEngine()'s two
- * windchest-task construction sites. */
+/** Builds and EnsureSetup()s pWindchest's processing chain, for
+ * GOSoundWindchestTask's constructor: one GOSoundShelfFilterProcessor +
+ * GOSoundEnclosureShelfMapper pair per enclosure attached to pWindchest,
+ * chained in series. Always builds the full chain, regardless of configured
+ * attenuation or current position - an enclosure with no shelf configured
+ * (or currently fully open) still gets a processor/mapper pair, so a swell
+ * EQ can be turned on/off or edited via Organ Settings and take effect on
+ * the very next round, without an engine rebuild. Efficiency for that
+ * common case comes entirely from GOSoundShelfFilterProcessor::Process()'s
+ * runtime isActive short-circuit.
+ *
+ * No Remove* counterpart is needed: this is only ever called from
+ * BuildEngine(), which throws the previous chain away and builds a fresh
+ * one every time (there is no live add/remove of enclosures on a running
+ * engine). Teardown is symmetric by construction rather than by an explicit
+ * step - each chain is owned by the GOSoundWindchestTask it is passed into,
+ * so DestroyEngine()'s mp_WindchestTasks.clear() destroys every chain (and,
+ * in turn, every processor/mapper it owns) at exactly the same [B2] step
+ * that built them.
+ * @param pWindchest the windchest to build the chain for, or nullptr for
+ *   the synthetic detached-release owner (always an empty chain)
+ */
 static std::unique_ptr<GOSoundProcessingChain> build_windchest_chain(
-  unsigned nSamplesPerBuffer, unsigned sampleRate) {
+  GOWindchest *pWindchest, unsigned nSamplesPerBuffer, unsigned sampleRate) {
   auto pChain = std::make_unique<GOSoundProcessingChain>();
 
+  if (pWindchest)
+    for (GOEnclosure *pEnclosure : pWindchest->GetEnclosures()) {
+      auto pProcessor = std::make_unique<GOSoundShelfFilterProcessor>();
+      GOSoundShelfFilterProcessor &rProcessor = *pProcessor;
+
+      pChain->AddProcessor(std::move(pProcessor));
+      pChain->AddMapper(
+        std::make_unique<GOSoundEnclosureShelfMapper>(*pEnclosure, rProcessor));
+    }
   pChain->EnsureSetup(MAX_OUTPUT_CHANNELS, nSamplesPerBuffer, sampleRate);
 
   return pChain;
@@ -219,12 +256,17 @@ void GOSoundOrganEngine::BuildEngine(
   // DETACHED_RELEASE_TASK_ID). Always gets a valid, empty chain, uniformly
   // with every other windchest.
   mp_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
-    *this, nullptr, build_windchest_chain(m_NSamplesPerBuffer, sampleRate)));
-  for (unsigned n = r_OrganModel.GetWindchestCount(), wcI = 0; wcI < n; wcI++)
+    *this,
+    nullptr,
+    build_windchest_chain(nullptr, m_NSamplesPerBuffer, sampleRate)));
+  for (unsigned n = r_OrganModel.GetWindchestCount(), wcI = 0; wcI < n; wcI++) {
+    GOWindchest *const pWindchest = r_OrganModel.GetWindchest(wcI);
+
     mp_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
       *this,
-      r_OrganModel.GetWindchest(wcI),
-      build_windchest_chain(m_NSamplesPerBuffer, sampleRate)));
+      pWindchest,
+      build_windchest_chain(pWindchest, m_NSamplesPerBuffer, sampleRate)));
+  }
 
   // [B3] Initialize windchests with tremulant tasks
   for (auto &pWcTask : mp_WindchestTasks)

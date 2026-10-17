@@ -124,6 +124,15 @@ private:
    */
   void TestSamplerAudioReachesPlanarOutput();
 
+  /*
+   * BuildEngine() fills each windchest's chain from its own enclosures:
+   * a windchest with no enclosures gets an empty chain, and a windchest
+   * with N enclosures gets N GOSoundShelfFilterProcessor/
+   * GOSoundEnclosureShelfMapper pairs - one per enclosure, regardless of
+   * configured attenuation or position (issue #717).
+   */
+  void TestChainReflectsWindchestEnclosures();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

@@ -287,6 +287,23 @@ void GOTestSoundShelfFilterProcessor::
       "silence must stay silent after a band is re-activated");
 }
 
+void GOTestSoundShelfFilterProcessor::
+  TestBandAboveNyquistIsInactiveUntilSampleRateAllowsIt() {
+  GOSoundShelfFilterProcessor processor;
+
+  processor.SetLowShelf(30000, -12);
+  processor.SetHighShelf(30000, -12);
+  processor.EnsureSetup(2, TEST_N_FRAMES, 48000);
+  GOAssert(
+    !processor.m_LowCoeffs.isActive && !processor.m_HighCoeffs.isActive,
+    "bands with a corner above Nyquist must not be isActive");
+
+  processor.EnsureSetup(2, TEST_N_FRAMES, 96000);
+  GOAssert(
+    processor.m_LowCoeffs.isActive && processor.m_HighCoeffs.isActive,
+    "bands must become isActive when the sampleRate allows their corner");
+}
+
 void GOTestSoundShelfFilterProcessor::run() {
   GO_RUN_TEST(TestConstructorLeavesBothBandsNoop())
   GO_RUN_TEST(TestEnsureSetupRecomputesOnlyOnSampleRateChange())
@@ -297,4 +314,5 @@ void GOTestSoundShelfFilterProcessor::run() {
   GO_RUN_TEST(TestProcessAppliesBothBandsInSeries())
   GO_RUN_TEST(TestDynamicUpdateTakesEffectImmediately())
   GO_RUN_TEST(TestBandStateClearedWhenBecomingInactive())
+  GO_RUN_TEST(TestBandAboveNyquistIsInactiveUntilSampleRateAllowsIt())
 }

@@ -15,9 +15,12 @@
 #include <mutex>
 #include <thread>
 
+#include "model/GOEnclosure.h"
 #include "model/GOWindchest.h"
 #include "sound/GOSoundOrganEngine.h"
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
+#include "sound/effects/GOSoundShelfFilterProcessor.h"
+#include "sound/processing/GOSoundProcessingChain.h"
 #include "sound/providers/GOSoundProviderSynthedTrem.h"
 
 #include "GOOrganController.h"
@@ -626,6 +629,53 @@ void GOTestSoundOrganEngine::TestSamplerAudioReachesPlanarOutput() {
   StopAndDestroyEngine();
 }
 
+void GOTestSoundOrganEngine::TestChainReflectsWindchestEnclosures() {
+  // Windchest indices, not just counts, matter here (unlike this suite's
+  // routing-only tests, which just need *some* valid index): controller is
+  // shared across every TestXxx() in this suite's single run(), so earlier
+  // tests' own AddWindchest() calls may have already added windchests -
+  // AddWindchest()'s own return value, not an assumed 1/2, is the only
+  // reliable way to know which index each of these two actually landed at.
+  GOWindchest *pEmptyWindchest = new GOWindchest(*controller);
+  GOWindchest *pWindchestWithEnclosures = new GOWindchest(*controller);
+  const unsigned emptyWindchestN = controller->AddWindchest(pEmptyWindchest);
+  const unsigned windchestWithEnclosuresN
+    = controller->AddWindchest(pWindchestWithEnclosures);
+
+  for (unsigned enclosureI = 0; enclosureI < 2; enclosureI++) {
+    GOEnclosure *pEnclosure = new GOEnclosure(*controller);
+
+    controller->AddEnclosure(pEnclosure);
+    pWindchestWithEnclosures->AddEnclosure(pEnclosure);
+  }
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(
+    /* nAudioGroups */ 1, /* nAuxThreads */ 0, /* nOutputs */ 1);
+
+  GOAssert(
+    engine.GetWindchestChainAt(emptyWindchestN).IsEmpty(),
+    "a windchest with no enclosures must get an empty chain");
+
+  const GOSoundProcessingChain &chainWithEnclosures
+    = engine.GetWindchestChainAt(windchestWithEnclosuresN);
+  unsigned nShelfProcessors = 0;
+
+  for (unsigned n = chainWithEnclosures.GetNProcessors(), processorI = 0;
+       processorI < n;
+       processorI++)
+    if (dynamic_cast<const GOSoundShelfFilterProcessor *>(
+          &chainWithEnclosures.GetProcessor(processorI)))
+      nShelfProcessors++;
+  GOAssert(
+    nShelfProcessors == 2,
+    "a windchest with 2 enclosures must get exactly 2 "
+    "GOSoundShelfFilterProcessor instances in its chain, one per enclosure "
+    "(counted by type, not raw processor count, so this stays correct if "
+    "a future stage adds other processor types to the same chain)");
+
+  StopAndDestroyEngine();
+}
+
 void GOTestSoundOrganEngine::run() {
   GO_RUN_TEST(TestSingleOutputLifecycle())
   GO_RUN_TEST(TestTwoOutputsLifecycle())
@@ -641,4 +691,5 @@ void GOTestSoundOrganEngine::run() {
   GO_RUN_TEST(TestHasSoundRoutingFor())
   GO_RUN_TEST(TestPrepareAndCommitSoundRoutingFor())
   GO_RUN_TEST(TestSamplerAudioReachesPlanarOutput())
+  GO_RUN_TEST(TestChainReflectsWindchestEnclosures())
 }
