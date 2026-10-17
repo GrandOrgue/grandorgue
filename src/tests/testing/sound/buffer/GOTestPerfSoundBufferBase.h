@@ -48,13 +48,24 @@ protected:
   std::vector<std::string> m_failedTests;
 
   /**
-   * Number of iterations for performance tests. Overridable so a subclass
-   * with an unusually large number of Test*() cases (e.g. one covering
-   * several resampler/buffer-size combinations) can shorten its own total
-   * runtime without affecting every other perf-test subclass's measurement
+   * Number of frames processed by one measurement of a performance test. The
+   * number of iterations is this divided by the buffer size (see
+   * GetNIterations()), so every measurement lasts about the same time
+   * regardless of the buffer size: a small buffer gets many iterations and
+   * is not left with a window too short to measure reliably. The default is
+   * 1000000 iterations of a 128-frame buffer. Overridable so a subclass with
+   * an unusually large number of Test*() cases (e.g. one covering several
+   * resampler/buffer-size combinations) can shorten its own total runtime
+   * without affecting every other perf-test subclass's measurement
    * precision.
    */
-  virtual unsigned GetNumIterations() const { return 1000000; }
+  virtual unsigned GetNFrames() const { return 128000000; }
+
+  /**
+   * Returns the number of iterations of one measurement with a buffer of
+   * bufferSize frames: GetNFrames() / bufferSize, at least 1.
+   */
+  unsigned GetNIterations(unsigned bufferSize) const;
 
   /**
    * Measures performance of operation.
@@ -67,9 +78,9 @@ protected:
     std::function<void()> operation);
 
   /**
-   * Runs operation GetNumIterations() times, compares the measured throughput
-   * against baseline, prints a PASS/FAIL line, and records failures into
-   * m_failedTests.
+   * Runs operation GetNIterations(baseline.m_BufferSize) times, compares the
+   * measured throughput against baseline, prints a PASS/FAIL line, and records
+   * failures into m_failedTests.
    * @param nUnitsPerFrame scales baseline.m_BufferSize (a frame count) for
    *   the throughput calculation - 1 (the default) means the measured
    *   throughput is already in frames.
