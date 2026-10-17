@@ -10,6 +10,8 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/playing/GOSoundToneBalanceFilter.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundToneBalanceFilter::TEST_NAME
   = "GOTestSoundToneBalanceFilter";
 
@@ -97,8 +99,8 @@ void GOTestSoundToneBalanceFilter::TestStateProcessBufferFilters() {
 }
 
 void GOTestSoundToneBalanceFilter::run() {
-  TestInitAndIsToApply();
-  TestSetSamplerateResetsToIdentity();
-  TestStateIsToApply();
-  TestStateProcessBufferFilters();
+  GO_RUN_TEST(TestInitAndIsToApply())
+  GO_RUN_TEST(TestSetSamplerateResetsToIdentity())
+  GO_RUN_TEST(TestStateIsToApply())
+  GO_RUN_TEST(TestStateProcessBufferFilters())
 }

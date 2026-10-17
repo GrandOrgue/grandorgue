@@ -12,6 +12,8 @@
 #include "sound/effects/GOSoundShelfFilterProcessorState.h"
 #include "sound/processing/GOSoundProcessor.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundShelfFilterProcessor::TEST_NAME
   = "GOTestSoundShelfFilterProcessor";
 
@@ -286,13 +288,13 @@ void GOTestSoundShelfFilterProcessor::
 }
 
 void GOTestSoundShelfFilterProcessor::run() {
-  TestConstructorLeavesBothBandsNoop();
-  TestEnsureSetupRecomputesOnlyOnSampleRateChange();
-  TestSettersAffectOnlyTheirOwnBand();
-  TestCreateTypedStateSizing();
-  TestProcessBothBandsNoopIsBypass();
-  TestProcessOnlyConfiguredBandIsApplied();
-  TestProcessAppliesBothBandsInSeries();
-  TestDynamicUpdateTakesEffectImmediately();
-  TestBandStateClearedWhenBecomingInactive();
+  GO_RUN_TEST(TestConstructorLeavesBothBandsNoop())
+  GO_RUN_TEST(TestEnsureSetupRecomputesOnlyOnSampleRateChange())
+  GO_RUN_TEST(TestSettersAffectOnlyTheirOwnBand())
+  GO_RUN_TEST(TestCreateTypedStateSizing())
+  GO_RUN_TEST(TestProcessBothBandsNoopIsBypass())
+  GO_RUN_TEST(TestProcessOnlyConfiguredBandIsApplied())
+  GO_RUN_TEST(TestProcessAppliesBothBandsInSeries())
+  GO_RUN_TEST(TestDynamicUpdateTakesEffectImmediately())
+  GO_RUN_TEST(TestBandStateClearedWhenBecomingInactive())
 }

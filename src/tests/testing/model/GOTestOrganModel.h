@@ -32,6 +32,12 @@ private:
    */
   void TestCollectWindchestsForNode();
 
+  /*
+   * The organ modified flag is set by SetOrganModelModified() and
+   * NotifyPipeConfigModified() and cleared by ResetOrganModified().
+   */
+  void TestOrganModifiedFlag();
+
 public:
   GOTestOrganModel() { name = "GOTestOrganModel"; }
   virtual ~GOTestOrganModel();

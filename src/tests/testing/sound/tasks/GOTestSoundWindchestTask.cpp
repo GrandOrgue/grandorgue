@@ -18,6 +18,7 @@
 #include "GOMemoryPool.h"
 
 #include "../processing/GOSoundProcessingTestImpls.h"
+#include "GOTestScope.h"
 
 const std::string GOTestSoundWindchestTask::TEST_NAME
   = "GOTestSoundWindchestTask";
@@ -114,7 +115,7 @@ void GOTestSoundWindchestTask::TestDoRunCallsEnsureParametersUpToDate() {
 }
 
 void GOTestSoundWindchestTask::run() {
-  TestGetChainNeverNull();
-  TestChainReflectsConstructedChain();
-  TestDoRunCallsEnsureParametersUpToDate();
+  GO_RUN_TEST(TestGetChainNeverNull())
+  GO_RUN_TEST(TestChainReflectsConstructedChain())
+  GO_RUN_TEST(TestDoRunCallsEnsureParametersUpToDate())
 }

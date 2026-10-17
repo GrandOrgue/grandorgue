@@ -23,7 +23,10 @@ public:
   std::string GetName();
 
 private:
-  void runImpl();
+  /*
+   * Reading an organ: the loaded organ info with and without a CMB.
+   */
+  void TestLoadedOrganInfo();
 };
 
 #endif

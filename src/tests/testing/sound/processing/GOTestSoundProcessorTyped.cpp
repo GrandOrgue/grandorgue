@@ -17,6 +17,8 @@
 #include "sound/processing/GOSoundProcessingChain.h"
 #include "sound/processing/GOSoundProcessingChainState.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundProcessorTyped::TEST_NAME
   = "GOTestSoundProcessorTyped";
 
@@ -128,6 +130,6 @@ void GOTestSoundProcessorTyped::TestTypedDispatch() {
 }
 
 void GOTestSoundProcessorTyped::run() {
-  TestOneProcessorTwoIndependentStates();
-  TestTypedDispatch();
+  GO_RUN_TEST(TestOneProcessorTwoIndependentStates())
+  GO_RUN_TEST(TestTypedDispatch())
 }

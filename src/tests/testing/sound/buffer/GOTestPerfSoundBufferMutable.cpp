@@ -447,7 +447,7 @@ void GOTestPerfSoundBufferMutable::TestPerfAddChannelFromMono() {
   }
 }
 
-void GOTestPerfSoundBufferMutable::run() {
+bool GOTestPerfSoundBufferMutable::setUp() {
   m_failedTests.clear();
 
   std::cout << "\n========== Performance Tests for GOSoundBufferMutable "
@@ -461,7 +461,15 @@ void GOTestPerfSoundBufferMutable::run() {
             << " iterations per buffer size\n";
   std::cout << "Buffer configuration: " << NUM_CHANNELS
             << " channels (stereo)\n";
+  return true;
+}
 
+bool GOTestPerfSoundBufferMutable::tearDown() {
+  std::cout << "\n========== Performance Tests Completed ==========\n";
+  return true;
+}
+
+void GOTestPerfSoundBufferMutable::run() {
   GO_RUN_TEST(TestPerfFillWithSilence())
   GO_RUN_TEST(TestPerfCopyFrom())
   GO_RUN_TEST(TestPerfAddFrom())
@@ -471,8 +479,8 @@ void GOTestPerfSoundBufferMutable::run() {
   GO_RUN_TEST(TestPerfAddChannelFromWithCoefficient())
   GO_RUN_TEST(TestPerfAddChannelFromMonoRecipient())
   GO_RUN_TEST(TestPerfAddChannelFromMono())
-
-  std::cout << "\n========== Performance Tests Completed ==========\n";
-
-  GO_RUN_TEST(ReportFailedTests())
+  // It must stay here and not in tearDown(), because an exception thrown from
+  // tearDown() is not counted as a test failure. Does nothing if no test was
+  // run
+  ReportFailedTests();
 }

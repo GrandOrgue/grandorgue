@@ -9,6 +9,8 @@
 
 #include "sound/dsp-kernels/GOSoundOnePoleFilter.h"
 
+#include "GOTestScope.h"
+
 const std::string GOTestSoundOnePoleFilter::TEST_NAME
   = "GOTestSoundOnePoleFilter";
 
@@ -85,7 +87,7 @@ void GOTestSoundOnePoleFilter::TestProcessSampleRecurrence() {
 }
 
 void GOTestSoundOnePoleFilter::run() {
-  TestComputeCoeffsIdentityEdgeCases();
-  TestComputeCoeffsPerType();
-  TestProcessSampleRecurrence();
+  GO_RUN_TEST(TestComputeCoeffsIdentityEdgeCases())
+  GO_RUN_TEST(TestComputeCoeffsPerType())
+  GO_RUN_TEST(TestProcessSampleRecurrence())
 }
