@@ -24,6 +24,7 @@
 #include "threading/GOMutex.h"
 
 #include "GOSoundWindchestGroupTaskGrid.h"
+#include "ptrvector.h"
 
 class GOConfig;
 class GOMemoryPool;
@@ -38,6 +39,7 @@ class GOSoundProcessingChain;
 class GOSoundReleaseTask;
 class GOSoundTouchTask;
 class GOSoundTremulantTask;
+class GOSoundTremulantWaveForm;
 class GOSoundWindchestGroupTask;
 class GOSoundWindchestTask;
 class GOWindchest;
@@ -62,6 +64,8 @@ class GOWindchest;
  *      legal from BUILT (i.e. after StopEngine()). BUILT → IDLE.
  */
 class GOSoundOrganEngine {
+  friend class GOTestSoundOrganEngine; // the engine tests read the tasks
+
 public:
   /*
    * Nested type
@@ -98,6 +102,41 @@ public:
     /** @return true if there is nothing to commit - Prepare found every
      *   requested pair already routable */
     bool IsEmpty() const { return newTasks.empty(); }
+  };
+
+  /**
+   * The result of PrepareTremulantWaveForms(): the new wave forms to install
+   * with CommitTremulantWaveForms(), which leaves the replaced ones here. Free
+   * it after the engine is resumed, so the old forms are not freed while the
+   * sound is suspended.
+   *
+   * Used by GOOrganController only; the GUI goes through the controller.
+   */
+  struct TremulantWaveFormChange {
+    struct Item {
+      /** The index of the tremulant in the organ model */
+      unsigned tremulantIndex;
+
+      /**
+       * Before Commit: the new wave form (nullptr for a Wave tremulant); after
+       * Commit: the replaced one
+       */
+      std::unique_ptr<GOSoundTremulantWaveForm> oWaveForm;
+    };
+
+    std::vector<Item> items;
+
+    /*
+     * GOSoundTremulantWaveForm is only forward-declared here: the special
+     * members are defined in the .cpp where it is complete
+     */
+    TremulantWaveFormChange();
+    TremulantWaveFormChange(TremulantWaveFormChange &&);
+    TremulantWaveFormChange &operator=(TremulantWaveFormChange &&);
+    ~TremulantWaveFormChange();
+
+    /** @return true if there is nothing to commit */
+    bool IsEmpty() const { return items.empty(); }
   };
 
   /*
@@ -196,7 +235,7 @@ private:
   GOSoundSamplerPlayer m_SamplerPlayer;
   // m_scheduler is constructed empty here, like mp_ReleaseTask/mp_TouchTask
   // above; it is only populated by BuildEngine() [B11]. Declared before
-  // mp_TremulantTasks [B1] below - the earliest task block - so that it
+  // mo_TremulantTasks [B1] below - the earliest task block - so that it
   // outlives every task holding a reference into it
   // (GOSoundWindchestGroupTask::r_RoundCounter), since members are destroyed
   // in reverse declaration order.
@@ -242,19 +281,20 @@ private:
    * here in that same order)
    */
 
-  // [B1] mp_TremulantTasks: one per tremulant in r_OrganModel
-  //   — referenced by mp_WindchestTasks after [B3] Init()
-  ptr_vector<GOSoundTremulantTask> mp_TremulantTasks;
-  // [B2] mp_WindchestTasks: one special + one per windchest in r_OrganModel
-  //   — initialized in [B3] with mp_TremulantTasks [B1]
+  // [B1] mo_TremulantTasks: one per tremulant in r_OrganModel, each with its
+  // wave form
+  //   — referenced by mo_WindchestTasks after [B3] Init()
+  std::vector<std::unique_ptr<GOSoundTremulantTask>> mo_TremulantTasks;
+  // [B2] mo_WindchestTasks: one special + one per windchest in r_OrganModel
+  //   — initialized in [B3] with mo_TremulantTasks [B1]
   //   — referenced by m_WindchestGroupTaskGrid [B4] (each cell is
   //     constructed with a reference to its owning windchest task)
-  std::vector<std::unique_ptr<GOSoundWindchestTask>> mp_WindchestTasks;
-  // [B3] Init(): connects mp_WindchestTasks [B2] to mp_TremulantTasks [B1]
+  std::vector<std::unique_ptr<GOSoundWindchestTask>> mo_WindchestTasks;
+  // [B3] Init(): connects mo_WindchestTasks [B2] to mo_TremulantTasks [B1]
   //
   // [B4] m_WindchestGroupTaskGrid: one GOSoundWindchestGroupTask per
   // (windchest, audio group) pair actually used by the organ's pipes
-  //   — uses mp_WindchestTasks [B2] (each cell is wired to its owning
+  //   — uses mo_WindchestTasks [B2] (each cell is wired to its owning
   //     windchest task's processing chain at construction)
   //   — referenced by: mp_AudioGroupTasks [B5] via SetInputs(),
   //     m_SamplerPlayer::PassSampler() (constructor reference)
@@ -302,9 +342,9 @@ private:
    * to handle gracefully.
    */
   GOSoundWindchestTask &GetWindchestTaskAt(unsigned windchestIndex) {
-    assert(windchestIndex < mp_WindchestTasks.size());
+    assert(windchestIndex < mo_WindchestTasks.size());
 
-    return *mp_WindchestTasks[windchestIndex];
+    return *mo_WindchestTasks[windchestIndex];
   }
 
   /*
@@ -717,6 +757,33 @@ public:
    *   PrepareSoundRoutingFor(); consumed by move
    */
   void CommitSoundRoutingFor(AudioGroupRoutingChange &&change);
+
+  /*
+   * Live change of the tremulant wave forms
+   */
+
+  /**
+   * Phase 1 of changing the wave forms of tremulants on the fly: builds a new
+   * wave form for each of them from its current parameters. May run while the
+   * engine is working: it allocates but touches no state of the audio thread;
+   * the parameters of the tremulants must not change meanwhile.
+   *
+   * @param tremulantIndices the indexes of the tremulants in the organ model
+   * @return the change to hand to CommitTremulantWaveForms()
+   */
+  TremulantWaveFormChange PrepareTremulantWaveForms(
+    const std::set<unsigned> &tremulantIndices);
+
+  /**
+   * Phase 2: installs the new wave forms. Must only be called with the engine
+   * stopped (between StopEngine() and StartEngine()). Neither allocates nor
+   * frees: the replaced wave forms stay in the change, which the caller
+   * destroys after the engine is resumed.
+   *
+   * @param ioChange in: from PrepareTremulantWaveForms(); out: holds the old
+   *   wave forms
+   */
+  void CommitTremulantWaveForms(TremulantWaveFormChange &ioChange);
 
   /*
    * Functions called from GOSoundSystem

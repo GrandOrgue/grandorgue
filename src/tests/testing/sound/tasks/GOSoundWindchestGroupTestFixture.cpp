@@ -34,11 +34,7 @@ GOSoundWindchestGroupTestFixture::GOSoundWindchestGroupTestFixture()
   : m_Config("GOSoundWindchestGroupTestFixture", ""),
     m_OrganModel(m_Config),
     m_Engine(m_OrganModel, m_MemoryPool),
-    player(
-      m_UnusedGrid,
-      m_UnusedWindchestTasks,
-      m_UnusedTremulantTasks,
-      m_UnusedReleaseTask),
+    player(m_UnusedGrid, m_UnusedWindchestTasks, m_UnusedReleaseTask),
     roundCounter(m_Engine.GetScheduler().GetRoundCounter()) {
   for (unsigned windchestIndex = 0; windchestIndex < N_WINDCHEST_TASKS;
        windchestIndex++)

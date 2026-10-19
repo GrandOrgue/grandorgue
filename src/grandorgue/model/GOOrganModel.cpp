@@ -146,8 +146,8 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
 
     oTremulant->SetContext(&MIDI_CONTEXT_TREMULANTS);
     set_name_for_context(oTremulant.get(), num);
-    oTremulant->Load(cfg, wxString::Format(wxT("Tremulant%03u"), num), num);
-    m_tremulants.push_back(std::move(oTremulant));
+    oTremulant->Load(cfg, wxString::Format(wxT("Tremulant%03u"), num));
+    AddTremulant(std::move(oTremulant));
   }
 
   for (unsigned i = 0; i < NumberOfWindchestGroups; i++)
@@ -363,6 +363,11 @@ int GOOrganModel::FindTremulantByName(const wxString &name) const {
       break;
     }
   return resIndex;
+}
+
+unsigned GOOrganModel::AddTremulant(std::unique_ptr<GOTremulant> &&oTremulant) {
+  m_tremulants.push_back(std::move(oTremulant));
+  return m_tremulants.size() - 1;
 }
 
 void GOOrganModel::AddRank(std::unique_ptr<GORank> &&oRank) {

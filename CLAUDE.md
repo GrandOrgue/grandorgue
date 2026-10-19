@@ -234,7 +234,8 @@ This pattern flows through: `GOSoundPort` → `GOSound` → `GOSoundEngine`
     - `providers/`: Audio sources feeding samplers, and tremulant wave form
       sources.
     - `tasks/`, `buffer/`, `ports/`, `interfaces/`: Scheduler tasks, buffer
-      wrappers, backends, contracts.
+      wrappers, backends, contracts. A task may depend on `effects/` (the
+      tremulant task reads the vibrato pitch rate curve).
     - `reverb/`: External-library (zita-convolver) integration, a category
       of its own.
 

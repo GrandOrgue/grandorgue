@@ -16,7 +16,6 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/providers/GOSoundProvider.h"
 #include "sound/tasks/GOSoundReleaseTask.h"
-#include "sound/tasks/GOSoundTremulantTask.h"
 #include "sound/tasks/GOSoundWindchestGroupTask.h"
 #include "sound/tasks/GOSoundWindchestTask.h"
 
@@ -30,11 +29,9 @@
 GOSoundSamplerPlayer::GOSoundSamplerPlayer(
   GOSoundWindchestGroupTaskGrid &windchestGroupTaskGrid,
   std::vector<std::unique_ptr<GOSoundWindchestTask>> &windchestTasks,
-  ptr_vector<GOSoundTremulantTask> &tremulantTasks,
   std::unique_ptr<GOSoundReleaseTask> &pReleaseTask)
   : r_WindchestGroupTaskGrid(windchestGroupTaskGrid),
     r_WindchestTasks(windchestTasks),
-    r_TremulantTasks(tremulantTasks),
     rp_ReleaseTask(pReleaseTask),
     m_IsScaledReleases(true),
     m_IsReleaseAlignmentEnabled(true),
@@ -108,15 +105,11 @@ float GOSoundSamplerPlayer::GetRandomFactor() const {
 }
 
 void GOSoundSamplerPlayer::PassSampler(GOSoundSampler *sampler) {
-  int taskId = sampler->m_MixWindchestTaskId;
-
-  if (isWindchestTask(taskId))
-    r_WindchestGroupTaskGrid
-      .GetWindchestGroupTask(
-        windchestTaskToIndex(taskId), sampler->m_AudioGroupId)
-      .Add(sampler);
-  else
-    r_TremulantTasks[tremulantTaskToIndex(taskId)]->Add(sampler);
+  r_WindchestGroupTaskGrid
+    .GetWindchestGroupTask(
+      windchestTaskToIndex(sampler->m_MixWindchestTaskId),
+      sampler->m_AudioGroupId)
+    .Add(sampler);
 }
 
 void GOSoundSamplerPlayer::StartSampler(GOSoundSampler *sampler) {
@@ -505,14 +498,6 @@ GOSoundSampler *GOSoundSamplerPlayer::StartPipeSample(
     prevEventTime,
     isRelease,
     pStartTimeSamples);
-}
-
-GOSoundSampler *GOSoundSamplerPlayer::StartTremulantSample(
-  const GOSoundProvider *tremProvider,
-  unsigned tremulantN,
-  uint64_t prevEventTime) {
-  return CreateTaskSample(
-    tremProvider, -tremulantN, 0, 0x7f, 0, prevEventTime, false, nullptr);
 }
 
 uint64_t GOSoundSamplerPlayer::StopSample(

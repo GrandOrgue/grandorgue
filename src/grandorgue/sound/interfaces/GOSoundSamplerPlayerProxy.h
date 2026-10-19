@@ -52,22 +52,6 @@ public:
   }
 
   /**
-   * Starts a tremulant sample. Returns nullptr if not connected.
-   */
-  GOSoundSampler *StartTremulantSample(
-    const GOSoundProvider *tremProvider,
-    unsigned tremulantN,
-    uint64_t prevEventTime) override {
-
-    return ForwardCall(
-      &GOSoundSamplerPlayerInterface::StartTremulantSample,
-      nullptr,
-      tremProvider,
-      tremulantN,
-      prevEventTime);
-  }
-
-  /**
    * Updates velocity. Does nothing if not connected.
    */
   void UpdateVelocity(

@@ -29,12 +29,12 @@ GOSoundWindchestTask::GOSoundWindchestTask(
 GOSoundWindchestTask::~GOSoundWindchestTask() = default;
 
 void GOSoundWindchestTask::Init(
-  ptr_vector<GOSoundTremulantTask> &tremulantTasks) {
+  std::vector<std::unique_ptr<GOSoundTremulantTask>> &tremulantTasks) {
   m_pTremulantTasks.clear();
   if (p_windchest)
     for (unsigned i = 0; i < p_windchest->GetTremulantCount(); i++)
       m_pTremulantTasks.push_back(
-        tremulantTasks[p_windchest->GetTremulantId(i)]);
+        tremulantTasks[p_windchest->GetTremulantId(i)].get());
 }
 
 bool GOSoundWindchestTask::DoRun(GOSchedulerThread *pThread) {
@@ -42,8 +42,11 @@ bool GOSoundWindchestTask::DoRun(GOSchedulerThread *pThread) {
 
   if (p_windchest) {
     amplitude *= p_windchest->GetAmplitude();
-    for (unsigned i = 0; i < m_pTremulantTasks.size(); i++)
-      amplitude *= m_pTremulantTasks[i]->GetAmplitude();
+    for (GOSoundTremulantTask *pTremulantTask : m_pTremulantTasks) {
+      // The getter does not run the task: the round order is guaranteed here
+      pTremulantTask->EnsureDone();
+      amplitude *= pTremulantTask->GetAmplitude();
+    }
   }
   m_amplitude = amplitude;
   mp_chain->EnsureParametersUpToDate();

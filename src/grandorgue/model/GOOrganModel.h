@@ -204,6 +204,11 @@ public:
     return m_tremulants[index];
   }
   /**
+   * Takes the ownership of the tremulant and registers it in the model.
+   * @return the zero-based index of the tremulant
+   */
+  unsigned AddTremulant(std::unique_ptr<GOTremulant> &&oTremulant);
+  /**
    * Find a tremulant by it's name
    * @param name - the name of tremulant to find
    * @return the tremulant index or -1 if the tremulant is not found

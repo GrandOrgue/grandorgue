@@ -17,11 +17,9 @@
 #include "sound/interfaces/GOSoundSamplerPlayerInterface.h"
 
 #include "GOSoundSamplerPool.h"
-#include "ptrvector.h"
 
 class GOSoundBufferMutable;
 class GOSoundReleaseTask;
-class GOSoundTremulantTask;
 class GOSoundWindchestGroupTaskGrid;
 class GOSoundWindchestTask;
 
@@ -40,7 +38,6 @@ private:
 
   GOSoundWindchestGroupTaskGrid &r_WindchestGroupTaskGrid;
   std::vector<std::unique_ptr<GOSoundWindchestTask>> &r_WindchestTasks;
-  ptr_vector<GOSoundTremulantTask> &r_TremulantTasks;
   /** nullptr when player is constructed; populated in the body of
    * GOSoundOrganEngine constructor. Used only during playback (after Build). */
   std::unique_ptr<GOSoundReleaseTask> &rp_ReleaseTask;
@@ -149,7 +146,6 @@ public:
   GOSoundSamplerPlayer(
     GOSoundWindchestGroupTaskGrid &windchestGroupTaskGrid,
     std::vector<std::unique_ptr<GOSoundWindchestTask>> &windchestTasks,
-    ptr_vector<GOSoundTremulantTask> &tremulantTasks,
     std::unique_ptr<GOSoundReleaseTask> &pReleaseTask);
 
   /*
@@ -246,11 +242,6 @@ public:
     uint64_t prevEventTime,
     bool isRelease = false,
     uint64_t *pStartTimeSamples = nullptr) override;
-
-  GOSoundSampler *StartTremulantSample(
-    const GOSoundProvider *tremProvider,
-    unsigned tremulantN,
-    uint64_t prevEventTime) override;
 
   uint64_t StopSample(
     const GOSoundProvider *pipe, GOSoundSampler *handle) override;
