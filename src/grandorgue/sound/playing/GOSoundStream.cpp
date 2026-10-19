@@ -57,6 +57,8 @@ public:
       res = 0;
     return res;
   }
+
+  inline void NormalizePosition(GOSoundResample::ResamplingPosition &) const {}
 };
 
 template <bool format16, unsigned windowLen, uint8_t nChannels>
