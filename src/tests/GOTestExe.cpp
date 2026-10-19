@@ -50,6 +50,7 @@
 #include "testing/sound/playing/GOTestSoundToneBalanceFilter.h"
 #include "testing/sound/processing/GOTestSoundProcessingChain.h"
 #include "testing/sound/processing/GOTestSoundProcessorTyped.h"
+#include "testing/sound/providers/GOTestSoundTremulantProviderSynth.h"
 #include "testing/sound/reverb/GOTestSoundReverb.h"
 #include "testing/sound/tasks/GOTestPerfSoundTaskBase.h"
 #include "testing/sound/tasks/GOTestSoundOutputTask.h"
@@ -118,6 +119,7 @@ int main(int argc, char *argv[]) {
   GOTestSoundResample testSoundResample;
   GOTestPerfSoundResample testPerfSoundResample;
   GOTestSoundToneBalanceFilter testSoundToneBalanceFilter;
+  GOTestSoundTremulantProviderSynth testSoundTremulantProviderSynth;
   GOTestSoundReverb testSoundReverb;
   GOTestSoundReverbProcessor testSoundReverbProcessor;
   GOTestSoundShelfFilterProcessor testSoundShelfFilterProcessor;

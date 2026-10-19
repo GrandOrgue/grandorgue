@@ -231,7 +231,8 @@ This pattern flows through: `GOSoundPort` → `GOSound` → `GOSoundEngine`
       stack allowed to see `model/`.
     - `playing/`: Sampler-side playback (streams, samplers, faders, audio
       sections).
-    - `providers/`: Audio sources feeding samplers.
+    - `providers/`: Audio sources feeding samplers, and tremulant wave form
+      sources.
     - `tasks/`, `buffer/`, `ports/`, `interfaces/`: Scheduler tasks, buffer
       wrappers, backends, contracts.
     - `reverb/`: External-library (zita-convolver) integration, a category
