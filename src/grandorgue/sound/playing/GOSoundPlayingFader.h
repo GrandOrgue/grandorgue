@@ -5,8 +5,8 @@
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
-#ifndef GOSOUNDFADER_H_
-#define GOSOUNDFADER_H_
+#ifndef GOSOUNDPLAYINGFADER_H_
+#define GOSOUNDPLAYINGFADER_H_
 
 #include <assert.h>
 
@@ -37,7 +37,7 @@ class GOSoundBufferMutable;
  * This volume is applied in the Process() call
  */
 
-class GOSoundFader {
+class GOSoundPlayingFader {
 private:
   // The final volume after increasing
   float m_TargetVolume;
@@ -99,4 +99,4 @@ public:
   bool IsSilent() const { return (m_LastTargetVolumePoint <= 0.0f); }
 };
 
-#endif /* GOSOUNDFADER_H_ */
+#endif /* GOSOUNDPLAYINGFADER_H_ */
