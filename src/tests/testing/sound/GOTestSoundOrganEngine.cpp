@@ -9,25 +9,129 @@
 
 #include <atomic>
 #include <chrono>
+#include <cmath>
 #include <condition_variable>
 #include <format>
 #include <iterator>
 #include <mutex>
+#include <numbers>
 #include <thread>
+#include <vector>
 
 #include "model/GOEnclosure.h"
 #include "model/GOWindchest.h"
 #include "sound/GOSoundOrganEngine.h"
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/effects/GOSoundShelfFilterProcessor.h"
+#include "sound/playing/GOSoundAudioSection.h"
 #include "sound/processing/GOSoundProcessingChain.h"
-#include "sound/providers/GOSoundProviderSynthedTrem.h"
+#include "sound/providers/GOSoundProvider.h"
 
+#include "GOBuffer.h"
+#include "GOMemoryPool.h"
 #include "GOOrganController.h"
 
 #include "GOTestScope.h"
 
 const std::string GOTestSoundOrganEngine::TEST_NAME = "GOTestSoundOrganEngine";
+
+namespace {
+/**
+ * A sound provider for tests that start a sampler and do not care what it
+ * plays: a looped mono sine and a short fade-out release. It replaces the
+ * synthesized tremulant provider the engine tests used as a sample source.
+ */
+class GOSoundSineProviderTestImpl : public GOSoundProvider {
+public:
+  GOSoundSineProviderTestImpl();
+
+  /**
+   * Builds the attack (one period of a sine, looped) and the release.
+   *
+   * @param pool the pool for the audio sections
+   * @param amplitudePercent the sine amplitude in percent of the full scale;
+   *   0 makes a silent provider that still plays, loops and releases
+   */
+  void Create(GOMemoryPool &pool, unsigned amplitudePercent);
+};
+
+constexpr unsigned SAMPLE_RATE = 44100;
+// 100 ms
+constexpr unsigned N_PERIOD_FRAMES = 4410;
+// 10 ms
+constexpr unsigned N_RELEASE_FRAMES = 441;
+constexpr double FULL_SCALE = 0x7FF0;
+
+GOSoundSineProviderTestImpl::GOSoundSineProviderTestImpl() { m_Gain = 1.0f; }
+
+void GOSoundSineProviderTestImpl::Create(
+  GOMemoryPool &pool, unsigned amplitudePercent) {
+  ClearData();
+
+  const double amplitude = FULL_SCALE * amplitudePercent / 100.0;
+  const double radsPerFrame = 2.0 * std::numbers::pi / N_PERIOD_FRAMES;
+  GOBuffer<int16_t> data(N_PERIOD_FRAMES + N_RELEASE_FRAMES);
+  int16_t *pData = data.get();
+
+  // The attack: one period, looped
+  for (unsigned frameI = 0; frameI < N_PERIOD_FRAMES; ++frameI, ++pData)
+    *pData = (int16_t)(amplitude * std::sin(radsPerFrame * frameI));
+
+  // The release: the sine continues and fades out linearly
+  for (unsigned frameI = 0; frameI < N_RELEASE_FRAMES; ++frameI, ++pData)
+    *pData
+      = (int16_t)(amplitude * std::sin(radsPerFrame * frameI) * (1.0 - (double)frameI / N_RELEASE_FRAMES));
+
+  GOWaveLoop loop;
+
+  loop.m_StartPosition = 0;
+  loop.m_EndPosition = N_PERIOD_FRAMES - 1;
+
+  std::vector<GOWaveLoop> loops{loop};
+  AttackSelector attackInfo;
+
+  attackInfo.m_WaveTremulantStateFor = BOOL3_DEFAULT;
+  attackInfo.min_attack_velocity = 0;
+  attackInfo.max_released_time = -1;
+  m_AttackInfo.push_back(attackInfo);
+  m_Attack.push_back(new GOSoundAudioSection(pool));
+  m_Attack[0]->Setup(
+    nullptr,
+    nullptr,
+    data.get(),
+    GOWave::SF_SIGNEDSHORT_16,
+    1,
+    SAMPLE_RATE,
+    loop.m_EndPosition,
+    &loops,
+    BOOL3_DEFAULT,
+    false,
+    0,
+    0);
+
+  ReleaseSelector releaseInfo;
+
+  releaseInfo.m_WaveTremulantStateFor = BOOL3_DEFAULT;
+  releaseInfo.max_playback_time = -1;
+  m_ReleaseInfo.push_back(releaseInfo);
+  m_Release.push_back(new GOSoundAudioSection(pool));
+  m_Release[0]->Setup(
+    nullptr,
+    nullptr,
+    data.get() + N_PERIOD_FRAMES,
+    GOWave::SF_SIGNEDSHORT_16,
+    1,
+    SAMPLE_RATE,
+    N_RELEASE_FRAMES,
+    nullptr,
+    BOOL3_DEFAULT,
+    false,
+    0,
+    0);
+
+  ComputeReleaseAlignmentInfo();
+}
+} // namespace
 
 struct EngineConfig {
   unsigned nAudioGroups;
@@ -395,9 +499,9 @@ void GOTestSoundOrganEngine::TestStopStartResumePreservesSamplers() {
   engine.CommitSoundRoutingFor(std::move(routingChange));
   engine.StartEngine();
 
-  GOSoundProviderSynthedTrem provider;
+  GOSoundSineProviderTestImpl provider;
 
-  provider.Create(controller->GetMemoryPool(), 100, 100, 100, 0);
+  provider.Create(controller->GetMemoryPool(), 0);
 
   GOSoundSampler *pSampler
     = engine.GetSamplerPlayer().StartPipeSample(&provider, 1, 0, 80, 0, 0);
@@ -442,9 +546,9 @@ void GOTestSoundOrganEngine::TestDestroyRebuildReclaimsAndResizesPool() {
   engine.CommitSoundRoutingFor(std::move(routingChange));
   engine.StartEngine();
 
-  GOSoundProviderSynthedTrem provider;
+  GOSoundSineProviderTestImpl provider;
 
-  provider.Create(controller->GetMemoryPool(), 100, 100, 100, 0);
+  provider.Create(controller->GetMemoryPool(), 0);
   for (unsigned i = 0; i < FIRST_LIMIT; i++)
     GOAssert(
       engine.GetSamplerPlayer().StartPipeSample(&provider, 1, 0, 80, 0, 0),
@@ -551,9 +655,9 @@ void GOTestSoundOrganEngine::TestPrepareAndCommitSoundRoutingFor() {
   engine.CommitSoundRoutingFor(std::move(change));
   engine.StartEngine();
 
-  GOSoundProviderSynthedTrem provider;
+  GOSoundSineProviderTestImpl provider;
 
-  provider.Create(controller->GetMemoryPool(), 100, 100, 100, 0);
+  provider.Create(controller->GetMemoryPool(), 0);
 
   GOSoundSampler *pSampler
     = engine.GetSamplerPlayer().StartPipeSample(&provider, 1, 1, 80, 0, 0);
@@ -579,12 +683,12 @@ void GOTestSoundOrganEngine::TestSamplerAudioReachesPlanarOutput() {
   engine.CommitSoundRoutingFor(std::move(routingChange));
   engine.StartEngine();
 
-  GOSoundProviderSynthedTrem provider;
+  GOSoundSineProviderTestImpl provider;
 
-  // amp_mod_depth=50 (unlike the other tests in this suite, which pass 0 for
+  // amplitude 50% (unlike the other tests in this suite, which pass 0 for
   // a deliberately silent fixture since they only check pool bookkeeping):
   // this test needs actual non-zero waveform data to reach the output.
-  provider.Create(controller->GetMemoryPool(), 100, 100, 100, 50);
+  provider.Create(controller->GetMemoryPool(), 50);
 
   GOSoundSampler *pSampler
     = engine.GetSamplerPlayer().StartPipeSample(&provider, 1, 0, 80, 0, 0);

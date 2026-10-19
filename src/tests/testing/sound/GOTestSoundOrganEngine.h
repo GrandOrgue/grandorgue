@@ -110,7 +110,7 @@ private:
   void TestPrepareAndCommitSoundRoutingFor();
 
   /*
-   * Starts a real GOSoundProviderSynthedTrem sample and checks that
+   * Starts a real sine sample (GOSoundSineProviderTestImpl) and checks that
    * non-silent audio reaches the final planar output buffer after a few
    * periods - a content-level canary for the windchest-group merge
    * (DeinterleaveFrom()/AddDeinterleavedFrom(), Stage 3's planar rewrite):
