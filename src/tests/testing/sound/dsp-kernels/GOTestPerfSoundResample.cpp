@@ -13,6 +13,7 @@
 
 #include "sound/dsp-kernels/GOSoundResample.h"
 
+#include "../GOSoundTestSignals.h"
 #include "GOInt.h"
 #include "GOTestScope.h"
 
@@ -131,16 +132,6 @@ static unsigned compute_src_frames(unsigned nOutFrames, unsigned vectorLength) {
   return (unsigned)std::ceil(nOutFrames * RESAMPLING_FACTOR) + vectorLength + 1;
 }
 
-static void fill_with_ramp(std::vector<float> &data) {
-  for (unsigned i = 0, n = data.size(); i < n; i++)
-    data[i] = (float)i;
-}
-
-static void fill_with_ramp(std::vector<GOInt24> &data) {
-  for (unsigned i = 0, n = data.size(); i < n; i++)
-    data[i] = (int)(i % 0x7fffff);
-}
-
 void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatLinear() {
   std::cout
     << "\nPerformance test: LinearResampler::ResampleBlock (mono float)\n";
@@ -156,7 +147,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatLinear() {
     std::vector<float> src(nSrcFrames);
     std::vector<float> out(nOutFrames);
 
-    fill_with_ramp(src);
+    GOSoundTestSignals::fillWithRamp(src);
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
@@ -193,7 +184,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatPolyphase() {
     std::vector<float> src(nSrcFrames);
     std::vector<float> out(nOutFrames);
 
-    fill_with_ramp(src);
+    GOSoundTestSignals::fillWithRamp(src);
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
@@ -230,7 +221,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Linear() {
     std::vector<GOInt24> src(nSrcFrames * 2);
     std::vector<float> out(nOutFrames * 2);
 
-    fill_with_ramp(src);
+    GOSoundTestSignals::fillWithRamp(src);
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
@@ -267,7 +258,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Polyphase() {
     std::vector<GOInt24> src(nSrcFrames * 2);
     std::vector<float> out(nOutFrames * 2);
 
-    fill_with_ramp(src);
+    GOSoundTestSignals::fillWithRamp(src);
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
@@ -390,7 +381,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockVariableRatePlanarLinear() {
     // Planar layout: channel c's frame f is at out[c * nOutFrames + f].
     std::vector<float> out(nOutFrames * N_PLANAR_PERF_CHANNELS);
 
-    fill_with_ramp(src);
+    GOSoundTestSignals::fillWithRamp(src);
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
@@ -439,7 +430,7 @@ void GOTestPerfSoundResample::
     std::vector<float> src(nSrcFrames * N_PLANAR_PERF_CHANNELS);
     std::vector<float> out(nOutFrames * N_PLANAR_PERF_CHANNELS);
 
-    fill_with_ramp(src);
+    GOSoundTestSignals::fillWithRamp(src);
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
@@ -496,7 +487,7 @@ void GOTestPerfSoundResample::run_constant_rate_planar(
     std::vector<float> src(nPhysicalFrames * N_PLANAR_PERF_CHANNELS);
     std::vector<float> out(nOutFrames * N_PLANAR_PERF_CHANNELS);
 
-    fill_with_ramp(src);
+    GOSoundTestSignals::fillWithRamp(src);
 
     Ring ring(src.data(), N_PLANAR_PERF_CHANNELS, nRingFrames, nTailFrames);
     GOSoundResample::ResamplingPosition resamplingPos;
