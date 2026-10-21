@@ -7,6 +7,7 @@
 
 #include "GOSetter.h"
 
+#include <algorithm>
 #include <iomanip>
 #include <sstream>
 #include <string>
@@ -58,6 +59,8 @@ static const GOMidiObjectContext MIDI_CONTEXT_TEMPERAMENT(
   wxT("Temperament"), _("Temperament"));
 static const GOMidiObjectContext MIDI_CONTEXT_TRANSPOSE(
   wxT("Transpose"), _("Transpose"));
+static const GOMidiObjectContext MIDI_CONTEXT_VOLUME(
+  wxT("Volume"), _("Volume"));
 
 const wxString GOSetter::KEY_REFRESH_FILES = wxT("RefreshFiles");
 const wxString GOSetter::KEY_PREV_FILE = wxT("PrevFile");
@@ -707,6 +710,18 @@ static const GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
    true,
    false,
    &MIDI_CONTEXT_TRANSPOSE},
+  {wxT("VolumeDown"),
+   GOSetter::ID_SETTER_VOLUME_DOWN,
+   true,
+   true,
+   false,
+   &MIDI_CONTEXT_VOLUME},
+  {wxT("VolumeUp"),
+   GOSetter::ID_SETTER_VOLUME_UP,
+   true,
+   true,
+   false,
+   &MIDI_CONTEXT_VOLUME},
 
   {GOSetter::KEY_ON_STATE,
    GOSetter::ID_SETTER_ON,
@@ -884,6 +899,8 @@ void GOSetter::Load(GOConfigReader &cfg) {
     cfg, wxT("SetterTransposeDown"), _("-"));
   m_buttons[ID_SETTER_TRANSPOSE_UP]->Init(
     cfg, wxT("SetterTransposeUp"), _("+"));
+  m_buttons[ID_SETTER_VOLUME_DOWN]->Init(cfg, wxT("SetterVolumeDown"), _("-"));
+  m_buttons[ID_SETTER_VOLUME_UP]->Init(cfg, wxT("SetterVolumeUp"), _("+"));
 
   m_buttons[ID_SETTER_ON]->Init(cfg, wxT("SetterOn"), _("ON"));
   m_buttons[ID_SETTER_ON]->Display(true);
@@ -1433,6 +1450,22 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
     else
       value--;
     SetTranspose(value);
+  } break;
+  case ID_SETTER_VOLUME_DOWN:
+  case ID_SETTER_VOLUME_UP: {
+    // 1 dB per press, same range as the toolbar spin. The spin is told about
+    // it so it stays in sync; the value itself lives in the sound engine and
+    // is saved with the organ like a manual change would be.
+    int value
+      = m_OrganController->GetGain() + (id == ID_SETTER_VOLUME_UP ? 1 : -1);
+
+    value = std::clamp(value, -120, 20);
+    m_OrganController->SetGain(value);
+
+    wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
+
+    event.SetInt(value);
+    wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
   } break;
   case ID_SETTER_AUDIO_PANIC: {
     wxCommandEvent event(wxEVT_MENU, ID_AUDIO_PANIC);

@@ -52,6 +52,31 @@ public:
 
   void DeleteEvent(unsigned index) { m_events.erase(m_events.begin() + index); }
 
+  bool HasEventFromDevice(unsigned deviceId) const {
+    return std::any_of(
+      m_events.begin(), m_events.end(), [deviceId](const MidiEventPattern &x) {
+        return x.deviceId == deviceId;
+      });
+  }
+
+  /**
+   * Append the events of src that come from deviceId, unless this list
+   * already listens to that device
+   * @return whether anything was added
+   */
+  bool AddMissingEventsFrom(
+    const GOMidiEventPatternList &src, unsigned deviceId) {
+    bool isChanged = false;
+
+    if (!HasEventFromDevice(deviceId))
+      for (const MidiEventPattern &x : src.m_events)
+        if (x.deviceId == deviceId && !x.IsEmpty()) {
+          m_events.push_back(x);
+          isChanged = true;
+        }
+    return isChanged;
+  }
+
   /**
    * Assign the new list to the current one
    * @param newList the lnew list to assign

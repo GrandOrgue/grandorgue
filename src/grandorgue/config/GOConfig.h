@@ -113,7 +113,11 @@ private:
   void LoadOrgans(GOConfigReader &cfg);
   void SaveOrgans(GOConfigWriter &cfg);
 
+  // filled by FillWebRemoteDefaults()
+  unsigned m_WebRemoteDeviceId = 0;
+
   void LoadDefaults();
+  void FillWebRemoteDefaults();
 
 public:
   GOConfig(const std::string &instanceName, const std::string &confFilePath);
@@ -185,6 +189,8 @@ public:
 
   GOSettingBool IsToAutoAddMidi;
   GOSettingBool IsToCheckMidiOnStart;
+  // TCP port the "Web Remote" MIDI input device listens on
+  GOSettingUnsigned WebRemotePort;
   GOSettingString MidiRecorderOutputDevice;
 
   GOSettingDirectory OrganPath;
@@ -268,6 +274,7 @@ public:
   }
 
   GOMidiMap &GetMidiMap() { return m_MidiMap; }
+  unsigned GetWebRemoteDeviceId() const { return m_WebRemoteDeviceId; }
   const GOMidiMap &GetMidiMap() const { return m_MidiMap; }
 
   GOTemperamentList &GetTemperaments() { return m_Temperaments; }
