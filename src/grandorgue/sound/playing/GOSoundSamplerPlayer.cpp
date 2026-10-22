@@ -130,6 +130,25 @@ void GOSoundSamplerPlayer::StartSampler(GOSoundSampler *sampler) {
   PassSampler(sampler);
 }
 
+float GOSoundSamplerPlayer::ApplyLiveProviderChanges(GOSoundSampler &sampler) {
+  float gainRatio = 1.0f;
+  const GOSoundProvider *pProvider = sampler.p_SoundProvider;
+
+  if (pProvider) {
+    const float tuning = pProvider->GetTuning();
+
+    if (tuning != sampler.m_AppliedTuning) {
+      sampler.stream.SetRelativeRate(tuning / sampler.m_BakedTuning);
+      sampler.m_AppliedTuning = tuning;
+    }
+    // A sampler that was started silent can not be raised later: its fader
+    // target volume is 0
+    if (sampler.m_BakedGain > 0.0f)
+      gainRatio = pProvider->GetGain() / sampler.m_BakedGain;
+  }
+  return gainRatio;
+}
+
 bool GOSoundSamplerPlayer::ProcessSampler(
   GOSoundSampler &sampler, float amplitude, GOSoundBufferMutable &outBuffer) {
   const bool process_sampler = (sampler.time <= m_CurrentTime);
@@ -150,12 +169,16 @@ bool GOSoundSamplerPlayer::ProcessSampler(
      *
      *     playback gain * (2 ^ -sampler.pipe_section->sample_bits)
      */
+    // Must be called before ReadBlock() because the stream rate is changed
+    // here, and before p_SoundProvider may be reset below
+    const float liveGainRatio = ApplyLiveProviderChanges(sampler);
+
     GO_DECLARE_LOCAL_SOUND_BUFFER(tmpBuffer, 2, outBuffer.GetNFrames())
 
     if (!sampler.stream.ReadBlock(tmpBuffer))
       sampler.p_SoundProvider = NULL;
 
-    sampler.fader.Process(amplitude, tmpBuffer);
+    sampler.fader.Process(amplitude * liveGainRatio, tmpBuffer);
     if (sampler.toneBalanceFilterState.IsToApply())
       sampler.toneBalanceFilterState.ProcessBuffer(tmpBuffer);
 
@@ -219,14 +242,17 @@ GOSoundSampler *GOSoundSamplerPlayer::CreateTaskSample(
       sampler->p_SoundProvider = pSoundProvider;
       sampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
       sampler->velocity = velocity;
+      sampler->m_BakedTuning = pSoundProvider->GetTuning();
+      sampler->m_AppliedTuning = sampler->m_BakedTuning;
       sampler->stream.InitStream(
         &m_resample,
         section,
         m_InterpolationType,
-        GetRandomFactor() * pSoundProvider->GetTuning() / (float)m_SampleRate);
+        GetRandomFactor() * sampler->m_BakedTuning / (float)m_SampleRate);
 
-      const float playback_gain
-        = pSoundProvider->GetGain() * section->GetNormGain();
+      sampler->m_BakedGain = pSoundProvider->GetGain();
+
+      const float playback_gain = sampler->m_BakedGain * section->GetNormGain();
 
       sampler->fader.Setup(
         playback_gain, pSoundProvider->GetVelocityVolume(velocity));
@@ -278,6 +304,11 @@ void GOSoundSamplerPlayer::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
           gain_target,
           new_sampler->fader.GetVelocityVolume(),
           crossFadeSamples);
+        // The new stream takes over the current rate of the old one, which
+        // already includes the applied tuning. So the applied tuning becomes
+        // the base for further tuning changes.
+        pSampler->m_BakedTuning = pSampler->m_AppliedTuning;
+        pSampler->m_BakedGain = pProvider->GetGain();
         pSampler->is_release = false;
 
         new_sampler->toneBalanceFilterState.Init(
@@ -407,18 +438,24 @@ void GOSoundSamplerPlayer::CreateReleaseSampler(GOSoundSampler *handle) {
         new_sampler->fader.StartDecreasingVolume(
           MsToSamples(gain_decay_length));
 
+      new_sampler->m_BakedGain = this_pipe->GetGain();
       if (
         m_IsReleaseAlignmentEnabled
         && release_section->SupportsStreamAlignment()) {
         new_sampler->stream.InitAlignedStream(
           release_section, m_InterpolationType, &handle->stream);
+        // The aligned stream takes over the current rate of the attack stream,
+        // which already includes the tuning applied to it
+        new_sampler->m_BakedTuning = handle->m_AppliedTuning;
       } else {
+        new_sampler->m_BakedTuning = this_pipe->GetTuning();
         new_sampler->stream.InitStream(
           &m_resample,
           release_section,
           m_InterpolationType,
-          this_pipe->GetTuning() / (float)m_SampleRate);
+          new_sampler->m_BakedTuning / (float)m_SampleRate);
       }
+      new_sampler->m_AppliedTuning = new_sampler->m_BakedTuning;
       new_sampler->is_release = true;
 
       new_sampler->m_SamplerTaskId = not_a_tremulant

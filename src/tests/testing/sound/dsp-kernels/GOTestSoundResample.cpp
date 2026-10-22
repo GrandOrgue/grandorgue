@@ -832,7 +832,77 @@ void GOTestSoundResample::TestConstantRatePlanar() {
     }
 }
 
+void GOTestSoundResample::TestSetRelativeRate() {
+  static constexpr unsigned UPSAMPLE_FACTOR = GOSoundResample::UPSAMPLE_FACTOR;
+  static constexpr unsigned MAX_INC = GOSoundResample::MAX_FRACTION_INCREMENT;
+
+  GOSoundResample::ResamplingPosition pos;
+
+  pos.Init(1.0f, 7);
+  pos.Inc(UPSAMPLE_FACTOR / 3);
+
+  const unsigned index = pos.GetIndex();
+  const unsigned fraction = pos.GetFraction();
+
+  // the ratio 1.0 keeps the increment
+  pos.SetRelativeRate(1.0f);
+  GOAssert(pos.IsSameRate(), "the ratio 1.0 must keep the unity rate");
+
+  // the ratio 2.0 doubles it and keeps the position
+  pos.SetRelativeRate(2.0f);
+  GOAssert(
+    pos.GetFractionIncrement() == 2 * UPSAMPLE_FACTOR,
+    "the ratio 2.0 must double the increment");
+  GOAssert(
+    pos.GetIndex() == index && pos.GetFraction() == fraction,
+    "SetRelativeRate() must keep the position");
+  GOAssert(pos.IsValid(), "the position must stay valid");
+
+  // 100 cents up from 1.0 and back many times must not drift: the result
+  // depends on the last ratio only
+  const float centUp = std::pow(2.0f, 100.0f / 1200.0f);
+
+  for (unsigned i = 0; i < 1000; i++) {
+    pos.SetRelativeRate(centUp);
+    pos.SetRelativeRate(1.0f);
+  }
+  GOAssert(pos.IsSameRate(), "1000 round trips must return exactly to unity");
+  pos.SetRelativeRate(centUp);
+  GOAssert(
+    pos.GetFractionIncrement()
+      == (unsigned)std::lround((double)centUp * UPSAMPLE_FACTOR),
+    "the result must depend on the last ratio only");
+
+  // a base that Init() set from pOld is the base, not the very first rate
+  GOSoundResample::ResamplingPosition aligned;
+
+  aligned.Init(1.0f, 0, &pos);
+  aligned.SetRelativeRate(1.0f);
+  GOAssert(
+    aligned.GetFractionIncrement() == pos.GetFractionIncrement(),
+    "the base of a stream initialized from pOld is the copied increment");
+
+  // limits
+  pos.SetRelativeRate(1e9f);
+  GOAssert(
+    pos.GetFractionIncrement() == MAX_INC && pos.IsValid(),
+    "a huge ratio must be limited to MAX_FRACTION_INCREMENT");
+  pos.SetRelativeRate(1e-9f);
+  GOAssert(
+    pos.GetFractionIncrement() == 1,
+    "a tiny ratio must be limited to the increment 1");
+
+  // a zero base stays zero
+  GOSoundResample::ResamplingPosition zeroPos;
+
+  zeroPos.Init(0.0f);
+  zeroPos.SetRelativeRate(2.0f);
+  GOAssert(
+    zeroPos.GetFractionIncrement() == 0, "a zero increment must stay zero");
+}
+
 void GOTestSoundResample::run() {
+  GO_RUN_TEST(TestSetRelativeRate())
   GO_RUN_TEST(TestIsSameRate())
   GO_RUN_TEST(TestRingGetChannelVector())
   GO_RUN_TEST(TestConstantRatePlanar())

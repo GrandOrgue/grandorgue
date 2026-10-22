@@ -34,6 +34,18 @@ struct GOSoundSampler {
   GOSoundStream stream;
   GOSoundPlayingFader fader;
   GOSoundToneBalanceFilter::State toneBalanceFilterState;
+  /** The provider gain (GOSoundProvider::GetGain()) that is baked into the
+   * fader's target volume. When the provider's gain is changed during playback,
+   * the sampler applies the ratio of the new gain to this value - see
+   * GOSoundSamplerPlayer::ApplyLiveProviderChanges(). */
+  float m_BakedGain;
+  /** The provider tuning (GOSoundProvider::GetTuning()) with which the stream
+   * was initialized. The stream rate is scaled by the ratio of the current
+   * provider tuning to this value. */
+  float m_BakedTuning;
+  /** The provider tuning that is currently reflected in the stream rate. It
+   * differs from the provider's tuning only until the next buffer. */
+  float m_AppliedTuning;
   uint64_t time;
   unsigned velocity;
   unsigned delay;

@@ -21,7 +21,9 @@
 
 #include "GOSoundResample.h"
 
+#include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <math.h>
 #include <stdlib.h>
 
@@ -36,6 +38,18 @@ void GOSoundResample::ResamplingPosition::Init(
   m_FractionIncrement = pOld
     ? (unsigned)roundf(factor * pOld->m_FractionIncrement)
     : rateToFractionIncrement(factor);
+  m_BaseFractionIncrement = m_FractionIncrement;
+}
+
+void GOSoundResample::ResamplingPosition::SetRelativeRate(float ratio) {
+  assert(ratio > 0.0f);
+
+  const double newIncrement = (double)ratio * m_BaseFractionIncrement;
+
+  m_FractionIncrement = m_BaseFractionIncrement
+    ? (unsigned)std::clamp(
+      std::round(newIncrement), 1.0, (double)MAX_FRACTION_INCREMENT)
+    : 0;
 }
 
 static double sinc(const double arg) {

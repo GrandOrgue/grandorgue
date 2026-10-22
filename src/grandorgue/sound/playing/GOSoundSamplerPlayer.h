@@ -95,6 +95,21 @@ private:
   void StartSampler(GOSoundSampler *sampler);
 
   /**
+   * @brief Makes a playing sampler follow the changes of its provider's gain
+   * and tuning that were made after the sampler had been started (for example,
+   * by the voicing controls).
+   *
+   * The tuning is applied to the sampler's stream immediately, keeping the
+   * stream position. The gain is returned as a ratio so that the caller can
+   * pass it to the fader, which changes the volume smoothly.
+   *
+   * @param sampler  The sampler to be processed in the current audio period.
+   * @return the ratio of the provider's current gain to the gain that is baked
+   *   into the fader of the sampler. 1.0 if the gain was not changed.
+   */
+  float ApplyLiveProviderChanges(GOSoundSampler &sampler);
+
+  /**
    * @brief Creates and starts a new sampler.
    *
    * @param pSoundProvider     Audio data source.

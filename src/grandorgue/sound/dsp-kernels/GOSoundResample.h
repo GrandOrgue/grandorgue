@@ -164,6 +164,8 @@ public:
     // Increment of the source position for one target sample in
     //   1/UPSAMPLE_FACTOR units
     unsigned m_FractionIncrement;
+    // The increment that was set by Init(). SetRelativeRate() scales it
+    unsigned m_BaseFractionIncrement;
 
     /**
      * Advances the position by the increment with no checks. The preconditions
@@ -217,6 +219,18 @@ public:
       float factor,
       unsigned startIndex = 0,
       const ResamplingPosition *pOld = nullptr);
+
+    /**
+     * Changes the constant resampling rate while the stream is playing. The
+     * position (index and fraction) is kept, so the pitch changes without a
+     * jump. The new rate is always computed from the increment set by Init(),
+     * not from the previous call, so repeated calls do not accumulate rounding
+     * errors. The result is limited to 1..MAX_FRACTION_INCREMENT (or stays 0
+     * if Init() set a zero increment).
+     * @param ratio the new rate divided by the rate set by Init(); must be
+     *   positive
+     */
+    void SetRelativeRate(float ratio);
 
     /**
      * Advance the position for the next target frame by an explicit
