@@ -302,30 +302,52 @@ Key CMake options (see `CMakeLists.txt` for full list):
 
 ### Naming: Pointers
 
-- **Local pointers**: `pCamelCase`
-  - ✅ `pData`, `pBuffer`, `pDevice`, `pSrc`, `pDst`
+- **Member prefixes** encode what the member is and, for a container of pointers, what it holds:
 
-- **Non-owning member pointers**: `p_` prefix
-  - Simple names lowercase: `p_buffer`, `p_data`
-  - Compound names PascalCase: `p_AudioOutput`, `p_AudioEngine`
+  | Member is ↓ / holds → | objects / nothing | non-owning pointers | owning pointers |
+  |---|---|---|---|
+  | an object (incl. a container) | `m_` | `mp_` | `mo_` |
+  | a reference (injected via constructor) | `r_` | `rp_` | `ro_` |
+  | a non-owning pointer | `p_` | — | — |
+  | an owning pointer | `o_` | — | — |
 
-- **Owning member pointers**: `mp_` prefix
-  - Simple names lowercase: `mp_buffer`, `mp_device`
-  - Compound names PascalCase: `mp_AudioOutput`, `mp_AudioEngine`
-
-- **Non-owning references stored as members** (injected via constructor): `r_` prefix
-  - ✅ `GOOrganModel &r_OrganModel`, `GOMemoryPool &r_MemoryPool`
+  - ✅ `GOGUIPanel *p_panel`, `std::unique_ptr<GOSoundProcessingChain> o_chain`,
+    `std::vector<GOSoundBufferTaskBase *> mp_inputs`,
+    `std::vector<std::unique_ptr<GOSoundWindchestTask>> mo_WindchestTasks`,
+    `ptr_vector<GOSoundGroupTask> &ro_AudioGroups`, `GOOrganModel &r_OrganModel`
+  - ❌ `mp_chain` (single owning pointer), `m_InputCouplers` (container of non-owning
+    pointers), `mp_buffers` (container of objects), `r_WindchestTasks` (reference to a container of owning pointers)
+  - A pointer is a raw pointer, `std::unique_ptr` or `std::atomic<T *>`; owning means the object
+    deletes the pointee (or holds the `unique_ptr`)
+  - A container is any standard or own container or wrapper (`std::vector`, `std::map`,
+    `std::array`, `std::optional`, `ptr_vector`, …), not necessarily holding many items
+  - A map is classified by its mapped values; pointer keys do not count
+  - Nested containers are classified by the innermost element
+  - Simple names lowercase, compound names PascalCase, as for `m_`
   - Prefer reference over pointer when non-nullable
 
+- **Locals and parameters** use the same prefix without `_`; a plain `m`/`r` is dropped (a local
+  reference is classified by what it refers to), followed by camelCase
+  - ✅ `pData`, `oWindchest` (`std::unique_ptr`), `mpInputs` (`std::vector<T *>`), `moTasks`,
+    `const auto &mpOrgans = r_config.GetLRUOrganList();`
+  - A parameter taking ownership is `o…`: `std::unique_ptr<T> oProvider`, or a raw `T *oLayoutEngine`
+  - Other containers need no prefix: their names end with a plural `s`. A container of pointers
+    needs `mp`/`mo`, because otherwise it is unclear what the `s` refers to
+
+- **Existing code** is renamed lazily: bring the names to these rules together with other changes
+  of the same code, not in separate rename-only commits
+
 - **Never compare pointers explicitly with `nullptr`** — use implicit bool conversion
-  - ✅ `if (pEngine)`, `return mp_Engine.load();`
-  - ❌ `if (pEngine != nullptr)`, `return mp_Engine.load() != nullptr;`
+  - ✅ `if (pEngine)`, `return p_Engine.load();`
+  - ❌ `if (pEngine != nullptr)`, `return p_Engine.load() != nullptr;`
 
 ### Naming: Output Parameters
 
 - Place at **end** of parameter lists, prefix with `out`
   - ✅ `void GetAudioOutput(unsigned outputIndex, bool isLast, GOSoundBufferMutable &outOutputBuffer)`
   - ❌ `void GetAudioOutput(GOSoundBufferMutable &outputBuffer, unsigned outputIndex, bool isLast)`
+- An output parameter is usually a reference to an object. For a pointer or a container of pointers
+  put `out` before the capitalised local prefix: `T *&outPData`, `std::vector<T *> &outMpInputs`
 
 ### Naming: Boolean Variables
 
@@ -415,8 +437,8 @@ Key CMake options (see `CMakeLists.txt` for full list):
     - ❌ mixed: `for (unsigned n = v.size(), groupI = 0; groupI < n; groupI++)`
 
 - **Use range-based `for`** when loop index is not used in body:
-  - ✅ `for (GOSoundThread *pThread : m_Threads) pThread->Wakeup();`
-  - ❌ `for (unsigned n = m_Threads.size(), i = 0; i < n; i++) m_Threads[i]->Wakeup();`
+  - ✅ `for (auto &oThread : mo_threads) oThread->Wakeup();`
+  - ❌ `for (unsigned n = mo_threads.size(), i = 0; i < n; i++) mo_threads[i]->Wakeup();`
 
 - **Pre-compute repeated subexpressions** (e.g. `v[i]`, `v[i].size()`) into named variables before use
 
