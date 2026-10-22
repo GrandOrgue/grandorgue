@@ -189,6 +189,7 @@ midi/GOMidiSystem.cpp
 model/pipe-config/GOPipeConfig.cpp
 model/pipe-config/GOPipeConfigNode.cpp
 model/pipe-config/GOPipeConfigTreeNode.cpp
+model/pipe-config/GOPipeVoicing.cpp
 model/GOCacheObject.cpp
 model/GOCoupler.cpp
 model/GODivisionalCoupler.cpp

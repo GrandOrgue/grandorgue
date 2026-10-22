@@ -57,6 +57,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_SoundProvider(this),
     m_PipeConfigNode(
       &rank->GetPipeConfig(), *pOrganModel, this, &m_SoundProvider) {
+  m_PipeConfigNode.SetMidiNoteNumber(m_MidiKeyNumber);
   p_OrganModel->RegisterCacheObject(this);
 }
 
