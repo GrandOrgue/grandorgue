@@ -7,8 +7,10 @@
 
 #include "GOTestSoundOrganEngine.h"
 
+#include <algorithm>
 #include <atomic>
 #include <chrono>
+#include <cmath>
 #include <condition_variable>
 #include <format>
 #include <iterator>
@@ -676,7 +678,165 @@ void GOTestSoundOrganEngine::TestChainReflectsWindchestEnclosures() {
   StopAndDestroyEngine();
 }
 
+/** A provider whose gain can be changed from a test, like the voicing
+ * controls change it during playback */
+class GOTestLiveChangeProvider : public GOSoundProviderSynthedTrem {
+public:
+  void SetGainForTest(float gain) { m_Gain = gain; }
+};
+
+std::vector<float> GOTestSoundOrganEngine::RunLiveChangeScenario(
+  unsigned changePeriodI, float newGain, float newTuningCent) {
+  static constexpr unsigned N_PERIODS = 200;
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(
+    /* nAudioGroups */ 1, /* nAuxThreads */ 0, /* nOutputs */ 1);
+
+  // The random detune of the start of a pipe would make runs differ
+  engine.SetRandomizeSpeaking(false);
+
+  GOSoundOrganEngine::AudioGroupRoutingChange routingChange
+    = engine.PrepareSoundRoutingFor({{1, 0}});
+
+  engine.StopEngine();
+  engine.CommitSoundRoutingFor(std::move(routingChange));
+  engine.StartEngine();
+
+  GOTestLiveChangeProvider provider;
+
+  provider.Create(controller->GetMemoryPool(), 100, 100, 100, 50);
+
+  GOSoundSampler *pSampler
+    = engine.GetSamplerPlayer().StartPipeSample(&provider, 1, 0, 80, 0, 0);
+
+  GOAssert(pSampler, "Sample should have started");
+
+  engine.SetUsed(true);
+  engine.SetStreaming(true);
+
+  std::vector<float> periodEnergies;
+
+  for (unsigned periodI = 0; periodI < N_PERIODS; ++periodI) {
+    if (periodI == changePeriodI) {
+      provider.SetGainForTest(newGain);
+      provider.SetTuning(newTuningCent);
+    }
+
+    GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(
+      buf, N_OUTPUT_CHANNELS, N_SAMPLES_PER_BUFFER);
+
+    engine.ProcessAudioCallback(0, buf);
+
+    const float *pData = buf.GetChannelBuffer(0).GetData();
+    float energy = 0.0f;
+
+    for (unsigned frameI = 0; frameI < N_SAMPLES_PER_BUFFER; ++frameI)
+      energy += pData[frameI] * pData[frameI];
+    periodEnergies.push_back(energy);
+  }
+
+  engine.SetStreaming(false);
+  engine.SetUsed(false);
+  StopAndDestroyEngine();
+  return periodEnergies;
+}
+
+void GOTestSoundOrganEngine::TestPlayingSamplerFollowsProviderChanges() {
+  static constexpr unsigned CHANGE_PERIOD_I = 50;
+  // The fader changes the volume smoothly in 1024 frames
+  static constexpr unsigned RAMP_PERIODS
+    = 1024 / N_SAMPLES_PER_BUFFER + 2;
+  static constexpr unsigned FIRST_SETTLED_PERIOD_I
+    = CHANGE_PERIOD_I + RAMP_PERIODS;
+
+  controller->AddWindchest(new GOWindchest(*controller));
+
+  // A period index that is never reached: the provider is never touched
+  static constexpr unsigned NEVER_I = 100000;
+
+  // the original gain of GOSoundProviderSynthedTrem is 1.0 and the original
+  // tuning is 0 cents
+  const std::vector<float> untouched
+    = RunLiveChangeScenario(NEVER_I, 1.0f, 0.0f);
+  const std::vector<float> unchanged
+    = RunLiveChangeScenario(CHANGE_PERIOD_I, 1.0f, 0.0f);
+  const std::vector<float> halfGain
+    = RunLiveChangeScenario(CHANGE_PERIOD_I, 0.5f, 0.0f);
+  const std::vector<float> centsUp
+    = RunLiveChangeScenario(CHANGE_PERIOD_I, 1.0f, 100.0f);
+
+  GOAssert(
+    untouched.size() == unchanged.size() && untouched.size() == halfGain.size()
+      && untouched.size() == centsUp.size(),
+    "all scenarios must produce the same number of periods");
+
+  // setting the same values must not alter the sound at all
+  for (unsigned n = untouched.size(), periodI = 0; periodI < n; ++periodI)
+    GOAssert(
+      untouched[periodI] == unchanged[periodI],
+      std::format(
+        "setting the same gain and tuning during playback must not alter the "
+        "output: period {} differs ({} vs {})",
+        periodI,
+        untouched[periodI],
+        unchanged[periodI]));
+
+  // before the change all scenarios must be identical
+  for (unsigned periodI = 0; periodI < CHANGE_PERIOD_I; ++periodI) {
+    GOAssert(
+      unchanged[periodI] == halfGain[periodI]
+        && unchanged[periodI] == centsUp[periodI],
+      "the output before the change must not depend on the later change");
+  }
+
+  // the gain: after the ramp the energy is the squared ratio of the gains
+  unsigned nCheckedPeriods = 0;
+
+  for (unsigned n = unchanged.size(), periodI = FIRST_SETTLED_PERIOD_I;
+       periodI < n;
+       ++periodI) {
+    if (unchanged[periodI] > 1e-12f) {
+      const float ratio = halfGain[periodI] / unchanged[periodI];
+
+      GOAssert(
+        std::fabs(ratio - 0.25f) < 1e-3f,
+        std::format(
+          "period {}: halving the gain of a playing sample must scale the "
+          "energy to 0.25, got {}",
+          periodI,
+          ratio));
+      nCheckedPeriods++;
+    }
+  }
+  GOAssert(
+    nCheckedPeriods > 20, "the sample must be audible after the change");
+
+  // the gain must change gradually: in the period of the change the same
+  // samples are scaled by a factor between 1.0 and 0.5, so the energy is
+  // between 0.25 and 1.0 of the unchanged one
+  GOAssert(
+    halfGain[CHANGE_PERIOD_I] <= unchanged[CHANGE_PERIOD_I] * 1.0001f
+      && halfGain[CHANGE_PERIOD_I] >= unchanged[CHANGE_PERIOD_I] * 0.2499f,
+    "the energy in the period of the change must be between the old and the "
+    "new level");
+
+  // the tuning: the pitch change must alter the output after the change
+  float maxRelativeDifference = 0.0f;
+
+  for (unsigned n = unchanged.size(), periodI = FIRST_SETTLED_PERIOD_I;
+       periodI < n;
+       ++periodI)
+    if (unchanged[periodI] > 1e-12f)
+      maxRelativeDifference = std::max(
+        maxRelativeDifference,
+        std::fabs(centsUp[periodI] - unchanged[periodI]) / unchanged[periodI]);
+  GOAssert(
+    maxRelativeDifference > 1e-3f,
+    "raising the tuning of a playing sample must alter its output");
+}
+
 void GOTestSoundOrganEngine::run() {
+  GO_RUN_TEST(TestPlayingSamplerFollowsProviderChanges())
   GO_RUN_TEST(TestSingleOutputLifecycle())
   GO_RUN_TEST(TestTwoOutputsLifecycle())
   GO_RUN_TEST(TestTwoGroupsTwoOutputsLifecycle())
