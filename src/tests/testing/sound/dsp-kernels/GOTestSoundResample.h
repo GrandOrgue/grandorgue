@@ -107,6 +107,12 @@ private:
    * resamplers. */
   void TestConstantRatePlanar();
 
+  /** ResamplingPosition::SetRelativeRate() scales the increment that Init()
+   * set, keeps the index and fraction, does not accumulate rounding errors
+   * over many calls, is limited to 1..MAX_FRACTION_INCREMENT, and is
+   * independent of the previous SetRelativeRate() calls. */
+  void TestSetRelativeRate();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

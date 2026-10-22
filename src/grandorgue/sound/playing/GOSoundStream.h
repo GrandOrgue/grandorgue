@@ -132,6 +132,14 @@ public:
     GOSoundResample::InterpolationType interpolationType,
     const GOSoundStream *pExistingStream);
 
+  /**
+   * Changes the pitch of the playing stream, keeping its position. See
+   * GOSoundResample::ResamplingPosition::SetRelativeRate().
+   * @param ratio the new resampling rate divided by the rate at which the
+   *   stream was initialized; must be positive
+   */
+  void SetRelativeRate(float ratio) { m_ResamplingPos.SetRelativeRate(ratio); }
+
   /* Read an audio buffer from an audio section stream */
   bool ReadBlock(GOSoundBufferMutable &outBuffer);
 };
