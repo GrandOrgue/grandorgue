@@ -15,9 +15,9 @@
 /**
  * Regression coverage for GOSoundToneBalanceFilter's instance API
  * (Init()/IsToApply()/SetSamplerate()) and its nested State
- * (Init()/IsToApply()/ProcessBuffer()), proving the Stage 5 restructure
- * (absorbing the former GOSoundOnePoleFilter instance API/FilterState) kept
- * the exact same observable behavior.
+ * (Init()/EnsureCoeffs()/IsToApply()/ProcessBuffer()), proving the Stage 5
+ * restructure (absorbing the former GOSoundOnePoleFilter instance
+ * API/FilterState) kept the exact same observable behavior.
  */
 class GOTestSoundToneBalanceFilter : public GOTest {
 private:
@@ -32,8 +32,9 @@ private:
    * Init() is called again. */
   void TestSetSamplerateResetsToIdentity();
 
-  /** State::IsToApply() is false when unbound (nullptr) or bound to a
-   * no-op filter, and true once bound to a configured filter. */
+  /** After EnsureCoeffs(), State::IsToApply() is false when unbound (nullptr)
+   * or bound to a no-op filter, and true once bound to a configured
+   * filter. */
   void TestStateIsToApply();
 
   /** State::ProcessBuffer() actually filters a bound, configured buffer,
@@ -43,6 +44,20 @@ private:
    * when IsToApply() is false, so this only asserts the bound/configured
    * case actually changes the audio. */
   void TestStateProcessBufferFilters();
+
+  /** A State bound to a filter takes over the coefficients that are set by
+   * Init() after the binding, at the next EnsureCoeffs(); its carried memory is
+   * cleared when the filter is switched off. */
+  void TestStateFollowsFilterChanges();
+
+  /** EnsureCoeffs() changes nothing when the filter was not changed since the
+   * previous call, in particular it keeps the carried memory. */
+  void TestEnsureCoeffsIsIdempotent();
+
+  /** While another thread changes the filter in a loop, the coefficients that
+   * a State uses are always one complete set that was written by Init() and
+   * never a mix of two sets. */
+  void TestStateNeverSeesTornCoefficients();
 
 public:
   std::string GetName() override { return TEST_NAME; }
