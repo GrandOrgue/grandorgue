@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -14,6 +14,10 @@
 #include "primitives/GOFont.h"
 
 class GOGUIDisplayMetrics {
+public:
+  /** The vertical gap between two adjacent rows of the layout, in pixels */
+  static constexpr unsigned ROW_GAP = 12;
+
 protected:
   /* Values loaded from ODF */
   unsigned m_DispScreenSizeHoriz;

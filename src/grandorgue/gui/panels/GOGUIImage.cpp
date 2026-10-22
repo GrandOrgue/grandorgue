@@ -26,14 +26,14 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
   image_mask_file
     = cfg.ReadStringTrim(ODFSetting, group, wxT("Mask"), false, wxEmptyString);
 
-  m_Bitmap.SetSourceImage(m_panel->LoadImage(image_file, image_mask_file));
+  m_Bitmap.SetSourceImage(p_panel->LoadImage(image_file, image_mask_file));
 
   x = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("PositionX"),
     0,
-    m_metrics->GetScreenWidth(),
+    p_metrics->GetScreenWidth(),
     false,
     0);
   y = cfg.ReadInteger(
@@ -41,7 +41,7 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("PositionY"),
     0,
-    m_metrics->GetScreenHeight(),
+    p_metrics->GetScreenHeight(),
     false,
     0);
   w = cfg.ReadInteger(
@@ -49,7 +49,7 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("Width"),
     1,
-    m_metrics->GetScreenWidth(),
+    p_metrics->GetScreenWidth(),
     false,
     m_Bitmap.GetSourceWidth());
   h = cfg.ReadInteger(
@@ -57,7 +57,7 @@ void GOGUIImage::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("Height"),
     1,
-    m_metrics->GetScreenHeight(),
+    p_metrics->GetScreenHeight(),
     false,
     m_Bitmap.GetSourceHeight());
   m_BoundingRect = wxRect(x, y, w, h);
