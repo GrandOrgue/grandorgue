@@ -32,7 +32,7 @@ GOGUIEnclosure::GOGUIEnclosure(GOGUIPanel *panel, GOEnclosure *control)
     m_TileOffsetX(0),
     m_TileOffsetY(0),
     m_Bitmaps(0) {
-  m_layout->RegisterEnclosure(this);
+  p_layout->RegisterEnclosure(this);
 }
 
 void GOGUIEnclosure::Init(GOConfigReader &cfg, wxString group) {
@@ -45,7 +45,7 @@ void GOGUIEnclosure::Init(GOConfigReader &cfg, wxString group) {
       wxT(GOBitmapPrefix "enclosure%c%02d"), wxT('B'), i - 1);
 
     m_Bitmaps.emplace_back();
-    m_Bitmaps.back().SetSourceImage(m_panel->LoadImage(bitmap, wxEmptyString));
+    m_Bitmaps.back().SetSourceImage(p_panel->LoadImage(bitmap, wxEmptyString));
   }
 
   for (unsigned i = 1; i < m_Bitmaps.size(); i++)
@@ -121,7 +121,7 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
       false,
       wxEmptyString);
     m_Bitmaps.emplace_back();
-    m_Bitmaps.back().SetSourceImage(m_panel->LoadImage(bitmap, mask));
+    m_Bitmaps.back().SetSourceImage(p_panel->LoadImage(bitmap, mask));
   }
 
   for (unsigned i = 1; i < m_Bitmaps.size(); i++)
@@ -138,7 +138,7 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("PositionX"),
     0,
-    m_metrics->GetScreenWidth(),
+    p_metrics->GetScreenWidth(),
     false,
     -1);
   y = cfg.ReadInteger(
@@ -146,7 +146,7 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("PositionY"),
     0,
-    m_metrics->GetScreenHeight(),
+    p_metrics->GetScreenHeight(),
     false,
     -1);
   w = cfg.ReadInteger(
@@ -154,7 +154,7 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("Width"),
     1,
-    m_metrics->GetScreenWidth(),
+    p_metrics->GetScreenWidth(),
     false,
     m_Bitmaps[0].GetSourceWidth());
   h = cfg.ReadInteger(
@@ -162,7 +162,7 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("Height"),
     1,
-    m_metrics->GetScreenHeight(),
+    p_metrics->GetScreenHeight(),
     false,
     m_Bitmaps[0].GetSourceHeight());
   m_BoundingRect = wxRect(x, y, w, h);
@@ -292,9 +292,9 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
 
 void GOGUIEnclosure::Layout() {
   if (m_BoundingRect.GetX() == -1)
-    m_BoundingRect.SetX(m_layout->GetEnclosureX(this));
+    m_BoundingRect.SetX(p_layout->GetEnclosureX(this));
   if (m_BoundingRect.GetY() == -1)
-    m_BoundingRect.SetY(m_layout->GetEnclosureY());
+    m_BoundingRect.SetY(p_layout->GetEnclosureY());
 
   m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
   m_MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
