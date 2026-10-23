@@ -87,30 +87,6 @@ void GOWindchest::UpdateVolume() {
   m_amplitude = f;
 }
 
-unsigned GOWindchest::GetTremulantCount() { return m_tremulant.size(); }
-
-unsigned GOWindchest::GetTremulantId(unsigned no) { return m_tremulant[no]; }
-
-unsigned GOWindchest::GetRankCount() { return m_ranks.size(); }
-
-GORank *GOWindchest::GetRank(unsigned index) {
-  return index < m_ranks.size() ? m_ranks[index] : nullptr;
-}
-
-void GOWindchest::AddRank(GORank *rank) { m_ranks.push_back(rank); }
-
-void GOWindchest::AddPipe(GOPipeWindchestCallback *pipe) {
-  m_pipes.push_back(pipe);
-}
-
-void GOWindchest::AddEnclosure(GOEnclosure *enclosure) {
-  m_enclosure.push_back(enclosure);
-}
-
-const wxString &GOWindchest::GetName() { return m_Name; }
-
-GOPipeConfigNode &GOWindchest::GetPipeConfig() { return m_PipeConfig; }
-
 void GOWindchest::UpdateTremulant(GOTremulant *tremulant) {
   for (unsigned i = 0; i < m_tremulant.size(); i++)
     if (tremulant == r_OrganModel.GetTremulant(m_tremulant[i])) {
