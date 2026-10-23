@@ -8,6 +8,8 @@
 #ifndef GOGUIDISPLAYMETRICS_H
 #define GOGUIDISPLAYMETRICS_H
 
+#include <functional>
+
 #include <wx/colour.h>
 #include <wx/string.h>
 
@@ -17,6 +19,19 @@ class GOGUIDisplayMetrics {
 public:
   /** The vertical gap between two adjacent rows of the layout, in pixels */
   static constexpr unsigned ROW_GAP = 12;
+
+  /**
+   * @return the offset of the cell number nCells from the start of a line of
+   *   cells: the sum of the sizes of the first nCells cells plus gap after each
+   *   of them
+   * @param nCells the number of the cells before the wanted position
+   * @param getCellSize the size of the cell by its index from 0
+   * @param gap the gap after each cell: 0 for the columns, ROW_GAP for the rows
+   */
+  static unsigned computeCellOffset(
+    unsigned nCells,
+    const std::function<unsigned(unsigned)> &getCellSize,
+    unsigned gap);
 
 protected:
   /* Values loaded from ODF */
@@ -103,6 +118,45 @@ public:
   unsigned GetButtonHeight();
   unsigned GetEnclosureWidth();
   unsigned GetEnclosureHeight();
+
+  /**
+   * The sizes of the cells of the grids by the index. The base gives the same
+   * size for every column and every row; a derived metrics may give each its
+   * own. The layout engine honours the size of every index: it sums them to
+   * get the coordinates and uses the size of a row or a column for the offsets
+   * within it.
+   * @param colN the column from 1
+   * @param rowN the row, numbered as in the grid: from 1 (the drawstop and
+   *   the enclosure grids), the manual number for the pushbutton grid (99 for
+   *   the pedal), from 100 for the extra rows of the drawstop and the
+   *   pushbutton grids
+   * @note the height of the drawstop jamb sums the rows up to
+   *   NumberOfDrawstopRowsToDisplay() + 1; the last one is the spare row that
+   *   centres the jamb, so a derived metrics should give it a height
+   */
+  virtual unsigned GetDrawstopColumnWidth(unsigned colN) {
+    return GetDrawstopWidth();
+  }
+  virtual unsigned GetDrawstopRowHeight(int rowN) {
+    return GetDrawstopHeight();
+  }
+  virtual unsigned GetButtonColumnWidth(unsigned colN) {
+    return GetButtonWidth();
+  }
+  virtual unsigned GetButtonRowHeight(int rowN) { return GetButtonHeight(); }
+  virtual unsigned GetEnclosureColumnWidth(unsigned colN) {
+    return GetEnclosureWidth();
+  }
+  virtual unsigned GetEnclosureRowHeight(int rowN) {
+    return GetEnclosureHeight();
+  }
+
+  /**
+   * @return the number of the rows of the enclosure grid: the enclosures and,
+   *   in a derived metrics, the rows below them. The base has one row
+   */
+  virtual unsigned GetNEnclosureRows() { return 1; }
+
   unsigned GetManualKeyWidth();
   unsigned GetManualHeight();
   unsigned GetPedalKeyWidth();
