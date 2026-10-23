@@ -38,6 +38,15 @@ protected:
   void Init(GOConfigReader &cfg, wxString group);
   void Save(GOConfigWriter &cfg) override;
 
+  /**
+   * Sets the coordinates of m_BoundingRect that are not set yet (equal to
+   * wxDefaultCoord) to x and y. The coordinates set explicitly (e.g. from the
+   * ODF) are kept.
+   * @param x the value for an unset X
+   * @param y the value for an unset Y
+   */
+  void SetPositionIfUnset(int x, int y);
+
   void ControlChanged(GOControl *control) override;
 
 public:

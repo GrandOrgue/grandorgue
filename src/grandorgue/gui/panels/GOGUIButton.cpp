@@ -366,10 +366,7 @@ void GOGUIButton::Layout() {
     p_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, x, y);
   }
 
-  if (m_BoundingRect.GetX() == -1)
-    m_BoundingRect.SetX(x);
-  if (m_BoundingRect.GetY() == -1)
-    m_BoundingRect.SetY(y);
+  SetPositionIfUnset(x, y);
 
   m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
   m_MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
