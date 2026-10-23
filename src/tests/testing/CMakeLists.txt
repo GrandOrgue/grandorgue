@@ -6,6 +6,7 @@ set(go_tests
     midi/GOTestMidiPlayerContent.cpp
     midi/GOTestMidiSendProxy.cpp
     model/GOTestDrawStop.cpp
+    model/GOTestEnclosure.cpp
     model/GOTestOrganModel.cpp
     model/GOTestPipeConfigTreeNode.cpp
     model/GOTestSoundingPipe.cpp
@@ -29,6 +30,7 @@ set(go_tests
     sound/dsp-kernels/GOTestPerfSoundResample.cpp
     sound/dsp-kernels/GOTestSoundOnePoleFilter.cpp
     sound/dsp-kernels/GOTestSoundResample.cpp
+    sound/effects/GOTestPerfSoundShelfFilterProcessor.cpp
     sound/effects/GOTestSoundReverbProcessor.cpp
     sound/effects/GOTestSoundShelfFilterProcessor.cpp
     sound/GOTestSoundCallbackConnector.cpp
@@ -37,6 +39,8 @@ set(go_tests
     sound/GOTestSoundOrganEngineFactories.cpp
     sound/GOTestSoundOrganEngineStress.cpp
     sound/GOTestSoundWindchestGroupTaskGrid.cpp
+    sound/mappers/GOTestPerfSoundEnclosureShelfMapper.cpp
+    sound/mappers/GOTestSoundEnclosureShelfMapper.cpp
     sound/playing/GOTestPerfSoundPlayingFader.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
     sound/playing/GOTestSoundPlayingFader.cpp

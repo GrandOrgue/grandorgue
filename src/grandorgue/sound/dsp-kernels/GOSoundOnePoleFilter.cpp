@@ -15,9 +15,13 @@ void GOSoundOnePoleFilter::computeCoeffs(
   double gain,
   unsigned sampleRate,
   Coeffs &outCoeffs) {
+  const bool isShelf
+    = type == Type::TYPE_LOW_SHELF || type == Type::TYPE_HIGH_SHELF;
+
+  // A shelf corner outside of (0, Nyquist) makes the filter unstable
   if (
     sampleRate == 0 || type == Type::TYPE_NONE
-    || ((type == Type::TYPE_LOW_SHELF || type == Type::TYPE_HIGH_SHELF) && gain == 0))
+    || (isShelf && (gain == 0 || frequency <= 0 || !isBelowNyquist(frequency, sampleRate))))
     outCoeffs = Coeffs();
   else {
     double a0 = 1;
