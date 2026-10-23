@@ -40,6 +40,7 @@ class GOConfigWriter;
 class GODialogSizeSet;
 class GODivisionalSetter;
 class GOElementCreator;
+class GOEnclosure;
 class GOGuiOrgan;
 class GOMidiEvent;
 class GOMidiPlayer;
@@ -91,6 +92,22 @@ private:
 
   GOVirtualCouplerController m_VirtualCouplers;
 
+  /**
+   * The master volume enclosure that is applied to every windchest. Not an
+   * ODF object: it is created by InitInternalEnclosures() and saved to the
+   * .cmb group SetterMasterVolume. Non-owning - the organ model owns it, so
+   * it is reset in ClearOrganCoreData() before the model is cleaned up.
+   * nullptr while the organ core data is not loaded.
+   */
+  GOEnclosure *p_MasterEnclosure = nullptr;
+  /**
+   * The per-windchest volume enclosures, in the windchest order: the item
+   * with the index windchestI belongs to GetWindchest(windchestI). Not ODF
+   * objects; saved to the .cmb groups SetterMaster%03d. Non-owning - the
+   * organ model owns them. Empty while the organ core data is not loaded.
+   */
+  std::vector<GOEnclosure *> mp_InternalEnclosures;
+
   ptr_vector<GOElementCreator> m_elementcreators;
 
   GOMidiSystem *m_midi;
@@ -117,6 +134,19 @@ private:
   /** Reads the non-GUI ODF/CMB data (church info, model, element creators,
    * combinations) into this controller. Sets m_IsOrganCoreDataLoaded. */
   void LoadOrganCoreData(GOConfigReader &cfg);
+  /**
+   * Creates the internal (not ODF) enclosures: the master volume and one per
+   * windchest, reading their values from the .cmb. Adds them to the model,
+   * assigns the MIDI context, the hard name and the recorder element id, and
+   * attaches the master and the windchest's own enclosure to every windchest.
+   * Fills p_MasterEnclosure and mp_InternalEnclosures.
+   *
+   * Call order: once per load, after every windchest exists (the ODF ones and
+   * the metronome's) and before LoadCmbButtons(), which builds the general
+   * combination template. It does not touch the GUI.
+   * @param cfg the config reader of the organ being loaded
+   */
+  void InitInternalEnclosures(GOConfigReader &cfg);
   /** Loads pipe/sample data from the cache or, failing that, from the
    * sample files in parallel worker threads. Sets m_IsObjectsLoaded. */
   void LoadObjects(GOProgressMonitor &monitor);
@@ -166,6 +196,17 @@ private:
 public:
   GOOrganController(GOConfig &config);
   virtual ~GOOrganController();
+
+  /**
+   * @return the master volume enclosure, or nullptr if the organ core data
+   *   is not loaded. Not an ODF object; owned by the model.
+   */
+  GOEnclosure *GetMasterEnclosure() const { return p_MasterEnclosure; }
+  /**
+   * @param windchestI 0-based windchest index, less than GetWindchestCount()
+   * @return the volume enclosure of that windchest. Owned by the model.
+   */
+  GOEnclosure *GetInternalEnclosure(unsigned windchestI) const;
 
   // Returns organ modification flag
   bool IsOrganModified() const { return m_OrganModified; }
