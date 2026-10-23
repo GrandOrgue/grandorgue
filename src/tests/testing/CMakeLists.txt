@@ -24,6 +24,8 @@ set(go_tests
     sound/buffer/GOTestSoundBufferPlanar.cpp
     sound/buffer/GOTestSoundBufferPlanarManaged.cpp
     sound/buffer/GOTestSoundBufferPlanarMutable.cpp
+    sound/buffer/GOTestSoundTypedBufferLoopBase.cpp
+    sound/buffer/GOTestSoundTypedBufferLoopMonoManaged.cpp
     sound/dsp-kernels/GOTestPerfSoundResample.cpp
     sound/dsp-kernels/GOTestSoundOnePoleFilter.cpp
     sound/dsp-kernels/GOTestSoundResample.cpp
