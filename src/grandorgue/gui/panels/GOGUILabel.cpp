@@ -15,7 +15,6 @@
 #include "primitives/GODC.h"
 
 #include "GOGUIDisplayMetrics.h"
-#include "GOGUILayoutEngine.h"
 #include "GOGUIPanel.h"
 #include "GOOrganController.h"
 
@@ -29,6 +28,8 @@ GOGUILabel::GOGUILabel(GOGUIPanel *panel, GOLabelControl *label)
     m_TextColor(0, 0, 0),
     m_TextRect(),
     m_TextWidth(0),
+    m_GridColN(0),
+    m_GridRowN(0),
     m_TileOffsetX(0),
     m_TileOffsetY(0) {}
 
@@ -50,9 +51,8 @@ static const wxString WX_BITMAP_LABEL_FMT = wxT(GOBitmapPrefix "label%02d");
 /**
  * Creates m_PBackgroundBitmap image from the imageFileName and imageNum and
  * sets the default values for m_BoundingRect, m_TextRect, m_TextWidth,
- * m_TileOffsetX, m_TileOffsetY, basing on the image size
- * @param x - the x coordinate for m_BoundingRect
- * @param x - the y coordinate for m_BoundingRect
+ * m_TileOffsetX, m_TileOffsetY, basing on the image size. The position of
+ * m_BoundingRect is set by the caller
  * @param imageFileName the file name of the bitmap. If it is empty then
  *   it is calculated from imageNum
  * @param imageNum if > 0 then the number of predefined images. If 0 then the
@@ -61,8 +61,6 @@ static const wxString WX_BITMAP_LABEL_FMT = wxT(GOBitmapPrefix "label%02d");
  * @param imageMaskFilename a filename of the image mask
  */
 void GOGUILabel::InitBackgroundBitmap(
-  unsigned x,
-  unsigned y,
   unsigned w,
   unsigned h,
   wxString imageFileName,
@@ -88,7 +86,7 @@ void GOGUILabel::InitBackgroundBitmap(
   unsigned textWidth = w - textX;
   unsigned textHeigth = h - textY;
 
-  m_BoundingRect = wxRect(x, y, w, h);
+  m_BoundingRect = wxRect(0, 0, w, h);
   m_TextRect = wxRect(textX, textY, textWidth, textHeigth);
   m_TextWidth = textWidth;
   m_TileOffsetX = 0;
@@ -107,16 +105,23 @@ void GOGUILabel::Init(
   unsigned x_pos,
   unsigned y_pos,
   wxString name,
-  unsigned DispImageNum,
+  unsigned dispImageNum,
   unsigned w,
-  unsigned h) {
+  unsigned h,
+  std::optional<GOGUILayoutEngine::GridType> gridType) {
   GOGUIControl::Init(cfg, group);
 
   m_TextColor = wxColour(0x00, 0x00, 0x00);
   m_Text = name;
+  m_GridType = gridType;
+  m_GridColN = x_pos;
+  m_GridRowN = y_pos;
 
-  InitBackgroundBitmap(
-    x_pos, y_pos, w, h, wxEmptyString, DispImageNum, wxEmptyString);
+  InitBackgroundBitmap(w, h, wxEmptyString, dispImageNum, wxEmptyString);
+  // In a grid the position is set by Layout(): wxDefaultPosition means "not
+  // set"
+  m_BoundingRect.SetPosition(
+    gridType ? wxDefaultPosition : wxPoint(x_pos, y_pos));
   InitFont(wxEmptyString, 7);
 }
 
@@ -207,8 +212,6 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       = cfg.ReadString(ODFSetting, group, wxT("Name"), false, wxEmptyString);
 
   InitBackgroundBitmap(
-    x,
-    y,
     cfg.ReadInteger(
       ODFSetting,
       group,
@@ -228,6 +231,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     cfg.ReadStringTrim(ODFSetting, group, WX_IMAGE, false),
     cfg.ReadInteger(ODFSetting, group, WX_DISP_IMAGE_NUM, 0, 15, false, 1),
     cfg.ReadStringTrim(ODFSetting, group, WX_MASK, false));
+  m_BoundingRect.SetPosition(wxPoint(x, y));
   InitFont(
     cfg.ReadStringTrim(
       ODFSetting, group, wxT("DispLabelFontName"), false, wxEmptyString),
@@ -290,18 +294,33 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
 }
 
 void GOGUILabel::Layout() {
-  if (m_DispXpos >= 0)
-    m_DispXpos = p_layout->GetJambLeftX() + m_DispXpos;
-  else
-    m_DispXpos = p_layout->GetJambRightX() - m_DispXpos;
+  int x = 0;
+  int y = 0;
 
-  if (m_DispYpos >= 0)
-    m_DispYpos = p_layout->GetJambLeftRightY() + 1;
-  else
-    m_DispYpos = p_layout->GetJambLeftRightY() + 1
-      + p_layout->GetJambLeftRightHeight() - 32;
+  if (m_GridType) {
+    p_layout->GetBlitPosition(
+      *m_GridType,
+      m_GridRowN,
+      m_GridColN,
+      m_BoundingRect.GetWidth(),
+      m_BoundingRect.GetHeight(),
+      x,
+      y);
+  } else {
+    if (m_DispXpos >= 0)
+      m_DispXpos = p_layout->GetJambLeftX() + m_DispXpos;
+    else
+      m_DispXpos = p_layout->GetJambRightX() - m_DispXpos;
 
-  SetPositionIfUnset(m_DispXpos, m_DispYpos);
+    if (m_DispYpos >= 0)
+      m_DispYpos = p_layout->GetJambLeftRightY() + 1;
+    else
+      m_DispYpos = p_layout->GetJambLeftRightY() + 1
+        + p_layout->GetJambLeftRightHeight() - 32;
+    x = m_DispXpos;
+    y = m_DispYpos;
+  }
+  SetPositionIfUnset(x, y);
 
   m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
