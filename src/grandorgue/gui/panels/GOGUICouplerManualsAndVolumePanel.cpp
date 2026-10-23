@@ -27,7 +27,7 @@ static const GOMidiObjectContext MIDI_CONTEXT_VOLUMES(
 
 GOGUICouplerManualsAndVolumePanel::GOGUICouplerManualsAndVolumePanel(
   GOGuiOrgan &guiOrgan)
-  : r_GuiOrgan(guiOrgan), m_OrganController(guiOrgan.GetOrganController()) {}
+  : r_GuiOrgan(guiOrgan), p_OrganController(guiOrgan.GetOrganController()) {}
 
 GOGUICouplerManualsAndVolumePanel::~GOGUICouplerManualsAndVolumePanel() {}
 
@@ -37,59 +37,62 @@ void GOGUICouplerManualsAndVolumePanel::CreatePanels(GOConfigReader &cfg) {
 
 GOGUIPanel *GOGUICouplerManualsAndVolumePanel::CreatePanel(
   GOConfigReader &cfg) {
-  GOGUIPanel *panel = new GOGUIPanel(
-    m_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
-  GOGUIDisplayMetrics *metrics = new GOGUISetterDisplayMetrics(
-    cfg, m_OrganController, GOGUI_SETTER_FLOATING);
-  panel->Init(
+  GOGUIPanel *pPanel = new GOGUIPanel(
+    p_OrganController, r_GuiOrgan.GetImageCache(), r_GuiOrgan.GetMouseState());
+  GOGUIDisplayMetrics *pMetrics = new GOGUISetterDisplayMetrics(
+    cfg, p_OrganController, GOGUI_COUPLER_MANUALS_AND_VOLUME);
+
+  pPanel->Init(
     cfg,
-    metrics,
+    pMetrics,
     _("Coupler manuals and volume"),
+    // The .cmb group is still named SetterFloating for compatibility
+    // with the existing organ settings
     wxT("SetterFloating"),
     wxT(""));
 
-  GOGUIHW1Background *back = new GOGUIHW1Background(panel);
-  back->Init(cfg, wxT("SetterFloating"));
-  panel->AddControl(back);
+  GOGUIHW1Background *pBack = new GOGUIHW1Background(pPanel);
+  pBack->Init(cfg, wxT("SetterFloating"));
+  pPanel->AddControl(pBack);
 
-  for (unsigned i = m_OrganController->GetODFManualCount();
-       i <= m_OrganController->GetManualAndPedalCount();
+  for (unsigned i = p_OrganController->GetODFManualCount();
+       i <= p_OrganController->GetManualAndPedalCount();
        i++) {
     wxString group;
     group.Printf(
       wxT("SetterFloating%03d"),
-      i - m_OrganController->GetODFManualCount() + 1);
-    GOGUIManualBackground *manual_back = new GOGUIManualBackground(
-      panel, i - m_OrganController->GetODFManualCount());
-    manual_back->Init(cfg, group);
-    panel->AddControl(manual_back);
+      i - p_OrganController->GetODFManualCount() + 1);
+    GOGUIManualBackground *pManualBack = new GOGUIManualBackground(
+      pPanel, i - p_OrganController->GetODFManualCount());
+    pManualBack->Init(cfg, group);
+    pPanel->AddControl(pManualBack);
 
-    GOGUIManual *manual = new GOGUIManual(
-      panel,
-      m_OrganController->GetManual(i),
-      i - m_OrganController->GetODFManualCount());
-    manual->Init(cfg, group);
-    panel->AddControl(manual);
+    GOGUIManual *pManual = new GOGUIManual(
+      pPanel,
+      p_OrganController->GetManual(i),
+      i - p_OrganController->GetODFManualCount());
+    pManual->Init(cfg, group);
+    pPanel->AddControl(pManual);
   }
 
-  GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
+  GOEnclosure *master_enc = new GOEnclosure(*p_OrganController);
   master_enc->SetContext(&MIDI_CONTEXT_VOLUMES);
   master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
-  m_OrganController->AddEnclosure(master_enc);
+  p_OrganController->AddEnclosure(master_enc);
   master_enc->SetElementId(
-    m_OrganController->GetRecorderElementID(wxString::Format(wxT("SM"))));
+    p_OrganController->GetRecorderElementID(wxString::Format(wxT("SM"))));
 
-  GOGUIEnclosure *enclosure = new GOGUIEnclosure(panel, master_enc);
-  enclosure->Init(cfg, wxT("SetterMasterVolume"));
-  panel->AddControl(enclosure);
+  GOGUIEnclosure *pEnclosure = new GOGUIEnclosure(pPanel, master_enc);
+  pEnclosure->Init(cfg, wxT("SetterMasterVolume"));
+  pPanel->AddControl(pEnclosure);
 
-  for (unsigned i = 0; i < m_OrganController->GetWindchestCount(); i++) {
-    GOWindchest *pWindchest = m_OrganController->GetWindchest(i);
+  for (unsigned i = 0; i < p_OrganController->GetWindchestCount(); i++) {
+    GOWindchest *pWindchest = p_OrganController->GetWindchest(i);
     const wxString &windchestHardName = pWindchest->GetHardName();
 
     pWindchest->AddEnclosure(master_enc);
 
-    GOEnclosure *enc = new GOEnclosure(*m_OrganController);
+    GOEnclosure *enc = new GOEnclosure(*p_OrganController);
 
     enc->SetContext(&MIDI_CONTEXT_VOLUMES);
     enc->SetHardName(
@@ -101,14 +104,14 @@ GOGUIPanel *GOGUICouplerManualsAndVolumePanel::CreatePanel(
       wxString::Format(wxT("SetterMaster%03d"), i + 1),
       pWindchest->GetName(),
       127);
-    m_OrganController->AddEnclosure(enc);
-    enc->SetElementId(m_OrganController->GetRecorderElementID(
+    p_OrganController->AddEnclosure(enc);
+    enc->SetElementId(p_OrganController->GetRecorderElementID(
       wxString::Format(wxT("SM%d"), i)));
     pWindchest->AddEnclosure(enc);
 
-    enclosure = new GOGUIEnclosure(panel, enc);
-    enclosure->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));
-    panel->AddControl(enclosure);
+    pEnclosure = new GOGUIEnclosure(pPanel, enc);
+    pEnclosure->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));
+    pPanel->AddControl(pEnclosure);
   }
-  return panel;
+  return pPanel;
 }

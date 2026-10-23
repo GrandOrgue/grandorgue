@@ -17,7 +17,7 @@ class GOOrganController;
 class GOGUICouplerManualsAndVolumePanel : public GOGUIPanelCreator {
 private:
   GOGuiOrgan &r_GuiOrgan;
-  GOOrganController *m_OrganController;
+  GOOrganController *p_OrganController;
 
   GOGUIPanel *CreatePanel(GOConfigReader &cfg);
 

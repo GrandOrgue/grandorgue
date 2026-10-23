@@ -75,7 +75,7 @@ void GOGUILabel::InitBackgroundBitmap(
   if (!imageFileName.IsEmpty()) {
     m_PBackgroundBitmap = new GOBitmap();
     m_PBackgroundBitmap->SetSourceImage(
-      m_panel->LoadImage(imageFileName, imageMaskFilename));
+      p_panel->LoadImage(imageFileName, imageMaskFilename));
   }
 
   // take the size from the bitmap if it is not specified
@@ -96,7 +96,7 @@ void GOGUILabel::InitBackgroundBitmap(
 }
 
 void GOGUILabel::InitFont(const wxString &fontName, unsigned fontSize) {
-  m_Font = m_metrics->GetGroupLabelFont();
+  m_Font = p_metrics->GetGroupLabelFont();
   SetFontName(fontName);
   SetFontSize(fontSize);
 }
@@ -139,13 +139,13 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("DispDrawstopCol"),
       1,
-      m_metrics->NumberOfDrawstopColsToDisplay(),
+      p_metrics->NumberOfDrawstopColsToDisplay(),
       true,
       1);
     bool DispSpanDrawstopColToRight = cfg.ReadBoolean(
       ODFSetting, group, wxT("DispSpanDrawstopColToRight"), true, false);
 
-    int i = m_metrics->NumberOfDrawstopColsToDisplay() >> 1;
+    int i = p_metrics->NumberOfDrawstopColsToDisplay() >> 1;
     if (DispSpanDrawstopColToRight)
       m_DispXpos = 39;
     else
@@ -160,7 +160,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("DispXpos"),
       0,
-      m_metrics->GetScreenWidth(),
+      p_metrics->GetScreenWidth(),
       false,
       0);
   }
@@ -178,7 +178,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("DispYpos"),
       0,
-      m_metrics->GetScreenHeight(),
+      p_metrics->GetScreenHeight(),
       false,
       0);
   }
@@ -188,7 +188,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("PositionX"),
     0,
-    m_metrics->GetScreenWidth(),
+    p_metrics->GetScreenWidth(),
     false,
     x);
   y = cfg.ReadInteger(
@@ -196,13 +196,13 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("PositionY"),
     0,
-    m_metrics->GetScreenHeight(),
+    p_metrics->GetScreenHeight(),
     false,
     y);
 
   m_TextColor = logicalToWxColour(cfg.ReadColor(
     ODFSetting, group, wxT("DispLabelColour"), false, wxT("BLACK")));
-  if (!m_Label || !m_panel->GetOrganFile()->GetSettings().ODFCheck())
+  if (!m_Label || !p_panel->GetOrganFile()->GetSettings().ODFCheck())
     m_Text
       = cfg.ReadString(ODFSetting, group, wxT("Name"), false, wxEmptyString);
 
@@ -214,7 +214,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("Width"),
       1,
-      m_metrics->GetScreenWidth(),
+      p_metrics->GetScreenWidth(),
       false,
       0),
     cfg.ReadInteger(
@@ -222,7 +222,7 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("Height"),
       1,
-      m_metrics->GetScreenHeight(),
+      p_metrics->GetScreenHeight(),
       false,
       0),
     cfg.ReadStringTrim(ODFSetting, group, WX_IMAGE, false),
@@ -291,15 +291,15 @@ void GOGUILabel::Load(GOConfigReader &cfg, wxString group) {
 
 void GOGUILabel::Layout() {
   if (m_DispXpos >= 0)
-    m_DispXpos = m_layout->GetJambLeftX() + m_DispXpos;
+    m_DispXpos = p_layout->GetJambLeftX() + m_DispXpos;
   else
-    m_DispXpos = m_layout->GetJambRightX() - m_DispXpos;
+    m_DispXpos = p_layout->GetJambRightX() - m_DispXpos;
 
   if (m_DispYpos >= 0)
-    m_DispYpos = m_layout->GetJambLeftRightY() + 1;
+    m_DispYpos = p_layout->GetJambLeftRightY() + 1;
   else
-    m_DispYpos = m_layout->GetJambLeftRightY() + 1
-      + m_layout->GetJambLeftRightHeight() - 32;
+    m_DispYpos = p_layout->GetJambLeftRightY() + 1
+      + p_layout->GetJambLeftRightHeight() - 32;
 
   if (m_BoundingRect.GetX() == -1)
     m_BoundingRect.SetX(m_DispXpos);

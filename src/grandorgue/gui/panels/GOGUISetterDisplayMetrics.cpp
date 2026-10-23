@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -58,7 +58,7 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
     button_rows = 0;
     break;
 
-  case GOGUI_SETTER_FLOATING:
+  case GOGUI_COUPLER_MANUALS_AND_VOLUME:
     x_size = std::max(
       10
           * organController->GetManual(organController->GetODFManualCount())
@@ -146,9 +146,9 @@ GOGUISetterDisplayMetrics::GOGUISetterDisplayMetrics(
   m_DispDrawstopBackgroundImageNum = background_img;
   m_DispConsoleBackgroundImageNum = background_img;
   m_DispKeyHorizBackgroundImageNum
-    = type == GOGUI_SETTER_FLOATING ? horiz_img : background_img;
+    = type == GOGUI_COUPLER_MANUALS_AND_VOLUME ? horiz_img : background_img;
   m_DispKeyVertBackgroundImageNum
-    = type == GOGUI_SETTER_FLOATING ? vert_img : background_img;
+    = type == GOGUI_COUPLER_MANUALS_AND_VOLUME ? vert_img : background_img;
   m_DispDrawstopInsetBackgroundImageNum = background_img;
   m_DispControlLabelFont = wxT("Times New Roman");
   m_DispShortcutKeyLabelFont = wxT("Times New Roman");
