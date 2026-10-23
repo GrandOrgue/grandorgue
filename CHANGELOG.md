@@ -1,3 +1,4 @@
+- Fixed crash on receiving or playing a malformed Rodgers stop change SysEx MIDI message shorter than 9 bytes
 - Fixed MIDI player Play/Stop crashing when triggered by incoming MIDI https://github.com/GrandOrgue/grandorgue/issues/2636
 - Fixed hanging on Panic, on loading another organ, on exit and on removing an audio device in Settings https://github.com/GrandOrgue/grandorgue/issues/2606
 - Fixed Linux packages including unnecessary cpptrace/libdwarf headers and static libraries, causing RPM install conflicts with elfutils https://github.com/GrandOrgue/grandorgue/issues/2596
