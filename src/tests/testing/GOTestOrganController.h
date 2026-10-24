@@ -27,6 +27,14 @@ private:
    * Loading, saving and clearing of the organ core data.
    */
   void TestOrganCoreData();
+
+  /*
+   * The On indicator button does not send its MIDI events in the ordinary
+   * lifecycle calls (issue #1762): the controller sends them last by itself.
+   * The MIDI order itself is not tested: a recording MIDI send proxy needs a
+   * live GOMidiSystem or a configured GOMidiRecorder, which GOTestExe lacks.
+   */
+  void TestOnStateLifecycleSending();
 };
 
 #endif /* GOTESTORGANCONTROLLER_H */

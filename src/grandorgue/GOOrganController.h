@@ -157,6 +157,14 @@ private:
   void ClearObjects();
   /** Undoes LoadOrganCoreData if it ran. Idempotent. */
   void ClearOrganCoreData();
+  /**
+   * Sends the MIDI events of the On indicator button at the end of starting or
+   * after stopping the organ, so that they go last (see issue #1762).
+   * Temporarily enables the lifecycle sending of the button.
+   * @param isOn true: PreparePlayback+StartPlayback+PrepareRecording,
+   *   false: AbortPlayback
+   */
+  void SendOnStateMidi(bool isOn);
   GOHashType GenerateCacheHash();
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();
