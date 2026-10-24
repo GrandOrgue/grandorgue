@@ -382,7 +382,7 @@ void GOTestSoundOrganEngine::TestReconnectAfterMidPeriodDisconnect() {
 }
 
 void GOTestSoundOrganEngine::TestStopStartResumePreservesSamplers() {
-  controller->AddWindchest(new GOWindchest(*controller));
+  controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
 
   GOSoundOrganEngine &engine = BuildAndStartEngine(1, 0, 1);
 
@@ -427,7 +427,7 @@ void GOTestSoundOrganEngine::TestStopStartResumePreservesSamplers() {
 void GOTestSoundOrganEngine::TestDestroyRebuildReclaimsAndResizesPool() {
   static constexpr unsigned FIRST_LIMIT = 4;
 
-  controller->AddWindchest(new GOWindchest(*controller));
+  controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
 
   GOSoundOrganEngine &engine = BuildAndStartEngine(1, 0, 1);
 
@@ -477,7 +477,7 @@ void GOTestSoundOrganEngine::TestAudioGroupRoutingChangeIsEmpty() {
     defaultChange.IsEmpty(),
     "A default-constructed AudioGroupRoutingChange should be empty");
 
-  controller->AddWindchest(new GOWindchest(*controller));
+  controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
 
   GOSoundOrganEngine &engine = BuildAndStartEngine(2, 0, 1);
   GOSoundOrganEngine::AudioGroupRoutingChange realChange
@@ -496,7 +496,7 @@ void GOTestSoundOrganEngine::TestAudioGroupRoutingChangeIsEmpty() {
 }
 
 void GOTestSoundOrganEngine::TestHasSoundRoutingFor() {
-  controller->AddWindchest(new GOWindchest(*controller));
+  controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
 
   GOSoundOrganEngine &engine = BuildAndStartEngine(2, 0, 1);
 
@@ -525,7 +525,7 @@ void GOTestSoundOrganEngine::TestHasSoundRoutingFor() {
 }
 
 void GOTestSoundOrganEngine::TestPrepareAndCommitSoundRoutingFor() {
-  controller->AddWindchest(new GOWindchest(*controller));
+  controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
 
   GOSoundOrganEngine &engine = BuildAndStartEngine(2, 0, 1);
 
@@ -567,7 +567,7 @@ void GOTestSoundOrganEngine::TestPrepareAndCommitSoundRoutingFor() {
 }
 
 void GOTestSoundOrganEngine::TestSamplerAudioReachesPlanarOutput() {
-  controller->AddWindchest(new GOWindchest(*controller));
+  controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
 
   GOSoundOrganEngine &engine = BuildAndStartEngine(
     /* nAudioGroups */ 1, /* nAuxThreads */ 0, /* nOutputs */ 1);
@@ -636,16 +636,20 @@ void GOTestSoundOrganEngine::TestChainReflectsWindchestEnclosures() {
   // tests' own AddWindchest() calls may have already added windchests -
   // AddWindchest()'s own return value, not an assumed 1/2, is the only
   // reliable way to know which index each of these two actually landed at.
-  GOWindchest *pEmptyWindchest = new GOWindchest(*controller);
-  GOWindchest *pWindchestWithEnclosures = new GOWindchest(*controller);
-  const unsigned emptyWindchestN = controller->AddWindchest(pEmptyWindchest);
+  std::unique_ptr<GOWindchest> oWindchestWithEnclosures
+    = std::make_unique<GOWindchest>(*controller);
+  GOWindchest *const pWindchestWithEnclosures = oWindchestWithEnclosures.get();
+  const unsigned emptyWindchestN
+    = controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
   const unsigned windchestWithEnclosuresN
-    = controller->AddWindchest(pWindchestWithEnclosures);
+    = controller->AddWindchest(std::move(oWindchestWithEnclosures));
 
   for (unsigned enclosureI = 0; enclosureI < 2; enclosureI++) {
-    GOEnclosure *pEnclosure = new GOEnclosure(*controller);
+    std::unique_ptr<GOEnclosure> oEnclosure
+      = std::make_unique<GOEnclosure>(*controller);
+    GOEnclosure *const pEnclosure = oEnclosure.get();
 
-    controller->AddEnclosure(pEnclosure);
+    controller->AddEnclosure(std::move(oEnclosure));
     pWindchestWithEnclosures->AddEnclosure(pEnclosure);
   }
 
