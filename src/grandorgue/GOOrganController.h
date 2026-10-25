@@ -131,8 +131,9 @@ private:
   // if modified then sets m_IsOrganModified
   void OnIsModifiedChanged(bool modified);
 
-  /** Reads the non-GUI ODF/CMB data (church info, model, element creators,
-   * combinations) into this controller. Sets m_IsOrganCoreDataLoaded. */
+  /** Reads the non-GUI ODF/CMB data (church info, model, element creators)
+   * into this controller. Sets m_IsOrganCoreDataLoaded. The combinations are
+   * not read here: Load() reads them after OnLoad(). */
   void LoadOrganCoreData(GOConfigReader &cfg);
   /**
    * Creates the internal (not ODF) enclosures: the master volume and one per
