@@ -1,11 +1,13 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
 
 #include "GOPipeConfigTreeNode.h"
+
+#include <algorithm>
 
 #include "GOSampleStatistic.h"
 
@@ -16,6 +18,16 @@ GOPipeConfigTreeNode::GOPipeConfigTreeNode(
   : GOPipeConfigNode(parent, *organModel, this, NULL),
     m_Childs(),
     m_Callback(callback) {}
+
+GOPipeConfigTreeNode::~GOPipeConfigTreeNode() {
+  for (GOPipeConfigNode *child : m_Childs)
+    child->SetParent(nullptr);
+}
+
+void GOPipeConfigTreeNode::RemoveChild(GOPipeConfigNode *node) {
+  m_Childs.erase(
+    std::remove(m_Childs.begin(), m_Childs.end(), node), m_Childs.end());
+}
 
 void GOPipeConfigTreeNode::UpdateAmplitude() {
   for (unsigned i = 0; i < m_Childs.size(); i++)

@@ -6,6 +6,8 @@
 
 #include "GOTestPipeConfigTreeNode.h"
 
+#include <memory>
+
 #include "model/pipe-config/GOPipeConfigTreeNode.h"
 
 #include "GOTestScope.h"
@@ -14,6 +16,37 @@ GOTestPipeConfigTreeNode::~GOTestPipeConfigTreeNode() {}
 
 void GOTestPipeConfigTreeNode::run() {
   GO_RUN_TEST(TestChildInheritsAudioGroup())
+  GO_RUN_TEST(TestChildDestructorDetachesFromParent())
+  GO_RUN_TEST(TestParentDestructorDetachesChildren())
+}
+
+void GOTestPipeConfigTreeNode::TestChildDestructorDetachesFromParent() {
+  GOPipeConfigTreeNode parent(nullptr, this->controller, nullptr);
+
+  GOAssert(parent.GetChildCount() == 0, "A new parent should have no children");
+  {
+    GOPipeConfigTreeNode child(&parent, this->controller, nullptr);
+
+    GOAssert(parent.GetChildCount() == 1, "The parent should have the child");
+  }
+  GOAssert(
+    parent.GetChildCount() == 0,
+    "The destructor of the child should remove it from the parent");
+}
+
+void GOTestPipeConfigTreeNode::TestParentDestructorDetachesChildren() {
+  GOPipeConfigTreeNode child1(nullptr, this->controller, nullptr);
+  GOPipeConfigTreeNode child2(nullptr, this->controller, nullptr);
+  auto pParent = std::make_unique<GOPipeConfigTreeNode>(
+    nullptr, this->controller, nullptr);
+
+  child1.SetParent(pParent.get());
+  child2.SetParent(pParent.get());
+  GOAssert(pParent->GetChildCount() == 2, "The parent should have 2 children");
+  pParent.reset();
+  GOAssert(
+    !child1.GetParent() && !child2.GetParent(),
+    "The destructor of the parent should reset the parent of its children");
 }
 
 void GOTestPipeConfigTreeNode::TestChildInheritsAudioGroup() {
