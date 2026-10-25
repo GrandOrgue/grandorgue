@@ -70,9 +70,27 @@ static std::unique_ptr<GODivisionalSetter> load_test_organ(
 
   testUtils.GOAssert(
     bool(pDivSetter), "Failed to build the GODivisionalSetter");
+  // Pressing the buttons reads the registries, which is allowed only when
+  // they are frozen (see UnfreezeOnExit)
+  controller.SetFrozen(true);
 
   return pDivSetter;
 }
+
+/**
+ * Unfreezes the registries of the controller when it goes out of scope.
+ * load_test_organ() freezes them, but the objects that unregister themselves
+ * in their destructors (the GODivisionalSetter) need them unfrozen. Declare it
+ * after the GODivisionalSetter, so that it is destroyed first.
+ */
+struct UnfreezeOnExit {
+  GOOrganController &r_Controller;
+
+  explicit UnfreezeOnExit(GOOrganController &controller)
+    : r_Controller(controller) {}
+
+  ~UnfreezeOnExit() { r_Controller.SetFrozen(false); }
+};
 
 // Looks up buttons directly on the GOSetter/GODivisionalSetter element
 // creators rather than via GOOrganController::GetButtonControl(), because
@@ -117,6 +135,7 @@ void GOTestDivisionalSetter::TestWithoutPedal::TestSetAndRecall() {
   // manual as a coupled one, so Set never stored anything.
   const std::unique_ptr<GODivisionalSetter> pDivSetter
     = load_test_organ(*controller, *this, "NoPedal.organ");
+  const UnfreezeOnExit unfreezeOnExit(*controller);
 
   const unsigned manualIndex = 1;
   GOSwitch *const pSwitch = controller->GetSwitch(0);
@@ -160,6 +179,7 @@ void GOTestDivisionalSetter::TestWithPedal::TestSetAndRecall() {
   // (GetFirstManualIndex() == 0), which must keep working as before.
   const std::unique_ptr<GODivisionalSetter> pDivSetter
     = load_test_organ(*controller, *this, "WithPedal.organ");
+  const UnfreezeOnExit unfreezeOnExit(*controller);
 
   const unsigned manualIndex = 1;
   GOSwitch *const pSwitch = controller->GetSwitch(0);
@@ -207,6 +227,7 @@ void GOTestDivisionalSetter::TestDivisionalCoupler::TestRecallThroughCoupler() {
   // SwitchDivisionalTo/ProcessPushDivisional that contained the bug.
   const std::unique_ptr<GODivisionalSetter> pDivSetter
     = load_test_organ(*controller, *this, "DivisionalCoupler.organ");
+  const UnfreezeOnExit unfreezeOnExit(*controller);
 
   const unsigned manual1Index = 1;
   const unsigned manual2Index = 2;

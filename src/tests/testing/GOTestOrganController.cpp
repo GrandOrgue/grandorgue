@@ -165,7 +165,9 @@ void GOTestOrganController::TestOrganCoreData() {
   GOConfigFileWriter cfgFile;
   GOConfigWriter cfgWriter(cfgFile, false);
 
+  controller->SetFrozen(true);
   controller->SaveOrganCoreData(cfgWriter);
+  controller->SetFrozen(false);
 
   const wxString cmbPath
     = wxString::Format(wxT("%s/test.cmb"), organ_directory);
