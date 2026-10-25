@@ -13,6 +13,8 @@
 
 #include "GOOrganController.h"
 #include "config/GOConfig.h"
+#include "model/GOEnclosure.h"
+#include "model/GORank.h"
 #include "model/GOWindchest.h"
 #include "model/pipe-config/GOPipeConfigTreeNode.h"
 
@@ -64,9 +66,58 @@ void GOTestOrganModel::TestCollectWindchestsForNode() {
     "The organ root should resolve to every windchest");
 }
 
+void GOTestOrganModel::TestRemoveLastAdded() {
+  const unsigned nWindchests = controller->GetWindchestCount();
+  const unsigned nRanks = controller->GetRankCount();
+  const unsigned nEnclosures = controller->GetEnclosureCount();
+  std::set<unsigned> windchestNsBefore;
+
+  controller->CollectWindchestsForNode(
+    controller->GetRootPipeConfigNode(), windchestNsBefore);
+
+  const unsigned windchestN1
+    = controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
+  std::unique_ptr<GOWindchest> oWindchest2
+    = std::make_unique<GOWindchest>(*controller);
+  GOWindchest *const pWindchest2 = oWindchest2.get();
+  std::unique_ptr<GORank> oRank = std::make_unique<GORank>(*controller);
+  GORank *const pRank = oRank.get();
+  std::unique_ptr<GOEnclosure> oEnclosure
+    = std::make_unique<GOEnclosure>(*controller);
+  GOEnclosure *const pEnclosure = oEnclosure.get();
+
+  controller->AddWindchest(std::move(oWindchest2));
+  controller->AddRank(std::move(oRank));
+  controller->AddEnclosure(std::move(oEnclosure));
+
+  controller->RemoveEnclosure(pEnclosure);
+  GOAssert(
+    controller->GetEnclosureCount() == nEnclosures,
+    "RemoveEnclosure() should restore the enclosure count");
+  controller->RemoveRank(pRank);
+  GOAssert(
+    controller->GetRankCount() == nRanks,
+    "RemoveRank() should restore the rank count");
+  controller->RemoveWindchest(pWindchest2);
+  GOAssert(
+    controller->GetWindchestCount() == nWindchests + 1,
+    "RemoveWindchest() should delete only the last windchest");
+
+  std::set<unsigned> windchestNsAfter;
+  std::set<unsigned> windchestNsExpected = windchestNsBefore;
+
+  windchestNsExpected.insert(windchestN1);
+  controller->CollectWindchestsForNode(
+    controller->GetRootPipeConfigNode(), windchestNsAfter);
+  GOAssert(
+    windchestNsAfter == windchestNsExpected,
+    "CollectWindchestsForNode() should not find the removed windchest");
+}
+
 void GOTestOrganModel::run() {
   GO_RUN_TEST(TestAssertSoundRoutingForNoOpWithoutSoundSystem())
   GO_RUN_TEST(TestCollectWindchestsForNode())
+  GO_RUN_TEST(TestRemoveLastAdded())
   GO_RUN_TEST(TestOrganModifiedFlag())
 }
 

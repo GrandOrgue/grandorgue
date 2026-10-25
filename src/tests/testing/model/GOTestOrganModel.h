@@ -33,6 +33,13 @@ private:
   void TestCollectWindchestsForNode();
 
   /*
+   * RemoveWindchest(), RemoveRank() and RemoveEnclosure() undo the last
+   * AddWindchest(), AddRank() and AddEnclosure() and restore the counts; the
+   * removed windchest is no more found by CollectWindchestsForNode().
+   */
+  void TestRemoveLastAdded();
+
+  /*
    * The organ modified flag is set by SetOrganModelModified() and
    * NotifyPipeConfigModified() and cleared by ResetOrganModified().
    */

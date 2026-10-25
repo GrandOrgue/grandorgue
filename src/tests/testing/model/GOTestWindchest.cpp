@@ -60,6 +60,13 @@ void GOTestWindchest::TestWindchestBasics() {
   controller->AddEnclosure(std::move(oEnclosure));
   windchest->AddEnclosure(enclosure);
 
+  // RemoveEnclosure() undoes the last AddEnclosure()
+  windchest->RemoveEnclosure(enclosure);
+  this->GOAssert(
+    windchest->GetEnclosures().empty(),
+    "RemoveEnclosure() should remove the enclosure from the windchest");
+  windchest->AddEnclosure(enclosure);
+
   enclosure->SetEnclosureValue(127);
   float amplitude = windchest->GetAmplitude();
   message = "The Windchest amplitude is not 1 but ";

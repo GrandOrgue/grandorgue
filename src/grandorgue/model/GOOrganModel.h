@@ -92,9 +92,22 @@ protected:
   unsigned m_ODFRankCount;
   unsigned m_ODFEnclosureCount;
 
-  /** Undoes Load()/LoadCmbButtons(): clears the windchest/manual/enclosure/
-   * switch/tremulant/rank/piston/divisional-coupler/general elements they
-   * populated, plus the inherited GOEventHandlerList registrations. */
+  /**
+   * Undoes LoadCmbButtons(): deletes the generals and clears the general
+   * template. The owned elements unregister themselves in their destructors,
+   * so it must be called while the registries are not frozen.
+   */
+  void CleanupCmbButtons();
+
+  /**
+   * Undoes Load(): deletes the divisional couplers, pistons, ranks,
+   * tremulants, switches, enclosures, manuals and windchests in the reverse
+   * order of their loading. The owned elements unregister themselves in their
+   * destructors, so it must be called while the registries are not frozen.
+   * The windchests and enclosures added later by AddWindchest() and
+   * AddEnclosure() must be removed by RemoveWindchest() and RemoveEnclosure()
+   * before.
+   */
   void Cleanup();
 
   /**
@@ -172,6 +185,13 @@ public:
    * @return the one-based number of the windchest
    */
   unsigned AddWindchest(std::unique_ptr<GOWindchest> &&oWindchest);
+  /**
+   * Deletes the windchest added by AddWindchest(). The mirror of
+   * AddWindchest(): the windchest must be the last added one (an assertion
+   * failure in Debug; ignored in Release if it is not the last one).
+   * @param pWindchest the windchest to remove
+   */
+  void RemoveWindchest(GOWindchest *pWindchest);
   // Returns the windchest by it's index starting with 0
   GOWindchest *GetWindchest(unsigned index) { return m_windchests[index]; }
 
@@ -188,6 +208,13 @@ public:
    * @return the zero-based index of the enclosure
    */
   unsigned AddEnclosure(std::unique_ptr<GOEnclosure> &&oEnclosure);
+  /**
+   * Deletes the enclosure added by AddEnclosure(). The mirror of
+   * AddEnclosure(): the enclosure must be the last added one (an assertion
+   * failure in Debug; ignored in Release if it is not the last one).
+   * @param pEnclosure the enclosure to remove
+   */
+  void RemoveEnclosure(GOEnclosure *pEnclosure);
 
   unsigned GetSwitchCount() const { return m_switches.size(); }
   GOSwitch *GetSwitch(unsigned index) { return m_switches[index]; }
@@ -228,6 +255,13 @@ public:
   GORank *GetRank(unsigned index) { return m_ranks[index]; }
   /** Takes the ownership of the rank and registers it in the model. */
   void AddRank(std::unique_ptr<GORank> &&oRank);
+  /**
+   * Deletes the rank added by AddRank(). The mirror of AddRank(): the rank
+   * must be the last added one (an assertion failure in Debug; ignored in
+   * Release if it is not the last one).
+   * @param pRank the rank to remove
+   */
+  void RemoveRank(GORank *pRank);
 
   /**
    * Scans every sounding pipe of every rank and collects the distinct
