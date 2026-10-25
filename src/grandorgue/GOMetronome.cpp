@@ -96,9 +96,15 @@ GOMetronome::GOMetronome(
     m_StopID(0) {
   CreateButtons(*m_OrganController, BUTTON_DEFS);
   m_OrganController->RegisterLifecycleListener(this);
+  m_OrganController->RegisterSaveableObject(this);
 }
 
-GOMetronome::~GOMetronome() { StopTimer(); }
+GOMetronome::~GOMetronome() {
+  StopTimer();
+  // in the reverse order of the constructor
+  m_OrganController->UnregisterSaveableObject(this);
+  m_OrganController->UnRegisterLifecycleListener(this);
+}
 
 static const wxString WX_EMPTY_STRING;
 static const wxString WX_BELL_BEAT_PATH = wxT("sounds\\metronome\\beat.wv");
@@ -157,8 +163,6 @@ void GOMetronome::Load(GOConfigReader &cfg) {
 
   m_BPMDisplay.Init(cfg, wxT("MetronomeBPM"), _("Metronome BPM"));
   m_MeasureDisplay.Init(cfg, wxT("MetronomeMeasure"), _("Metronom measure"));
-
-  m_OrganController->RegisterSaveableObject(this);
 
   std::unique_ptr<GORank> oRank = std::make_unique<GORank>(*m_OrganController);
 

@@ -22,11 +22,10 @@ protected:
   GOLogicalRect m_rect;
 
 public:
-  GOMainWindowData(GOOrganModel &organModel, const wxString &group)
-    : r_OrganModel(organModel) {
-    m_group = group;
-  }
-  virtual ~GOMainWindowData() {}
+  GOMainWindowData(GOOrganModel &organModel, const wxString &group);
+
+  /** Unregisters the saveable object registered by the constructor. */
+  virtual ~GOMainWindowData();
 
   void Load(GOConfigReader &cfg);
   const GOLogicalRect &GetWindowRect() const { return m_rect; }

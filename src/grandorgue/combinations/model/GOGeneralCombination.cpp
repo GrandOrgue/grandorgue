@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -24,10 +24,15 @@
 GOGeneralCombination::GOGeneralCombination(
   GOOrganModel &organModel, bool isSetter)
   : GOCombination(organModel, organModel.GetGeneralTemplate()),
-    m_IsSetter(isSetter) {}
+    m_IsSetter(isSetter) {
+  r_OrganModel.RegisterSaveableObject(this);
+}
+
+GOGeneralCombination::~GOGeneralCombination() {
+  r_OrganModel.UnregisterSaveableObject(this);
+}
 
 void GOGeneralCombination::Load(GOConfigReader &cfg, const wxString &group) {
-  r_OrganModel.RegisterSaveableObject(this);
   m_group = group;
 
   m_Protected
