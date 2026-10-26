@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -61,6 +61,12 @@ public:
     GOOrganModel &organModel,
     GOPipeUpdateCallback *callback,
     GOStatisticCallback *statistic);
+
+  /**
+   * Unregisters the saveable object registered by the constructor and removes
+   * the node from the children of its parent
+   */
+  virtual ~GOPipeConfigNode();
 
   GOPipeConfigNode *GetParent() const { return m_parent; }
   void SetParent(GOPipeConfigNode *parent);
@@ -178,6 +184,12 @@ public:
   }
 
   virtual void AddChild(GOPipeConfigNode *node) {}
+
+  /**
+   * Removes the node from the children. Called by the destructor of the child
+   * while the parent is alive; does nothing for the nodes without children
+   */
+  virtual void RemoveChild(GOPipeConfigNode *node) {}
   virtual unsigned GetChildCount() const { return 0; }
   virtual GOPipeConfigNode *GetChild(unsigned index) const { return nullptr; }
   virtual GOSampleStatistic GetStatistic() const;

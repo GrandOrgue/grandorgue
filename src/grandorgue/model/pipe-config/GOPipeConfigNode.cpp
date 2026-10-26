@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -24,8 +24,16 @@ GOPipeConfigNode::GOPipeConfigNode(
     m_PipeConfig(organModel, callback),
     m_StatisticCallback(statistic),
     m_Name() {
+  r_OrganModel.RegisterSaveableObject(this);
   if (m_parent)
     m_parent->AddChild(this);
+}
+
+GOPipeConfigNode::~GOPipeConfigNode() {
+  // in the reverse order of the constructor
+  if (m_parent)
+    m_parent->RemoveChild(this);
+  r_OrganModel.UnregisterSaveableObject(this);
 }
 
 void GOPipeConfigNode::SetParent(GOPipeConfigNode *parent) {
@@ -36,13 +44,11 @@ void GOPipeConfigNode::SetParent(GOPipeConfigNode *parent) {
 
 void GOPipeConfigNode::Init(
   GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
-  r_OrganModel.RegisterSaveableObject(this);
   m_PipeConfig.Init(cfg, group, prefix);
 }
 
 void GOPipeConfigNode::Load(
   GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
-  r_OrganModel.RegisterSaveableObject(this);
   m_PipeConfig.Load(
     cfg, group, prefix, m_parent && m_parent->GetEffectivePercussive());
 }
