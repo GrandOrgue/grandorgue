@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -36,6 +36,13 @@ void GOGUIControl::Load(GOConfigReader &cfg, wxString group) {
 void GOGUIControl::Layout() {}
 
 void GOGUIControl::Save(GOConfigWriter &cfg) {}
+
+void GOGUIControl::SetPositionIfUnset(int x, int y) {
+  wxPoint position = m_BoundingRect.GetPosition();
+
+  position.SetDefaults(wxPoint(x, y));
+  m_BoundingRect.SetPosition(position);
+}
 
 void GOGUIControl::ControlChanged(GOControl *control) {
   if (control == p_control)
