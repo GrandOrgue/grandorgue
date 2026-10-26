@@ -15,14 +15,10 @@
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
 #include "sound/dsp-kernels/GOSoundResample.h"
 
+#include "../GOSoundTestSignals.h"
 #include "GOTestScope.h"
 
 const std::string GOTestSoundResample::TEST_NAME = "GOTestSoundResample";
-
-static void fill_with_ramp(std::vector<float> &data) {
-  for (unsigned n = data.size(), i = 0; i < n; i++)
-    data[i] = (float)i;
-}
 
 /**
  * Relative comparison for two outputs computed by the same mathematical
@@ -134,7 +130,7 @@ void GOTestSoundResample::TestVaryingRateCorrectness() {
 
   std::vector<float> src(8);
 
-  fill_with_ramp(src);
+  GOSoundTestSignals::fillWithRamp(src);
 
   // Independently derived trajectory (index, fraction) -> Inc(unsigned)'s
   // documented formula, and LINEAR_INTERPOLATION's coefficients are
@@ -186,7 +182,7 @@ void GOTestSoundResample::TestVaryingRateMaxIncrement() {
   const std::vector<uint16_t> increments(N_OUT_FRAMES, UINT16_MAX);
   std::vector<float> out(N_OUT_FRAMES);
 
-  fill_with_ramp(src);
+  GOSoundTestSignals::fillWithRamp(src);
 
   GOSoundResample resampler;
   GOSoundResample::LinearResampler linearResampler(resampler);

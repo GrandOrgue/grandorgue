@@ -33,6 +33,7 @@ set(go_tests
     sound/effects/GOTestPerfSoundShelfFilterProcessor.cpp
     sound/effects/GOTestSoundReverbProcessor.cpp
     sound/effects/GOTestSoundShelfFilterProcessor.cpp
+    sound/GOSoundTestSignals.cpp
     sound/GOTestSoundCallbackConnector.cpp
     sound/GOTestSoundOrganEngine.cpp
     sound/GOTestSoundOrganEngineBase.cpp
