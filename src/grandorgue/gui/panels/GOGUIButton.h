@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,7 +21,7 @@ class GOGUIButton : public GOGUIMidiControl {
 protected:
   bool m_IsPiston;
   bool m_DispKeyLabelOnLeft;
-  GOButtonControl *m_ButtonControl;
+  GOButtonControl *p_ButtonControl;
   wxRect m_MouseRect;
   unsigned m_Radius;
   GOBitmap m_OnBitmap;
@@ -30,7 +30,7 @@ protected:
   wxString m_FontName;
   GOFont m_Font;
   wxColor m_TextColor;
-  wxString m_Text;
+  wxString m_DispLabelText;
   wxRect m_TextRect;
   unsigned m_TextWidth;
   unsigned m_DispCol;

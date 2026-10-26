@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -26,7 +26,7 @@ public:
   } MANUAL_RENDER_INFO;
 
 protected:
-  GOGUIDisplayMetrics &m_metrics;
+  GOGUIDisplayMetrics &r_metrics;
   std::vector<MANUAL_RENDER_INFO> m_ManualRenderInfo;
   std::vector<GOGUIEnclosure *> m_Enclosures;
   std::vector<GOGUIManual *> m_Manuals;
@@ -37,6 +37,9 @@ protected:
   int m_CenterY;
   int m_CenterWidth;
 
+  /** @return the width of the area of the enclosures */
+  unsigned GetEnclosureAreaWidth();
+
 public:
   GOGUILayoutEngine(GOGUIDisplayMetrics &metrics);
   virtual ~GOGUILayoutEngine();
@@ -46,7 +49,6 @@ public:
   virtual void GetPushbuttonBlitPosition(
     const int buttonRow, const int buttonCol, int &blitX, int &blitY);
 
-  virtual unsigned GetEnclosuresWidth();
   virtual int GetEnclosureY();
   virtual int GetEnclosureX(const GOGUIEnclosure *enclosure);
 

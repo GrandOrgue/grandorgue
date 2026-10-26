@@ -28,9 +28,9 @@ class GODC;
 class GOGUIControl : private GOSaveableObject,
                      protected GOControlChangedHandler {
 protected:
-  GOGUIPanel *m_panel;
-  GOGUIDisplayMetrics *m_metrics;
-  GOGUILayoutEngine *m_layout;
+  GOGUIPanel *p_panel;
+  GOGUIDisplayMetrics *p_metrics;
+  GOGUILayoutEngine *p_layout;
   GOControl *p_control;
   wxRect m_BoundingRect;
   bool m_DrawPending;
@@ -47,7 +47,7 @@ public:
   GOControl *GetControl() const { return p_control; }
 
   GODocumentBase *GetDocument() const {
-    return m_panel ? m_panel->GetDocument() : nullptr;
+    return p_panel ? p_panel->GetDocument() : nullptr;
   }
 
   virtual void Load(GOConfigReader &cfg, wxString group);
