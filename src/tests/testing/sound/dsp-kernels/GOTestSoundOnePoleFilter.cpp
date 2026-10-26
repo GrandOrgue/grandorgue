@@ -44,6 +44,23 @@ void GOTestSoundOnePoleFilter::TestComputeCoeffsIdentityEdgeCases() {
   GOSoundOnePoleFilter::computeCoeffs(
     GOSoundOnePoleFilter::Type::TYPE_HIGH_SHELF, 1000, 0, TEST_SAMPLE_RATE, c);
   assert_is_identity(*this, c, "TYPE_HIGH_SHELF, gain == 0");
+
+  const GOSoundOnePoleFilter::Type shelfTypes[] = {
+    GOSoundOnePoleFilter::Type::TYPE_LOW_SHELF,
+    GOSoundOnePoleFilter::Type::TYPE_HIGH_SHELF};
+  const double badFrequencies[]
+    = {0, -1000, TEST_SAMPLE_RATE / 2.0, 30000, 1e5};
+
+  for (GOSoundOnePoleFilter::Type type : shelfTypes)
+    for (double frequency : badFrequencies) {
+      GOSoundOnePoleFilter::computeCoeffs(
+        type, frequency, -12, TEST_SAMPLE_RATE, c);
+      assert_is_identity(
+        *this,
+        c,
+        "shelf type " + std::to_string((int)type)
+          + ", frequency not in (0, Nyquist): " + std::to_string(frequency));
+    }
 }
 
 void GOTestSoundOnePoleFilter::TestComputeCoeffsPerType() {
