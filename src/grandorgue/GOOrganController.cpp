@@ -106,6 +106,11 @@ GOOrganController::GOOrganController(GOConfig &config)
   // only place registering it) may never run (e.g. in tests, or if loading
   // fails before reaching that point), which would otherwise leak it.
   m_elementcreators.push_back(m_setter);
+  p_OnStateButton = GetButtonControl(GOSetter::KEY_ON_STATE);
+  assert(p_OnStateButton);
+  // The On indicator must not send its MIDI events together with the others
+  // (issue #1762): they are sent separately at the end by SendOnStateMidi()
+  p_OnStateButton->SetLifecycleSendingEnabled(false);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
@@ -150,7 +155,6 @@ void GOOrganController::ClearObjects() {
 
 void GOOrganController::ClearOrganCoreData() {
   if (m_IsOrganCoreDataLoaded) {
-    p_OnStateButton = nullptr;
     // They refer to the enclosures that GOOrganModel::Cleanup() frees
     p_MasterEnclosure = nullptr;
     mp_InternalEnclosures.clear();
@@ -350,14 +354,6 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
 
   for (unsigned i = 0; i < m_elementcreators.size(); i++)
     m_elementcreators[i]->Load(cfg);
-
-  p_OnStateButton = GetButtonControl(GOSetter::KEY_ON_STATE);
-
-  if (p_OnStateButton) {
-    // we do not want to send midi events on m_OnStateButton together with
-    // other events. They will be sent separately.
-    UnRegisterLifecycleListener(p_OnStateButton);
-  }
 
   // Load dialog sizes
   if (GODialogSizeSet::isPresentInCfg(cfg, CMBSetting))
@@ -846,6 +842,17 @@ void GOOrganController::EnsureSoundRoutingFor(
   }
 }
 
+void GOOrganController::SendOnStateMidi(bool isOn) {
+  p_OnStateButton->SetLifecycleSendingEnabled(true);
+  if (isOn) {
+    p_OnStateButton->PreparePlayback();
+    p_OnStateButton->StartPlayback();
+    p_OnStateButton->PrepareRecording();
+  } else
+    p_OnStateButton->AbortPlayback();
+  p_OnStateButton->SetLifecycleSendingEnabled(false);
+}
+
 void GOOrganController::StartOrgan(
   GOSoundSystem &soundSystem, GOMidiSystem &midi) {
   const std::vector<GOSoundOrganEngine::AudioOutputConfig> audioOutputConfigs
@@ -882,11 +889,7 @@ void GOOrganController::StartOrgan(
   m_MidiPlayer->Setup(&midi);
 
   // Light the OnState button
-  if (p_OnStateButton) {
-    p_OnStateButton->PreparePlayback();
-    p_OnStateButton->StartPlayback();
-    p_OnStateButton->PrepareRecording();
-  }
+  SendOnStateMidi(true);
 }
 
 void GOOrganController::StopOrgan(GOSoundSystem &soundSystem) {
@@ -896,8 +899,7 @@ void GOOrganController::StopOrgan(GOSoundSystem &soundSystem) {
   m_MidiRecorder->StopRecording();
   m_AudioRecorder->StopRecording();
   m_AudioRecorder->SetAudioRecorder(NULL);
-  if (p_OnStateButton)
-    p_OnStateButton->AbortPlayback();
+  SendOnStateMidi(false);
   GOOrganModel::GOSoundSamplerPlayerProxy::Disconnect();
   GOOrganModel::SetMidi(nullptr, nullptr);
   m_midi = NULL;
