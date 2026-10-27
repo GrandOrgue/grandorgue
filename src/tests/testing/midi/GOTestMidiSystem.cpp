@@ -17,6 +17,8 @@
 #include "midi/ports/GOMidiInPort.h"
 #include "midi/ports/GOMidiOutPort.h"
 
+#include "GOTestScope.h"
+
 // Uses simulated ports and a headless wxWidgets event loop, so it needs
 // no MIDI hardware. It verifies that configured input and output ports
 // which appear after startup open with their saved mappings, that failed
@@ -183,6 +185,6 @@ void GOTestMidiSystem::run() {
   std::unique_ptr<wxEventLoopBase> loop(app.GetTraits()->CreateEventLoop());
   wxEventLoopActivator activeLoop(loop.get());
 
-  TestLateDiscovery();
-  TestFailedOpen();
+  GO_RUN_TEST(TestLateDiscovery())
+  GO_RUN_TEST(TestFailedOpen())
 }
