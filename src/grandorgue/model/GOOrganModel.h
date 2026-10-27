@@ -89,6 +89,7 @@ protected:
   unsigned m_FirstManual;
   unsigned m_ODFManualCount;
   unsigned m_ODFRankCount;
+  unsigned m_ODFEnclosureCount;
 
   /** Undoes Load()/LoadCmbButtons(): clears the windchest/manual/enclosure/
    * switch/tremulant/rank/piston/divisional-coupler/general elements they
@@ -173,6 +174,11 @@ public:
   const ptr_vector<GOEnclosure> &GetEnclosures() const { return m_enclosures; }
   GOEnclosure *GetEnclosureElement(unsigned index);
   unsigned GetEnclosureCount();
+
+  /** @return the number of enclosures declared in the ODF only; excludes the
+   * internal enclosures added later via AddEnclosure(). Use it for validating
+   * enclosure references that come from the ODF */
+  unsigned GetODFEnclosureCount() const { return m_ODFEnclosureCount; }
   unsigned AddEnclosure(GOEnclosure *enclosure);
 
   unsigned GetSwitchCount() const { return m_switches.size(); }

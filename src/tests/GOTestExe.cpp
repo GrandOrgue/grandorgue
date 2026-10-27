@@ -14,10 +14,12 @@
 #include "testing/GOTestOrganController.h"
 #include "testing/combinations/GOTestDivisionalSetter.h"
 #include "testing/loader/GOTestOrganReader.h"
+#include "testing/midi/GOTestMidiEvent.h"
 #include "testing/midi/GOTestMidiPlayerContent.h"
 #include "testing/midi/GOTestMidiSendProxy.h"
 #include "testing/midi/GOTestMidiSystem.h"
 #include "testing/model/GOTestDrawStop.h"
+#include "testing/model/GOTestEnclosure.h"
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestPipeConfigTreeNode.h"
 #include "testing/model/GOTestSoundingPipe.h"
@@ -39,11 +41,19 @@
 #include "testing/sound/buffer/GOTestSoundBufferPlanar.h"
 #include "testing/sound/buffer/GOTestSoundBufferPlanarManaged.h"
 #include "testing/sound/buffer/GOTestSoundBufferPlanarMutable.h"
+#include "testing/sound/buffer/GOTestSoundTypedBufferLoopBase.h"
+#include "testing/sound/buffer/GOTestSoundTypedBufferLoopMonoManaged.h"
 #include "testing/sound/dsp-kernels/GOTestPerfSoundResample.h"
 #include "testing/sound/dsp-kernels/GOTestSoundOnePoleFilter.h"
+#include "testing/sound/dsp-kernels/GOTestSoundResample.h"
+#include "testing/sound/effects/GOTestPerfSoundShelfFilterProcessor.h"
 #include "testing/sound/effects/GOTestSoundReverbProcessor.h"
 #include "testing/sound/effects/GOTestSoundShelfFilterProcessor.h"
+#include "testing/sound/mappers/GOTestPerfSoundEnclosureShelfMapper.h"
+#include "testing/sound/mappers/GOTestSoundEnclosureShelfMapper.h"
+#include "testing/sound/playing/GOTestPerfSoundPlayingFader.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
+#include "testing/sound/playing/GOTestSoundPlayingFader.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
 #include "testing/sound/playing/GOTestSoundToneBalanceFilter.h"
 #include "testing/sound/processing/GOTestSoundProcessingChain.h"
@@ -83,6 +93,7 @@ int main(int argc, char *argv[]) {
   GOTestOrganReader testOrganReader;
   GOTestOrganController testOrganController;
   GOTestDrawStop testDrawStop;
+  GOTestEnclosure testEnclosure;
   GOTestOrganModel testOrganModel;
   GOTestPipeConfigTreeNode testPipeConfigTreeNode;
   GOTestSoundingPipe testSoundingPipe;
@@ -91,6 +102,7 @@ int main(int argc, char *argv[]) {
   GOTestScheduler testScheduler;
   GOTestNameMap goTestNameMap;
   GOTestMidiSendProxy testMidiSendProxy;
+  GOTestMidiEvent testMidiEvent;
   GOTestMidiPlayerContent testMidiPlayerContent;
   GOTestMidiSystem testMidiSystem;
   GOTestSoundBuffer goTestSoundBuffer;
@@ -101,6 +113,8 @@ int main(int argc, char *argv[]) {
   GOTestSoundBufferPlanar testSoundBufferPlanar;
   GOTestSoundBufferPlanarMutable testSoundBufferPlanarMutable;
   GOTestSoundBufferPlanarManaged testSoundBufferPlanarManaged;
+  GOTestSoundTypedBufferLoopBase testSoundTypedBufferLoopBase;
+  GOTestSoundTypedBufferLoopMonoManaged testSoundTypedBufferLoopMonoManaged;
   GOTestPerfSoundBufferMutable testPerfSoundBufferMutable;
   GOTestPerfSoundBufferPlanarMutable testPerfSoundBufferPlanarMutable;
   GOTestSoundProcessingChain testSoundProcessingChain;
@@ -110,13 +124,19 @@ int main(int argc, char *argv[]) {
   GOTestSoundCallbackConnector testSoundCallbackConnector;
   GOTestSoundOrganEngineStress testSoundOrganEngineStress;
   GOTestReleaseAlignTable testReleaseAlignTable;
+  GOTestSoundPlayingFader testSoundPlayingFader;
+  GOTestPerfSoundPlayingFader testPerfSoundPlayingFader;
   GOTestSoundStream testSoundStream;
   GOTestSoundOnePoleFilter testSoundOnePoleFilter;
+  GOTestSoundResample testSoundResample;
   GOTestPerfSoundResample testPerfSoundResample;
   GOTestSoundToneBalanceFilter testSoundToneBalanceFilter;
   GOTestSoundReverb testSoundReverb;
   GOTestSoundReverbProcessor testSoundReverbProcessor;
   GOTestSoundShelfFilterProcessor testSoundShelfFilterProcessor;
+  GOTestPerfSoundShelfFilterProcessor testPerfSoundShelfFilterProcessor;
+  GOTestSoundEnclosureShelfMapper testSoundEnclosureShelfMapper;
+  GOTestPerfSoundEnclosureShelfMapper testPerfSoundEnclosureShelfMapper;
   GOTestSoundWindchestGroupTaskGrid testSoundWindchestGroupTaskGrid;
   GOTestSoundTaskBase testSoundTaskBase;
   GOTestSoundWindchestTask testSoundWindchestTask;

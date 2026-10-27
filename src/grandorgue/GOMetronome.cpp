@@ -72,8 +72,20 @@ const struct GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
 const GOMetronome::ButtonDefinitionEntry *const GOMetronome::P_BUTTON_DEFS
   = BUTTON_DEFS;
 
-GOMetronome::GOMetronome(GOOrganController *organController)
+std::unique_ptr<GOWindchest> GOMetronome::createWindchest(
+  GOConfigReader &cfg, GOOrganModel &organModel) {
+  std::unique_ptr<GOWindchest> oWindchest(new GOWindchest(organModel));
+
+  oWindchest->SetHardName(wxT("Metronome"));
+  oWindchest->Init(cfg, wxT("MetronomeWindchest"), _("Metronome"));
+  oWindchest->GetPipeConfig().GetPipeConfig().SetPercussiveFromInit(BOOL3_TRUE);
+  return oWindchest;
+}
+
+GOMetronome::GOMetronome(
+  GOOrganController *organController, unsigned windchestN)
   : m_OrganController(organController),
+    m_WindchestN(windchestN),
     m_BPM(80),
     m_MeasureLength(4),
     m_Pos(0),
@@ -148,26 +160,19 @@ void GOMetronome::Load(GOConfigReader &cfg) {
 
   m_OrganController->RegisterSaveableObject(this);
 
-  GOWindchest *pWindchest = new GOWindchest(*m_OrganController);
-
-  pWindchest->SetHardName(wxT("Metronome"));
-  pWindchest->Init(cfg, wxT("MetronomeWindchest"), _("Metronome"));
-  pWindchest->GetPipeConfig().GetPipeConfig().SetPercussiveFromInit(BOOL3_TRUE);
-  unsigned windchestN = m_OrganController->AddWindchest(pWindchest);
-
   m_rank = new GORank(*m_OrganController);
-  m_rank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, windchestN);
+  m_rank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, m_WindchestN);
   m_StopID = m_rank->RegisterStop(NULL);
   m_OrganController->AddRank(m_rank);
 
   GOSoundingPipe *pipe;
 
   pipe = new GOSoundingPipe(
-    m_OrganController, m_rank, windchestN, 36, 8, 100, 100, false);
+    m_OrganController, m_rank, m_WindchestN, 36, 8, 100, 100, false);
   m_rank->AddPipe(pipe);
   pipe->Init(cfg, wxT("MetronomSounds"), wxT("A"), GetSampleFilePath(false));
   pipe = new GOSoundingPipe(
-    m_OrganController, m_rank, windchestN, 37, 8, 100, 100, false);
+    m_OrganController, m_rank, m_WindchestN, 37, 8, 100, 100, false);
   m_rank->AddPipe(pipe);
   pipe->Init(cfg, wxT("MetronomSounds"), wxT("B"), GetSampleFilePath(true));
 }

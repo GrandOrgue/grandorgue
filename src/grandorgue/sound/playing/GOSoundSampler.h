@@ -11,7 +11,7 @@
 #include "sound/playing/GOSoundToneBalanceFilter.h"
 
 #include "GOBool3.h"
-#include "GOSoundFader.h"
+#include "GOSoundPlayingFader.h"
 #include "GOSoundStream.h"
 
 class GOSoundProvider;
@@ -32,7 +32,7 @@ struct GOSoundSampler {
   GOSoundWindchestTask *p_WindchestTask;
   unsigned m_AudioGroupId;
   GOSoundStream stream;
-  GOSoundFader fader;
+  GOSoundPlayingFader fader;
   GOSoundToneBalanceFilter::State toneBalanceFilterState;
   uint64_t time;
   unsigned velocity;

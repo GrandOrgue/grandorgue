@@ -2,10 +2,12 @@ set(go_tests
     # Add here your tests files
     combinations/GOTestDivisionalSetter.cpp
     loader/GOTestOrganReader.cpp
+    midi/GOTestMidiEvent.cpp
     midi/GOTestMidiPlayerContent.cpp
     midi/GOTestMidiSendProxy.cpp
     midi/GOTestMidiSystem.cpp
     model/GOTestDrawStop.cpp
+    model/GOTestEnclosure.cpp
     model/GOTestOrganModel.cpp
     model/GOTestPipeConfigTreeNode.cpp
     model/GOTestSoundingPipe.cpp
@@ -24,17 +26,26 @@ set(go_tests
     sound/buffer/GOTestSoundBufferPlanar.cpp
     sound/buffer/GOTestSoundBufferPlanarManaged.cpp
     sound/buffer/GOTestSoundBufferPlanarMutable.cpp
+    sound/buffer/GOTestSoundTypedBufferLoopBase.cpp
+    sound/buffer/GOTestSoundTypedBufferLoopMonoManaged.cpp
     sound/dsp-kernels/GOTestPerfSoundResample.cpp
     sound/dsp-kernels/GOTestSoundOnePoleFilter.cpp
+    sound/dsp-kernels/GOTestSoundResample.cpp
+    sound/effects/GOTestPerfSoundShelfFilterProcessor.cpp
     sound/effects/GOTestSoundReverbProcessor.cpp
     sound/effects/GOTestSoundShelfFilterProcessor.cpp
+    sound/GOSoundTestSignals.cpp
     sound/GOTestSoundCallbackConnector.cpp
     sound/GOTestSoundOrganEngine.cpp
     sound/GOTestSoundOrganEngineBase.cpp
     sound/GOTestSoundOrganEngineFactories.cpp
     sound/GOTestSoundOrganEngineStress.cpp
     sound/GOTestSoundWindchestGroupTaskGrid.cpp
+    sound/mappers/GOTestPerfSoundEnclosureShelfMapper.cpp
+    sound/mappers/GOTestSoundEnclosureShelfMapper.cpp
+    sound/playing/GOTestPerfSoundPlayingFader.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
+    sound/playing/GOTestSoundPlayingFader.cpp
     sound/playing/GOTestSoundStream.cpp
     sound/playing/GOTestSoundToneBalanceFilter.cpp
     sound/processing/GOSoundProcessingTestImpls.cpp

@@ -8,6 +8,8 @@
 #ifndef GOMETRONOME_H
 #define GOMETRONOME_H
 
+#include <memory>
+
 #include "control/GOElementCreator.h"
 #include "control/GOLabelControl.h"
 #include "model/GOOrganLifecycleListener.h"
@@ -15,9 +17,12 @@
 #include "GOSaveableObject.h"
 #include "GOTimerCallback.h"
 
+class GOConfigReader;
 class GOMidiEvent;
-class GORank;
 class GOOrganController;
+class GOOrganModel;
+class GORank;
+class GOWindchest;
 
 class GOMetronome : private GOTimerCallback,
                     private GOOrganLifecycleListener,
@@ -37,6 +42,13 @@ public:
 
 private:
   GOOrganController *m_OrganController;
+  /**
+   * The number (1-based, as returned by GOOrganModel::AddWindchest()) of the
+   * windchest the metronome's rank and pipes sound through. The windchest is
+   * created by createWindchest() and registered by the caller before this
+   * object exists.
+   */
+  unsigned m_WindchestN;
   unsigned m_BPM;
   unsigned m_MeasureLength;
   unsigned m_Pos;
@@ -64,7 +76,26 @@ private:
   void UpdateMeasure(int val);
 
 public:
-  GOMetronome(GOOrganController *organController);
+  /**
+   * Creates, but does not register, the windchest the metronome plays its
+   * sounds through. It is a separate static step because the windchest has
+   * to exist before the internal enclosures are created, i.e. earlier than
+   * the element creators are loaded. The caller adds it to the model with
+   * AddWindchest() and passes the resulting number to the constructor.
+   * @param cfg the config reader of the organ being loaded
+   * @param organModel the model the windchest will belong to
+   * @return the new windchest, ownership goes to the caller
+   */
+  static std::unique_ptr<GOWindchest> createWindchest(
+    GOConfigReader &cfg, GOOrganModel &organModel);
+
+  /**
+   * @param organController the organ controller the metronome belongs to
+   * @param windchestN the number (1-based) of the metronome's windchest,
+   *   which must already be added to the model: the result of AddWindchest()
+   *   for the windchest from createWindchest()
+   */
+  GOMetronome(GOOrganController *organController, unsigned windchestN);
   virtual ~GOMetronome();
 
   void Load(GOConfigReader &cfg) override;

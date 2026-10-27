@@ -7,14 +7,18 @@
 #include "GOTestOrganController.h"
 
 #include <set>
+#include <string>
+#include <vector>
 
 #include "config/GOConfig.h"
 #include "config/GOConfigFileWriter.h"
 #include "config/GOConfigWriter.h"
 #include "loader/GOOrganReader.h"
 #include "loader/GOProgressMonitor.h"
+#include "model/GOEnclosure.h"
 #include "model/GOWindchest.h"
 
+#include "GOBuffer.h"
 #include "GOOrgan.h"
 #include "GOOrganController.h"
 #include "GOTestScope.h"
@@ -70,13 +74,61 @@ void GOTestOrganController::TestOrganCoreData() {
     controller->GetOrganName() == wxT("Test Organ"),
     "LoadOrganCoreData() should populate the organ name from the ODF");
   // 1 windchest group from the ODF (NumberOfWindchestGroups=1) plus 1 more
-  // that GOMetronome::Load() creates for itself via AddWindchest() to route
-  // its own sound (GOMetronome.cpp), regardless of the ODF's own count.
+  // that GOMetronome::createWindchest() creates to route its own sound and
+  // LoadOrganCoreData() registers, regardless of the ODF's own count.
   GOAssert(
     controller->GetWindchestCount() == 2,
     "LoadOrganCoreData() should populate the ODF's windchest group plus "
     "GOMetronome's own, got: "
       + std::to_string(controller->GetWindchestCount()));
+
+  // The internal enclosures: the master and one per windchest (including the
+  // metronome's), created by the controller and not by the GUI panel.
+  const unsigned nWindchests = controller->GetWindchestCount();
+
+  GOAssert(
+    controller->GetEnclosureCount() == 1 + nWindchests,
+    "InitInternalEnclosures() should create the master and one enclosure per "
+    "windchest, got: "
+      + std::to_string(controller->GetEnclosureCount()));
+  GOAssert(
+    controller->GetODFEnclosureCount() == 0,
+    "The internal enclosures should not be counted as ODF enclosures, got: "
+      + std::to_string(controller->GetODFEnclosureCount()));
+  GOAssert(
+    controller->GetMasterEnclosure()
+      && controller->GetMasterEnclosure()->GetName() == wxT("Master")
+      && controller->GetEnclosureElement(0) == controller->GetMasterEnclosure(),
+    "The master enclosure should be the first enclosure");
+  for (unsigned windchestI = 0; windchestI < nWindchests; windchestI++) {
+    GOEnclosure *pEnc = controller->GetInternalEnclosure(windchestI);
+    const std::vector<GOEnclosure *> &windchestEncs
+      = controller->GetWindchest(windchestI)->GetEnclosures();
+    const std::string suffix
+      = ", windchest index: " + std::to_string(windchestI);
+
+    GOAssert(
+      pEnc == controller->GetEnclosureElement(windchestI + 1),
+      "Internal enclosures should follow the master in the windchest "
+      "order"
+        + suffix);
+    GOAssert(
+      pEnc->GetName() == controller->GetWindchest(windchestI)->GetName(),
+      "An internal enclosure should be named after its windchest" + suffix);
+    GOAssert(
+      windchestEncs.size() == 2
+        && windchestEncs[0] == controller->GetMasterEnclosure()
+        && windchestEncs[1] == pEnc,
+      "A windchest should have the master and its own enclosure" + suffix);
+  }
+  GOAssert(
+    controller->GetInternalEnclosure(0)->GetHardName() == wxT("Windchest001"),
+    "An ODF windchest without a hard name should give Windchest001");
+  GOAssert(
+    controller->GetInternalEnclosure(nWindchests - 1)->GetHardName()
+      == wxT("Metronome"),
+    "The metronome windchest should have an internal enclosure with its hard "
+    "name");
 
   // Regression test: GOOrganModel::Load() must register every ODF windchest
   // in m_WindchestNByPipeConfig (via AddWindchest()), not just push it onto
@@ -111,6 +163,23 @@ void GOTestOrganController::TestOrganCoreData() {
     cfgFile.Save(cmbPath), "SaveOrganCoreData() output should be writable");
   GOAssert(wxFileExists(cmbPath), "The .cmb file should have been created");
 
+  {
+    // the file is compressed, so take the plain content from the writer
+    GOBuffer<uint8_t> cmbBuf;
+
+    GOAssert(
+      cfgFile.GetFileContent(cmbBuf, false),
+      "The plain .cmb content should be available");
+
+    const std::string cmbText((const char *)cmbBuf.get(), cmbBuf.GetSize());
+
+    for (const char *pGroup :
+         {"[SetterMasterVolume]", "[SetterMaster001]", "[SetterMaster002]"})
+      GOAssert(
+        cmbText.find(pGroup) != std::string::npos,
+        std::string("The saved .cmb should contain ") + pGroup);
+  }
+
   // ClearOrganCoreData() idempotency: calling it multiple times must not
   // crash, and a second call must be a safe no-op (this is exactly what
   // the m_IsOrganCoreDataLoaded flag is for).
@@ -118,6 +187,9 @@ void GOTestOrganController::TestOrganCoreData() {
   GOAssert(
     controller->GetWindchestCount() == 0,
     "ClearOrganCoreData() should remove the windchest group");
+  GOAssert(
+    !controller->GetMasterEnclosure(),
+    "ClearOrganCoreData() should reset the master enclosure");
   controller->ClearOrganCoreData();
   GOAssert(
     controller->GetWindchestCount() == 0,

@@ -12,6 +12,7 @@
 #include "sound/effects/GOSoundShelfFilterProcessorState.h"
 #include "sound/processing/GOSoundProcessor.h"
 
+#include "../GOSoundTestSignals.h"
 #include "GOTestScope.h"
 
 const std::string GOTestSoundShelfFilterProcessor::TEST_NAME
@@ -19,11 +20,6 @@ const std::string GOTestSoundShelfFilterProcessor::TEST_NAME
 
 static constexpr unsigned TEST_SAMPLE_RATE = 44100;
 static constexpr unsigned TEST_N_FRAMES = 64;
-
-static void fill_with_alternating_signal(GOSoundBufferPlanarMutable &buffer) {
-  for (unsigned itemI = 0; itemI < buffer.GetNItems(); itemI++)
-    buffer.GetData()[itemI] = (itemI % 2 == 0) ? 0.5f : -0.5f;
-}
 
 void GOTestSoundShelfFilterProcessor::TestConstructorLeavesBothBandsNoop() {
   GOSoundShelfFilterProcessor processor;
@@ -115,7 +111,7 @@ void GOTestSoundShelfFilterProcessor::TestProcessBothBandsNoopIsBypass() {
   GOSoundProcessor &untypedProcessor = processor;
   GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(buffer, 2, TEST_N_FRAMES);
 
-  fill_with_alternating_signal(buffer);
+  GOSoundTestSignals::fillWithAlternatingSignal(buffer);
   untypedProcessor.Process(*pState, buffer);
 
   for (unsigned itemI = 0; itemI < buffer.GetNItems(); itemI++)
@@ -135,7 +131,7 @@ void GOTestSoundShelfFilterProcessor::TestProcessOnlyConfiguredBandIsApplied() {
   GOSoundProcessor &untypedProcessor = processor;
   GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(buffer, 2, TEST_N_FRAMES);
 
-  fill_with_alternating_signal(buffer);
+  GOSoundTestSignals::fillWithAlternatingSignal(buffer);
   untypedProcessor.Process(*pState, buffer);
 
   bool wasLowChanged = false;
@@ -164,7 +160,7 @@ void GOTestSoundShelfFilterProcessor::TestProcessAppliesBothBandsInSeries() {
     GOSoundProcessor &untypedProcessor = processor;
     GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(buffer, nChannels, TEST_N_FRAMES);
 
-    fill_with_alternating_signal(buffer);
+    GOSoundTestSignals::fillWithAlternatingSignal(buffer);
     untypedProcessor.Process(*pState, buffer);
 
     bool wasChanged = false;
@@ -192,7 +188,7 @@ void GOTestSoundShelfFilterProcessor::
   GOSoundProcessor &untypedProcessor = processor;
   GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(bufferA, 1, TEST_N_FRAMES);
 
-  fill_with_alternating_signal(bufferA);
+  GOSoundTestSignals::fillWithAlternatingSignal(bufferA);
   untypedProcessor.Process(*pState, bufferA);
 
   processor.SetLowShelf(200, 18);
@@ -200,7 +196,7 @@ void GOTestSoundShelfFilterProcessor::
 
   GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(bufferB, 1, TEST_N_FRAMES);
 
-  fill_with_alternating_signal(bufferB);
+  GOSoundTestSignals::fillWithAlternatingSignal(bufferB);
   untypedProcessor.Process(*pState, bufferB);
 
   bool wasDifferent = false;
@@ -227,7 +223,7 @@ void GOTestSoundShelfFilterProcessor::
   GOSoundProcessor &untypedProcessor = processor;
   GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(activeBuffer, 2, TEST_N_FRAMES);
 
-  fill_with_alternating_signal(activeBuffer);
+  GOSoundTestSignals::fillWithAlternatingSignal(activeBuffer);
   untypedProcessor.Process(*pState, activeBuffer);
 
   bool hasLowMemory = false;
@@ -246,7 +242,7 @@ void GOTestSoundShelfFilterProcessor::
 
   GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(lowOffBuffer, 2, TEST_N_FRAMES);
 
-  fill_with_alternating_signal(lowOffBuffer);
+  GOSoundTestSignals::fillWithAlternatingSignal(lowOffBuffer);
   untypedProcessor.Process(*pState, lowOffBuffer);
   for (float value : pState->m_LowState)
     GOAssert(value == 0.0f, "an inactive low band's state must be cleared");
@@ -264,7 +260,7 @@ void GOTestSoundShelfFilterProcessor::
 
   GO_DECLARE_LOCAL_SOUND_BUFFER_PLANAR(bothOffBuffer, 2, TEST_N_FRAMES);
 
-  fill_with_alternating_signal(bothOffBuffer);
+  GOSoundTestSignals::fillWithAlternatingSignal(bothOffBuffer);
   untypedProcessor.Process(*pState, bothOffBuffer);
   for (unsigned itemI = 0; itemI < bothOffBuffer.GetNItems(); itemI++)
     GOAssert(
@@ -287,6 +283,23 @@ void GOTestSoundShelfFilterProcessor::
       "silence must stay silent after a band is re-activated");
 }
 
+void GOTestSoundShelfFilterProcessor::
+  TestBandAboveNyquistIsInactiveUntilSampleRateAllowsIt() {
+  GOSoundShelfFilterProcessor processor;
+
+  processor.SetLowShelf(30000, -12);
+  processor.SetHighShelf(30000, -12);
+  processor.EnsureSetup(2, TEST_N_FRAMES, 48000);
+  GOAssert(
+    !processor.m_LowCoeffs.isActive && !processor.m_HighCoeffs.isActive,
+    "bands with a corner above Nyquist must not be isActive");
+
+  processor.EnsureSetup(2, TEST_N_FRAMES, 96000);
+  GOAssert(
+    processor.m_LowCoeffs.isActive && processor.m_HighCoeffs.isActive,
+    "bands must become isActive when the sampleRate allows their corner");
+}
+
 void GOTestSoundShelfFilterProcessor::run() {
   GO_RUN_TEST(TestConstructorLeavesBothBandsNoop())
   GO_RUN_TEST(TestEnsureSetupRecomputesOnlyOnSampleRateChange())
@@ -297,4 +310,5 @@ void GOTestSoundShelfFilterProcessor::run() {
   GO_RUN_TEST(TestProcessAppliesBothBandsInSeries())
   GO_RUN_TEST(TestDynamicUpdateTakesEffectImmediately())
   GO_RUN_TEST(TestBandStateClearedWhenBecomingInactive())
+  GO_RUN_TEST(TestBandAboveNyquistIsInactiveUntilSampleRateAllowsIt())
 }

@@ -9,10 +9,6 @@
 
 #include <wx/intl.h>
 
-#include "midi/objects/GOMidiObjectContext.h"
-#include "model/GOEnclosure.h"
-#include "model/GOWindchest.h"
-
 #include "GOGUIEnclosure.h"
 #include "GOGUIHW1Background.h"
 #include "GOGUIManual.h"
@@ -21,9 +17,6 @@
 #include "GOGUISetterDisplayMetrics.h"
 #include "GOOrganController.h"
 #include "gui/GOGuiOrgan.h"
-
-static const GOMidiObjectContext MIDI_CONTEXT_VOLUMES(
-  wxT("volumes"), _("volumes"));
 
 GOGUICouplerManualsAndVolumePanel::GOGUICouplerManualsAndVolumePanel(
   GOGuiOrgan &guiOrgan)
@@ -72,42 +65,20 @@ GOGUIPanel *GOGUICouplerManualsAndVolumePanel::CreatePanel(
     panel->AddControl(manual);
   }
 
-  GOEnclosure *master_enc = new GOEnclosure(*m_OrganController);
-  master_enc->SetContext(&MIDI_CONTEXT_VOLUMES);
-  master_enc->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
-  m_OrganController->AddEnclosure(master_enc);
-  master_enc->SetElementId(
-    m_OrganController->GetRecorderElementID(wxString::Format(wxT("SM"))));
+  GOGUIEnclosure *enclosure
+    = new GOGUIEnclosure(panel, m_OrganController->GetMasterEnclosure());
 
-  GOGUIEnclosure *enclosure = new GOGUIEnclosure(panel, master_enc);
   enclosure->Init(cfg, wxT("SetterMasterVolume"));
   panel->AddControl(enclosure);
 
-  for (unsigned i = 0; i < m_OrganController->GetWindchestCount(); i++) {
-    GOWindchest *pWindchest = m_OrganController->GetWindchest(i);
-    const wxString &windchestHardName = pWindchest->GetHardName();
-
-    pWindchest->AddEnclosure(master_enc);
-
-    GOEnclosure *enc = new GOEnclosure(*m_OrganController);
-
-    enc->SetContext(&MIDI_CONTEXT_VOLUMES);
-    enc->SetHardName(
-      windchestHardName.IsEmpty()
-        ? wxString::Format(wxT("Windchest%03u"), i + 1)
-        : windchestHardName);
-    enc->Init(
-      cfg,
-      wxString::Format(wxT("SetterMaster%03d"), i + 1),
-      pWindchest->GetName(),
-      127);
-    m_OrganController->AddEnclosure(enc);
-    enc->SetElementId(m_OrganController->GetRecorderElementID(
-      wxString::Format(wxT("SM%d"), i)));
-    pWindchest->AddEnclosure(enc);
-
-    enclosure = new GOGUIEnclosure(panel, enc);
-    enclosure->Init(cfg, wxString::Format(wxT("SetterMaster%03d"), i + 1));
+  for (unsigned nWindchests = m_OrganController->GetWindchestCount(),
+                windchestI = 0;
+       windchestI < nWindchests;
+       windchestI++) {
+    enclosure = new GOGUIEnclosure(
+      panel, m_OrganController->GetInternalEnclosure(windchestI));
+    enclosure->Init(
+      cfg, wxString::Format(wxT("SetterMaster%03d"), windchestI + 1));
     panel->AddControl(enclosure);
   }
   return panel;

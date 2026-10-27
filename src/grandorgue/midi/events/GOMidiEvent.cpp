@@ -155,9 +155,11 @@ void GOMidiEvent::FromMidi(
         break;
       }
     }
-    /* Rodgers 'data set' 'stop change' message. */
+    /* Rodgers 'data set' 'stop change' message.
+       The shortest valid one is F0 41 dd 30 12 01 kk cs F7 (9 bytes).
+       Shorter ones would make msg.size() - 9 wrap around */
     if (
-      msg.size() >= 8 && msg[0] == 0xf0 && msg[1] == 0x41 && msg[3] == 0x30
+      msg.size() >= 9 && msg[0] == 0xf0 && msg[1] == 0x41 && msg[3] == 0x30
       && msg[4] == 0x12 && msg[5] == 0x01
       && msg[msg.size() - 2] == GORodgersChecksum(msg, 5, msg.size() - 7)
       && msg[msg.size() - 1] == 0xf7) {
