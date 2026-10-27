@@ -40,20 +40,15 @@ constexpr const char *OUTPUT_32 = "Output:32";
 // Shared state of the simulated input and output ports. The base classes
 // declare different Open() signatures (the input takes a channel shift),
 // so each concrete class keeps its own override.
-template <class Base>
-class TestMidiPort : public Base {
+template <class Base> class TestMidiPort : public Base {
 protected:
   const bool m_Available;
 
 public:
   unsigned m_Opens = 0;
 
-  TestMidiPort(
-    GOMidiSystem &midi,
-    const wxString &name,
-    bool available = true)
-    : Base(&midi, PORT_NAME, API_NAME, name, name),
-      m_Available(available) {}
+  TestMidiPort(GOMidiSystem &midi, const wxString &name, bool available = true)
+    : Base(&midi, PORT_NAME, API_NAME, name, name), m_Available(available) {}
 
   bool BeginOpen() {
     ++m_Opens;
@@ -92,7 +87,7 @@ void configure_test_ports(GOConfig &config) {
   config.SetMidiPortsConfig(ports);
 }
 
-}  // namespace
+} // namespace
 
 void GOTestMidiSystem::TestLateDiscovery() {
   GOConfig config(GetName(), "");
@@ -108,7 +103,7 @@ void GOTestMidiSystem::TestLateDiscovery() {
     midi.HasPendingDevices(),
     "Configured ports must stay pending while their devices are absent");
   GOAssert(
-    midi.m_pDiscoveryTimer->IsRunning(),
+    midi.o_DiscoveryTimer->IsRunning(),
     "Absent configured ports must start discovery");
 
   TestMidiInput *in = new TestMidiInput(midi, INPUT_28);
@@ -134,7 +129,7 @@ void GOTestMidiSystem::TestLateDiscovery() {
     !midi.HasPendingDevices(),
     "Discovery must stop after all configured ports connect");
   GOAssert(
-    !midi.m_pDiscoveryTimer->IsRunning(),
+    !midi.o_DiscoveryTimer->IsRunning(),
     "Discovery must stop after all configured ports connect");
 }
 
@@ -155,7 +150,7 @@ void GOTestMidiSystem::TestFailedOpen() {
     midi.HasPendingDevices(),
     "Failed opens must keep the configuration pending");
   GOAssert(
-    midi.m_pDiscoveryTimer->IsRunning(),
+    midi.o_DiscoveryTimer->IsRunning(),
     "A failed open must continue discovery");
 
   TestMidiInput *readyIn = new TestMidiInput(midi, INPUT_32);
@@ -167,11 +162,9 @@ void GOTestMidiSystem::TestFailedOpen() {
 
   midi.OnDiscoveryTimer(event);
   GOAssert(
-    readyIn->IsActive(),
-    "Discovery must retry an input at a new address");
+    readyIn->IsActive(), "Discovery must retry an input at a new address");
   GOAssert(
-    readyOut->IsActive(),
-    "Discovery must retry an output at a new address");
+    readyOut->IsActive(), "Discovery must retry an output at a new address");
   GOAssert(
     readyIn->GetID() == midi.GetMidiMap().GetDeviceIdByLogicalName(KEYBOARD),
     "A retried input must keep its saved logical mapping");
@@ -179,10 +172,9 @@ void GOTestMidiSystem::TestFailedOpen() {
     readyOut->GetID() == midi.GetMidiMap().GetDeviceIdByLogicalName(CONSOLE),
     "A retried output must keep its saved logical mapping");
   GOAssert(
-    !midi.HasPendingDevices(),
-    "Discovery must stop after successful retries");
+    !midi.HasPendingDevices(), "Discovery must stop after successful retries");
   GOAssert(
-    !midi.m_pDiscoveryTimer->IsRunning(),
+    !midi.o_DiscoveryTimer->IsRunning(),
     "Discovery must stop after successful retries");
 }
 

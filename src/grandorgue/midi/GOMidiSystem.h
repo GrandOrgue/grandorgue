@@ -8,6 +8,8 @@
 #ifndef GOMIDISYSTEM_H
 #define GOMIDISYSTEM_H
 
+#include <memory>
+
 #include <wx/event.h>
 
 #include "config/GOPortsConfig.h"
@@ -18,6 +20,7 @@ class GOMidiEvent;
 class GOMidiPort;
 class GOMidiListener;
 class GOMidiMap;
+class GOMidiDeviceConfig;
 class GOMidiDeviceConfigList;
 class GOConfig;
 class GOOrganController;
@@ -48,15 +51,22 @@ private:
    * Periodically discovers configured MIDI ports that were unavailable
    * when the MIDI system was opened
    */
-  wxTimer *m_pDiscoveryTimer;
+  std::unique_ptr<wxTimer> o_DiscoveryTimer;
+
+  /**
+   * Stops the discovery timer if it is running
+   */
+  void EnsureDiscoveryTimerStopped();
 
   /**
    * Whether a configured and enabled MIDI port in configs has no
    * active port in ports
    */
-  bool HasPendingDevices(
+  static bool hasPendingDevices(
     const GOMidiDeviceConfigList &configs,
-    const ptr_vector<GOMidiPort> &ports) const;
+    const ptr_vector<GOMidiPort> &ports,
+    const GOPortsConfig &portsConfig,
+    const GOMidiMap &midiMap);
 
   /**
    * Whether a configured and enabled MIDI input or output port has
@@ -77,11 +87,37 @@ private:
   void OnDiscoveryTimer(wxTimerEvent &event);
 
   /**
-   * Discovery opens only inactive, configured ports. Explicit Open()
-   * must still reopen active ports to apply settings and reset MIDI
-   * state.
+   * Opens or closes the ports of one direction according to their configs
+   *
+   * @param isToReconnectActive whether already active ports are reopened.
+   * Discovery passes false, so that an active port is not reopened even if
+   * the backend now reports a different native address for it; an explicit
+   * Open() passes true, to apply the settings and reset the MIDI state
    */
-  void OpenDevices(bool onlyInactive);
+  void OpenDevices(bool isToReconnectActive);
+
+  /**
+   * Opens or closes one port according to its device config
+   *
+   * @param pPort the port to process
+   * @param configs the device configs of the direction of pPort
+   * @param isToAutoAdd whether a config is created for a port which has none
+   * @param isToReconnectActive whether an already active port is reopened
+   */
+  void OpenOrClosePort(
+    GOMidiPort *pPort,
+    GOMidiDeviceConfigList &configs,
+    bool isToAutoAdd,
+    bool isToReconnectActive);
+
+  /**
+   * Opens one port with the settings of its device config
+   *
+   * @param pPort the port to open
+   * @param devConf the config holding the logical name and the channel shift
+   * @return whether the port is active after the attempt
+   */
+  bool OpenPort(GOMidiPort *pPort, const GOMidiDeviceConfig &devConf);
 
 public:
   GOMidiSystem(GOConfig &settings);

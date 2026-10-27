@@ -32,7 +32,7 @@ END_EVENT_TABLE()
 GOMidiSystem::GOMidiSystem(GOConfig &config)
   : m_config(config),
     m_MidiMap(config.GetMidiMap()),
-    m_pDiscoveryTimer(new wxTimer(this, ID_MIDI_DISCOVERY_TIMER)) {}
+    o_DiscoveryTimer(new wxTimer(this, ID_MIDI_DISCOVERY_TIMER)) {}
 
 void GOMidiSystem::UpdateDevices(const GOPortsConfig &portsConfig) {
   m_MidiFactory.addMissingInDevices(this, portsConfig, m_midi_in_devices);
@@ -40,50 +40,53 @@ void GOMidiSystem::UpdateDevices(const GOPortsConfig &portsConfig) {
 }
 
 GOMidiSystem::~GOMidiSystem() {
-  if (m_pDiscoveryTimer->IsRunning())
-    m_pDiscoveryTimer->Stop();
-  delete m_pDiscoveryTimer;
+  EnsureDiscoveryTimerStopped();
   m_midi_in_devices.clear();
   m_midi_out_devices.clear();
 
   GOMidiPortFactory::terminate();
 }
 
+void GOMidiSystem::EnsureDiscoveryTimerStopped() {
+  if (o_DiscoveryTimer->IsRunning())
+    o_DiscoveryTimer->Stop();
+}
+
 void GOMidiSystem::Open() {
-  if (m_pDiscoveryTimer->IsRunning())
-    m_pDiscoveryTimer->Stop();
-  OpenDevices(false);
+  EnsureDiscoveryTimerStopped();
+  OpenDevices(true);
   if (HasPendingDevices())
-    m_pDiscoveryTimer->Start(MIDI_DISCOVERY_INTERVAL_MS);
+    o_DiscoveryTimer->Start(MIDI_DISCOVERY_INTERVAL_MS);
 }
 
 bool GOMidiSystem::HasPendingDevices() const {
-  return HasPendingDevices(m_config.m_MidiIn, m_midi_in_devices)
-    || HasPendingDevices(m_config.m_MidiOut, m_midi_out_devices);
-}
-
-bool GOMidiSystem::HasPendingDevices(
-  const GOMidiDeviceConfigList &configs,
-  const ptr_vector<GOMidiPort> &ports) const {
   const GOPortsConfig &portsConfig = m_config.GetMidiPortsConfig();
 
+  return hasPendingDevices(
+           m_config.m_MidiIn, m_midi_in_devices, portsConfig, m_MidiMap)
+    || hasPendingDevices(
+           m_config.m_MidiOut, m_midi_out_devices, portsConfig, m_MidiMap);
+}
+
+bool GOMidiSystem::hasPendingDevices(
+  const GOMidiDeviceConfigList &configs,
+  const ptr_vector<GOMidiPort> &ports,
+  const GOPortsConfig &portsConfig,
+  const GOMidiMap &midiMap) {
   return std::ranges::any_of(
     configs,
-    [this, &ports, &portsConfig](const GOMidiDeviceConfig *config) {
+    [&ports, &portsConfig, &midiMap](const GOMidiDeviceConfig *config) {
       bool isPending = false;
 
       if (
         config->m_IsEnabled
-        && portsConfig.IsEnabled(
-          config->GetPortName(), config->GetApiName())) {
+        && portsConfig.IsEnabled(config->GetPortName(), config->GetApiName())) {
         const unsigned id
-          = m_MidiMap.GetDeviceIdByLogicalName(config->GetLogicalName());
+          = midiMap.GetDeviceIdByLogicalName(config->GetLogicalName());
 
-        isPending = !std::ranges::any_of(
-          ports,
-          [id](const GOMidiPort *port) {
-            return port->IsActive() && port->GetID() == id;
-          });
+        isPending = !std::ranges::any_of(ports, [id](const GOMidiPort *port) {
+          return port->IsActive() && port->GetID() == id;
+        });
       }
       return isPending;
     });
@@ -98,80 +101,81 @@ void GOMidiSystem::DiscoverDevices() {
     // error dialogs; an explicit Open() continues to report errors normally.
     wxLogNull quiet;
 
-    OpenDevices(true);
+    OpenDevices(false);
   }
 }
 
 void GOMidiSystem::OnDiscoveryTimer(wxTimerEvent &WXUNUSED(event)) {
   DiscoverDevices();
   if (!HasPendingDevices())
-    m_pDiscoveryTimer->Stop();
+    EnsureDiscoveryTimerStopped();
 }
 
-void GOMidiSystem::OpenDevices(bool onlyInactive) {
-  const bool isToAutoAdd = !onlyInactive && m_config.IsToAutoAddMidi();
+void GOMidiSystem::OpenDevices(bool isToReconnectActive) {
   const GOPortsConfig &portsConfig(m_config.GetMidiPortsConfig());
-  GOMidiDeviceConfigList &midiIn = m_config.m_MidiIn;
 
   UpdateDevices(portsConfig);
 
-  for (GOMidiPort *pPort : m_midi_in_devices) {
-    if (!onlyInactive || !pPort->IsActive()) {
-      const wxString &portName = pPort->GetPortName();
-      const wxString &apiName = pPort->GetApiName();
-      GOMidiDeviceConfig *pDevConf = NULL;
+  for (GOMidiPort *pPort : m_midi_in_devices)
+    OpenOrClosePort(
+      pPort,
+      m_config.m_MidiIn,
+      isToReconnectActive && m_config.IsToAutoAddMidi(),
+      isToReconnectActive);
+  for (GOMidiPort *pPort : m_midi_out_devices)
+    OpenOrClosePort(pPort, m_config.m_MidiOut, false, isToReconnectActive);
+}
 
-      if (pPort->IsToUse() && portsConfig.IsEnabled(portName, apiName)) {
-        const wxString &physicalName = pPort->GetName();
+void GOMidiSystem::OpenOrClosePort(
+  GOMidiPort *pPort,
+  GOMidiDeviceConfigList &configs,
+  bool isToAutoAdd,
+  bool isToReconnectActive) {
+  const bool isToProcess = isToReconnectActive || !pPort->IsActive();
+  const GOPortsConfig &portsConfig = m_config.GetMidiPortsConfig();
 
-        pDevConf = midiIn.FindByPhysicalName(physicalName, portName, apiName);
-        if (!pDevConf && isToAutoAdd)
-          pDevConf = midiIn.Append(
-            pPort->GetDefaultLogicalName(),
-            pPort->GetDefaultRegEx(),
-            portName,
-            apiName,
-            true,
-            physicalName);
-      }
-      if (pDevConf && pDevConf->m_IsEnabled) {
-        const bool opened = ((GOMidiInPort *)pPort)
-                              ->Open(
-                                m_MidiMap.EnsureLogicalName(
-                                  pDevConf->GetLogicalName()),
-                                pDevConf->m_ChannelShift);
+  if (isToProcess) {
+    const wxString &portName = pPort->GetPortName();
+    const wxString &apiName = pPort->GetApiName();
+    GOMidiDeviceConfig *pDevConf = NULL;
 
-        // If opening raced device removal, allow the next scan to match
-        // its replacement instead of retaining the failed port's physical
-        // name.
-        if (onlyInactive && !opened)
-          pDevConf->SetPhysicalName(wxEmptyString);
-      } else
-        pPort->Close();
+    if (pPort->IsToUse() && portsConfig.IsEnabled(portName, apiName)) {
+      const wxString &physicalName = pPort->GetName();
+
+      pDevConf = configs.FindByPhysicalName(physicalName, portName, apiName);
+      if (!pDevConf && isToAutoAdd)
+        pDevConf = configs.Append(
+          pPort->GetDefaultLogicalName(),
+          pPort->GetDefaultRegEx(),
+          portName,
+          apiName,
+          true,
+          physicalName);
     }
+    if (pDevConf && pDevConf->m_IsEnabled) {
+      const bool isOpen = OpenPort(pPort, *pDevConf);
+
+      // If opening raced device removal, allow the next scan to match
+      // its replacement instead of retaining the failed port's physical
+      // name.
+      if (!isToReconnectActive && !isOpen)
+        pDevConf->SetPhysicalName(wxEmptyString);
+    } else if (pPort->IsActive())
+      pPort->Close();
   }
+}
 
-  for (GOMidiPort *pPort : m_midi_out_devices) {
-    if (!onlyInactive || !pPort->IsActive()) {
-      const wxString &portName = pPort->GetPortName();
-      const wxString &apiName = pPort->GetApiName();
-      GOMidiDeviceConfig *devConf = NULL;
+bool GOMidiSystem::OpenPort(
+  GOMidiPort *pPort, const GOMidiDeviceConfig &devConf) {
+  const unsigned id = m_MidiMap.EnsureLogicalName(devConf.GetLogicalName());
+  GOMidiInPort *pInPort = dynamic_cast<GOMidiInPort *>(pPort);
+  bool isOpen = false;
 
-      if (
-        pPort->IsToUse() && portsConfig.IsEnabled(portName, apiName)
-        && (devConf = m_config.m_MidiOut.FindByPhysicalName(
-          pPort->GetName(), portName, apiName))
-        && devConf->m_IsEnabled) {
-        const bool opened
-          = pPort->Open(
-            m_MidiMap.EnsureLogicalName(devConf->GetLogicalName()));
-
-        if (onlyInactive && !opened)
-          devConf->SetPhysicalName(wxEmptyString);
-      } else
-        pPort->Close();
-    }
-  }
+  if (pInPort)
+    isOpen = pInPort->Open(id, devConf.m_ChannelShift);
+  else
+    isOpen = pPort->Open(id);
+  return isOpen;
 }
 
 bool GOMidiSystem::HasActiveDevice() {
