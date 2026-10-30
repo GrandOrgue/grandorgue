@@ -38,14 +38,37 @@ struct GOSoundSampler {
    * fader's target volume. When the provider's gain is changed during playback,
    * the sampler applies the ratio of the new gain to this value - see
    * GOSoundSamplerPlayer::ApplyLiveProviderChanges(). */
-  float m_BakedGain;
-  /** The provider tuning (GOSoundProvider::GetTuning()) with which the stream
-   * was initialized. The stream rate is scaled by the ratio of the current
-   * provider tuning to this value. */
-  float m_BakedTuning;
-  /** The provider tuning that is currently reflected in the stream rate. It
-   * differs from the provider's tuning only until the next buffer. */
-  float m_AppliedTuning;
+  float m_TargetGain;
+  /** The provider tuning (GOSoundProvider::GetTuning()) at which
+   * m_TargetResamplerIncrement was computed */
+  float m_TargetTuning;
+  /** The resampling increment (see GOSoundResample::rateToFractionIncrement())
+   * of the stream at the provider tuning m_TargetTuning. When the provider's
+   * tuning is changed during playback, the increment for the new tuning is
+   * scaled from this value, not from the previous result, so the rounding
+   * errors do not accumulate. */
+  unsigned m_TargetResamplerIncrement;
+  /** The resampling increment that is currently passed to
+   * GOSoundStream::ReadBlock(). It differs from the increment for the current
+   * provider tuning only until the next audio buffer. */
+  unsigned m_AppliedResamplerIncrement;
+
+  /**
+   * Sets the resampling increment that corresponds to the provider tuning. The
+   * stream will be read with it, and later tuning changes are scaled from it.
+   * @param tuning the provider tuning (GOSoundProvider::GetTuning()) the
+   *   increment was computed for; must be positive
+   * @param resamplerIncrement the increment of the stream at this tuning
+   */
+  void InitResamplerIncrement(float tuning, unsigned resamplerIncrement);
+
+  /**
+   * @param tuning the provider tuning; must be positive
+   * @return the resampling increment of the stream for the given provider
+   *   tuning, limited as GOSoundResample::scaleFractionIncrement() does
+   */
+  unsigned GetResamplerIncrementFor(float tuning) const;
+
   uint64_t time;
   unsigned velocity;
   unsigned delay;

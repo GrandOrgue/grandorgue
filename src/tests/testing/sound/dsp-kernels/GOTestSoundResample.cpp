@@ -51,15 +51,17 @@ static void assert_constant_rate_equivalent(
   GOSoundResample::ResamplingPosition posInterleaved;
   GOSoundResample::ResamplingPosition posPlanar;
 
-  posInterleaved.Init(1.37f);
-  posPlanar.Init(1.37f);
+  const unsigned fractionIncrement
+    = GOSoundResample::rateToFractionIncrement(1.37f);
+
+  posInterleaved.Init();
+  posPlanar.Init();
 
   GOSoundResample::PtrFrameVector<float, float, N_CHANNELS> fvInterleaved(
     src.data());
   GOSoundResample::PtrFrameVector<float, float, N_CHANNELS> fvPlanar(
     src.data());
-  std::vector<uint16_t> increments(
-    N_OUT_FRAMES, (uint16_t)posPlanar.GetFractionIncrement());
+  std::vector<uint16_t> increments(N_OUT_FRAMES, (uint16_t)fractionIncrement);
 
   std::vector<float> outInterleaved(N_CHANNELS * N_OUT_FRAMES);
 
@@ -71,7 +73,11 @@ static void assert_constant_rate_equivalent(
   typedResampler.template ResampleBlock<
     GOSoundResample::PtrFrameVector<float, float, N_CHANNELS>,
     N_CHANNELS>(
-    posInterleaved, fvInterleaved, outInterleaved.data(), N_OUT_FRAMES);
+    posInterleaved,
+    fractionIncrement,
+    fvInterleaved,
+    outInterleaved.data(),
+    N_OUT_FRAMES);
   typedResampler.template ResampleBlockVariableRatePlanar<
     GOSoundResample::PtrFrameVector<float, float, N_CHANNELS>>(
     posPlanar,
@@ -153,7 +159,7 @@ void GOTestSoundResample::TestVaryingRateCorrectness() {
   GOSoundResample::ResamplingPosition pos;
   std::vector<float> out(N_OUT_FRAMES);
 
-  pos.Init(1.0f);
+  pos.Init();
 
   GOSoundResample::PtrFrameVector<float, float, 1> fv(src.data());
 
@@ -190,8 +196,8 @@ void GOTestSoundResample::TestVaryingRateMaxIncrement() {
   GOSoundResample::ResamplingPosition expectedPos;
   GOSoundResample::PtrFrameVector<float, float, 1> fv(src.data());
 
-  pos.Init(1.0f);
-  expectedPos.Init(1.0f);
+  pos.Init();
+  expectedPos.Init();
   linearResampler.ResampleBlockVariableRatePlanar<
     GOSoundResample::PtrFrameVector<float, float, 1>>(
     pos, fv, increments.data(), N_OUT_FRAMES, 1, out.data(), N_OUT_FRAMES);
@@ -309,7 +315,7 @@ void GOTestSoundResample::TestRingNormalizePosition() {
       planar.data(), 1, N_RING_FRAMES, N_TAIL_FRAMES);
     GOSoundResample::ResamplingPosition pos;
 
-    pos.Init(1.0f);
+    pos.Init();
     for (unsigned step = 1; step <= N_STEPS; step++) {
       pos.Inc(UPSAMPLE_FACTOR);
       ring.NormalizePosition(pos);
@@ -333,7 +339,7 @@ void GOTestSoundResample::TestRingNormalizePosition() {
       planar.data(), 1, N_RING_FRAMES, N_TAIL_FRAMES);
     GOSoundResample::ResamplingPosition pos;
 
-    pos.Init(1.0f);
+    pos.Init();
     for (unsigned step = 1; step <= N_STEPS; step++) {
       pos.Inc(UPSAMPLE_FACTOR * 2);
       ring.NormalizePosition(pos);
@@ -404,8 +410,8 @@ void GOTestSoundResample::TestRingResamplerIntegration() {
   GOSoundResample::ResamplingPosition posRing;
   GOSoundResample::ResamplingPosition posFlat;
 
-  posRing.Init(1.0f, START_INDEX);
-  posFlat.Init(1.0f, START_INDEX);
+  posRing.Init(START_INDEX);
+  posFlat.Init(START_INDEX);
 
   GOSoundResample resampler;
   GOSoundResample::PolyphaseResampler polyphaseResampler(resampler);
@@ -524,7 +530,7 @@ void GOTestSoundResample::TestMaxFractionIncrement() {
   // The largest increment from the largest fraction must not wrap
   GOSoundResample::ResamplingPosition pos;
 
-  pos.Init(1.0f, 0);
+  pos.Init(0);
   pos.Inc(UPSAMPLE_FACTOR - 1);
   GOAssert(pos.IsValid(), "a position after Init() and Inc() must be valid");
   GOAssert(
@@ -542,7 +548,7 @@ void GOTestSoundResample::TestMaxFractionIncrement() {
        {0u, 1u, UPSAMPLE_FACTOR / 2, UPSAMPLE_FACTOR - 1}) {
     GOSoundResample::ResamplingPosition p;
 
-    p.Init(1.0f, 0);
+    p.Init(0);
     p.Inc(startFraction);
 
     const uint64_t sum = (uint64_t)startFraction + MAX_INC;
@@ -570,7 +576,7 @@ void GOTestSoundResample::TestRingOneFrameStep() {
     planar.data(), 1, N_RING_FRAMES, N_TAIL_FRAMES);
   GOSoundResample::ResamplingPosition pos;
 
-  pos.Init(1.0f);
+  pos.Init();
   // Does not trip the assert in a Debug build
   ring.AssertIncrementFits(UPSAMPLE_FACTOR);
   for (unsigned step = 0; step < 4; step++) {
@@ -594,7 +600,7 @@ void GOTestSoundResample::TestGetIndexIncrementByUnits() {
       GOSoundResample::ResamplingPosition pos;
       uint64_t nUnits = 0;
 
-      pos.Init(1.0f, 100);
+      pos.Init(100);
       // Set the starting fraction by one Inc() from the zero fraction
       pos.Inc(startFraction);
 
@@ -641,7 +647,7 @@ void GOTestSoundResample::TestComputeNUnitsToReach() {
       // Inc()-ing exactly that many units lands on index + k, fraction 0
       GOSoundResample::ResamplingPosition pos;
 
-      pos.Init(1.0f, 0);
+      pos.Init(0);
       pos.Inc(fraction);
 
       const unsigned startIndex = pos.GetIndex();
@@ -689,32 +695,30 @@ void GOTestSoundResample::TestComputeNUnitsToReach() {
 
 void GOTestSoundResample::TestIsSameRate() {
   static constexpr float STEP = 1.0f / GOSoundResample::UPSAMPLE_FACTOR;
-  GOSoundResample::ResamplingPosition pos;
+  const unsigned unityIncrement
+    = GOSoundResample::rateToFractionIncrement(1.0f);
 
-  pos.Init(1.0f);
-  GOAssert(pos.IsSameRate(), "Init(1.0f) must be the same rate");
+  GOAssert(
+    GOSoundResample::isSameRate(unityIncrement),
+    "the rate 1.0f must be the same rate");
 
-  GOSoundResample::ResamplingPosition copy;
-
-  // with pOld the factor scales the old increment
-  copy.Init(1.0f, 5, &pos);
-  GOAssert(copy.IsSameRate(), "pOld with the factor 1.0 keeps the rate");
-  copy.Init(0.5f, 5, &pos);
-  GOAssert(!copy.IsSameRate(), "pOld with the factor 0.5 changes the rate");
+  // the ratio scales the base increment
+  GOAssert(
+    GOSoundResample::isSameRate(
+      GOSoundResample::scaleFractionIncrement(unityIncrement, 1.0f)),
+    "the ratio 1.0 keeps the rate");
+  GOAssert(
+    !GOSoundResample::isSameRate(
+      GOSoundResample::scaleFractionIncrement(unityIncrement, 0.5f)),
+    "the ratio 0.5 changes the rate");
 
   const float notSameRates[] = {0.5f, 1.5f, 1.0f + STEP, 1.0f - STEP};
 
-  for (float rate : notSameRates) {
-    GOSoundResample::ResamplingPosition other;
-
-    other.Init(rate);
+  for (float rate : notSameRates)
     GOAssert(
-      !other.IsSameRate(), "rate " + std::to_string(rate) + " is not the same");
-  }
-
-  pos.Inc(3 * GOSoundResample::UPSAMPLE_FACTOR / 2);
-  pos.SetIndex(100);
-  GOAssert(pos.IsSameRate(), "Inc(explicit) and SetIndex() must not change it");
+      !GOSoundResample::isSameRate(
+        GOSoundResample::rateToFractionIncrement(rate)),
+      "rate " + std::to_string(rate) + " is not the same");
 }
 
 void GOTestSoundResample::TestRingGetChannelVector() {
@@ -774,19 +778,28 @@ static void assert_constant_rate_planar(
   GOSoundResample::ResamplingPosition posConst;
   GOSoundResample::ResamplingPosition posVar;
 
-  posConst.Init(rate, START_INDEX);
-  posVar.Init(rate, START_INDEX);
+  const unsigned fractionIncrement
+    = GOSoundResample::rateToFractionIncrement(rate);
+
+  posConst.Init(START_INDEX);
+  posVar.Init(START_INDEX);
   // a non-zero starting fraction
   posConst.Inc(1000);
   posVar.Inc(1000);
 
   const std::vector<uint16_t> increments(
-    N_OUT_FRAMES, (uint16_t)posVar.GetFractionIncrement());
+    N_OUT_FRAMES, (uint16_t)fractionIncrement);
   std::vector<float> outConst(nChannels * N_OUT_FRAMES);
   std::vector<float> outVar(nChannels * N_OUT_FRAMES);
 
   resampler.template ResampleBlockConstantRatePlanar<Ring>(
-    posConst, ring, N_OUT_FRAMES, nChannels, outConst.data(), N_OUT_FRAMES);
+    posConst,
+    fractionIncrement,
+    ring,
+    N_OUT_FRAMES,
+    nChannels,
+    outConst.data(),
+    N_OUT_FRAMES);
   resampler.template ResampleBlockVariableRatePlanar<Ring>(
     posVar,
     ring,
@@ -832,77 +845,53 @@ void GOTestSoundResample::TestConstantRatePlanar() {
     }
 }
 
-void GOTestSoundResample::TestSetRelativeRate() {
+void GOTestSoundResample::TestScaleFractionIncrement() {
   static constexpr unsigned UPSAMPLE_FACTOR = GOSoundResample::UPSAMPLE_FACTOR;
   static constexpr unsigned MAX_INC = GOSoundResample::MAX_FRACTION_INCREMENT;
 
-  GOSoundResample::ResamplingPosition pos;
-
-  pos.Init(1.0f, 7);
-  pos.Inc(UPSAMPLE_FACTOR / 3);
-
-  const unsigned index = pos.GetIndex();
-  const unsigned fraction = pos.GetFraction();
-
-  // the ratio 1.0 keeps the increment
-  pos.SetRelativeRate(1.0f);
-  GOAssert(pos.IsSameRate(), "the ratio 1.0 must keep the unity rate");
-
-  // the ratio 2.0 doubles it and keeps the position
-  pos.SetRelativeRate(2.0f);
+  // the ratio 1.0 keeps the increment, the ratio 2.0 doubles it
   GOAssert(
-    pos.GetFractionIncrement() == 2 * UPSAMPLE_FACTOR,
+    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 1.0f)
+      == UPSAMPLE_FACTOR,
+    "the ratio 1.0 must keep the increment");
+  GOAssert(
+    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 2.0f)
+      == 2 * UPSAMPLE_FACTOR,
     "the ratio 2.0 must double the increment");
-  GOAssert(
-    pos.GetIndex() == index && pos.GetFraction() == fraction,
-    "SetRelativeRate() must keep the position");
-  GOAssert(pos.IsValid(), "the position must stay valid");
 
-  // 100 cents up from 1.0 and back many times must not drift: the result
-  // depends on the last ratio only
+  // The result is computed from the base only, so 100 cents up from the base
+  // and back many times cannot drift
   const float centUp = std::pow(2.0f, 100.0f / 1200.0f);
+  unsigned increment = UPSAMPLE_FACTOR;
 
   for (unsigned i = 0; i < 1000; i++) {
-    pos.SetRelativeRate(centUp);
-    pos.SetRelativeRate(1.0f);
+    increment
+      = GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, centUp);
+    increment = GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 1.0f);
   }
-  GOAssert(pos.IsSameRate(), "1000 round trips must return exactly to unity");
-  pos.SetRelativeRate(centUp);
   GOAssert(
-    pos.GetFractionIncrement()
+    increment == UPSAMPLE_FACTOR, "the ratio 1.0 must return exactly to unity");
+  GOAssert(
+    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, centUp)
       == (unsigned)std::lround((double)centUp * UPSAMPLE_FACTOR),
-    "the result must depend on the last ratio only");
-
-  // a base that Init() set from pOld is the base, not the very first rate
-  GOSoundResample::ResamplingPosition aligned;
-
-  aligned.Init(1.0f, 0, &pos);
-  aligned.SetRelativeRate(1.0f);
-  GOAssert(
-    aligned.GetFractionIncrement() == pos.GetFractionIncrement(),
-    "the base of a stream initialized from pOld is the copied increment");
+    "the result must depend on the base and the ratio only");
 
   // limits
-  pos.SetRelativeRate(1e9f);
   GOAssert(
-    pos.GetFractionIncrement() == MAX_INC && pos.IsValid(),
+    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 1e9f) == MAX_INC,
     "a huge ratio must be limited to MAX_FRACTION_INCREMENT");
-  pos.SetRelativeRate(1e-9f);
   GOAssert(
-    pos.GetFractionIncrement() == 1,
+    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 1e-9f) == 1,
     "a tiny ratio must be limited to the increment 1");
 
   // a zero base stays zero
-  GOSoundResample::ResamplingPosition zeroPos;
-
-  zeroPos.Init(0.0f);
-  zeroPos.SetRelativeRate(2.0f);
   GOAssert(
-    zeroPos.GetFractionIncrement() == 0, "a zero increment must stay zero");
+    GOSoundResample::scaleFractionIncrement(0, 2.0f) == 0,
+    "a zero increment must stay zero");
 }
 
 void GOTestSoundResample::run() {
-  GO_RUN_TEST(TestSetRelativeRate())
+  GO_RUN_TEST(TestScaleFractionIncrement())
   GO_RUN_TEST(TestIsSameRate())
   GO_RUN_TEST(TestRingGetChannelVector())
   GO_RUN_TEST(TestConstantRatePlanar())

@@ -16,6 +16,7 @@
 #include <iterator>
 #include <mutex>
 #include <numbers>
+#include <numeric>
 #include <thread>
 #include <vector>
 
@@ -802,6 +803,9 @@ std::vector<float> GOTestSoundOrganEngine::RunLiveChangeScenario(
   // The random detune of the start of a pipe would make runs differ
   engine.SetRandomizeSpeaking(false);
 
+  // No pipe exists on windchest 1, so BuildAndStartEngine() did not build a
+  // grid cell for it - route it explicitly before starting a sample there.
+  // Without it GetWindchestGroupTask() hits assert(pTask).
   GOSoundOrganEngine::AudioGroupRoutingChange routingChange
     = engine.PrepareSoundRoutingFor({{1, 0}});
 
@@ -835,11 +839,11 @@ std::vector<float> GOTestSoundOrganEngine::RunLiveChangeScenario(
     engine.ProcessAudioCallback(0, buf);
 
     const float *pData = buf.GetChannelBuffer(0).GetData();
-    float energy = 0.0f;
 
-    for (unsigned frameI = 0; frameI < N_SAMPLES_PER_BUFFER; ++frameI)
-      energy += pData[frameI] * pData[frameI];
-    periodEnergies.push_back(energy);
+    periodEnergies.push_back(std::accumulate(
+      pData, pData + N_SAMPLES_PER_BUFFER, 0.0f, [](float energy, float item) {
+        return energy + item * item;
+      }));
   }
 
   engine.SetStreaming(false);
@@ -851,8 +855,7 @@ std::vector<float> GOTestSoundOrganEngine::RunLiveChangeScenario(
 void GOTestSoundOrganEngine::TestPlayingSamplerFollowsProviderChanges() {
   static constexpr unsigned CHANGE_PERIOD_I = 50;
   // The fader changes the volume smoothly in 1024 frames
-  static constexpr unsigned RAMP_PERIODS
-    = 1024 / N_SAMPLES_PER_BUFFER + 2;
+  static constexpr unsigned RAMP_PERIODS = 1024 / N_SAMPLES_PER_BUFFER + 2;
   static constexpr unsigned FIRST_SETTLED_PERIOD_I
     = CHANGE_PERIOD_I + RAMP_PERIODS;
 
@@ -915,8 +918,7 @@ void GOTestSoundOrganEngine::TestPlayingSamplerFollowsProviderChanges() {
       nCheckedPeriods++;
     }
   }
-  GOAssert(
-    nCheckedPeriods > 20, "the sample must be audible after the change");
+  GOAssert(nCheckedPeriods > 20, "the sample must be audible after the change");
 
   // the gain must change gradually: in the period of the change the same
   // samples are scaled by a factor between 1.0 and 0.5, so the energy is

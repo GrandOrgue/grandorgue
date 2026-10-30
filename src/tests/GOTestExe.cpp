@@ -67,6 +67,7 @@
 #include "testing/sound/playing/GOTestPerfSoundPlayingFader.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
 #include "testing/sound/playing/GOTestSoundPlayingFader.h"
+#include "testing/sound/playing/GOTestSoundSampler.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
 #include "testing/sound/playing/GOTestSoundToneBalanceFilter.h"
 #include "testing/sound/processing/GOTestSoundProcessingChain.h"
@@ -277,6 +278,7 @@ int main(int argc, char *argv[]) {
   GOTestReleaseAlignTable testReleaseAlignTable;
   GOTestSoundPlayingFader testSoundPlayingFader;
   GOTestPerfSoundPlayingFader testPerfSoundPlayingFader;
+  GOTestSoundSampler testSoundSampler;
   GOTestSoundStream testSoundStream;
   GOTestSoundLinearFaderCore testSoundLinearFaderCore;
   GOTestPerfSoundLinearFaderCore testPerfSoundLinearFaderCore;
