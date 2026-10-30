@@ -92,9 +92,8 @@ private:
    * be on the right side of the bound. */
   void TestComputeNUnitsToReach();
 
-  /** ResamplingPosition::IsSameRate() is true only for the exact unity
-   * increment, survives the copy via Init(pOld), and is unaffected by
-   * Inc(explicit) and SetIndex(). */
+  /** GOSoundResample::isSameRate() is true only for the exact unity
+   * increment, also after scaling it by the ratio 1.0. */
   void TestIsSameRate();
 
   /** RingPlanarFrameVector::GetChannelVector() reads the same items as Seek()
@@ -107,11 +106,11 @@ private:
    * resamplers. */
   void TestConstantRatePlanar();
 
-  /** ResamplingPosition::SetRelativeRate() scales the increment that Init()
-   * set, keeps the index and fraction, does not accumulate rounding errors
-   * over many calls, is limited to 1..MAX_FRACTION_INCREMENT, and is
-   * independent of the previous SetRelativeRate() calls. */
-  void TestSetRelativeRate();
+  /** GOSoundResample::scaleFractionIncrement() scales the base increment, does
+   * not accumulate rounding errors over many calls because the result depends
+   * on the base and the ratio only, is limited to 1..MAX_FRACTION_INCREMENT,
+   * and keeps a zero increment. */
+  void TestScaleFractionIncrement();
 
 public:
   std::string GetName() override { return TEST_NAME; }

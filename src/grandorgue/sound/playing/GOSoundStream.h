@@ -34,7 +34,7 @@ private:
   class StreamCacheReadAheadWindow;
 
   typedef void (GOSoundStream::*DecodeBlockFunction)(
-    float *pOut, unsigned nOutSamples);
+    float *pOut, unsigned nOutSamples, unsigned fractionIncrement);
 
   /* Method used to decode stream */
   DecodeBlockFunction decode_call;
@@ -72,7 +72,8 @@ private:
    * the audio is. The fade engine should ensure that this data is always
    * brought into the correct range. */
   template <class ResamplerT, class WindowT>
-  void DecodeBlock(float *pOut, unsigned nOutSamples);
+  void DecodeBlock(
+    float *pOut, unsigned nOutSamples, unsigned fractionIncrement);
 
   /* These functions must be static class members rather than file-scope
    * functions because they reference the private typedef DecodeBlockFunction
@@ -116,16 +117,20 @@ private:
     GOSoundResample::InterpolationType interpolationType);
 
 public:
-  /* Initialize a stream to play this audio section */
+  /**
+   * Initializes a stream to play this audio section from its beginning. The
+   * resampling rate is not stored in the stream: the owner passes it to
+   * ReadBlock().
+   */
   void InitStream(
     const GOSoundResample *pResample,
     const GOSoundAudioSection *pSection,
-    GOSoundResample::InterpolationType interpolationType,
-    float sampleRateAdjustment);
+    GOSoundResample::InterpolationType interpolationType);
 
   /**
    * Initializes a release stream aligned to the existing attack stream.
-   * Uses release alignment table if available.
+   * Uses release alignment table if available. The fractional part of the
+   * position is taken from the existing stream.
    */
   void InitAlignedStream(
     const GOSoundAudioSection *pSection,
@@ -133,15 +138,21 @@ public:
     const GOSoundStream *pExistingStream);
 
   /**
-   * Changes the pitch of the playing stream, keeping its position. See
-   * GOSoundResample::ResamplingPosition::SetRelativeRate().
-   * @param ratio the new resampling rate divided by the rate at which the
-   *   stream was initialized; must be positive
+   * @return the sample rate of the audio section the stream plays. It is
+   *   used for computing the resampling increment of a stream that takes over
+   *   the rate of another one
    */
-  void SetRelativeRate(float ratio) { m_ResamplingPos.SetRelativeRate(ratio); }
+  unsigned GetSampleRate() const;
 
-  /* Read an audio buffer from an audio section stream */
-  bool ReadBlock(GOSoundBufferMutable &outBuffer);
+  /**
+   * Reads an audio buffer from an audio section stream.
+   * @param fractionIncrement the constant resampling increment in
+   *   1/UPSAMPLE_FACTOR units, see GOSoundResample::rateToFractionIncrement();
+   *   must be non-zero
+   * @param outBuffer the buffer to fill
+   * @return whether the sample has not ended yet
+   */
+  bool ReadBlock(unsigned fractionIncrement, GOSoundBufferMutable &outBuffer);
 };
 
 #endif /* GOSOUNDSTREAM_H */
