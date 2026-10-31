@@ -44,12 +44,14 @@ static constexpr float TOGGLED_HIGH_FREQUENCY = BASELINE_HIGH_FREQUENCY + 1000;
 // GOTestPerfSoundShelfFilterProcessor.cpp's BASELINE_BOTH_NOOP margin
 // because the "nothing changed" case here is likewise dominated by fixed
 // per-call overhead and sensitive to contention from the rest of the test
-// suite running at the same time. No separate Release numbers are available
-// yet, so the Release thresholds reuse the same Debug-derived floor rather
-// than guessing a higher one.
-// TODO: recalibrate once this test has run on CI, separately for each build
-// type - same precedent as GOTestPerfSoundTaskBase.cpp's
-// MIN_COOPERATIVE_ITEMS_PER_SECOND.
+// suite running at the same time. The Release thresholds reuse the same
+// Debug-derived floor rather than guessing a higher one.
+// Recalibrated 2026-10-31 against the CI runs of both repos from
+// 2026-10-17..31, separately per build type: no value came close to its floor
+// in either build type, so the 20% floor is kept instead of being raised. The
+// lowest observed values are 155.5M/17.4M/10.7M calls/sec (Debug) and
+// 268.1M/22.7M/13.0M (Release) for the three cases below, i.e. 3.9x to 4.3x
+// the thresholds.
 #ifdef NDEBUG
 static constexpr double MIN_NOTHING_CHANGED_CALLS_PER_SECOND
   = 36'000'000.0; // 36.0M calls/sec (20% of isolated min observed 183.8M)
