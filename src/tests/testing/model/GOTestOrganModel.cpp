@@ -29,10 +29,13 @@ void GOTestOrganModel::TestAssertSoundRoutingForNoOpWithoutSoundSystem() {
 }
 
 void GOTestOrganModel::TestCollectWindchestsForNode() {
-  GOWindchest *pWindchest1 = new GOWindchest(*controller);
-  GOWindchest *pWindchest2 = new GOWindchest(*controller);
-  const unsigned windchestN1 = controller->AddWindchest(pWindchest1);
-  const unsigned windchestN2 = controller->AddWindchest(pWindchest2);
+  std::unique_ptr<GOWindchest> oWindchest1
+    = std::make_unique<GOWindchest>(*controller);
+  std::unique_ptr<GOWindchest> oWindchest2
+    = std::make_unique<GOWindchest>(*controller);
+  GOWindchest *pWindchest1 = oWindchest1.get();
+  const unsigned windchestN1 = controller->AddWindchest(std::move(oWindchest1));
+  const unsigned windchestN2 = controller->AddWindchest(std::move(oWindchest2));
   GOPipeConfigTreeNode nested(
     &pWindchest1->GetPipeConfig(), controller, nullptr);
 

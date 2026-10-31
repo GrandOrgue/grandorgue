@@ -168,19 +168,19 @@ void GOManual::Load(GOConfigReader &cfg, const wxString &group) {
 
   m_stops.resize(0);
   for (unsigned i = 0; i < nb_stops; i++) {
-    GOStop *pStop = new GOStop(
+    std::unique_ptr<GOStop> oStop = std::make_unique<GOStop>(
       r_OrganModel, GetFirstLogicalKeyMIDINoteNumber(), &m_MidiContextStops);
     unsigned localNumber = i + 1;
 
-    pStop->SetHardName(wxString::Format(WX_ODF_OBJ_NUM_FMT, localNumber));
+    oStop->SetHardName(wxString::Format(WX_ODF_OBJ_NUM_FMT, localNumber));
     buffer.Printf(wxT("Stop%03d"), localNumber);
     buffer.Printf(
       wxT("Stop%03d"), cfg.ReadInteger(ODFSetting, group, buffer, 1, 999));
     cfg.MarkGroupInUse(buffer);
-    pStop->Load(cfg, buffer);
-    pStop->SetElementId(r_OrganModel.GetRecorderElementID(
+    oStop->Load(cfg, buffer);
+    oStop->SetElementId(r_OrganModel.GetRecorderElementID(
       wxString::Format(wxT("M%dS%d"), m_manual_number, i)));
-    m_stops.push_back(pStop);
+    m_stops.push_back(std::move(oStop));
   }
 
   m_couplers.resize(0);
@@ -386,7 +386,9 @@ int GOManual::FindCouplerByName(const wxString &name) const {
   return resIndex;
 }
 
-void GOManual::AddCoupler(GOCoupler *coupler) { m_couplers.push_back(coupler); }
+void GOManual::AddCoupler(std::unique_ptr<GOCoupler> &&oCoupler) {
+  m_couplers.push_back(std::move(oCoupler));
+}
 
 GODivisionalButtonControl *GOManual::GetDivisional(unsigned index) {
   assert(index < m_divisionals.size());
