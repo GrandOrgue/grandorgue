@@ -50,6 +50,7 @@ set(go_tests
     sound/processing/GOSoundProcessingTestImpls.cpp
     sound/processing/GOTestSoundProcessingChain.cpp
     sound/processing/GOTestSoundProcessorTyped.cpp
+    sound/providers/GOTestSoundTremulantProviderSynth.cpp
     sound/reverb/GOTestSoundReverb.cpp
     sound/tasks/GOSoundCooperativeTaskTestImpl.cpp
     sound/tasks/GOSoundTaskTestImpl.cpp
