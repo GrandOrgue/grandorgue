@@ -23,6 +23,10 @@ const std::string GOTestSoundStream::TEST_NAME = "GOTestSoundStream";
 
 static constexpr unsigned SECTION_RATE = 48000;
 static constexpr float SAMPLE_RATE_ADJUSTMENT = 1.0f / SECTION_RATE;
+// The resampling increment for a section of SECTION_RATE: the same rate
+static constexpr unsigned FRACTION_INCREMENT
+  = GOSoundResample::rateToFractionIncrement(
+    SAMPLE_RATE_ADJUSTMENT * SECTION_RATE);
 static constexpr unsigned N_FRAMES = 500;
 static constexpr unsigned N_ATTACK_FRAMES = 100;
 static constexpr unsigned N_FRAMES_PER_BLOCK = 50;
@@ -79,13 +83,12 @@ void GOTestSoundStream::TestReadBlock(
   GOSoundResample resample;
   GOSoundStream stream;
 
-  stream.InitStream(
-    &resample, pSection.get(), interpolationType, SAMPLE_RATE_ADJUSTMENT);
+  stream.InitStream(&resample, pSection.get(), interpolationType);
 
   GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
 
   for (unsigned frameI = 0; frameI < N_FRAMES; frameI += N_FRAMES_PER_BLOCK) {
-    const bool result = stream.ReadBlock(buffer);
+    const bool result = stream.ReadBlock(FRACTION_INCREMENT, buffer);
 
     GOAssert(
       result,
@@ -94,7 +97,7 @@ void GOTestSoundStream::TestReadBlock(
   }
 
   // ReadBlock should return false after exhaustion
-  const bool resultAfterEnd = stream.ReadBlock(buffer);
+  const bool resultAfterEnd = stream.ReadBlock(FRACTION_INCREMENT, buffer);
 
   GOAssert(
     !resultAfterEnd,
@@ -123,15 +126,12 @@ void GOTestSoundStream::TestLoopedStreamAlwaysReturnsTrue() {
   GOSoundStream stream;
 
   stream.InitStream(
-    &resample,
-    pSection.get(),
-    GOSoundResample::GO_LINEAR_INTERPOLATION,
-    SAMPLE_RATE_ADJUSTMENT);
+    &resample, pSection.get(), GOSoundResample::GO_LINEAR_INTERPOLATION);
 
   GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
 
   for (unsigned iterI = 0; iterI < N_ITERATIONS; iterI++) {
-    const bool result = stream.ReadBlock(buffer);
+    const bool result = stream.ReadBlock(FRACTION_INCREMENT, buffer);
 
     GOAssert(
       result,
@@ -151,23 +151,20 @@ void GOTestSoundStream::TestInitAlignedStream() {
   GOSoundStream attackStream;
 
   attackStream.InitStream(
-    &resample,
-    pAttack.get(),
-    GOSoundResample::GO_LINEAR_INTERPOLATION,
-    SAMPLE_RATE_ADJUSTMENT);
+    &resample, pAttack.get(), GOSoundResample::GO_LINEAR_INTERPOLATION);
 
   GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
 
   for (unsigned frameI = 0; frameI < N_ATTACK_FRAMES;
        frameI += N_FRAMES_PER_BLOCK)
-    attackStream.ReadBlock(buffer);
+    attackStream.ReadBlock(FRACTION_INCREMENT, buffer);
 
   GOSoundStream releaseStream;
 
   releaseStream.InitAlignedStream(
     pRelease.get(), GOSoundResample::GO_LINEAR_INTERPOLATION, &attackStream);
 
-  const bool result = releaseStream.ReadBlock(buffer);
+  const bool result = releaseStream.ReadBlock(FRACTION_INCREMENT, buffer);
 
   GOAssert(result, "ReadBlock should return true after InitAlignedStream");
 }
@@ -248,15 +245,12 @@ void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
   // PickEndSegment uses rand(); seed for reproducibility of the test path.
   std::srand(0);
   stream.InitStream(
-    &resample,
-    pSection.get(),
-    GOSoundResample::GO_LINEAR_INTERPOLATION,
-    SAMPLE_RATE_ADJUSTMENT);
+    &resample, pSection.get(), GOSoundResample::GO_LINEAR_INTERPOLATION);
 
   GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
 
   for (unsigned iterI = 0; iterI < N_ITERATIONS; iterI++) {
-    const bool result = stream.ReadBlock(buffer);
+    const bool result = stream.ReadBlock(FRACTION_INCREMENT, buffer);
 
     GOAssert(
       result,
@@ -306,10 +300,7 @@ void GOTestSoundStream::TestCompressedLoopWrapMatchesUncompressed() {
     // the wrap timing (and hence the skip-ahead pattern) matches.
     std::srand(0);
     stream.InitStream(
-      &resample,
-      pSection.get(),
-      GOSoundResample::GO_LINEAR_INTERPOLATION,
-      SAMPLE_RATE_ADJUSTMENT);
+      &resample, pSection.get(), GOSoundResample::GO_LINEAR_INTERPOLATION);
 
     // GOSoundStream::ReadBlock always writes interleaved stereo output,
     // regardless of the source section's channel count.
@@ -320,7 +311,7 @@ void GOTestSoundStream::TestCompressedLoopWrapMatchesUncompressed() {
     GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
 
     for (unsigned iterI = 0; iterI < N_ITERATIONS; iterI++) {
-      stream.ReadBlock(buffer);
+      stream.ReadBlock(FRACTION_INCREMENT, buffer);
       for (unsigned i = 0; i < nBufferItems; i++)
         captured[iterI * nBufferItems + i] = buffer.GetData()[i];
     }

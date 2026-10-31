@@ -45,6 +45,7 @@ set(go_tests
     sound/playing/GOTestPerfSoundPlayingFader.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
     sound/playing/GOTestSoundPlayingFader.cpp
+    sound/playing/GOTestSoundSampler.cpp
     sound/playing/GOTestSoundStream.cpp
     sound/playing/GOTestSoundToneBalanceFilter.cpp
     sound/processing/GOSoundProcessingTestImpls.cpp

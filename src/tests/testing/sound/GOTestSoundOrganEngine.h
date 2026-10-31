@@ -8,6 +8,8 @@
 #ifndef GOTESTSOUNDORGANENGINE_H
 #define GOTESTSOUNDORGANENGINE_H
 
+#include <vector>
+
 #include "GOTestSoundOrganEngineBase.h"
 
 /*
@@ -132,6 +134,29 @@ private:
    * configured attenuation or position (issue #717).
    */
   void TestChainReflectsWindchestEnclosures();
+
+  /*
+   * Starts a sample, runs N periods and, at the given period, changes the
+   * gain and the tuning of the sample's provider while the sample is playing.
+   * Builds, runs and destroys its own engine. The windchest must already be
+   * added to the controller.
+   * @param changePeriodI  the period before which the provider is changed
+   * @param newGain  the new provider gain
+   * @param newTuningCent  the new provider tuning in cents
+   * @return the energy (the sum of squares) of the first output channel of
+   *   every period
+   */
+  std::vector<float> RunLiveChangeScenario(
+    unsigned changePeriodI, float newGain, float newTuningCent);
+
+  /*
+   * A change of the gain or the tuning of the provider of a playing sample is
+   * heard without restriking the key: the output is identical to an unchanged
+   * run before the change, a no-op change does not alter the output at all, a
+   * gain change scales the energy by the squared ratio after the smoothing
+   * ramp, and a tuning change alters the output.
+   */
+  void TestPlayingSamplerFollowsProviderChanges();
 
 public:
   std::string GetName() override { return TEST_NAME; }

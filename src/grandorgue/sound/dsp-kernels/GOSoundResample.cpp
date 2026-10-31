@@ -21,7 +21,9 @@
 
 #include "GOSoundResample.h"
 
+#include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <math.h>
 #include <stdlib.h>
 
@@ -30,12 +32,21 @@
 #endif
 
 void GOSoundResample::ResamplingPosition::Init(
-  float factor, unsigned startIndex, const ResamplingPosition *pOld) {
+  unsigned startIndex, unsigned startFraction) {
+  assert(startFraction < UPSAMPLE_FACTOR);
   m_index = startIndex;
-  m_fraction = pOld ? pOld->m_fraction : 0;
-  m_FractionIncrement = pOld
-    ? (unsigned)roundf(factor * pOld->m_FractionIncrement)
-    : rateToFractionIncrement(factor);
+  m_fraction = startFraction;
+}
+
+unsigned GOSoundResample::scaleFractionIncrement(
+  unsigned fractionIncrement, float ratio) {
+  assert(ratio > 0.0f);
+
+  const double newIncrement = (double)ratio * fractionIncrement;
+
+  return fractionIncrement ? (unsigned)std::clamp(
+           std::round(newIncrement), 1.0, (double)MAX_FRACTION_INCREMENT)
+                           : 0;
 }
 
 static double sinc(const double arg) {
@@ -128,10 +139,13 @@ float *GOSoundResample::NewResampledMono(
   unsigned from_samplerate,
   unsigned to_samplerate) {
   ResamplingPosition resamplingPos;
+  const unsigned fractionIncrement
+    = rateToFractionIncrement((float)from_samplerate / to_samplerate);
 
-  resamplingPos.Init((float)from_samplerate / to_samplerate);
+  resamplingPos.Init();
 
-  unsigned new_len = resamplingPos.AvailableTargetSamples(len);
+  unsigned new_len
+    = resamplingPos.AvailableTargetSamples(len, fractionIncrement);
 
   if (!new_len)
     return NULL;
@@ -145,7 +159,7 @@ float *GOSoundResample::NewResampledMono(
   PolyphaseResampler resampler(*this);
 
   resampler.ResampleBlock<BoundedPtrFrameVector<float, float, 1>, 1>(
-    resamplingPos, w, out, new_len);
+    resamplingPos, fractionIncrement, w, out, new_len);
   len = new_len;
   return out;
 }

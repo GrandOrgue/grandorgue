@@ -220,6 +220,7 @@ sound/mappers/GOSoundEnclosureShelfMapper.cpp
 sound/playing/GOSoundAudioSection.cpp
 sound/playing/GOSoundPlayingFader.cpp
 sound/playing/GOSoundReleaseAlignTable.cpp
+sound/playing/GOSoundSampler.cpp
 sound/playing/GOSoundSamplerPlayer.cpp
 sound/playing/GOSoundSamplerPool.cpp
 sound/playing/GOSoundStream.cpp
