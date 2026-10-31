@@ -24,55 +24,59 @@ const std::string GOTestPerfSoundPlayingFader::TEST_NAME
 // for Release and Debug. Mitems/sec: the frames of an iteration * 2 channels *
 // the Process() calls of the iteration. CI runners are noisy: sizes 512 and
 // 2048 were seen there at a fraction of the local throughput.
+// Rebaselined 2026-10-31 against the CI runs of both repos from 2026-10-17..31
+// (all after commit 341191074 changed the iteration count): every entry is
+// -10% of the worst throughput observed in that window, floored to 2
+// significant figures; entries above that value were left unchanged.
 // Every iteration refills the buffer with ones first (a repeated in-place
 // fade would drive the data to denormals); the refill is a part of the
 // measured time, equal before and after the refactoring of the fader.
 // Format: {buffer_size, min_MItems_per_second}.
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_CONSTANT_GAIN[] = {
 #ifdef NDEBUG
-  // Release, worst runs 4221/6816/702/668, minus 10%
-  {32, 3700},
-  {128, 6100},
-  {512, 630},
-  {2048, 600},
+  // Release, worst runs 3433.2/5520.4/492.2/589.3, minus 10%
+  {32, 3000},
+  {128, 4900},
+  {512, 440},
+  {2048, 530},
 #else
-  // Debug, worst runs 1611/2285/484/557, minus 10%
-  {32, 1400},
-  {128, 2000},
+  // Debug, worst runs 1497.5/2221.5/484/501.5, minus 10%
+  {32, 1300},
+  {128, 1900},
   {512, 430},
-  {2048, 500},
+  {2048, 450},
 #endif
 };
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_RAMP[] = {
 #ifdef NDEBUG
-  // Release, worst runs 2979/3182/635/605, minus 10%
-  {32, 2600},
-  {128, 2500}, // a CI run 2782
-  {512, 570},
-  {2048, 540},
+  // Release, worst runs 2737.0/2589.6/457.0/541.9, minus 10%
+  {32, 2400},
+  {128, 2300},
+  {512, 410},
+  {2048, 480},
 #else
-  // Debug, worst runs 1378/1592/449/511, minus 10%
-  {32, 1200},
-  {128, 1400},
+  // Debug, worst runs 1104.3/1289.3/449/474.7, minus 10%
+  {32, 990},
+  {128, 1100},
   {512, 400},
-  {2048, 450},
+  {2048, 420},
 #endif
 };
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_GROWTH_TO_DECAY[] = {
 #ifdef NDEBUG
-  // Release, worst runs 3462/4625/1197/1114, minus 10%
-  {32, 3100},
-  {128, 4100},
-  {512, 1000},
-  {2048, 1000},
+  // Release, worst runs 3049.4/4018.5/874.7/1037.0, minus 10%
+  {32, 2700},
+  {128, 3600},
+  {512, 780},
+  {2048, 930},
 #else
-  // Debug, worst runs 1401/1943/783/881, minus 10%
+  // Debug, worst runs 1401/1818.8/783/811.9, minus 10%
   {32, 1200},
-  {128, 1700},
+  {128, 1600},
   {512, 700},
-  {2048, 790},
+  {2048, 730},
 #endif
 };
 
@@ -80,17 +84,17 @@ static constexpr GOTestPerfSoundBufferBaseline
   BASELINE_TARGET_REACHED_MID_BLOCK[]
   = {
 #ifdef NDEBUG
-    // Release, worst runs 2880/3199/637/585, minus 10%
+    // Release, worst runs 2880/2610.0/457.8/542.5, minus 10%
     {32, 2500},
-    {128, 2500}, // a CI run 2779
-    {512, 570},
-    {2048, 520},
+    {128, 2300},
+    {512, 410},
+    {2048, 480},
 #else
-    // Debug, worst runs 1427/1619/450/514, minus 10%
-    {32, 1200},
-    {128, 1400},
+    // Debug, worst runs 1203.4/1312.1/450/476.1, minus 10%
+    {32, 1000},
+    {128, 1100},
     {512, 400},
-    {2048, 460},
+    {2048, 420},
 #endif
 };
 

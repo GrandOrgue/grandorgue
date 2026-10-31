@@ -38,6 +38,10 @@ const std::string GOTestPerfSoundResample::TEST_NAME
 // for the mono cases (nOutChannels=1) that numerically equals Mframes/sec,
 // so their tables are unaffected in value; the Stereo24 tables' values are
 // 2x their own frame throughput, noted individually below.
+// A further recalibration pass (2026-10-31, against the CI runs of both
+// GrandOrgue/grandorgue and oleg68/GrandOrgue-official made 2026-10-17..31,
+// after commit 341191074 changed the iteration count) re-derived every table
+// from the worst throughput observed in that window with the same -10% margin.
 // Format: {buffer_size, min_MItems_per_second} - see
 // GOTestPerfSoundBufferBase::RunAndEvaluateTest().
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_MONO_FLOAT_LINEAR[] = {
@@ -65,17 +69,20 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_MONO_FLOAT_LINEAR[] = {
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_MONO_FLOAT_POLYPHASE[]
   = {
 #ifdef NDEBUG
-    // Release, worst of all local and CI runs 279.8/312.4/375.3/524.1, minus
-    // 10%
+    // Release, worst of all local and CI runs 279.8/312.4/375.3/507.5, minus
+    // 10%, floored to 2 significant figures (rebaselined 2026-10-31 against
+    // the 2026-10-17..31 CI runs of both repos)
     {32, 250},
     {128, 280},
     {512, 330},
-    {2048, 470},
+    {2048, 450},
 #else
-    // Debug, worst of all local and CI runs 75.2/76.1/76.7/76.7, minus 10%
-    {32, 67},
-    {128, 68},
-    {512, 69},
+    // Debug, worst of all local and CI runs 72.4/74.1/75.2/76.7, minus 10%,
+    // floored to 2 significant figures (rebaselined 2026-10-31 against the
+    // 2026-10-17..31 CI runs of both repos)
+    {32, 65},
+    {128, 66},
+    {512, 67},
     {2048, 69},
 #endif
 };
@@ -108,11 +115,13 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_STEREO24_POLYPHASE[] = {
   {512, 100},
   {2048, 100},
 #else
-  // Debug, worst of all local and CI runs 54.2/54.2/54.0/54.1, minus 10%
-  {32, 48},
-  {128, 48},
-  {512, 48},
-  {2048, 48},
+  // Debug, worst of all local and CI runs 47.2/47.8/47.3/47.5, minus 10%,
+  // floored to 2 significant figures (rebaselined 2026-10-31 against the
+  // 2026-10-17..31 CI runs of both repos)
+  {32, 42},
+  {128, 43},
+  {512, 42},
+  {2048, 42},
 #endif
 };
 
@@ -295,11 +304,13 @@ static constexpr GOTestPerfSoundBufferBaseline
   = {
 #ifdef NDEBUG
     // Release, worst of local runs and GrandOrgue/grandorgue CI runs
-    // 786.0/810.0/788.9/802.0, minus 10%.
-    {32, 700},
-    {128, 720},
-    {512, 710},
-    {2048, 720},
+    // 728.4/770.7/785.1/788.5, minus 10%, floored to 2 significant figures
+    // (rebaselined 2026-10-31 against the 2026-10-17..31 CI runs of both
+    // repos).
+    {32, 650},
+    {128, 690},
+    {512, 700},
+    {2048, 700},
 #else
     // Debug, single local run 217.4/233.3/236.2/235.2.
     {32, 190},
@@ -321,11 +332,13 @@ static constexpr GOTestPerfSoundBufferBaseline
     {2048, 310},
 #else
     // Debug, worst of local runs and GrandOrgue/grandorgue CI runs
-    // 58.2/62.8/63.7/65.3, minus 10%.
-    {32, 52},
-    {128, 56},
-    {512, 57},
-    {2048, 58},
+    // 50.8/52.5/51.0/52.0, minus 10%, floored to 2 significant figures
+    // (rebaselined 2026-10-31 against the 2026-10-17..31 CI runs of both
+    // repos).
+    {32, 45},
+    {128, 47},
+    {512, 45},
+    {2048, 46},
 #endif
 };
 
@@ -333,11 +346,13 @@ static constexpr GOTestPerfSoundBufferBaseline
   BASELINE_CONSTANT_RATE_PLANAR_LINEAR[]
   = {
 #ifdef NDEBUG
-    // Release, worst of local and CI runs 719.5/721.3/711.1/713.8, minus 10%.
-    {32, 640},
-    {128, 640},
-    {512, 630},
-    {2048, 640},
+    // Release, worst of local and CI runs 661.5/685.1/684.7/690.8, minus 10%,
+    // floored to 2 significant figures (rebaselined 2026-10-31 against the
+    // 2026-10-17..31 CI runs of both repos).
+    {32, 590},
+    {128, 610},
+    {512, 610},
+    {2048, 620},
 #else
     // Debug, worst of local and CI runs 87.3/90.3/91.1/91.4, minus 10%.
     {32, 78},
@@ -351,11 +366,13 @@ static constexpr GOTestPerfSoundBufferBaseline
   BASELINE_CONSTANT_RATE_PLANAR_POLYPHASE[]
   = {
 #ifdef NDEBUG
-    // Release, worst of local and CI runs 539.0/556.1/560.0/571.1, minus 10%.
-    {32, 480},
-    {128, 500},
-    {512, 500},
-    {2048, 510},
+    // Release, worst of local and CI runs 478.9/503.7/505.5/510.7, minus 10%,
+    // floored to 2 significant figures (rebaselined 2026-10-31 against the
+    // 2026-10-17..31 CI runs of both repos).
+    {32, 430},
+    {128, 450},
+    {512, 450},
+    {2048, 450},
 #else
     // Debug, worst of local and CI runs 40.1/40.9/41.1/41.3, minus 10%.
     {32, 36},
