@@ -324,12 +324,14 @@ static constexpr GOTestPerfSoundBufferBaseline
   BASELINE_VARIABLE_RATE_PLANAR_POLYPHASE[]
   = {
 #ifdef NDEBUG
-    // Release, worst of local runs and GrandOrgue/grandorgue CI runs
-    // 333.1/352.2/352.5/353.7, minus 10%.
-    {32, 290},
-    {128, 310},
-    {512, 310},
-    {2048, 310},
+    // Release, worst of local runs and of the CI runs on both repos
+    // 296.6/297.1/296.4/296.4, minus 10%, floored to 2 significant figures (the
+    // 2026-10-31 run on an Intel Xeon Platinum 8573C was 15..16% below all the
+    // earlier runs).
+    {32, 260},
+    {128, 260},
+    {512, 260},
+    {2048, 260},
 #else
     // Debug, worst of local runs and GrandOrgue/grandorgue CI runs
     // 50.8/52.5/51.0/52.0, minus 10%, floored to 2 significant figures
