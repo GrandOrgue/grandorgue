@@ -80,6 +80,12 @@ public:
     = std::numeric_limits<unsigned>::max() - UPSAMPLE_MASK;
 
   /**
+   * The smallest non-zero increment: the slowest resampling that still moves
+   * the position forward.
+   */
+  static constexpr unsigned MIN_FRACTION_INCREMENT = 1;
+
+  /**
    * The same limit expressed as the largest resampling rate (source frames per
    * target frame) rateToFractionIncrement() accepts. A whole number of frames,
    * so it is exactly representable as float.
@@ -119,21 +125,21 @@ public:
    * stream is changed. The caller should always scale the same base increment,
    * not the result of the previous scaling, so repeated changes do not
    * accumulate rounding errors.
-   * @param fractionIncrement the base increment in 1/UPSAMPLE_FACTOR units
+   * @param resamplerPosIncrement the base increment
    * @param ratio the new rate divided by the rate of the base increment; must
    *   be positive
-   * @return the scaled increment limited to 1..MAX_FRACTION_INCREMENT, or 0 if
-   *   the base increment is 0
+   * @return the scaled increment limited to MIN_FRACTION_INCREMENT..
+   *   MAX_FRACTION_INCREMENT, or 0 if the base increment is 0
    */
-  static unsigned scaleFractionIncrement(
-    unsigned fractionIncrement, float ratio);
+  static unsigned scaleResamplerPosIncrement(
+    unsigned resamplerPosIncrement, float ratio);
 
   /**
-   * @param fractionIncrement an increment in 1/UPSAMPLE_FACTOR units
+   * @param resamplerPosIncrement a resampling increment
    * @return whether the increment is exactly one source frame per target frame
    */
-  static constexpr bool isSameRate(unsigned fractionIncrement) {
-    return fractionIncrement == UPSAMPLE_FACTOR;
+  static constexpr bool isSameRate(unsigned resamplerPosIncrement) {
+    return resamplerPosIncrement == UPSAMPLE_FACTOR;
   }
 
   /**
@@ -188,11 +194,10 @@ public:
      * Advances the position by the increment with no checks. The preconditions
      * are the ones of Inc(unsigned): IsValid() and the increment not above
      * MAX_FRACTION_INCREMENT.
-     * @param fractionIncrement the source-position advance in
-     *   1/UPSAMPLE_FACTOR units
+     * @param resamplerPosIncrement the source-position advance
      */
-    GO_FORCE_INLINE void Advance(unsigned fractionIncrement) {
-      m_fraction += fractionIncrement;
+    GO_FORCE_INLINE void Advance(unsigned resamplerPosIncrement) {
+      m_fraction += resamplerPosIncrement;
       m_index += m_fraction >> UPSAMPLE_BITS;
       m_fraction &= UPSAMPLE_MASK;
     }
@@ -220,35 +225,35 @@ public:
     /**
      * Advance the position for the next target frame by an explicit
      * increment.
-     * @param fractionIncrement the source-position advance for this one
-     *   target frame, in 1/UPSAMPLE_FACTOR units; must not exceed
-     *   MAX_FRACTION_INCREMENT, so that the sum with the fraction (which is
-     *   below UPSAMPLE_FACTOR) does not wrap around unsigned.
+     * @param resamplerPosIncrement the source-position advance for this one
+     *   target frame; must not exceed MAX_FRACTION_INCREMENT, so that the sum
+     *   with the fraction (which is below UPSAMPLE_FACTOR) does not wrap around
+     *   unsigned.
      */
-    GO_FORCE_INLINE void Inc(unsigned fractionIncrement) {
-      assert(fractionIncrement <= MAX_FRACTION_INCREMENT);
-      Advance(fractionIncrement);
+    GO_FORCE_INLINE void Inc(unsigned resamplerPosIncrement) {
+      assert(resamplerPosIncrement <= MAX_FRACTION_INCREMENT);
+      Advance(resamplerPosIncrement);
     }
 
     /**
      * Calculates the target samples length from given source position to the
      * end index
      * @param endIndex the first index position after the last source sample
-     * @param fractionIncrement the constant resampling increment in
-     *   1/UPSAMPLE_FACTOR units; must be non-zero: it is the divisor
+     * @param resamplerPosIncrement the constant resampling increment; must be
+     *   non-zero: it is the divisor
      * @result - the number of tatget samples can be received before the current
      *   position exceeds endIndex specified
      */
     inline unsigned AvailableTargetSamples(
-      unsigned endIndex, unsigned fractionIncrement) {
-      assert(fractionIncrement > 0);
+      unsigned endIndex, unsigned resamplerPosIncrement) {
+      assert(resamplerPosIncrement > 0);
       return m_index < endIndex ? unsigned(
                (
                  // for preventing owerflowing if endIndex >= 2**19 ~ 550000
                  uint64_t(endIndex - m_index) * UPSAMPLE_FACTOR
-                 + fractionIncrement - 1 // for rounding up
+                 + resamplerPosIncrement - 1 // for rounding up
                  - m_fraction)
-               / fractionIncrement)
+               / resamplerPosIncrement)
                                 : 0;
     }
   };
@@ -626,8 +631,8 @@ public:
      *   given number of frames, at the stream's constant resampling rate
      * @param resamplingPos A resampling position in the input stream. It is
      *   advanced during this call
-     * @param fractionIncrement the constant resampling increment: the source
-     *   position advance for every output frame in 1/UPSAMPLE_FACTOR units, see
+     * @param resamplingPosIncrement the constant resampling increment: the
+     *   source position advance for every output frame, see
      *   rateToFractionIncrement(). Must not exceed MAX_FRACTION_INCREMENT
      * @param fV a floating sample vector linked to the input stream
      * @param pOut a pointer to the output sample buffer in interleaving format.
@@ -637,13 +642,13 @@ public:
     template <class FrameVectorT, uint8_t nOutChannels>
     inline void ResampleBlock(
       ResamplingPosition &resamplingPos,
-      unsigned fractionIncrement,
+      unsigned resamplingPosIncrement,
       FrameVectorT &fV,
       float *pOut,
       unsigned nOutFrames) const {
       // Validated once per block: Inc() of the frame loop checks only in Debug
       assert(resamplingPos.IsValid());
-      assert(fractionIncrement <= MAX_FRACTION_INCREMENT);
+      assert(resamplingPosIncrement <= MAX_FRACTION_INCREMENT);
       for (unsigned nFramesLeft = nOutFrames; nFramesLeft > 0; nFramesLeft--) {
         float outItem = 0.0f;
 
@@ -656,14 +661,15 @@ public:
           *(pOut++) = outItem;
         }
 
-        resamplingPos.Inc(fractionIncrement);
+        resamplingPos.Inc(resamplingPosIncrement);
         fV.NormalizePosition(resamplingPos);
       }
     }
 
     /**
      * Like ResampleBlockVariableRatePlanar(), but the source-position advance
-     * is constant: the same fractionIncrement is used for every output frame.
+     * is constant: the same resamplingPosIncrement is used for every output
+     * frame.
      * Writes planar (channel-major) output. Every channel
      * follows the same index/fraction trajectory, so each channel is
      * resampled from a local copy of resamplingPos by the interleaved
@@ -676,8 +682,8 @@ public:
      *   compile
      * @param resamplingPos a resampling position in the input stream; advanced
      *   during this call
-     * @param fractionIncrement the constant resampling increment in
-     *   1/UPSAMPLE_FACTOR units, see ResampleBlock()
+     * @param resamplingPosIncrement the constant resampling increment, see
+     *   ResampleBlock()
      * @param fV a floating sample vector linked to the input stream
      * @param nFramesTotalInBuffer each channel's total length, in items, of the
      *   buffer pFirstItemOfChannel0ToFill points into: the stride between one
@@ -692,7 +698,7 @@ public:
     template <class FrameVectorT>
     inline void ResampleBlockConstantRatePlanar(
       ResamplingPosition &resamplingPos,
-      unsigned fractionIncrement,
+      unsigned resamplingPosIncrement,
       FrameVectorT &fV,
       unsigned nFramesTotalInBuffer,
       unsigned nChannels,
@@ -708,7 +714,7 @@ public:
         ResamplingPosition pos = resamplingPos;
 
         ResampleBlock<FrameVectorT, 1>(
-          pos, fractionIncrement, channelFV, pOut, nFramesToFill);
+          pos, resamplingPosIncrement, channelFV, pOut, nFramesToFill);
         if (++channelI >= nChannels) {
           resamplingPos = pos; // only the last channel commits back
           break;

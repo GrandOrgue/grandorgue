@@ -106,11 +106,12 @@ private:
    * resamplers. */
   void TestConstantRatePlanar();
 
-  /** GOSoundResample::scaleFractionIncrement() scales the base increment, does
-   * not accumulate rounding errors over many calls because the result depends
-   * on the base and the ratio only, is limited to 1..MAX_FRACTION_INCREMENT,
+  /** GOSoundResample::scaleResamplerPosIncrement() scales the base increment,
+   * does not accumulate rounding errors over many calls because the result
+   * depends on the base and the ratio only, is limited to
+   * MIN_FRACTION_INCREMENT..MAX_FRACTION_INCREMENT,
    * and keeps a zero increment. */
-  void TestScaleFractionIncrement();
+  void TestScaleResamplerPosIncrement();
 
 public:
   std::string GetName() override { return TEST_NAME; }

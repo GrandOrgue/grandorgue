@@ -705,11 +705,11 @@ void GOTestSoundResample::TestIsSameRate() {
   // the ratio scales the base increment
   GOAssert(
     GOSoundResample::isSameRate(
-      GOSoundResample::scaleFractionIncrement(unityIncrement, 1.0f)),
+      GOSoundResample::scaleResamplerPosIncrement(unityIncrement, 1.0f)),
     "the ratio 1.0 keeps the rate");
   GOAssert(
     !GOSoundResample::isSameRate(
-      GOSoundResample::scaleFractionIncrement(unityIncrement, 0.5f)),
+      GOSoundResample::scaleResamplerPosIncrement(unityIncrement, 0.5f)),
     "the ratio 0.5 changes the rate");
 
   const float notSameRates[] = {0.5f, 1.5f, 1.0f + STEP, 1.0f - STEP};
@@ -845,17 +845,17 @@ void GOTestSoundResample::TestConstantRatePlanar() {
     }
 }
 
-void GOTestSoundResample::TestScaleFractionIncrement() {
+void GOTestSoundResample::TestScaleResamplerPosIncrement() {
   static constexpr unsigned UPSAMPLE_FACTOR = GOSoundResample::UPSAMPLE_FACTOR;
   static constexpr unsigned MAX_INC = GOSoundResample::MAX_FRACTION_INCREMENT;
 
   // the ratio 1.0 keeps the increment, the ratio 2.0 doubles it
   GOAssert(
-    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 1.0f)
+    GOSoundResample::scaleResamplerPosIncrement(UPSAMPLE_FACTOR, 1.0f)
       == UPSAMPLE_FACTOR,
     "the ratio 1.0 must keep the increment");
   GOAssert(
-    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 2.0f)
+    GOSoundResample::scaleResamplerPosIncrement(UPSAMPLE_FACTOR, 2.0f)
       == 2 * UPSAMPLE_FACTOR,
     "the ratio 2.0 must double the increment");
 
@@ -866,32 +866,35 @@ void GOTestSoundResample::TestScaleFractionIncrement() {
 
   for (unsigned i = 0; i < 1000; i++) {
     increment
-      = GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, centUp);
-    increment = GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 1.0f);
+      = GOSoundResample::scaleResamplerPosIncrement(UPSAMPLE_FACTOR, centUp);
+    increment
+      = GOSoundResample::scaleResamplerPosIncrement(UPSAMPLE_FACTOR, 1.0f);
   }
   GOAssert(
     increment == UPSAMPLE_FACTOR, "the ratio 1.0 must return exactly to unity");
   GOAssert(
-    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, centUp)
+    GOSoundResample::scaleResamplerPosIncrement(UPSAMPLE_FACTOR, centUp)
       == (unsigned)std::lround((double)centUp * UPSAMPLE_FACTOR),
     "the result must depend on the base and the ratio only");
 
   // limits
   GOAssert(
-    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 1e9f) == MAX_INC,
+    GOSoundResample::scaleResamplerPosIncrement(UPSAMPLE_FACTOR, 1e9f)
+      == MAX_INC,
     "a huge ratio must be limited to MAX_FRACTION_INCREMENT");
   GOAssert(
-    GOSoundResample::scaleFractionIncrement(UPSAMPLE_FACTOR, 1e-9f) == 1,
-    "a tiny ratio must be limited to the increment 1");
+    GOSoundResample::scaleResamplerPosIncrement(UPSAMPLE_FACTOR, 1e-9f)
+      == GOSoundResample::MIN_FRACTION_INCREMENT,
+    "a tiny ratio must be limited to MIN_FRACTION_INCREMENT");
 
   // a zero base stays zero
   GOAssert(
-    GOSoundResample::scaleFractionIncrement(0, 2.0f) == 0,
+    GOSoundResample::scaleResamplerPosIncrement(0, 2.0f) == 0,
     "a zero increment must stay zero");
 }
 
 void GOTestSoundResample::run() {
-  GO_RUN_TEST(TestScaleFractionIncrement())
+  GO_RUN_TEST(TestScaleResamplerPosIncrement())
   GO_RUN_TEST(TestIsSameRate())
   GO_RUN_TEST(TestRingGetChannelVector())
   GO_RUN_TEST(TestConstantRatePlanar())

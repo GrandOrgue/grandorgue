@@ -34,7 +34,7 @@ private:
   class StreamCacheReadAheadWindow;
 
   typedef void (GOSoundStream::*DecodeBlockFunction)(
-    float *pOut, unsigned nOutSamples, unsigned fractionIncrement);
+    float *pOut, unsigned nOutSamples, unsigned resamplerPosIncrement);
 
   /* Method used to decode stream */
   DecodeBlockFunction decode_call;
@@ -73,7 +73,7 @@ private:
    * brought into the correct range. */
   template <class ResamplerT, class WindowT>
   void DecodeBlock(
-    float *pOut, unsigned nOutSamples, unsigned fractionIncrement);
+    float *pOut, unsigned nOutSamples, unsigned resamplerPosIncrement);
 
   /* These functions must be static class members rather than file-scope
    * functions because they reference the private typedef DecodeBlockFunction
@@ -146,13 +146,13 @@ public:
 
   /**
    * Reads an audio buffer from an audio section stream.
-   * @param fractionIncrement the constant resampling increment in
-   *   1/UPSAMPLE_FACTOR units, see GOSoundResample::rateToFractionIncrement();
-   *   must be non-zero
+   * @param resamplerPosIncrement the constant resampling increment, see
+   *   GOSoundResample::rateToFractionIncrement(); must be non-zero
    * @param outBuffer the buffer to fill
    * @return whether the sample has not ended yet
    */
-  bool ReadBlock(unsigned fractionIncrement, GOSoundBufferMutable &outBuffer);
+  bool ReadBlock(
+    unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer);
 };
 
 #endif /* GOSOUNDSTREAM_H */
