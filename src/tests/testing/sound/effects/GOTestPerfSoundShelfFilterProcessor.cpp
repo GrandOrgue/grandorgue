@@ -28,11 +28,15 @@ static constexpr unsigned TEST_SAMPLE_RATE = 96000;
 // bypass-path case is dominated by fixed per-call overhead rather than real
 // per-frame work, so it is unusually sensitive to other tests/processes
 // contending for the machine when the full suite runs (observed ~0.45-0.5x
-// of the isolated numbers under that contention). No separate Release
-// numbers are available yet, so the Release thresholds below reuse the same
-// Debug-derived floor rather than guessing a higher one.
-// TODO: recalibrate once this test has run on CI, separately for each build
-// type.
+// of the isolated numbers under that contention). The Release thresholds
+// below reuse the same Debug-derived floor rather than guessing a higher one.
+// Recalibrated 2026-10-31 against the CI runs of both repos from
+// 2026-10-17..31, separately per build type: no value came close to its floor
+// in either build type, so the 20% floor is kept instead of being raised. The
+// lowest observed values are 1903.5/10176.5/30315.6/120998.3 Mframes/sec for
+// the bypass path (Debug) and 44.1/42.0/41.4/41.3 for the actively filtering
+// paths (Release, from size=32 to size=2048) - at least 1.7x the threshold
+// everywhere.
 // Format: {buffer_size, min_MFrames_per_second} - see
 // GOTestPerfSoundBufferBase::RunAndEvaluateTest(), which reports and
 // compares against this table in Mframes/sec.

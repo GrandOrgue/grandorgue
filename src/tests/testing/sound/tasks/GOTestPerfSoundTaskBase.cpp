@@ -50,8 +50,15 @@ static constexpr double AUDIO_PERIODS_PER_SECOND
 // GrandOrgue-official) - both from CI, well below any local run. Each
 // threshold set 10% below its own worst case for run-to-run variance on
 // shared hardware, then rounded down to 2 significant figures.
+// Rebaselined 2026-10-31: a further pass over the CI runs of both repos from
+// 2026-10-17..31 found a single Release run at 237.0M runs/sec (run
+// 39319199383 on oleg68/GrandOrgue-official) on a heavily loaded shared
+// runner, all other Release runs being above 352.9M; Debug's worst was 361.3M
+// (run 39384995846 on GrandOrgue/grandorgue). The same -10% rule rounded down
+// to 2 significant figures gives 210M for Release and leaves the Debug
+// threshold unchanged.
 #ifdef NDEBUG
-static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 340'000'000.0;
+static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 210'000'000.0;
 #else
 static constexpr double MIN_UNCONTENDED_RUNS_PER_SECOND = 320'000'000.0;
 #endif
@@ -77,7 +84,11 @@ static constexpr double MIN_CONTENDED_ROUNDS_PER_SECOND
 // below any Debug or local observation. Threshold set 10% below this worst
 // case, then rounded down to 2 significant figures; not split by build type
 // since the constant is shared between them.
-static constexpr double MIN_COOPERATIVE_ITEMS_PER_SECOND = 410'000'000.0;
+// Rebaselined 2026-10-31: a further pass over the CI runs of both repos from
+// 2026-10-17..31 found 453.8M items/sec (Release, nThreads=1, run 40296685492
+// on oleg68/GrandOrgue-official). The same -10% rule rounded down to 2
+// significant figures gives 400M.
+static constexpr double MIN_COOPERATIVE_ITEMS_PER_SECOND = 400'000'000.0;
 
 // Maximum acceptable cost of the round protocol itself - the m_mutex
 // acquisitions in Run() and NewRound() - with barrier and thread scheduling
@@ -135,8 +146,12 @@ static constexpr double MAX_NEXT_PERIOD_PEAK_MICROSECONDS
 // 38912090895 on GrandOrgue/grandorgue) - the same scheduling jitter, even with
 // a single worker; set 10% above the new worst case, rounded up to 2
 // significant figures.
+// Peak raised 2026-10-31: nThreads=1 reached 627.7 us (Debug, run 39923570151
+// on oleg68/GrandOrgue-official) - the same OS scheduling jitter on a loaded
+// shared runner, with the mean still far below its own threshold; set 10%
+// above the new worst case, rounded up to 2 significant figures.
 static constexpr double MAX_COOPERATIVE_ROUND_MEAN_MICROSECONDS = 1.5;
-static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS = 590.0;
+static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS = 700.0;
 
 // Minimum acceptable round rate on the lazy-prerequisite path
 // (GOSoundWindchestTask::GetAmplitude() shape) with ~5us of work per
@@ -150,7 +165,11 @@ static constexpr double MAX_COOPERATIVE_ROUND_PEAK_MICROSECONDS = 590.0;
 // on GrandOrgue/grandorgue), below any Debug or local observation.
 // Threshold set 10% below this worst case; not split by build type since the
 // constant is shared between them.
-static constexpr double MIN_LAZY_ROUNDS_PER_SECOND = 7'600.0;
+// Rebaselined 2026-10-31: a further pass over the CI runs of both repos from
+// 2026-10-17..31 found 8,125.8 rounds/sec (Release, doneWithinRound=false,
+// nThreads=8, run 40282253233 on GrandOrgue/grandorgue). The same -10% rule
+// rounded down to 2 significant figures gives 7,300.
+static constexpr double MIN_LAZY_ROUNDS_PER_SECOND = 7'300.0;
 
 /**
  * Times nRounds barrier-synchronised rounds across nThreads threads.
