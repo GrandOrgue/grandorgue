@@ -49,7 +49,7 @@ if(RSVG_CONVERT_EXECUTABLE)
                        DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
 else()
   ADD_CUSTOM_COMMAND(OUTPUT "${CMAKE_BINARY_DIR}/GOIcon.ico"
-                       COMMAND ${IMAGEMAGICK_EXECUTABLE} -background none -resize 32x32 "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${CMAKE_BINARY_DIR}/GOIcon.ico"
+                       COMMAND ${IMAGEMAGICK_EXECUTABLE} -background none "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" -resize 32x32 "${CMAKE_BINARY_DIR}/GOIcon.ico"
                        DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg)
 endif()
 LIST(APPEND DEPLIST "${CMAKE_BINARY_DIR}/GOIcon.ico")
@@ -72,7 +72,7 @@ foreach(ICON_SIZE IN ITEMS ${ICON_SIZES})
                        DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
   else()
     ADD_CUSTOM_COMMAND(OUTPUT "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
-                       COMMAND ${IMAGEMAGICK_EXECUTABLE} -background none -resize ${ICON_SIZE}x${ICON_SIZE} "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
+                       COMMAND ${IMAGEMAGICK_EXECUTABLE} -background none "${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg" -resize ${ICON_SIZE}x${ICON_SIZE} "${GENERATED_ICONS_DIR}/icon_${ICON_SIZE}x${ICON_SIZE}.png"
                        DEPENDS ${CMAKE_SOURCE_DIR}/resources/GrandOrgue.svg ${GENERATED_ICONS_DIR})
   endif()
 endforeach()

@@ -20,6 +20,12 @@ fi
 
 PARALLEL_PRMS="-j$(nproc)"
 
+# Wine refuses to use a HOME directory that it does not own, which is what a
+# GitHub Actions container job provides: /github/home belongs to the runner
+# user while the container runs as root, so wine exits before cv2pdb runs and
+# the .pdb targets fail. Give it a prefix of its own.
+export WINEPREFIX="${WINEPREFIX:-/tmp/go-wineprefix}"
+
 mkdir -p build/build-tools
 pushd build/build-tools
 rm -rf *

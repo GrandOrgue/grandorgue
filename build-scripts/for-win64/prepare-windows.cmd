@@ -34,7 +34,7 @@ rem "set VAR=" (even quoted) unsets the variable rather than making it
 rem empty, so only run the substitution when an argument was actually given.
 if defined ARGS set "ARGS=%ARGS:\=/%"
 
-"%MSYS2_DIR%\msys2_shell.cmd" -mingw64 -here -no-start -defterm -c "'%SCRIPT_DIR%prepare-msys2.sh' %ARGS%"
+"%MSYS2_DIR%\msys2_shell.cmd" -ucrt64 -here -no-start -defterm -c "'%SCRIPT_DIR%prepare-msys2.sh' %ARGS%"
 if errorlevel 1 exit /b %errorlevel%
 
 endlocal

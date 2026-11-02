@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Builds GrandOrgue for Windows natively, inside an MSYS2 MINGW64 shell.
+# Builds GrandOrgue for Windows natively, inside an MSYS2 UCRT64 shell.
 # Meant to be run via build-on-windows.cmd.
 
 # $1 - Version
@@ -37,12 +37,15 @@ PARALLEL_PRMS="-j$(nproc)"
 # missing Visual Studio install just skips .pdb splitting, not the build.
 VCTOOLS_COMPONENT="Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
 VS_INSTALL_PATH=$(vswhere.exe -latest -requires "$VCTOOLS_COMPONENT" -property installationPath)
-CMAKE_CV2PDB_PRMS=
+# An array rather than a string: VC_PATH is a Windows path and normally
+# contains spaces ("C:/Program Files/..."), which would be split into
+# separate cmake arguments if it were expanded from a string variable.
+CMAKE_CV2PDB_PRMS=()
 if [ -n "$VS_INSTALL_PATH" ]; then
 	VCTOOLS_DIR=$(ls -1d "$VS_INSTALL_PATH"/VC/Tools/MSVC/*/bin/Hostx86/x64 2>/dev/null | sort | tail -n 1)
 fi
 if [ -n "${VCTOOLS_DIR:-}" ]; then
-	CMAKE_CV2PDB_PRMS="-DCV2PDB_EXE=/usr/local/share/cv2pdb/cv2pdb.exe -DVC_PATH=$VCTOOLS_DIR"
+	CMAKE_CV2PDB_PRMS=(-DCV2PDB_EXE=/usr/local/share/cv2pdb/cv2pdb.exe "-DVC_PATH=$VCTOOLS_DIR")
 else
 	echo "Warning: could not find the $VCTOOLS_COMPONENT Visual Studio component." >&2
 	echo "Building without split debug symbols (.pdb). Install Visual Studio" >&2
@@ -55,15 +58,15 @@ pushd build/win64
 rm -rf *
 export LANG=C
 
-CMAKE_WIN_PRMS="-DASIO_SDK_DIR=/usr/local/asio-sdk \
-  -DINSTALL_DEPEND=ON \
-  -DSTATIC=1 \
-  -DRTAUDIO_USE_ASIO=ON \
-  $CMAKE_CV2PDB_PRMS"
+CMAKE_WIN_PRMS=(-DASIO_SDK_DIR=/usr/local/asio-sdk
+  -DINSTALL_DEPEND=ON
+  -DSTATIC=1
+  -DRTAUDIO_USE_ASIO=ON
+  "${CMAKE_CV2PDB_PRMS[@]}")
 
-CMAKE_APP_PRMS="-DGO_USE_JACK=ON $CMAKE_VERSION_PRMS $CMAKE_RELEASE_FLAG_PRM $ASAN_FLAG"
+CMAKE_APP_PRMS=(-DGO_USE_JACK=ON ${CMAKE_VERSION_PRMS} ${CMAKE_RELEASE_FLAG_PRM} ${ASAN_FLAG})
 
-cmake -G "MSYS Makefiles" $CMAKE_WIN_PRMS $CMAKE_APP_PRMS . "$SRC_DIR"
+cmake -G "MSYS Makefiles" "${CMAKE_WIN_PRMS[@]}" "${CMAKE_APP_PRMS[@]}" . "$SRC_DIR"
 make $PARALLEL_PRMS VERBOSE=1 package
 
 popd
