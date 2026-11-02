@@ -239,6 +239,24 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  # Checks that the native MSYS2 build (build-scripts/for-win64/*.cmd) still
+  # works. No artifacts are uploaded: the produced files have the same names as
+  # the cross-built ones, and the release flow uses those.
+  build-win64-native:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4.1.1
+      with:
+        submodules: true
+
+    - name: Install Dependencies
+      shell: cmd
+      run: build-scripts\for-win64\prepare-windows.cmd
+
+    - name: Build
+      shell: cmd
+      run: build-scripts\for-win64\build-on-windows.cmd
+
   release:
     needs: [calc_ver, build]
     if: ${{ needs.calc_ver.outputs.release_flag == 'ON' }}
