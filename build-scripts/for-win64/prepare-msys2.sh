@@ -63,13 +63,6 @@ TOOLCHAIN_PACKAGES=(
 source "$BASE_DIR/msys2-packages.sh"
 LIB_PACKAGES=("${MSYS2_LIB_PACKAGES[@]/#/mingw-w64-ucrt-x86_64-}")
 
-WX_PACKAGES=(
-	mingw-w64-ucrt-x86_64-wxwidgets3.3-common
-	mingw-w64-ucrt-x86_64-wxwidgets3.3-common-libs
-	mingw-w64-ucrt-x86_64-wxwidgets3.3-msw
-	mingw-w64-ucrt-x86_64-wxwidgets3.3-msw-libs
-)
-
 # wxWidgets 3.2 ships its own /ucrt64/bin/wx-config, which conflicts with the
 # 3.3 one, so it has to be removed before 3.3 can be installed
 OLD_WX_PACKAGES=$(pacman -Qq 2>/dev/null | grep '^mingw-w64-ucrt-x86_64-wxwidgets3\.2-' || true)
@@ -78,7 +71,7 @@ if [[ -n "$OLD_WX_PACKAGES" ]]; then
 fi
 
 pacman -S --needed --noconfirm \
-	"${TOOLCHAIN_PACKAGES[@]}" "${LIB_PACKAGES[@]}" "${WX_PACKAGES[@]}"
+	"${TOOLCHAIN_PACKAGES[@]}" "${LIB_PACKAGES[@]}"
 
 if [[ "$INSTALL_TESTS" == "tests" ]]; then
 	pacman -S --needed --noconfirm mingw-w64-ucrt-x86_64-gcovr

@@ -195,9 +195,21 @@ jobs:
             for: win64
             prepare: "debian-based"
             build_on: linux
+            # The UCRT-targeting mingw-w64 cross toolchain is packaged by
+            # Debian 13 but not by the Ubuntu images (Debian 13 also ships
+            # mingw-w64 27, which the msvcrt-targeting Ubuntu packages lag)
+            container: debian:trixie
 
     runs-on: ${{ matrix.run_on }}
+    container: ${{ matrix.container }}
     steps:
+    - name: Prepare the container
+      if: matrix.container != ''
+      # actions/checkout needs git, and prepare-debian-based.sh expects sudo
+      run: |
+        apt-get update
+        apt-get install -y --no-install-recommends git sudo ca-certificates
+
     - uses: actions/checkout@v4.1.1
       with:
         submodules: true
