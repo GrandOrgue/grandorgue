@@ -51,8 +51,8 @@ pushd deb
 
 # MSYS2 packages are built against newer libstdc++.
 # It will be downloaded as a dependency for the packages below.
-source $BASE_DIR/msys2-mingw64-packages.sh
-PACKAGES_FROM_MSYS2=("${MSYS2_MINGW64_LIB_PACKAGES[@]}")
+source $BASE_DIR/msys2-packages.sh
+PACKAGES_FROM_MSYS2=("${MSYS2_LIB_PACKAGES[@]}")
 DEB_PACKAGES_FROM_MSYS2=("${PACKAGES_FROM_MSYS2[@]/%/-msys2-mingw64}")
 if ! dpkg -l "${DEB_PACKAGES_FROM_MSYS2[@]}" &>/dev/null; then
   # Download packages from MSYS2 repositories and convert them to .deb.

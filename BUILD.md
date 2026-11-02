@@ -214,7 +214,7 @@ You can download the source code archive from GitHub
 
 ## Building for Windows on Windows using MSYS2
 
-This is the recommended way for Windows-only contributors to build GrandOrgue - it builds natively on Windows via the [MSYS2](https://www.msys2.org/) mingw-w64 toolchain, without needing a Linux machine for cross-compiling (see the next section for that alternative, still used for Linux-hosted CI/release builds).
+This is the recommended way for Windows-only contributors to build GrandOrgue - it builds natively on Windows via the [MSYS2](https://www.msys2.org/) mingw-w64 toolchain in its UCRT64 environment, without needing a Linux machine for cross-compiling (see the next section for that alternative, still used for Linux-hosted CI/release builds).
 
 1. Prerequisites:
     1. Windows 10/11, 64-bit.
@@ -225,10 +225,10 @@ This is the recommended way for Windows-only contributors to build GrandOrgue - 
     ```
     build-scripts\for-win64\prepare-windows.cmd
     ```
-    This installs MSYS2 if needed, the required MSYS2 mingw64 packages, and downloads the ASIO SDK, `vswhere`, and `cv2pdb`. Administrator rights are required because it may install MSYS2 itself and its packages.
+    This installs MSYS2 if needed, the required MSYS2 ucrt64 packages, and downloads the ASIO SDK, `vswhere`, and `cv2pdb`. Administrator rights are required because it may install MSYS2 itself and its packages.
 
     Optional keywords can be passed in any order, eg. `prepare-windows.cmd tests asan`:
-    - `wx32` (default: `auto`) - wxWidgets package version.
+    - `auto` (default) - wxWidgets version. Only wxWidgets 3.3 is available for the UCRT64 environment.
     - `tests` (default: `notests`) - also install `gcovr`, needed for generating code coverage reports.
     - `asan` (default: `noasan`) - accepted for parity with the Linux prepare scripts; [AddressSanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer) support is already bundled with the MSYS2 mingw-w64 gcc package, so nothing extra is installed.
 

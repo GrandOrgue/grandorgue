@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Builds GrandOrgue for Windows natively, inside an MSYS2 MINGW64 shell.
+# Builds GrandOrgue for Windows natively, inside an MSYS2 UCRT64 shell.
 # Meant to be run via build-on-windows.cmd.
 
 # $1 - Version

@@ -1,21 +1,15 @@
 #!/bin/bash
 
 # Installs the build dependencies for building GrandOrgue natively on Windows
-# inside an MSYS2 MINGW64 shell. Meant to be run once via prepare-windows.cmd.
+# inside an MSYS2 UCRT64 shell. Meant to be run once via prepare-windows.cmd.
 
 # Accepts, in any order:
-#   wx32 or auto (default) - wxWidgets version. Only 3.2.11-1 is available
-#     for the MINGW64 environment (see msys2-mingw64-packages.sh)
+#   auto (default) - wxWidgets version. Only auto is available: it picks
+#     wxWidgets 3.3, the same series that the win64 cross-build links against
 #   tests or notests (default) - also install gcovr for code coverage reports
 #   asan or noasan (default) - AddressSanitizer support; bundled with the
-#     mingw-w64-x86_64-gcc package, so this only accepts the keyword for
+#     mingw-w64-ucrt-x86_64-gcc package, so this only accepts the keyword for
 #     parity with prepare-debian-based.sh - nothing extra is installed
-
-# gcovr has no package of its own for the classic MINGW64 environment, and
-# pip-installing it there fails to build its lxml dependency from source
-# (missing -lzlib). mingw-w64-ucrt-x86_64-gcovr is a prebuilt, self-contained
-# alternative from the ucrt64 environment; it's exposed on PATH via a small
-# wrapper script since /ucrt64/bin isn't part of the MINGW64 shell's PATH.
 
 set -eu
 
@@ -26,8 +20,12 @@ INSTALL_ASAN=noasan
 
 for prm in "$@"; do
 	case "$prm" in
-	wx32 | auto)
+	auto)
 		WX_VER=$prm
+		;;
+	wx32)
+		echo "Unsupported wx version $prm: only auto is available" >&2
+		exit 1
 		;;
 	tests | notests)
 		INSTALL_TESTS=$prm
@@ -37,7 +35,7 @@ for prm in "$@"; do
 		;;
 	*)
 		echo "Unknown parameter $prm" >&2
-		echo "Usage: $(basename "$0") [wx32 | auto] [tests | notests] [asan | noasan]" >&2
+		echo "Usage: $(basename "$0") [auto] [tests | notests] [asan | noasan]" >&2
 		exit 1
 		;;
 	esac
@@ -49,36 +47,41 @@ done
 # installed here.
 TOOLCHAIN_PACKAGES=(
 	base-devel git unzip wget zip
-	mingw-w64-x86_64-cmake
-	mingw-w64-x86_64-docbook-xsl
-	mingw-w64-x86_64-gcc
-	mingw-w64-x86_64-imagemagick
-	mingw-w64-x86_64-libxslt
-	mingw-w64-x86_64-librsvg
-	mingw-w64-x86_64-nsis
-	mingw-w64-x86_64-pkgconf
-	mingw-w64-x86_64-zstd
+	mingw-w64-ucrt-x86_64-cmake
+	mingw-w64-ucrt-x86_64-docbook-xsl
+	mingw-w64-ucrt-x86_64-gcc
+	mingw-w64-ucrt-x86_64-imagemagick
+	mingw-w64-ucrt-x86_64-libxslt
+	mingw-w64-ucrt-x86_64-librsvg
+	mingw-w64-ucrt-x86_64-nsis
+	mingw-w64-ucrt-x86_64-pkgconf
+	mingw-w64-ucrt-x86_64-zstd
 )
 
 # Library packages GrandOrgue links against - shared with
 # prepare-debian-based.sh so both stay in sync.
-source "$BASE_DIR/msys2-mingw64-packages.sh"
-LIB_PACKAGES=("${MSYS2_MINGW64_LIB_PACKAGES[@]/#/mingw-w64-x86_64-}")
+source "$BASE_DIR/msys2-packages.sh"
+LIB_PACKAGES=("${MSYS2_LIB_PACKAGES[@]/#/mingw-w64-ucrt-x86_64-}")
 
-pacman -S --needed --noconfirm "${TOOLCHAIN_PACKAGES[@]}" "${LIB_PACKAGES[@]}"
+WX_PACKAGES=(
+	mingw-w64-ucrt-x86_64-wxwidgets3.3-common
+	mingw-w64-ucrt-x86_64-wxwidgets3.3-common-libs
+	mingw-w64-ucrt-x86_64-wxwidgets3.3-msw
+	mingw-w64-ucrt-x86_64-wxwidgets3.3-msw-libs
+)
 
-# wxWidgets is no longer in the MSYS2 MINGW64 package database, so install
-# the pinned last MINGW64 packages directly
-pacman -U --needed --noconfirm "${MSYS2_MINGW64_WX_PACKAGE_URLS[@]}"
+# wxWidgets 3.2 ships its own /ucrt64/bin/wx-config, which conflicts with the
+# 3.3 one, so it has to be removed before 3.3 can be installed
+OLD_WX_PACKAGES=$(pacman -Qq 2>/dev/null | grep '^mingw-w64-ucrt-x86_64-wxwidgets3\.2-' || true)
+if [[ -n "$OLD_WX_PACKAGES" ]]; then
+	pacman -R --noconfirm $OLD_WX_PACKAGES
+fi
+
+pacman -S --needed --noconfirm \
+	"${TOOLCHAIN_PACKAGES[@]}" "${LIB_PACKAGES[@]}" "${WX_PACKAGES[@]}"
 
 if [[ "$INSTALL_TESTS" == "tests" ]]; then
 	pacman -S --needed --noconfirm mingw-w64-ucrt-x86_64-gcovr
-
-	if [ ! -f /usr/local/bin/gcovr ]; then
-		mkdir -p /usr/local/bin
-		printf '#!/bin/bash\nexec /ucrt64/bin/gcovr.exe "$@"\n' >/usr/local/bin/gcovr
-		chmod +x /usr/local/bin/gcovr
-	fi
 fi
 
 # download and install ASIO sdk
