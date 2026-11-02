@@ -4,6 +4,7 @@ set(go_test_common
     GOTestResultCollection.cpp
     GOTest.cpp
     GOTestCollection.cpp
+    GOTestFilter.cpp
     GOTestScope.cpp
 )
 
