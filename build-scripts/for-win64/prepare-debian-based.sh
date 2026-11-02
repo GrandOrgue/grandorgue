@@ -33,17 +33,12 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config nsis \
   docbook-xsl xsltproc gettext po4a imagemagick zip \
-  librsvg2-bin wine32 winbind python3-venv gnupg
+  librsvg2-bin wine32 winbind pipx gnupg
 
 if ! command -v msys2dl &> /dev/null; then
-  # Install a tool to download pre-compiled libraries from msys2 repositories.
-  # It gets its own venv rather than pipx: msys2dl 2.1.1 pins zstandard<0.23,
-  # which has no wheel for Python 3.13, and building it from source pulls in
-  # an older cffi that does not compile against 3.13 either.
-  sudo python3 -m venv /opt/msys2dl
-  sudo /opt/msys2dl/bin/pip install --no-deps msys2dl==2.1.1
-  sudo /opt/msys2dl/bin/pip install "requests<3.0,>=2.31.0" "rich<14.0,>=13.7.1" "zstandard>=0.22"
-  sudo ln -sf /opt/msys2dl/bin/msys2dl /usr/local/bin/msys2dl
+  # Install a tool to download pre-compiled libraries from msys2 repositories
+  sudo PIPX_HOME=/opt/pipx PIPX_BIN_DIR=/usr/local/bin \
+    pipx install msys2dl==2.2.0
 fi
 
 if ! command -v cygpath &> /dev/null; then
