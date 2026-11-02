@@ -5,7 +5,7 @@
 
 set -e
 
-BASE_DIR=$(readlink -f "$(dirname "$0")")
+BASE_DIR=$(dirname "$0")
 WX_VER=$1
 
 case "${WX_VER:-auto}" in
@@ -33,7 +33,7 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   wget unzip cmake g++ pkg-config nsis \
   docbook-xsl xsltproc gettext po4a imagemagick zip \
-  librsvg2-bin wine32 winbind pipx gnupg
+  wine32 winbind pipx gnupg
 
 if ! command -v msys2dl &> /dev/null; then
   # Install a tool to download pre-compiled libraries from msys2 repositories

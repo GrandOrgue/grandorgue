@@ -215,11 +215,11 @@ jobs:
         submodules: true
     
     - name: Install Dependencies
-      run: build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.wx_version }}"
+      run: $GITHUB_WORKSPACE/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.wx_version }}"
       
     - name: Build
       run: >
-        build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh
+        $GITHUB_WORKSPACE/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh
         ${{needs.calc_ver.outputs.project_ver}}
         ${{needs.calc_ver.outputs.build_ver}}
         "$GITHUB_WORKSPACE"

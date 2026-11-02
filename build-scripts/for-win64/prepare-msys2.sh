@@ -4,8 +4,8 @@
 # inside an MSYS2 UCRT64 shell. Meant to be run once via prepare-windows.cmd.
 
 # Accepts, in any order:
-#   auto (default) - wxWidgets version. Only auto is available: it picks
-#     wxWidgets 3.3, the same series that the win64 cross-build links against
+#   wx33 or auto (default) - wxWidgets version. Only 3.3 is available for the
+#     UCRT64 environment
 #   tests or notests (default) - also install gcovr for code coverage reports
 #   asan or noasan (default) - AddressSanitizer support; bundled with the
 #     mingw-w64-ucrt-x86_64-gcc package, so this only accepts the keyword for
@@ -20,12 +20,8 @@ INSTALL_ASAN=noasan
 
 for prm in "$@"; do
 	case "$prm" in
-	auto)
+	wx33 | auto)
 		WX_VER=$prm
-		;;
-	wx32)
-		echo "Unsupported wx version $prm: only auto is available" >&2
-		exit 1
 		;;
 	tests | notests)
 		INSTALL_TESTS=$prm
@@ -35,7 +31,7 @@ for prm in "$@"; do
 		;;
 	*)
 		echo "Unknown parameter $prm" >&2
-		echo "Usage: $(basename "$0") [auto] [tests | notests] [asan | noasan]" >&2
+		echo "Usage: $(basename "$0") [wx33 | auto] [tests | notests] [asan | noasan]" >&2
 		exit 1
 		;;
 	esac
@@ -62,13 +58,6 @@ TOOLCHAIN_PACKAGES=(
 # prepare-debian-based.sh so both stay in sync.
 source "$BASE_DIR/msys2-packages.sh"
 LIB_PACKAGES=("${MSYS2_LIB_PACKAGES[@]/#/mingw-w64-ucrt-x86_64-}")
-
-# wxWidgets 3.2 ships its own /ucrt64/bin/wx-config, which conflicts with the
-# 3.3 one, so it has to be removed before 3.3 can be installed
-OLD_WX_PACKAGES=$(pacman -Qq 2>/dev/null | grep '^mingw-w64-ucrt-x86_64-wxwidgets3\.2-' || true)
-if [[ -n "$OLD_WX_PACKAGES" ]]; then
-	pacman -R --noconfirm $OLD_WX_PACKAGES
-fi
 
 pacman -S --needed --noconfirm \
 	"${TOOLCHAIN_PACKAGES[@]}" "${LIB_PACKAGES[@]}"

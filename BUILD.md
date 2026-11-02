@@ -228,7 +228,7 @@ This is the recommended way for Windows-only contributors to build GrandOrgue - 
     This installs MSYS2 if needed, the required MSYS2 ucrt64 packages, and downloads the ASIO SDK, `vswhere`, and `cv2pdb`. Administrator rights are required because it may install MSYS2 itself and its packages.
 
     Optional keywords can be passed in any order, eg. `prepare-windows.cmd tests asan`:
-    - `auto` (default) - wxWidgets version. Only wxWidgets 3.3 is available for the UCRT64 environment.
+    - `wx33` (default: `auto`) - wxWidgets package version.
     - `tests` (default: `notests`) - also install `gcovr`, needed for generating code coverage reports.
     - `asan` (default: `noasan`) - accepted for parity with the Linux prepare scripts; [AddressSanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer) support is already bundled with the MSYS2 mingw-w64 gcc package, so nothing extra is installed.
 
