@@ -5,7 +5,7 @@
 
 set -e
 
-BASE_DIR=$(dirname $0)
+BASE_DIR=$(readlink -f "$(dirname "$0")")
 WX_VER=$1
 
 case "${WX_VER:-auto}" in

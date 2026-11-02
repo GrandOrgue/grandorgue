@@ -215,15 +215,14 @@ jobs:
         submodules: true
     
     - name: Install Dependencies
-      run: ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.wx_version }}"
+      run: build-scripts/for-${{ matrix.for }}/prepare-${{ matrix.prepare }}.sh "${{ matrix.wx_version }}"
       
     - name: Build
-      working-directory: ${{github.workspace}}
       run: >
-        ${{github.workspace}}/build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh
+        build-scripts/for-${{ matrix.for }}/build-on-${{ matrix.build_on }}.sh
         ${{needs.calc_ver.outputs.project_ver}}
         ${{needs.calc_ver.outputs.build_ver}}
-        ${{github.workspace}}
+        "$GITHUB_WORKSPACE"
         "${{ matrix.pkg_suffix }}"
         ${{needs.calc_ver.outputs.release_flag}}
         ""
@@ -233,7 +232,7 @@ jobs:
       uses: nanoufo/action-upload-artifacts-and-release-assets@v2
       with:
         path: |
-          ${{github.workspace}}/build/${{ matrix.for }}/grandorgue*${{needs.calc_ver.outputs.full_ver}}*
+          build/${{ matrix.for }}/grandorgue*${{needs.calc_ver.outputs.full_ver}}*
         upload-release-files: ${{ needs.calc_ver.outputs.release_flag }}
         release-upload-url: ${{ needs.calc_ver.outputs.release_upload_url }}
         if-no-files-found: error
