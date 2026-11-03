@@ -127,12 +127,12 @@ public:
 
 template <class ResamplerT, class WindowT>
 void GOSoundStream::DecodeBlock(
-  float *pOut, unsigned nOutSamples, unsigned resamplerPosIncrement) {
+  unsigned resamplerPosIncrement, float *pOut, unsigned nOutSamples) {
   ResamplerT resampler(*resample);
   WindowT w(*this);
 
   resampler.template ResampleBlock<WindowT, 2>(
-    m_ResamplingPos, resamplerPosIncrement, w, pOut, nOutSamples);
+    resamplerPosIncrement, m_ResamplingPos, w, pOut, nOutSamples);
 }
 
 GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
@@ -379,7 +379,7 @@ bool GOSoundStream::ReadBlock(
       assert(targetSamples > 0);
       if (isToPlayMain) {
         assert(decode_call);
-        (this->*decode_call)(pData, targetSamples, resamplerPosIncrement);
+        (this->*decode_call)(resamplerPosIncrement, pData, targetSamples);
       } else {
         assert(end_decode_call);
 
@@ -387,7 +387,7 @@ bool GOSoundStream::ReadBlock(
         GoToEndSegment();
         // we continue to use the same position as before because end_ptr is a
         // "virtual" pointer: end_data - transition_offset
-        (this->*end_decode_call)(pData, targetSamples, resamplerPosIncrement);
+        (this->*end_decode_call)(resamplerPosIncrement, pData, targetSamples);
       }
       pData += 2 * targetSamples;
       nFrames -= targetSamples;

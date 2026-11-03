@@ -71,6 +71,12 @@ public:
   static constexpr unsigned UPSAMPLE_MASK = UPSAMPLE_FACTOR - 1;
 
   /**
+   * The smallest non-zero increment: the slowest resampling that still moves
+   * the position forward.
+   */
+  static constexpr unsigned MIN_FRACTION_INCREMENT = 1;
+
+  /**
    * The largest increment in 1/UPSAMPLE_FACTOR units that
    * ResamplingPosition::Inc(unsigned) accepts: the fraction of a position is
    * always below UPSAMPLE_FACTOR, so the fraction plus such an increment cannot
@@ -78,12 +84,6 @@ public:
    */
   static constexpr unsigned MAX_FRACTION_INCREMENT
     = std::numeric_limits<unsigned>::max() - UPSAMPLE_MASK;
-
-  /**
-   * The smallest non-zero increment: the slowest resampling that still moves
-   * the position forward.
-   */
-  static constexpr unsigned MIN_FRACTION_INCREMENT = 1;
 
   /**
    * The same limit expressed as the largest resampling rate (source frames per
@@ -629,11 +629,11 @@ public:
     /**
      * Do actual resampling of an input sample block to the output block of the
      *   given number of frames, at the stream's constant resampling rate
-     * @param resamplingPos A resampling position in the input stream. It is
-     *   advanced during this call
      * @param resamplingPosIncrement the constant resampling increment: the
      *   source position advance for every output frame, see
      *   rateToFractionIncrement(). Must not exceed MAX_FRACTION_INCREMENT
+     * @param resamplingPos A resampling position in the input stream. It is
+     *   advanced during this call
      * @param fV a floating sample vector linked to the input stream
      * @param pOut a pointer to the output sample buffer in interleaving format.
      *   Must have at least nOutChannels*nOutFrames length
@@ -641,8 +641,8 @@ public:
      */
     template <class FrameVectorT, uint8_t nOutChannels>
     inline void ResampleBlock(
-      ResamplingPosition &resamplingPos,
       unsigned resamplingPosIncrement,
+      ResamplingPosition &resamplingPos,
       FrameVectorT &fV,
       float *pOut,
       unsigned nOutFrames) const {
@@ -680,10 +680,10 @@ public:
      * @tparam FrameVectorT a planar frame vector type that provides
      *   GetChannelVector(), e.g. RingPlanarFrameVector; other types do not
      *   compile
-     * @param resamplingPos a resampling position in the input stream; advanced
-     *   during this call
      * @param resamplingPosIncrement the constant resampling increment, see
      *   ResampleBlock()
+     * @param resamplingPos a resampling position in the input stream; advanced
+     *   during this call
      * @param fV a floating sample vector linked to the input stream
      * @param nFramesTotalInBuffer each channel's total length, in items, of the
      *   buffer pFirstItemOfChannel0ToFill points into: the stride between one
@@ -697,8 +697,8 @@ public:
      */
     template <class FrameVectorT>
     inline void ResampleBlockConstantRatePlanar(
-      ResamplingPosition &resamplingPos,
       unsigned resamplingPosIncrement,
+      ResamplingPosition &resamplingPos,
       FrameVectorT &fV,
       unsigned nFramesTotalInBuffer,
       unsigned nChannels,
@@ -714,7 +714,7 @@ public:
         ResamplingPosition pos = resamplingPos;
 
         ResampleBlock<FrameVectorT, 1>(
-          pos, resamplingPosIncrement, channelFV, pOut, nFramesToFill);
+          resamplingPosIncrement, pos, channelFV, pOut, nFramesToFill);
         if (++channelI >= nChannels) {
           resamplingPos = pos; // only the last channel commits back
           break;

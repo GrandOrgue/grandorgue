@@ -232,15 +232,14 @@ GOSoundSampler *GOSoundSamplerPlayer::CreateTaskSample(
       sampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
       sampler->velocity = velocity;
       const float tuningFactor = pSoundProvider->GetTuning();
-      const float sampleRateAdjustment
-        = GetRandomFactor() * tuningFactor / (float)m_SampleRate;
       const float volumeFactor = pSoundProvider->GetGain();
 
       sampler->stream.InitStream(&m_resample, section, m_InterpolationType);
       sampler->InitResamplerIncrement(
         tuningFactor,
         GOSoundResample::rateToFractionIncrement(
-          sampleRateAdjustment * section->GetSampleRate()));
+          GetRandomFactor() * tuningFactor * section->GetSampleRate()
+          / m_SampleRate));
       sampler->InitVolumeFactor(volumeFactor);
 
       const float playback_gain = volumeFactor * section->GetNormGain();

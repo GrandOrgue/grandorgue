@@ -41,12 +41,12 @@ unsigned GOSoundResample::scaleResamplerPosIncrement(
   unsigned resamplerPosIncrement, float ratio) {
   assert(ratio > 0.0f);
 
-  const double newIncrement = (double)ratio * resamplerPosIncrement;
+  const float newIncrement = ratio * resamplerPosIncrement;
 
   return resamplerPosIncrement ? (unsigned)std::clamp(
            std::round(newIncrement),
-           (double)MIN_FRACTION_INCREMENT,
-           (double)MAX_FRACTION_INCREMENT)
+           (float)MIN_FRACTION_INCREMENT,
+           (float)MAX_FRACTION_INCREMENT)
                                : 0;
 }
 
@@ -160,7 +160,7 @@ float *GOSoundResample::NewResampledMono(
   PolyphaseResampler resampler(*this);
 
   resampler.ResampleBlock<BoundedPtrFrameVector<float, float, 1>, 1>(
-    resamplingPos, resamplingPosIncrement, w, out, new_len);
+    resamplingPosIncrement, resamplingPos, w, out, new_len);
   len = new_len;
   return out;
 }

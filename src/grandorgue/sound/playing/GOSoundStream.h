@@ -34,7 +34,7 @@ private:
   class StreamCacheReadAheadWindow;
 
   typedef void (GOSoundStream::*DecodeBlockFunction)(
-    float *pOut, unsigned nOutSamples, unsigned resamplerPosIncrement);
+    unsigned resamplerPosIncrement, float *pOut, unsigned nOutSamples);
 
   /* Method used to decode stream */
   DecodeBlockFunction decode_call;
@@ -73,7 +73,7 @@ private:
    * brought into the correct range. */
   template <class ResamplerT, class WindowT>
   void DecodeBlock(
-    float *pOut, unsigned nOutSamples, unsigned resamplerPosIncrement);
+    unsigned resamplerPosIncrement, float *pOut, unsigned nOutSamples);
 
   /* These functions must be static class members rather than file-scope
    * functions because they reference the private typedef DecodeBlockFunction

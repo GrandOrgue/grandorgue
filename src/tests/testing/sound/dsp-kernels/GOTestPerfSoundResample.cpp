@@ -174,7 +174,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatLinear() {
         resamplingPos.SetIndex(0);
         linearResampler
           .ResampleBlock<GOSoundResample::PtrFrameVector<float, float, 1>, 1>(
-            resamplingPos, FRACTION_INCREMENT, fV, out.data(), nOutFrames);
+            FRACTION_INCREMENT, resamplingPos, fV, out.data(), nOutFrames);
       },
       1,
       true);
@@ -211,7 +211,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatPolyphase() {
         resamplingPos.SetIndex(0);
         polyphaseResampler
           .ResampleBlock<GOSoundResample::PtrFrameVector<float, float, 1>, 1>(
-            resamplingPos, FRACTION_INCREMENT, fV, out.data(), nOutFrames);
+            FRACTION_INCREMENT, resamplingPos, fV, out.data(), nOutFrames);
       },
       1,
       true);
@@ -248,7 +248,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Linear() {
         resamplingPos.SetIndex(0);
         linearResampler
           .ResampleBlock<GOSoundResample::PtrFrameVector<GOInt24, int, 2>, 2>(
-            resamplingPos, FRACTION_INCREMENT, fV, out.data(), nOutFrames);
+            FRACTION_INCREMENT, resamplingPos, fV, out.data(), nOutFrames);
       },
       2,
       true);
@@ -285,7 +285,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Polyphase() {
         resamplingPos.SetIndex(0);
         polyphaseResampler
           .ResampleBlock<GOSoundResample::PtrFrameVector<GOInt24, int, 2>, 2>(
-            resamplingPos, FRACTION_INCREMENT, fV, out.data(), nOutFrames);
+            FRACTION_INCREMENT, resamplingPos, fV, out.data(), nOutFrames);
       },
       2,
       true);
@@ -527,8 +527,8 @@ void GOTestPerfSoundResample::run_constant_rate_planar(
       [&resamplingPos, &startPos, &resampler, &ring, &out, nOutFrames]() {
         resamplingPos = startPos;
         resampler.template ResampleBlockConstantRatePlanar<Ring>(
-          resamplingPos,
           GOSoundResample::UPSAMPLE_FACTOR,
+          resamplingPos,
           ring,
           nOutFrames,
           N_PLANAR_PERF_CHANNELS,

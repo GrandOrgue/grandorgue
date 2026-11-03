@@ -73,8 +73,8 @@ static void assert_constant_rate_equivalent(
   typedResampler.template ResampleBlock<
     GOSoundResample::PtrFrameVector<float, float, N_CHANNELS>,
     N_CHANNELS>(
-    posInterleaved,
     fractionIncrement,
+    posInterleaved,
     fvInterleaved,
     outInterleaved.data(),
     N_OUT_FRAMES);
@@ -793,8 +793,8 @@ static void assert_constant_rate_planar(
   std::vector<float> outVar(nChannels * N_OUT_FRAMES);
 
   resampler.template ResampleBlockConstantRatePlanar<Ring>(
-    posConst,
     fractionIncrement,
+    posConst,
     ring,
     N_OUT_FRAMES,
     nChannels,
