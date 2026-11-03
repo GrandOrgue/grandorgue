@@ -10,6 +10,7 @@
 #include <algorithm>
 
 #include "sound/buffer/GOSoundBufferMutable.h"
+#include "sound/dsp-kernels/GOSoundLinearFaderCore.h"
 
 void GOSoundPlayingFader::Setup(
   float targetVolume, float velocityVolume, unsigned nFramesToIncreaseIn) {
@@ -100,28 +101,16 @@ void GOSoundPlayingFader::Process(
       * std::max(nFrames, EXTERNAL_VOLUME_CHANGE_FRAMES)
       / EXTERNAL_VOLUME_CHANGE_FRAMES;
 
-  float frameTotalVolume = startTargetVolumePoint * startExternalVolumePoint;
+  // Process data: one linear ramp of the total volume over the whole period.
+  // If the total volume does not change, the GainRamp constructor makes a
+  // constant-gain ramp (0 frames): fade() then only dispatches by the gain
+  // (1: nothing, 0: fill, otherwise multiply)
+  const float startVolume = startTargetVolumePoint * startExternalVolumePoint;
+  const float endVolume = m_LastTargetVolumePoint * m_LastExternalVolumePoint;
 
-  // Process data
-  if (
-    (m_LastTargetVolumePoint == startTargetVolumePoint)
-    && (m_LastExternalVolumePoint == startExternalVolumePoint)) {
-    // Adjust the buffer by frameTotalVolume
-    for (unsigned int i = nFrames; i > 0; i--) {
-      *pData++ *= frameTotalVolume;
-      *pData++ *= frameTotalVolume;
-    }
-  } else {
-    // Adjust the buffer smoothly from frameTotalVolume to
-    // m_LastTargetVolumePoint * m_LastExternalVolumePoint
-    float frameTotalVolumeDelta // changing the volume by one frame
-      = (m_LastTargetVolumePoint * m_LastExternalVolumePoint - frameTotalVolume)
-      / nFrames;
-
-    for (unsigned int i = nFrames; i > 0; i--) {
-      *pData++ *= frameTotalVolume;
-      *pData++ *= frameTotalVolume;
-      frameTotalVolume += frameTotalVolumeDelta;
-    }
-  }
+  GOSoundLinearFaderCore::fade<2>(
+    GOSoundLinearFaderCore::GainRamp(startVolume, endVolume, nFrames),
+    0,
+    nFrames,
+    pData);
 }
