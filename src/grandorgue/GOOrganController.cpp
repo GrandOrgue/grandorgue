@@ -365,9 +365,6 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
 
   GetRootPipeConfigNode().SetName(organName);
   OnIsModifiedChanged(true);
-  ReadCombinations(cfg);
-  m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
-  ResetOrganModified();
 
   GOHash hash;
   const auto organNameUtf8 = organName.utf8_str();
@@ -524,8 +521,15 @@ wxString GOOrganController::Load(
     m_LoadedOrganInfo = organReader.GetLoadedOrganInfo();
     m_Cacheable = false;
 
-    LoadOrganCoreData(organReader.GetConfigReader());
-    OnLoad(organReader.GetConfigReader());
+    GOConfigReader &cfg = organReader.GetConfigReader();
+
+    LoadOrganCoreData(cfg);
+    OnLoad(cfg);
+    // The combinations are read after the GUI is loaded
+    ReadCombinations(cfg);
+    m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
+    ResetOrganModified();
+    // after reading the combinations, otherwise they are reported as unused
     organReader.ReportUnused();
 
     if (!isGuiOnly)
