@@ -13,6 +13,7 @@
 #include "config/GOConfig.h"
 #include "config/GOConfigFileWriter.h"
 #include "config/GOConfigWriter.h"
+#include "control/GOButtonControl.h"
 #include "loader/GOOrganReader.h"
 #include "loader/GOProgressMonitor.h"
 #include "model/GOEnclosure.h"
@@ -43,11 +44,21 @@ std::string GOTestOrganController::GetName() { return name; }
 
 void GOTestOrganController::run() {
   try {
+    GO_RUN_TEST(TestOnStateLifecycleSending())
     GO_RUN_TEST(TestOrganCoreData())
   } catch (const wxString &e) {
     throw GOTestException(
       std::string("Unexpected wxString exception: ") + e.ToStdString());
   }
+}
+
+void GOTestOrganController::TestOnStateLifecycleSending() {
+  GOAssert(
+    controller->p_OnStateButton,
+    "The On indicator button should exist after the constructor");
+  GOAssert(
+    !controller->p_OnStateButton->IsLifecycleSendingEnabled(),
+    "The On indicator should not send MIDI events in the lifecycle calls");
 }
 
 // Deliberately does not go through the public Load()/Clear(), since those
