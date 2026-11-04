@@ -1,3 +1,4 @@
+- Fixed crashing or hanging when importing settings or resetting an organ to defaults while it is playing https://github.com/GrandOrgue/grandorgue/issues/2687
 - Fixed leak of the organ objects when loading an organ fails
 - Added a swell-box shelf equalizer: enclosures can now cut low or high frequencies as they close, in addition to overall volume attenuation https://github.com/GrandOrgue/grandorgue/issues/717
 - Fixed crash on receiving or playing a malformed Rodgers stop change SysEx MIDI message shorter than 9 bytes
