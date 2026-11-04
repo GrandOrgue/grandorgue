@@ -291,10 +291,7 @@ void GOGUIEnclosure::Load(GOConfigReader &cfg, wxString group) {
 }
 
 void GOGUIEnclosure::Layout() {
-  if (m_BoundingRect.GetX() == -1)
-    m_BoundingRect.SetX(p_layout->GetEnclosureX(this));
-  if (m_BoundingRect.GetY() == -1)
-    m_BoundingRect.SetY(p_layout->GetEnclosureY());
+  SetPositionIfUnset(p_layout->GetEnclosureX(this), p_layout->GetEnclosureY());
 
   m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
   m_MouseRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());

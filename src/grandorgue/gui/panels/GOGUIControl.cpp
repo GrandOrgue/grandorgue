@@ -37,6 +37,13 @@ void GOGUIControl::Layout() {}
 
 void GOGUIControl::Save(GOConfigWriter &cfg) {}
 
+void GOGUIControl::SetPositionIfUnset(int x, int y) {
+  wxPoint position = m_BoundingRect.GetPosition();
+
+  position.SetDefaults(wxPoint(x, y));
+  m_BoundingRect.SetPosition(position);
+}
+
 void GOGUIControl::ControlChanged(GOControl *control) {
   if (control == p_control)
     if (!m_DrawPending) {

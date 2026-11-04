@@ -301,10 +301,7 @@ void GOGUILabel::Layout() {
     m_DispYpos = p_layout->GetJambLeftRightY() + 1
       + p_layout->GetJambLeftRightHeight() - 32;
 
-  if (m_BoundingRect.GetX() == -1)
-    m_BoundingRect.SetX(m_DispXpos);
-  if (m_BoundingRect.GetY() == -1)
-    m_BoundingRect.SetY(m_DispYpos);
+  SetPositionIfUnset(m_DispXpos, m_DispYpos);
 
   m_TextRect.Offset(m_BoundingRect.GetX(), m_BoundingRect.GetY());
 }
