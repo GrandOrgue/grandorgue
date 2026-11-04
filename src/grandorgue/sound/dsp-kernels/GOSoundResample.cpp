@@ -41,10 +41,8 @@ unsigned GOSoundResample::scaleResamplerPosIncrement(
   unsigned resamplerPosIncrement, float ratio) {
   assert(ratio > 0.0f);
 
-  const float newIncrement = ratio * resamplerPosIncrement;
-
   return resamplerPosIncrement ? (unsigned)std::clamp(
-           std::round(newIncrement),
+           std::round(ratio * resamplerPosIncrement),
            (float)MIN_FRACTION_INCREMENT,
            (float)MAX_FRACTION_INCREMENT)
                                : 0;
