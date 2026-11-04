@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -12,24 +12,24 @@
 #include "config/GOConfigReader.h"
 
 GOGUIControl::GOGUIControl(GOGUIPanel *panel, GOControl *pControl)
-  : m_panel(panel),
+  : p_panel(panel),
     p_control(pControl),
     m_BoundingRect(0, 0, 0, 0),
     m_DrawPending(false) {
-  m_metrics = panel->GetDisplayMetrics();
-  m_layout = panel->GetLayoutEngine();
-  m_panel->GetOrganFile()->RegisterControlChangedHandler(this);
+  p_metrics = panel->GetDisplayMetrics();
+  p_layout = panel->GetLayoutEngine();
+  p_panel->GetOrganFile()->RegisterControlChangedHandler(this);
 }
 
 GOGUIControl::~GOGUIControl() {}
 
 void GOGUIControl::Init(GOConfigReader &cfg, wxString group) {
-  m_panel->GetOrganFile()->RegisterSaveableObject(this);
+  p_panel->GetOrganFile()->RegisterSaveableObject(this);
   m_group = group;
 }
 
 void GOGUIControl::Load(GOConfigReader &cfg, wxString group) {
-  m_panel->GetOrganFile()->RegisterSaveableObject(this);
+  p_panel->GetOrganFile()->RegisterSaveableObject(this);
   m_group = group;
 }
 
@@ -41,7 +41,7 @@ void GOGUIControl::ControlChanged(GOControl *control) {
   if (control == p_control)
     if (!m_DrawPending) {
       m_DrawPending = true;
-      m_panel->AddEvent(this);
+      p_panel->AddEvent(this);
     }
 }
 

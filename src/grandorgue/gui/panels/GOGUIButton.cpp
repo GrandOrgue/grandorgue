@@ -24,13 +24,13 @@ GOGUIButton::GOGUIButton(
   : GOGUIMidiControl(panel, control, control),
     m_IsPiston(is_piston),
     m_DispKeyLabelOnLeft(true),
-    m_ButtonControl(control),
+    p_ButtonControl(control),
     m_MouseRect(),
     m_Radius(0),
     m_FontSize(0),
     m_FontName(),
     m_TextColor(0, 0, 0),
-    m_Text(),
+    m_DispLabelText(),
     m_TextRect(),
     m_TextWidth(0),
     m_DispCol(0),
@@ -54,20 +54,20 @@ void GOGUIButton::Init(
   m_TextColor = wxColour(0x80, 0x00, 0x00);
   m_FontSize = 9;
   m_FontName = wxT("");
-  m_Text = m_ButtonControl->GetName();
+  m_DispLabelText = p_ButtonControl->GetName();
 
   int x, y, w, h;
 
   wxString off_mask_file, on_mask_file;
   wxString on_file, off_file;
   if (m_IsPiston) {
-    int DispImageNum = image ? image : m_ButtonControl->IsReadOnly() ? 3 : 1;
+    int DispImageNum = image ? image : p_ButtonControl->IsReadOnly() ? 3 : 1;
     off_file
       = wxString::Format(wxT(GOBitmapPrefix "piston%02d_off"), DispImageNum);
     on_file
       = wxString::Format(wxT(GOBitmapPrefix "piston%02d_on"), DispImageNum);
   } else {
-    int DispImageNum = image ? image : m_ButtonControl->IsReadOnly() ? 4 : 1;
+    int DispImageNum = image ? image : p_ButtonControl->IsReadOnly() ? 4 : 1;
     off_file
       = wxString::Format(wxT(GOBitmapPrefix "drawstop%02d_off"), DispImageNum);
     on_file
@@ -77,8 +77,8 @@ void GOGUIButton::Init(
   on_mask_file = wxEmptyString;
   off_mask_file = on_mask_file;
 
-  m_OnBitmap.SetSourceImage(m_panel->LoadImage(on_file, on_mask_file));
-  m_OffBitmap.SetSourceImage(m_panel->LoadImage(off_file, off_mask_file));
+  m_OnBitmap.SetSourceImage(p_panel->LoadImage(on_file, on_mask_file));
+  m_OffBitmap.SetSourceImage(p_panel->LoadImage(off_file, off_mask_file));
 
   x = -1;
   y = -1;
@@ -109,7 +109,7 @@ void GOGUIButton::Init(
   m_TextRect = wxRect(x, y, w, h);
   m_TextWidth = m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14);
 
-  m_Font = m_metrics->GetControlLabelFont();
+  m_Font = p_metrics->GetControlLabelFont();
   m_Font.SetName(m_FontName);
   m_Font.SetPoints(m_FontSize);
 }
@@ -125,8 +125,8 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
     ODFSetting, group, wxT("DispLabelFontSize"), false, wxT("normal"));
   m_FontName = cfg.ReadStringTrim(
     ODFSetting, group, wxT("DispLabelFontName"), false, wxT(""));
-  m_Text = cfg.ReadString(
-    ODFSetting, group, wxT("DispLabelText"), false, m_ButtonControl->GetName());
+  m_DispLabelText = cfg.ReadString(
+    ODFSetting, group, wxT("DispLabelText"), false, p_ButtonControl->GetName());
 
   int x, y, w, h;
 
@@ -143,7 +143,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       1,
       5,
       false,
-      m_ButtonControl->IsReadOnly() ? 3 : 1);
+      p_ButtonControl->IsReadOnly() ? 3 : 1);
     off_file
       = wxString::Format(wxT(GOBitmapPrefix "piston%02d_off"), DispImageNum);
     on_file
@@ -154,7 +154,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("DispButtonRow"),
       0,
-      99 + m_metrics->NumberOfExtraButtonRows(),
+      99 + p_metrics->NumberOfExtraButtonRows(),
       false,
       1);
     m_DispCol = cfg.ReadInteger(
@@ -162,7 +162,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("DispButtonCol"),
       1,
-      m_metrics->NumberOfButtonCols(),
+      p_metrics->NumberOfButtonCols(),
       false,
       1);
   } else {
@@ -173,7 +173,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       1,
       7,
       false,
-      m_ButtonControl->IsReadOnly() ? 4 : 1);
+      p_ButtonControl->IsReadOnly() ? 4 : 1);
     off_file
       = wxString::Format(wxT(GOBitmapPrefix "drawstop%02d_off"), DispImageNum);
     on_file
@@ -184,7 +184,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("DispDrawstopRow"),
       1,
-      99 + m_metrics->NumberOfExtraDrawstopRowsToDisplay(),
+      99 + p_metrics->NumberOfExtraDrawstopRowsToDisplay(),
       false,
       1);
     m_DispCol = cfg.ReadInteger(
@@ -192,8 +192,8 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("DispDrawstopCol"),
       1,
-      m_DispRow > 99 ? m_metrics->NumberOfExtraDrawstopColsToDisplay()
-                     : m_metrics->NumberOfDrawstopColsToDisplay(),
+      m_DispRow > 99 ? p_metrics->NumberOfExtraDrawstopColsToDisplay()
+                     : p_metrics->NumberOfDrawstopColsToDisplay(),
       false,
       1);
   }
@@ -207,15 +207,15 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
   off_mask_file = cfg.ReadStringTrim(
     ODFSetting, group, wxT("MaskOff"), false, on_mask_file);
 
-  m_OnBitmap.SetSourceImage(m_panel->LoadImage(on_file, on_mask_file));
-  m_OffBitmap.SetSourceImage(m_panel->LoadImage(off_file, off_mask_file));
+  m_OnBitmap.SetSourceImage(p_panel->LoadImage(on_file, on_mask_file));
+  m_OffBitmap.SetSourceImage(p_panel->LoadImage(off_file, off_mask_file));
 
   x = cfg.ReadInteger(
     ODFSetting,
     group,
     wxT("PositionX"),
     0,
-    m_metrics->GetScreenWidth(),
+    p_metrics->GetScreenWidth(),
     false,
     -1);
   y = cfg.ReadInteger(
@@ -223,7 +223,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("PositionY"),
     0,
-    m_metrics->GetScreenHeight(),
+    p_metrics->GetScreenHeight(),
     false,
     -1);
   w = cfg.ReadInteger(
@@ -231,7 +231,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("Width"),
     1,
-    m_metrics->GetScreenWidth(),
+    p_metrics->GetScreenWidth(),
     false,
     m_OnBitmap.GetSourceWidth());
   h = cfg.ReadInteger(
@@ -239,7 +239,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
     group,
     wxT("Height"),
     1,
-    m_metrics->GetScreenHeight(),
+    p_metrics->GetScreenHeight(),
     false,
     m_OnBitmap.GetSourceHeight());
   m_BoundingRect = wxRect(x, y, w, h);
@@ -351,7 +351,7 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
     false,
     m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14));
 
-  m_Font = m_metrics->GetControlLabelFont();
+  m_Font = p_metrics->GetControlLabelFont();
   m_Font.SetName(m_FontName);
   m_Font.SetPoints(m_FontSize);
 }
@@ -359,11 +359,11 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
 void GOGUIButton::Layout() {
   int x, y;
   if (m_IsPiston) {
-    m_layout->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, x, y);
+    p_layout->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, x, y);
     if (!m_DispKeyLabelOnLeft)
       x -= 13;
   } else {
-    m_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, x, y);
+    p_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, x, y);
   }
 
   if (m_BoundingRect.GetX() == -1)
@@ -393,10 +393,10 @@ bool GOGUIButton::HandleMousePress(
     if (state.GetControl() == this)
       return true;
     state.SetControl(this);
-    if (m_ButtonControl->IsReadOnly())
+    if (p_ButtonControl->IsReadOnly())
       return true;
 
-    m_ButtonControl->Push();
+    p_ButtonControl->Push();
     return true;
   }
 }
@@ -410,12 +410,12 @@ void GOGUIButton::PrepareDraw(double scale, GOBitmap *background) {
 
 void GOGUIButton::Draw(GODC &dc) {
   GOBitmap &bmp
-    = m_ButtonControl->DisplayInverted() ^ m_ButtonControl->IsEngaged()
+    = p_ButtonControl->DisplayInverted() ^ p_ButtonControl->IsEngaged()
     ? m_OnBitmap
     : m_OffBitmap;
   dc.DrawBitmap(bmp, m_BoundingRect);
   if (m_TextWidth)
-    dc.DrawText(m_Text, m_TextRect, m_TextColor, m_Font, m_TextWidth);
+    dc.DrawText(m_DispLabelText, m_TextRect, m_TextColor, m_Font, m_TextWidth);
 
   GOGUIControl::Draw(dc);
 }
