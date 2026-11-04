@@ -191,7 +191,11 @@ jobs:
             prepare: osx
             build_on: osx
 
-          - run_on: ubuntu-latest
+          # ubuntu-latest already resolves to Ubuntu 26.04 on some accounts,
+          # where wine in the container fails with "wineserver: socket:
+          # Function not implemented" and cv2pdb produces no .pdb. Go back to
+          # ubuntu-latest when wine works on 26.04
+          - run_on: ubuntu-24.04
             for: win64
             prepare: "debian-based"
             build_on: linux
