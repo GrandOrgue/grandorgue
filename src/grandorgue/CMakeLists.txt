@@ -234,6 +234,7 @@ sound/processing/GOSoundProcessingChainState.cpp
 sound/providers/GOSoundProvider.cpp
 sound/providers/GOSoundProviderSynthedTrem.cpp
 sound/providers/GOSoundProviderWave.cpp
+sound/providers/GOSoundTremulantProviderSynth.cpp
 sound/reverb/GOSoundReverb.cpp
 sound/reverb/GOSoundReverbEngine.cpp
 sound/reverb/GOSoundReverbPartition.cpp
