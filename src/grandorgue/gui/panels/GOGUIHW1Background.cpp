@@ -26,77 +26,77 @@ void GOGUIHW1Background::Layout() {
   m_Images.clear();
   wxRect rect;
 
-  rect = wxRect(0, 0, m_layout->GetCenterX(), m_metrics->GetScreenHeight());
+  rect = wxRect(0, 0, p_layout->GetCenterX(), p_metrics->GetScreenHeight());
   if (is_rect_valid(rect))
     m_Images.emplace_back(
-      rect, m_panel->GetWoodImage(m_metrics->GetDrawstopBackgroundImageNum()));
+      rect, p_panel->GetWoodImage(p_metrics->GetDrawstopBackgroundImageNum()));
   rect = wxRect(
-    m_layout->GetCenterX() + m_layout->GetCenterWidth(),
+    p_layout->GetCenterX() + p_layout->GetCenterWidth(),
     0,
-    m_metrics->GetScreenWidth()
-      - (m_layout->GetCenterX() + m_layout->GetCenterWidth()),
-    m_metrics->GetScreenHeight());
+    p_metrics->GetScreenWidth()
+      - (p_layout->GetCenterX() + p_layout->GetCenterWidth()),
+    p_metrics->GetScreenHeight());
   if (is_rect_valid(rect))
     m_Images.emplace_back(
-      rect, m_panel->GetWoodImage(m_metrics->GetDrawstopBackgroundImageNum()));
+      rect, p_panel->GetWoodImage(p_metrics->GetDrawstopBackgroundImageNum()));
   rect = wxRect(
-    m_layout->GetCenterX(),
+    p_layout->GetCenterX(),
     0,
-    m_layout->GetCenterWidth(),
-    m_metrics->GetScreenHeight());
+    p_layout->GetCenterWidth(),
+    p_metrics->GetScreenHeight());
   if (is_rect_valid(rect))
     m_Images.emplace_back(
-      rect, m_panel->GetWoodImage(m_metrics->GetConsoleBackgroundImageNum()));
+      rect, p_panel->GetWoodImage(p_metrics->GetConsoleBackgroundImageNum()));
 
-  if (m_metrics->HasPairDrawstopCols()) {
-    for (unsigned i = 0; i < (m_metrics->NumberOfDrawstopColsToDisplay() >> 2);
+  if (p_metrics->HasPairDrawstopCols()) {
+    for (unsigned i = 0; i < (p_metrics->NumberOfDrawstopColsToDisplay() >> 2);
          i++) {
       rect = wxRect(
-        i * (2 * m_metrics->GetDrawstopWidth() + 18) + m_layout->GetJambLeftX()
+        i * (2 * p_metrics->GetDrawstopWidth() + 18) + p_layout->GetJambLeftX()
           - 5,
-        m_layout->GetJambLeftRightY(),
-        2 * m_metrics->GetDrawstopWidth() + 10,
-        m_layout->GetJambLeftRightHeight());
+        p_layout->GetJambLeftRightY(),
+        2 * p_metrics->GetDrawstopWidth() + 10,
+        p_layout->GetJambLeftRightHeight());
       if (is_rect_valid(rect))
         m_Images.emplace_back(
           rect,
-          m_panel->GetWoodImage(
-            m_metrics->GetDrawstopInsetBackgroundImageNum()));
+          p_panel->GetWoodImage(
+            p_metrics->GetDrawstopInsetBackgroundImageNum()));
       rect = wxRect(
-        i * (2 * m_metrics->GetDrawstopWidth() + 18) + m_layout->GetJambRightX()
+        i * (2 * p_metrics->GetDrawstopWidth() + 18) + p_layout->GetJambRightX()
           - 5,
-        m_layout->GetJambLeftRightY(),
-        2 * m_metrics->GetDrawstopWidth() + 10,
-        m_layout->GetJambLeftRightHeight());
+        p_layout->GetJambLeftRightY(),
+        2 * p_metrics->GetDrawstopWidth() + 10,
+        p_layout->GetJambLeftRightHeight());
       if (is_rect_valid(rect))
         m_Images.emplace_back(
           rect,
-          m_panel->GetWoodImage(
-            m_metrics->GetDrawstopInsetBackgroundImageNum()));
+          p_panel->GetWoodImage(
+            p_metrics->GetDrawstopInsetBackgroundImageNum()));
     }
   }
 
-  if (m_metrics->HasTrimAboveExtraRows()) {
+  if (p_metrics->HasTrimAboveExtraRows()) {
     rect = wxRect(
-      m_layout->GetCenterX(),
-      m_layout->GetCenterY(),
-      m_layout->GetCenterWidth(),
+      p_layout->GetCenterX(),
+      p_layout->GetCenterY(),
+      p_layout->GetCenterWidth(),
       8);
     if (is_rect_valid(rect))
       m_Images.emplace_back(
-        rect, m_panel->GetWoodImage(m_metrics->GetKeyVertBackgroundImageNum()));
+        rect, p_panel->GetWoodImage(p_metrics->GetKeyVertBackgroundImageNum()));
   }
 
-  if (m_layout->GetJambTopHeight() + m_layout->GetPistonTopHeight()) {
+  if (p_layout->GetJambTopHeight() + p_layout->GetPistonTopHeight()) {
     rect = wxRect(
-      m_layout->GetCenterX(),
-      m_layout->GetJambTopY(),
-      m_layout->GetCenterWidth(),
-      m_layout->GetJambTopHeight() + m_layout->GetPistonTopHeight());
+      p_layout->GetCenterX(),
+      p_layout->GetJambTopY(),
+      p_layout->GetCenterWidth(),
+      p_layout->GetJambTopHeight() + p_layout->GetPistonTopHeight());
     if (is_rect_valid(rect))
       m_Images.emplace_back(
         rect,
-        m_panel->GetWoodImage(m_metrics->GetKeyHorizBackgroundImageNum()));
+        p_panel->GetWoodImage(p_metrics->GetKeyHorizBackgroundImageNum()));
   }
 }
 

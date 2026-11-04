@@ -25,7 +25,7 @@ GOGUIManual::GOGUIManual(
     m_manual(manual),
     m_ManualNumber(manual_number),
     m_Keys() {
-  m_layout->RegisterManual(this);
+  p_layout->RegisterManual(this);
 }
 
 bool GOGUIManual::IsSharp(unsigned key) { return m_Keys[key].IsSharp; }
@@ -101,9 +101,9 @@ void GOGUIManual::Init(GOConfigReader &cfg, wxString group) {
     off_mask_file = on_mask_file;
 
     m_Keys[i].OnBitmap.SetSourceImage(
-      m_panel->LoadImage(on_file, on_mask_file));
+      p_panel->LoadImage(on_file, on_mask_file));
     m_Keys[i].OffBitmap.SetSourceImage(
-      m_panel->LoadImage(off_file, off_mask_file));
+      p_panel->LoadImage(off_file, off_mask_file));
 
     if (
       m_Keys[i].OnBitmap.GetSourceWidth()
@@ -308,9 +308,9 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       off_mask_file);
 
     m_Keys[i].OnBitmap.SetSourceImage(
-      m_panel->LoadImage(on_file, on_mask_file));
+      p_panel->LoadImage(on_file, on_mask_file));
     m_Keys[i].OffBitmap.SetSourceImage(
-      m_panel->LoadImage(off_file, off_mask_file));
+      p_panel->LoadImage(off_file, off_mask_file));
 
     if (
       m_Keys[i].OnBitmap.GetSourceWidth()
@@ -422,7 +422,7 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("PositionX"),
       0,
-      m_metrics->GetScreenWidth(),
+      p_metrics->GetScreenWidth(),
       false,
       -1),
     cfg.ReadInteger(
@@ -430,7 +430,7 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
       group,
       wxT("PositionY"),
       0,
-      m_metrics->GetScreenHeight(),
+      p_metrics->GetScreenHeight(),
       false,
       -1));
   m_BoundingRect = wxRect(left, top, right - left + 1, bottom - top + 1);
@@ -438,7 +438,7 @@ void GOGUIManual::Load(GOConfigReader &cfg, wxString group) {
 
 void GOGUIManual::Layout() {
   const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri
-    = m_layout->GetManualRenderInfo(m_ManualNumber);
+    = p_layout->GetManualRenderInfo(m_ManualNumber);
 
   // Get the top left point
   if (m_LeftTop.x == -1)

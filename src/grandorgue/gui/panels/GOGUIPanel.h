@@ -51,20 +51,20 @@ private:
     bool isPiston = false);
 
 protected:
-  GOOrganController *m_OrganController;
+  GOOrganController *p_OrganController;
 
   /** The image cache to load/lookup wood and control images through,
    * captured from the enclosing GOGuiOrgan at construction (same as
-   * m_MouseState below). */
+   * r_MouseState below). */
   GOGuiImageCache &r_ImageCache;
-  GOGUIMouseState &m_MouseState;
+  GOGUIMouseState &r_MouseState;
   ptr_vector<GOGUIControl> m_controls;
   unsigned m_BackgroundControls;
   wxString m_Name;
   wxString m_GroupName;
-  GOGUIDisplayMetrics *m_metrics;
-  GOGUILayoutEngine *m_layout;
-  GOGUIPanelView *m_view;
+  GOGUIDisplayMetrics *o_metrics;
+  GOGUILayoutEngine *o_layout;
+  GOGUIPanelView *p_view;
   bool m_InitialOpenWindow;
 
   void LoadControl(GOGUIControl *control, GOConfigReader &cfg, wxString group);
@@ -98,8 +98,8 @@ public:
   void Load(GOConfigReader &cfg, const wxString &group) override;
   void Layout();
 
-  GOGUIPanelView *GetView() const { return m_view; }
-  void SetView(GOGUIPanelView *view) { m_view = view; }
+  GOGUIPanelView *GetView() const { return p_view; }
+  void SetView(GOGUIPanelView *view) { p_view = view; }
   GODocumentBase *GetDocument() const;
 
   GOOrganController *GetOrganFile();

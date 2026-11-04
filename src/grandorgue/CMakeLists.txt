@@ -215,6 +215,7 @@ sound/effects/GOSoundReverbProcessor.cpp
 sound/effects/GOSoundReverbProcessorState.cpp
 sound/effects/GOSoundShelfFilterProcessor.cpp
 sound/effects/GOSoundShelfFilterProcessorState.cpp
+sound/effects/GOSoundVibratoPitchRateCurve.cpp
 sound/interfaces/GOSoundCallbackConnector.cpp
 sound/mappers/GOSoundEnclosureShelfMapper.cpp
 sound/playing/GOSoundAudioSection.cpp
@@ -234,6 +235,7 @@ sound/processing/GOSoundProcessingChainState.cpp
 sound/providers/GOSoundProvider.cpp
 sound/providers/GOSoundProviderSynthedTrem.cpp
 sound/providers/GOSoundProviderWave.cpp
+sound/providers/GOSoundTremulantProviderSynth.cpp
 sound/reverb/GOSoundReverb.cpp
 sound/reverb/GOSoundReverbEngine.cpp
 sound/reverb/GOSoundReverbPartition.cpp

@@ -8,6 +8,7 @@
 #ifndef GOORGANMODEL_H
 #define GOORGANMODEL_H
 
+#include <memory>
 #include <set>
 #include <unordered_map>
 
@@ -166,8 +167,11 @@ public:
 
   const ptr_vector<GOWindchest> &GetWindchests() const { return m_windchests; }
   unsigned GetWindchestCount() const { return m_windchests.size(); }
-  // Returns the windchest number starting with 1
-  unsigned AddWindchest(GOWindchest *windchest);
+  /**
+   * Takes the ownership of the windchest and registers it in the model.
+   * @return the one-based number of the windchest
+   */
+  unsigned AddWindchest(std::unique_ptr<GOWindchest> &&oWindchest);
   // Returns the windchest by it's index starting with 0
   GOWindchest *GetWindchest(unsigned index) { return m_windchests[index]; }
 
@@ -179,7 +183,11 @@ public:
    * internal enclosures added later via AddEnclosure(). Use it for validating
    * enclosure references that come from the ODF */
   unsigned GetODFEnclosureCount() const { return m_ODFEnclosureCount; }
-  unsigned AddEnclosure(GOEnclosure *enclosure);
+  /**
+   * Takes the ownership of the enclosure and registers it in the model.
+   * @return the zero-based index of the enclosure
+   */
+  unsigned AddEnclosure(std::unique_ptr<GOEnclosure> &&oEnclosure);
 
   unsigned GetSwitchCount() const { return m_switches.size(); }
   GOSwitch *GetSwitch(unsigned index) { return m_switches[index]; }
@@ -215,7 +223,8 @@ public:
 
   const GORank *GetRank(unsigned index) const { return m_ranks[index]; }
   GORank *GetRank(unsigned index) { return m_ranks[index]; }
-  void AddRank(GORank *rank);
+  /** Takes the ownership of the rank and registers it in the model. */
+  void AddRank(std::unique_ptr<GORank> &&oRank);
 
   /**
    * Scans every sounding pipe of every rank and collects the distinct

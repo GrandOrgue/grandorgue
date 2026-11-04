@@ -28,15 +28,24 @@ class GODC;
 class GOGUIControl : private GOSaveableObject,
                      protected GOControlChangedHandler {
 protected:
-  GOGUIPanel *m_panel;
-  GOGUIDisplayMetrics *m_metrics;
-  GOGUILayoutEngine *m_layout;
+  GOGUIPanel *p_panel;
+  GOGUIDisplayMetrics *p_metrics;
+  GOGUILayoutEngine *p_layout;
   GOControl *p_control;
   wxRect m_BoundingRect;
   bool m_DrawPending;
 
   void Init(GOConfigReader &cfg, wxString group);
   void Save(GOConfigWriter &cfg) override;
+
+  /**
+   * Sets the coordinates of m_BoundingRect that are not set yet (equal to
+   * wxDefaultCoord) to x and y. The coordinates set explicitly (e.g. from the
+   * ODF) are kept.
+   * @param x the value for an unset X
+   * @param y the value for an unset Y
+   */
+  void SetPositionIfUnset(int x, int y);
 
   void ControlChanged(GOControl *control) override;
 
@@ -47,7 +56,7 @@ public:
   GOControl *GetControl() const { return p_control; }
 
   GODocumentBase *GetDocument() const {
-    return m_panel ? m_panel->GetDocument() : nullptr;
+    return p_panel ? p_panel->GetDocument() : nullptr;
   }
 
   virtual void Load(GOConfigReader &cfg, wxString group);

@@ -106,6 +106,11 @@ GOOrganController::GOOrganController(GOConfig &config)
   // only place registering it) may never run (e.g. in tests, or if loading
   // fails before reaching that point), which would otherwise leak it.
   m_elementcreators.push_back(m_setter);
+  p_OnStateButton = GetButtonControl(GOSetter::KEY_ON_STATE);
+  assert(p_OnStateButton);
+  // The On indicator must not send its MIDI events together with the others
+  // (issue #1762): they are sent separately at the end by SendOnStateMidi()
+  p_OnStateButton->SetLifecycleSendingEnabled(false);
   m_pool.SetMemoryLimit(m_config.MemoryLimit() * 1024 * 1024);
 }
 
@@ -150,7 +155,6 @@ void GOOrganController::ClearObjects() {
 
 void GOOrganController::ClearOrganCoreData() {
   if (m_IsOrganCoreDataLoaded) {
-    p_OnStateButton = nullptr;
     // They refer to the enclosures that GOOrganModel::Cleanup() frees
     p_MasterEnclosure = nullptr;
     mp_InternalEnclosures.clear();
@@ -238,11 +242,12 @@ void GOOrganController::InitInternalEnclosures(GOConfigReader &cfg) {
   assert(!p_MasterEnclosure && mp_InternalEnclosures.empty());
 
   const unsigned nWindchests = GetWindchestCount();
-  GOEnclosure *pMaster = new GOEnclosure(*this);
+  std::unique_ptr<GOEnclosure> oMaster = std::make_unique<GOEnclosure>(*this);
+  GOEnclosure *const pMaster = oMaster.get();
 
-  pMaster->SetContext(&MIDI_CONTEXT_VOLUMES);
-  pMaster->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
-  AddEnclosure(pMaster);
+  oMaster->SetContext(&MIDI_CONTEXT_VOLUMES);
+  oMaster->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
+  AddEnclosure(std::move(oMaster));
   pMaster->SetElementId(GetRecorderElementID(wxT("SM")));
   p_MasterEnclosure = pMaster;
 
@@ -250,20 +255,21 @@ void GOOrganController::InitInternalEnclosures(GOConfigReader &cfg) {
   for (unsigned windchestI = 0; windchestI < nWindchests; ++windchestI) {
     GOWindchest *pWindchest = GetWindchest(windchestI);
     const wxString &hardName = pWindchest->GetHardName();
-    GOEnclosure *pEnc = new GOEnclosure(*this);
+    std::unique_ptr<GOEnclosure> oEnc = std::make_unique<GOEnclosure>(*this);
+    GOEnclosure *const pEnc = oEnc.get();
 
     pWindchest->AddEnclosure(pMaster);
-    pEnc->SetContext(&MIDI_CONTEXT_VOLUMES);
-    pEnc->SetHardName(
+    oEnc->SetContext(&MIDI_CONTEXT_VOLUMES);
+    oEnc->SetHardName(
       hardName.IsEmpty()
         ? wxString::Format(wxT("Windchest%03u"), windchestI + 1)
         : hardName);
-    pEnc->Init(
+    oEnc->Init(
       cfg,
       wxString::Format(wxT("SetterMaster%03d"), windchestI + 1),
       pWindchest->GetName(),
       127);
-    AddEnclosure(pEnc);
+    AddEnclosure(std::move(oEnc));
     pEnc->SetElementId(
       GetRecorderElementID(wxString::Format(wxT("SM%d"), windchestI)));
     pWindchest->AddEnclosure(pEnc);
@@ -330,7 +336,7 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
   // The metronome's windchest and the internal enclosures must exist before
   // LoadCmbButtons(); the GOMetronome itself is created below
   const unsigned metronomeWindchestN
-    = AddWindchest(GOMetronome::createWindchest(cfg, *this).release());
+    = AddWindchest(GOMetronome::createWindchest(cfg, *this));
 
   InitInternalEnclosures(cfg);
 
@@ -351,14 +357,6 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
   for (unsigned i = 0; i < m_elementcreators.size(); i++)
     m_elementcreators[i]->Load(cfg);
 
-  p_OnStateButton = GetButtonControl(GOSetter::KEY_ON_STATE);
-
-  if (p_OnStateButton) {
-    // we do not want to send midi events on m_OnStateButton together with
-    // other events. They will be sent separately.
-    UnRegisterLifecycleListener(p_OnStateButton);
-  }
-
   // Load dialog sizes
   if (GODialogSizeSet::isPresentInCfg(cfg, CMBSetting))
     m_config.m_DialogSizes.Load(cfg, CMBSetting);
@@ -367,9 +365,6 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
 
   GetRootPipeConfigNode().SetName(organName);
   OnIsModifiedChanged(true);
-  ReadCombinations(cfg);
-  m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
-  ResetOrganModified();
 
   GOHash hash;
   const auto organNameUtf8 = organName.utf8_str();
@@ -526,8 +521,15 @@ wxString GOOrganController::Load(
     m_LoadedOrganInfo = organReader.GetLoadedOrganInfo();
     m_Cacheable = false;
 
-    LoadOrganCoreData(organReader.GetConfigReader());
-    OnLoad(organReader.GetConfigReader());
+    GOConfigReader &cfg = organReader.GetConfigReader();
+
+    LoadOrganCoreData(cfg);
+    OnLoad(cfg);
+    // The combinations are read after the GUI is loaded
+    ReadCombinations(cfg);
+    m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
+    ResetOrganModified();
+    // after reading the combinations, otherwise they are reported as unused
     organReader.ReportUnused();
 
     if (!isGuiOnly)
@@ -846,6 +848,17 @@ void GOOrganController::EnsureSoundRoutingFor(
   }
 }
 
+void GOOrganController::SendOnStateMidi(bool isOn) {
+  p_OnStateButton->SetLifecycleSendingEnabled(true);
+  if (isOn) {
+    p_OnStateButton->PreparePlayback();
+    p_OnStateButton->StartPlayback();
+    p_OnStateButton->PrepareRecording();
+  } else
+    p_OnStateButton->AbortPlayback();
+  p_OnStateButton->SetLifecycleSendingEnabled(false);
+}
+
 void GOOrganController::StartOrgan(
   GOSoundSystem &soundSystem, GOMidiSystem &midi) {
   const std::vector<GOSoundOrganEngine::AudioOutputConfig> audioOutputConfigs
@@ -882,11 +895,7 @@ void GOOrganController::StartOrgan(
   m_MidiPlayer->Setup(&midi);
 
   // Light the OnState button
-  if (p_OnStateButton) {
-    p_OnStateButton->PreparePlayback();
-    p_OnStateButton->StartPlayback();
-    p_OnStateButton->PrepareRecording();
-  }
+  SendOnStateMidi(true);
 }
 
 void GOOrganController::StopOrgan(GOSoundSystem &soundSystem) {
@@ -896,8 +905,7 @@ void GOOrganController::StopOrgan(GOSoundSystem &soundSystem) {
   m_MidiRecorder->StopRecording();
   m_AudioRecorder->StopRecording();
   m_AudioRecorder->SetAudioRecorder(NULL);
-  if (p_OnStateButton)
-    p_OnStateButton->AbortPlayback();
+  SendOnStateMidi(false);
   GOOrganModel::GOSoundSamplerPlayerProxy::Disconnect();
   GOOrganModel::SetMidi(nullptr, nullptr);
   m_midi = NULL;

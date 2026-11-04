@@ -18,6 +18,14 @@ class GOMidiSendingObject : public GOMidiPlayingObject {
 private:
   GOMidiSender m_sender;
 
+  /**
+   * Whether PreparePlayback(), PrepareRecording() and AbortPlayback() send
+   * MIDI events (the name, the current or the empty value). It does not affect
+   * the ordinary sends during the work. The base class lifecycle calls (the
+   * receiver reset) are always done.
+   */
+  bool m_IsLifecycleSendingEnabled = true;
+
 protected:
   GOMidiSendingObject(
     GOOrganModel &organModel,
@@ -56,6 +64,18 @@ protected:
   void OnSettingsApplied() override;
 
 public:
+  /** @return true if the lifecycle methods send MIDI events */
+  bool IsLifecycleSendingEnabled() const { return m_IsLifecycleSendingEnabled; }
+
+  /**
+   * Enables or disables the MIDI sending in PreparePlayback(),
+   * PrepareRecording() and AbortPlayback().
+   * @param isEnabled true: send (the default); false: do not send
+   */
+  void SetLifecycleSendingEnabled(bool isEnabled) {
+    m_IsLifecycleSendingEnabled = isEnabled;
+  }
+
   void PreparePlayback() override;
   void PrepareRecording() override;
   void AbortPlayback() override;

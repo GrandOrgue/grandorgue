@@ -131,8 +131,9 @@ private:
   // if modified then sets m_IsOrganModified
   void OnIsModifiedChanged(bool modified);
 
-  /** Reads the non-GUI ODF/CMB data (church info, model, element creators,
-   * combinations) into this controller. Sets m_IsOrganCoreDataLoaded. */
+  /** Reads the non-GUI ODF/CMB data (church info, model, element creators)
+   * into this controller. Sets m_IsOrganCoreDataLoaded. The combinations are
+   * not read here: Load() reads them after OnLoad(). */
   void LoadOrganCoreData(GOConfigReader &cfg);
   /**
    * Creates the internal (not ODF) enclosures: the master volume and one per
@@ -157,6 +158,14 @@ private:
   void ClearObjects();
   /** Undoes LoadOrganCoreData if it ran. Idempotent. */
   void ClearOrganCoreData();
+  /**
+   * Sends the MIDI events of the On indicator button at the end of starting or
+   * after stopping the organ, so that they go last (see issue #1762).
+   * Temporarily enables the lifecycle sending of the button.
+   * @param isOn true: PreparePlayback+StartPlayback+PrepareRecording,
+   *   false: AbortPlayback
+   */
+  void SendOnStateMidi(bool isOn);
   GOHashType GenerateCacheHash();
   void SetTemperament(const GOTemperament &temperament);
   void PreconfigRecorder();

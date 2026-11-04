@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -41,16 +41,20 @@ void GOMidiSendingObject::OnSettingsApplied() {
 
 void GOMidiSendingObject::PreparePlayback() {
   GOMidiPlayingObject::PreparePlayback();
-  m_sender.SetName(GetName());
+  if (m_IsLifecycleSendingEnabled)
+    m_sender.SetName(GetName());
 }
 
 void GOMidiSendingObject::PrepareRecording() {
   GOMidiPlayingObject::PrepareRecording();
-  SendCurrentMidiValue();
+  if (m_IsLifecycleSendingEnabled)
+    SendCurrentMidiValue();
 }
 
 void GOMidiSendingObject::AbortPlayback() {
-  SendEmptyMidiValue();
+  if (m_IsLifecycleSendingEnabled)
+    SendEmptyMidiValue();
   GOMidiPlayingObject::AbortPlayback();
-  m_sender.SetName(wxEmptyString);
+  if (m_IsLifecycleSendingEnabled)
+    m_sender.SetName(wxEmptyString);
 }

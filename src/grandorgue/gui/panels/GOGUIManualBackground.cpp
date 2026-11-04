@@ -29,21 +29,21 @@ void GOGUIManualBackground::Load(GOConfigReader &cfg, wxString group) {
 
 void GOGUIManualBackground::Layout() {
   const GOGUILayoutEngine::MANUAL_RENDER_INFO &mri
-    = m_layout->GetManualRenderInfo(m_ManualNumber);
+    = p_layout->GetManualRenderInfo(m_ManualNumber);
   m_BoundingRect = wxRect(mri.x, mri.y, mri.width, mri.height);
   m_VRect = wxRect(
-    m_layout->GetCenterX(), mri.y, m_layout->GetCenterWidth(), mri.height);
+    p_layout->GetCenterX(), mri.y, p_layout->GetCenterWidth(), mri.height);
   m_VBackground.SetSourceImage(
-    m_panel->GetWoodImage(m_metrics->GetKeyVertBackgroundImageNum()));
+    p_panel->GetWoodImage(p_metrics->GetKeyVertBackgroundImageNum()));
   m_HRect = wxRect(
-    m_layout->GetCenterX(),
+    p_layout->GetCenterX(),
     mri.piston_y,
-    m_layout->GetCenterWidth(),
-    (!m_ManualNumber && m_metrics->HasExtraPedalButtonRow())
-      ? 2 * m_metrics->GetButtonHeight()
-      : m_metrics->GetButtonHeight());
+    p_layout->GetCenterWidth(),
+    (!m_ManualNumber && p_metrics->HasExtraPedalButtonRow())
+      ? 2 * p_metrics->GetButtonHeight()
+      : p_metrics->GetButtonHeight());
   m_HBackground.SetSourceImage(
-    m_panel->GetWoodImage(m_metrics->GetKeyHorizBackgroundImageNum()));
+    p_panel->GetWoodImage(p_metrics->GetKeyHorizBackgroundImageNum()));
 }
 
 void GOGUIManualBackground::PrepareDraw(double scale, GOBitmap *background) {

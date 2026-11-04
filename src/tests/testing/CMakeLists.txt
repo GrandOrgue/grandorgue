@@ -33,8 +33,10 @@ set(go_tests
     sound/dsp-kernels/GOTestSoundOnePoleFilter.cpp
     sound/dsp-kernels/GOTestSoundResample.cpp
     sound/effects/GOTestPerfSoundShelfFilterProcessor.cpp
+    sound/effects/GOTestPerfSoundVibratoPitchRateCurve.cpp
     sound/effects/GOTestSoundReverbProcessor.cpp
     sound/effects/GOTestSoundShelfFilterProcessor.cpp
+    sound/effects/GOTestSoundVibratoPitchRateCurve.cpp
     sound/GOSoundTestSignals.cpp
     sound/GOTestSoundCallbackConnector.cpp
     sound/GOTestSoundOrganEngine.cpp
@@ -52,6 +54,7 @@ set(go_tests
     sound/processing/GOSoundProcessingTestImpls.cpp
     sound/processing/GOTestSoundProcessingChain.cpp
     sound/processing/GOTestSoundProcessorTyped.cpp
+    sound/providers/GOTestSoundTremulantProviderSynth.cpp
     sound/reverb/GOTestSoundReverb.cpp
     sound/tasks/GOSoundCooperativeTaskTestImpl.cpp
     sound/tasks/GOSoundTaskTestImpl.cpp

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,7 @@
 #ifndef PTRVECTOR_H
 #define PTRVECTOR_H
 
+#include <memory>
 #include <vector>
 
 template <class T> class ptr_vector : protected std::vector<T *> {
@@ -68,6 +69,16 @@ public:
   }
 
   void push_back(T *ptr) { std::vector<T *>::push_back(ptr); }
+
+  /**
+   * Takes the ownership of the object and appends it to the vector. If the
+   * append throws, the object is still owned by the unique_ptr and is deleted.
+   * @param ptr the object to append; it is empty after the call
+   */
+  void push_back(std::unique_ptr<T> &&ptr) {
+    std::vector<T *>::push_back(ptr.get());
+    ptr.release();
+  }
 
   void insert(unsigned pos, T *ptr) {
     std::vector<T *>::insert(std::vector<T *>::begin() + pos, ptr);
