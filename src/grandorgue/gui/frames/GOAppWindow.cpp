@@ -662,6 +662,21 @@ void GOAppWindow::LoadOrgan(const GOOrgan &organ, const wxString &cmb) {
   if (mp_organ) {
     GOProgressDialog dlg;
 
+    /*
+     * GOGuiOrgan::LoadOrgan() destroys the current controller before it builds
+     * the new one, so the raw pointer must be cleared before that destruction.
+     * Clearing it before StopOrgan() as well keeps the retiring controller
+     * invisible for the whole teardown. StopOrgan() logs and waits, and
+     * historically log handling could re-enter the event loop (issue #2606),
+     * so handlers such as OnMeters() or OnUpdateLoaded() must not see the
+     * controller that is being retired.
+     */
+    GOOrganController *const pOldController = p_OrganController;
+
+    p_OrganController = nullptr;
+    if (pOldController && pOldController->IsOrganStarted())
+      pOldController->StopOrgan(r_SoundSystem);
+
     p_OrganController = mp_organ->LoadOrgan(organ, cmb, m_IsGuiOnly, dlg);
     OnIsModifiedChanged(false);
 
