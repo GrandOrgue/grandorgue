@@ -28,6 +28,8 @@ GOWindchest::GOWindchest(GOOrganModel &organModel)
   organModel.RegisterLifecycleListener(this);
 }
 
+GOWindchest::~GOWindchest() { r_OrganModel.UnRegisterLifecycleListener(this); }
+
 void GOWindchest::Init(GOConfigReader &cfg, wxString group, wxString name) {
   m_enclosure.resize(0);
   m_tremulant.resize(0);
