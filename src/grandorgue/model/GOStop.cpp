@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -83,9 +83,11 @@ void GOStop::Load(GOConfigReader &cfg, const wxString &group) {
   } else {
     RankInfo info;
 
-    info.Rank = new GORank(r_OrganModel);
+    std::unique_ptr<GORank> oRank = std::make_unique<GORank>(r_OrganModel);
+
+    info.Rank = oRank.get();
     info.Rank->SetHardName(group);
-    r_OrganModel.AddRank(info.Rank);
+    r_OrganModel.AddRank(std::move(oRank));
     info.FirstPipeNumber = cfg.ReadInteger(
       ODFSetting, group, wxT("FirstAccessiblePipeLogicalPipeNumber"), 1, 192);
     info.FirstAccessibleKeyNumber = 1;

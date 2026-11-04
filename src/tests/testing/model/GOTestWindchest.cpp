@@ -28,11 +28,13 @@ void GOTestWindchest::TestWindchestBasics() {
   std::string message;
   // Check the size of Windchest is correct
   unsigned w_size;
-  w_size = this->controller->AddWindchest(new GOWindchest(*this->controller));
+  w_size = this->controller->AddWindchest(
+    std::make_unique<GOWindchest>(*this->controller));
   message = "Windchest size is wrong";
   this->GOAssert(w_size == 1, message);
 
-  w_size = this->controller->AddWindchest(new GOWindchest(*this->controller));
+  w_size = this->controller->AddWindchest(
+    std::make_unique<GOWindchest>(*this->controller));
   message = "Windchest size is wrong";
   this->GOAssert(w_size == 2, message);
 
@@ -48,12 +50,14 @@ void GOTestWindchest::TestWindchestBasics() {
   this->GOAssert(name == "", message);
 
   // Check enclosure amplitude values from midi ones
-  GOEnclosure *enclosure = new GOEnclosure(*this->controller);
+  std::unique_ptr<GOEnclosure> oEnclosure
+    = std::make_unique<GOEnclosure>(*this->controller);
+  GOEnclosure *enclosure = oEnclosure.get();
   // windchest->AddEnclosure() only registers enclosure in a non-owning
   // std::vector (GOWindchest::m_enclosure) for volume grouping; ownership
   // (and destruction) comes from the model's own ptr_vector, registered
   // via controller->AddEnclosure().
-  controller->AddEnclosure(enclosure);
+  controller->AddEnclosure(std::move(oEnclosure));
   windchest->AddEnclosure(enclosure);
 
   enclosure->SetEnclosureValue(127);
@@ -81,21 +85,23 @@ void GOTestWindchest::TestWindchestBasics() {
   this->GOAssert(tremulant_count == 0, message);
 
   // Test Ranks
-  GORank *rank = new GORank(*this->controller);
+  std::unique_ptr<GORank> oRank = std::make_unique<GORank>(*this->controller);
+  GORank *pRank = oRank.get();
+
   message = "The Rank count for Windchest should be 0";
   this->GOAssert(windchest->GetRankCount() == 0, message);
   // windchest->AddRank() only registers rank in a non-owning std::vector
   // (GOWindchest::m_ranks) for grouping; ownership (and destruction, which
   // transitively frees rank's own owned pipes via GORank::m_Pipes) comes
   // from the model's own ptr_vector, registered via controller->AddRank().
-  controller->AddRank(rank);
-  windchest->AddRank(rank);
+  controller->AddRank(std::move(oRank));
+  windchest->AddRank(pRank);
   this->GOAssert(windchest->GetRankCount() == 1, message);
 
   // Get Rank by Index 0
   GORank *rank_get = windchest->GetRank(0);
   message = "The Rank from GetRank should be the same as the one added!";
-  this->GOAssert(rank_get == rank, message);
+  this->GOAssert(rank_get == pRank, message);
 
   // Get Rank by Index 1
   rank_get = windchest->GetRank(1);
@@ -104,13 +110,13 @@ void GOTestWindchest::TestWindchestBasics() {
 
   // Test Pipes
   message = "The Pipe count for Windchest should be 0";
-  this->GOAssert(rank->GetPipeCount() == 0, message);
+  this->GOAssert(pRank->GetPipeCount() == 0, message);
   GOSoundingPipe *pipe = new GOSoundingPipe(
-    this->controller, rank, w_size, 36, 8, 100, 100, false);
-  rank->AddPipe(pipe);
+    this->controller, pRank, w_size, 36, 8, 100, 100, false);
+  pRank->AddPipe(pipe);
 
   message = "The Pipe count for Windchest should be 1";
-  this->GOAssert(rank->GetPipeCount() == 1, message);
+  this->GOAssert(pRank->GetPipeCount() == 1, message);
 }
 
 std::string GOTestWindchest::GetName() { return name; }

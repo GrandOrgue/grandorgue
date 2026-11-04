@@ -238,11 +238,12 @@ void GOOrganController::InitInternalEnclosures(GOConfigReader &cfg) {
   assert(!p_MasterEnclosure && mp_InternalEnclosures.empty());
 
   const unsigned nWindchests = GetWindchestCount();
-  GOEnclosure *pMaster = new GOEnclosure(*this);
+  std::unique_ptr<GOEnclosure> oMaster = std::make_unique<GOEnclosure>(*this);
+  GOEnclosure *const pMaster = oMaster.get();
 
-  pMaster->SetContext(&MIDI_CONTEXT_VOLUMES);
-  pMaster->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
-  AddEnclosure(pMaster);
+  oMaster->SetContext(&MIDI_CONTEXT_VOLUMES);
+  oMaster->Init(cfg, wxT("SetterMasterVolume"), _("Master"), 127);
+  AddEnclosure(std::move(oMaster));
   pMaster->SetElementId(GetRecorderElementID(wxT("SM")));
   p_MasterEnclosure = pMaster;
 
@@ -250,20 +251,21 @@ void GOOrganController::InitInternalEnclosures(GOConfigReader &cfg) {
   for (unsigned windchestI = 0; windchestI < nWindchests; ++windchestI) {
     GOWindchest *pWindchest = GetWindchest(windchestI);
     const wxString &hardName = pWindchest->GetHardName();
-    GOEnclosure *pEnc = new GOEnclosure(*this);
+    std::unique_ptr<GOEnclosure> oEnc = std::make_unique<GOEnclosure>(*this);
+    GOEnclosure *const pEnc = oEnc.get();
 
     pWindchest->AddEnclosure(pMaster);
-    pEnc->SetContext(&MIDI_CONTEXT_VOLUMES);
-    pEnc->SetHardName(
+    oEnc->SetContext(&MIDI_CONTEXT_VOLUMES);
+    oEnc->SetHardName(
       hardName.IsEmpty()
         ? wxString::Format(wxT("Windchest%03u"), windchestI + 1)
         : hardName);
-    pEnc->Init(
+    oEnc->Init(
       cfg,
       wxString::Format(wxT("SetterMaster%03d"), windchestI + 1),
       pWindchest->GetName(),
       127);
-    AddEnclosure(pEnc);
+    AddEnclosure(std::move(oEnc));
     pEnc->SetElementId(
       GetRecorderElementID(wxString::Format(wxT("SM%d"), windchestI)));
     pWindchest->AddEnclosure(pEnc);
@@ -330,7 +332,7 @@ void GOOrganController::LoadOrganCoreData(GOConfigReader &cfg) {
   // The metronome's windchest and the internal enclosures must exist before
   // LoadCmbButtons(); the GOMetronome itself is created below
   const unsigned metronomeWindchestN
-    = AddWindchest(GOMetronome::createWindchest(cfg, *this).release());
+    = AddWindchest(GOMetronome::createWindchest(cfg, *this));
 
   InitInternalEnclosures(cfg);
 

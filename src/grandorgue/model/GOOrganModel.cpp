@@ -91,7 +91,7 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   m_WindchestNByPipeConfig.clear();
   m_windchests.resize(0);
   for (unsigned i = 0; i < NumberOfWindchestGroups; i++)
-    AddWindchest(new GOWindchest(*this));
+    AddWindchest(std::make_unique<GOWindchest>(*this));
 
   m_ODFManualCount
     = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfManuals"), 1, 16) + 1;
@@ -111,13 +111,16 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
 
   m_enclosures.resize(0);
   for (unsigned i = 0; i < m_ODFEnclosureCount; i++) {
-    GOEnclosure *pEnclosure = new GOEnclosure(*this);
+    // owned by the unique_ptr until it is pushed: if Load() throws, the
+    // half-loaded enclosure is deleted
+    std::unique_ptr<GOEnclosure> oEnclosure
+      = std::make_unique<GOEnclosure>(*this);
     unsigned num = i + 1;
 
-    pEnclosure->SetContext(&MIDI_CONTEXT_ENCLOSURES);
-    set_name_for_context(pEnclosure, num);
-    pEnclosure->Load(cfg, wxString::Format(wxT("Enclosure%03u"), i + 1));
-    m_enclosures.push_back(pEnclosure);
+    oEnclosure->SetContext(&MIDI_CONTEXT_ENCLOSURES);
+    set_name_for_context(oEnclosure.get(), num);
+    oEnclosure->Load(cfg, wxString::Format(wxT("Enclosure%03u"), i + 1));
+    m_enclosures.push_back(std::move(oEnclosure));
   }
 
   // Switches must be loaded before manuals because manuals reference to
@@ -126,24 +129,25 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
     = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfSwitches"), 0, 999, 0);
   m_switches.resize(0);
   for (unsigned i = 0; i < NumberOfSwitches; i++) {
-    GOSwitch *pSwitch = new GOSwitch(*this);
+    std::unique_ptr<GOSwitch> oSwitch = std::make_unique<GOSwitch>(*this);
     unsigned num = i + 1;
 
-    set_name_for_context(pSwitch, num);
-    pSwitch->Load(cfg, wxString::Format(wxT("Switch%03d"), num));
-    m_switches.push_back(pSwitch);
+    set_name_for_context(oSwitch.get(), num);
+    oSwitch->Load(cfg, wxString::Format(wxT("Switch%03d"), num));
+    m_switches.push_back(std::move(oSwitch));
   }
 
   unsigned NumberOfTremulants
     = cfg.ReadInteger(ODFSetting, WX_ORGAN, wxT("NumberOfTremulants"), 0, 999);
   for (unsigned i = 0; i < NumberOfTremulants; i++) {
-    GOTremulant *pTremulant = new GOTremulant(*this);
+    std::unique_ptr<GOTremulant> oTremulant
+      = std::make_unique<GOTremulant>(*this);
     unsigned num = i + 1;
 
-    pTremulant->SetContext(&MIDI_CONTEXT_TREMULANTS);
-    set_name_for_context(pTremulant, num);
-    pTremulant->Load(cfg, wxString::Format(wxT("Tremulant%03u"), num), num);
-    m_tremulants.push_back(pTremulant);
+    oTremulant->SetContext(&MIDI_CONTEXT_TREMULANTS);
+    set_name_for_context(oTremulant.get(), num);
+    oTremulant->Load(cfg, wxString::Format(wxT("Tremulant%03u"), num), num);
+    m_tremulants.push_back(std::move(oTremulant));
   }
 
   for (unsigned i = 0; i < NumberOfWindchestGroups; i++)
@@ -153,13 +157,13 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
   m_ODFRankCount = cfg.ReadInteger(
     ODFSetting, WX_ORGAN, wxT("NumberOfRanks"), 0, 999, false);
   for (unsigned i = 0; i < m_ODFRankCount; i++) {
-    GORank *pRank = new GORank(*this);
+    std::unique_ptr<GORank> oRank = std::make_unique<GORank>(*this);
     unsigned num = i + 1;
 
-    pRank->SetContext(&MIDI_CONTEXT_RANKS);
-    set_name_for_context(pRank, num);
-    pRank->Load(cfg, wxString::Format(wxT("Rank%03d"), num), -1);
-    m_ranks.push_back(pRank);
+    oRank->SetContext(&MIDI_CONTEXT_RANKS);
+    set_name_for_context(oRank.get(), num);
+    oRank->Load(cfg, wxString::Format(wxT("Rank%03d"), num), -1);
+    m_ranks.push_back(std::move(oRank));
   }
 
   // Switches must be loaded before manuals because manuals reference to
@@ -238,11 +242,12 @@ void GOOrganModel::LoadCmbButtons(GOConfigReader &cfg) {
   m_GeneralTemplate.InitGeneral();
   m_generals.resize(0);
   for (unsigned i = 0; i < NumberOfGenerals; i++) {
-    GOGeneralButtonControl *pGeneral = new GOGeneralButtonControl(*this, false);
+    std::unique_ptr<GOGeneralButtonControl> oGeneral
+      = std::make_unique<GOGeneralButtonControl>(*this, false);
 
-    pGeneral->SetContext(&MIDI_CONTEXT_GENERALS);
-    pGeneral->Load(cfg, wxString::Format(wxT("General%03d"), i + 1));
-    m_generals.push_back(pGeneral);
+    oGeneral->SetContext(&MIDI_CONTEXT_GENERALS);
+    oGeneral->Load(cfg, wxString::Format(wxT("General%03d"), i + 1));
+    m_generals.push_back(std::move(oGeneral));
   }
 
   // Divisionals
@@ -281,12 +286,14 @@ void GOOrganModel::UpdateVolume() {
     m_windchests[i]->UpdateVolume();
 }
 
-unsigned GOOrganModel::AddWindchest(GOWindchest *windchest) {
-  m_windchests.push_back(windchest);
+unsigned GOOrganModel::AddWindchest(std::unique_ptr<GOWindchest> &&oWindchest) {
+  GOWindchest *pWindchest = oWindchest.get();
+
+  m_windchests.push_back(std::move(oWindchest));
 
   const unsigned windchestN = m_windchests.size();
 
-  m_WindchestNByPipeConfig[&windchest->GetPipeConfig()] = windchestN;
+  m_WindchestNByPipeConfig[&pWindchest->GetPipeConfig()] = windchestN;
   return windchestN;
 }
 
@@ -329,8 +336,8 @@ GOEnclosure *GOOrganModel::GetEnclosureElement(unsigned index) {
 
 unsigned GOOrganModel::GetEnclosureCount() { return m_enclosures.size(); }
 
-unsigned GOOrganModel::AddEnclosure(GOEnclosure *enclosure) {
-  m_enclosures.push_back(enclosure);
+unsigned GOOrganModel::AddEnclosure(std::unique_ptr<GOEnclosure> &&oEnclosure) {
+  m_enclosures.push_back(std::move(oEnclosure));
   return m_enclosures.size() - 1;
 }
 
@@ -356,9 +363,9 @@ int GOOrganModel::FindTremulantByName(const wxString &name) const {
   return resIndex;
 }
 
-void GOOrganModel::AddRank(GORank *rank) {
-  rank->SetContext(&MIDI_CONTEXT_RANKS);
-  m_ranks.push_back(rank);
+void GOOrganModel::AddRank(std::unique_ptr<GORank> &&oRank) {
+  oRank->SetContext(&MIDI_CONTEXT_RANKS);
+  m_ranks.push_back(std::move(oRank));
 }
 
 std::set<std::pair<unsigned, unsigned>> GOOrganModel::

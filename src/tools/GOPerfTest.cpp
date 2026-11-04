@@ -76,7 +76,8 @@ void GOPerfTestApp::RunTest(
         + wxFileName::GetPathSeparator() + "perftests";
 
     organController->InitOrganDirectory(testsDir);
-    organController->AddWindchest(new GOWindchest(*organController));
+    organController->AddWindchest(
+      std::make_unique<GOWindchest>(*organController));
 
     GOSoundOrganEngine &engine = organController->GetSoundEngine();
 

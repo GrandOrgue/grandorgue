@@ -160,10 +160,12 @@ void GOMetronome::Load(GOConfigReader &cfg) {
 
   m_OrganController->RegisterSaveableObject(this);
 
-  m_rank = new GORank(*m_OrganController);
-  m_rank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, m_WindchestN);
-  m_StopID = m_rank->RegisterStop(NULL);
-  m_OrganController->AddRank(m_rank);
+  std::unique_ptr<GORank> oRank = std::make_unique<GORank>(*m_OrganController);
+
+  oRank->Init(cfg, wxT("MetronomSounds"), _("Metronome"), 36, m_WindchestN);
+  m_StopID = oRank->RegisterStop(NULL);
+  m_rank = oRank.get(); // non-owning, valid until the model is cleared
+  m_OrganController->AddRank(std::move(oRank));
 
   GOSoundingPipe *pipe;
 

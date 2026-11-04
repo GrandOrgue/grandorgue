@@ -44,10 +44,11 @@ static void load_coupler(
   const wxString &recorderNameFmt,
   const wxString &couplerLabel) {
   GOManual *pSrcManual = organModel.GetManual(srcManualN);
-  GOCoupler *pCoupler = new GOCoupler(
+  std::unique_ptr<GOCoupler> oCoupler = std::make_unique<GOCoupler>(
     organModel, srcManualN, true, couplerSet.m_CouplersContext.get());
+  GOCoupler *pCoupler = oCoupler.get();
 
-  pCoupler->Init(
+  oCoupler->Init(
     cfg,
     wxString::Format(cfgGroupFmt, srcManualN, dstManualN),
     couplerLabel,
@@ -56,9 +57,9 @@ static void load_coupler(
     keyshift,
     dstManualN,
     couplerType);
-  pCoupler->SetElementId(organModel.GetRecorderElementID(
+  oCoupler->SetElementId(organModel.GetRecorderElementID(
     wxString::Format(recorderNameFmt, srcManualN, dstManualN)));
-  pSrcManual->AddCoupler(pCoupler);
+  pSrcManual->AddCoupler(std::move(oCoupler));
   couplerSet.m_CouplerPtrs.push_back(pCoupler);
 }
 
