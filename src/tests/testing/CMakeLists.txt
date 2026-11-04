@@ -5,6 +5,8 @@ set(go_tests
     midi/GOTestMidiEvent.cpp
     midi/GOTestMidiPlayerContent.cpp
     midi/GOTestMidiSendProxy.cpp
+    midi/GOTestMidiWebInPort.cpp
+    midi/GOTestWebRemoteDefaults.cpp
     model/GOTestDrawStop.cpp
     model/GOTestEnclosure.cpp
     model/GOTestOrganModel.cpp

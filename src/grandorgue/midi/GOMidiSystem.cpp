@@ -15,13 +15,17 @@
 #include "ports/GOMidiInPort.h"
 #include "ports/GOMidiOutPort.h"
 #include "ports/GOMidiPortFactory.h"
+#include "ports/GOMidiWebInPort.h"
 
 BEGIN_EVENT_TABLE(GOMidiSystem, wxEvtHandler)
 EVT_MIDI(GOMidiSystem::OnMidiEvent)
 END_EVENT_TABLE()
 
 GOMidiSystem::GOMidiSystem(GOConfig &config)
-  : m_config(config), m_MidiMap(config.GetMidiMap()) {}
+  : m_config(config), m_MidiMap(config.GetMidiMap()) {
+  // not a real device so the port factory knows nothing about it
+  m_midi_in_devices.push_back(new GOMidiWebInPort(this, config));
+}
 
 void GOMidiSystem::UpdateDevices(const GOPortsConfig &portsConfig) {
   m_MidiFactory.addMissingInDevices(this, portsConfig, m_midi_in_devices);
@@ -57,7 +61,7 @@ void GOMidiSystem::Open() {
           pPort->GetDefaultRegEx(),
           portName,
           apiName,
-          true,
+          pPort->IsToAutoEnable(),
           physicalName);
     }
     if (pDevConf && pDevConf->m_IsEnabled)
