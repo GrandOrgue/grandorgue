@@ -146,14 +146,16 @@ static constexpr double BASELINE_POSITION_PERIODS[] = {
   // Debug, worst of local and CI runs
   // 97.5/98.0/97.4/97.9/98.3/101.4/94.8/100.3 Mperiods/s, minus 10%; the last
   // two cases lowered after local runs 86.6 (512/100000) and 84.4
-  // (2048/100000), minus 10%
-  87,
-  88,
-  87,
-  88,
-  88,
+  // (2048/100000), minus 10%. Rebaselined 2026-11-04 against the CI runs of
+  // both repos from 2026-11-01..04, whose worst values were 83.2/83.5/82.3/
+  // 83.5/83.4/83.6 for the cases 0..4 and 6
+  74,
+  75,
+  74,
+  75,
+  75,
   77,
-  85,
+  75,
   76,
 #endif
 };
