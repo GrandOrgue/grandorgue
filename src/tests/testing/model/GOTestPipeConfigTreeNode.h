@@ -19,6 +19,17 @@ private:
    */
   void TestChildInheritsAudioGroup();
 
+  /*
+   * The destructor of a child removes it from its parent.
+   */
+  void TestChildDestructorDetachesFromParent();
+
+  /*
+   * The destructor of a parent resets the parent of the children that are
+   * still alive.
+   */
+  void TestParentDestructorDetachesChildren();
+
 public:
   GOTestPipeConfigTreeNode() { name = "GOTestPipeConfigTreeNode"; }
   virtual ~GOTestPipeConfigTreeNode();
