@@ -1,5 +1,5 @@
+- Fixed crashing or hanging when importing settings or resetting an organ to defaults while it is playing https://github.com/GrandOrgue/grandorgue/issues/2687- Fixed crashing or hanging when importing settings or resetting an organ to defaults while it is playing https://github.com/GrandOrgue/grandorgue/issues/2687
 - Added a swell-box shelf equalizer: enclosures can now cut low or high frequencies as they close, in addition to overall volume attenuation https://github.com/GrandOrgue/grandorgue/issues/717
-- Fixed crashing or hanging when importing settings or resetting an organ to defaults while it is playing https://github.com/GrandOrgue/grandorgue/issues/2687
 - Fixed crash on receiving or playing a malformed Rodgers stop change SysEx MIDI message shorter than 9 bytes
 - Fixed MIDI player Play/Stop crashing when triggered by incoming MIDI https://github.com/GrandOrgue/grandorgue/issues/2636
 - Fixed hanging on Panic, on loading another organ, on exit and on removing an audio device in Settings https://github.com/GrandOrgue/grandorgue/issues/2606
