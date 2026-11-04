@@ -34,6 +34,8 @@ using Core = GOSoundLinearFaderCore;
 // (all after commit 341191074 changed the iteration count): every entry is
 // -10% of the worst throughput observed in that window, floored to 2
 // significant figures; entries above that value were left unchanged.
+// Rebaselined again 2026-11-04 against the CI runs of both repos from
+// 2026-11-01..04 by the same rule.
 // fade() computes the gain of every frame by the formula start + delta *
 // frameI: in the Release build it is 1.4..4 times faster than accumulating it
 // (gain += delta); in the Debug build it is up to 25% slower.
@@ -88,7 +90,7 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_FADE_STEREO_CONST_ONE[]
     {2048, 540},
 #else
     {32, 3200},
-    {128, 9900},
+    {128, 7900},
     {512, 550},
     {2048, 600},
 #endif
@@ -98,14 +100,14 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_FADE_STEREO_CONST_ZERO[]
   = {
 #ifdef NDEBUG
     {32, 3100},
-    {128, 7400}, // a local run 8266
+    {128, 5500},
     {512, 590},
     {2048, 530},
 #else
-    {32, 1300},
-    {128, 1500},
+    {32, 900},
+    {128, 1100},
     {512, 470},
-    {2048, 490},
+    {2048, 430},
 #endif
 };
 
@@ -117,8 +119,8 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_FADE_MONO[] = {
   {2048, 470},
 #else
   {32, 450},
-  {128, 560},
-  {512, 590},
+  {128, 440},
+  {512, 470},
   {2048, 310},
 #endif
 };
@@ -132,9 +134,9 @@ static constexpr GOTestPerfSoundBufferBaseline
     {512, 2200},
     {2048, 470},
 #else
-    {32, 440},
-    {128, 550},
-    {512, 590},
+    {32, 380},
+    {128, 430},
+    {512, 460},
     {2048, 310},
 #endif
 };
@@ -148,8 +150,8 @@ static constexpr GOTestPerfSoundBufferBaseline
     {512, 520},
     {2048, 460},
 #else
-    {32, 490},
-    {128, 550},
+    {32, 410},
+    {128, 440},
     {512, 300},
     {2048, 310},
 #endif
@@ -207,7 +209,7 @@ static constexpr GOTestPerfSoundBufferBaseline
   BASELINE_CROSSFADE_INTERLEAVED_HALF[]
   = {
 #ifdef NDEBUG
-    {32, 2100},
+    {32, 1800},
     {128, 3100},
     {512, 410},
     {2048, 530},
@@ -239,14 +241,14 @@ static constexpr GOTestPerfSoundBufferBaseline
   BASELINE_CROSSFADE_INTERLEAVED_FROM_PAST[]
   = {
 #ifdef NDEBUG
-    {32, 4100},
+    {32, 3500},
     {128, 11000},
     {512, 660},
     {2048, 600},
 #else
     {32, 3300},
-    {128, 10000},
-    {512, 530},
+    {128, 8900},
+    {512, 470},
     {2048, 600},
 #endif
 };
@@ -284,14 +286,14 @@ static constexpr GOTestPerfSoundBufferBaseline
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_CROSSFADE_TO_PAST[] = {
 #ifdef NDEBUG
-  {32, 2000},
+  {32, 1600},
   {128, 5600},
   {512, 630},
   {2048, 570},
 #else
   {32, 1300},
   {128, 4400},
-  {512, 550},
+  {512, 460},
   {2048, 590},
 #endif
 };
@@ -299,21 +301,21 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_CROSSFADE_TO_PAST[] = {
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_CROSSFADE_FROM_PAST[]
   = {
 #ifdef NDEBUG
-    {32, 3600},
+    {32, 1900},
     {128, 10000},
     {512, 660},
     {2048, 600},
 #else
     {32, 1800},
     {128, 6600},
-    {512, 560},
+    {512, 470},
     {2048, 620},
 #endif
 };
 
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_CROSSFADE_HALF[] = {
 #ifdef NDEBUG
-  {32, 1700},
+  {32, 1300},
   {128, 2800},
   {512, 580},
   {2048, 530},

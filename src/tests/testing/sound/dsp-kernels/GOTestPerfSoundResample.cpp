@@ -370,8 +370,9 @@ static constexpr GOTestPerfSoundBufferBaseline
 #ifdef NDEBUG
     // Release, worst of local and CI runs 478.9/503.7/505.5/510.7, minus 10%,
     // floored to 2 significant figures (rebaselined 2026-10-31 against the
-    // 2026-10-17..31 CI runs of both repos).
-    {32, 430},
+    // 2026-10-17..31 CI runs of both repos; the 32-frame case rebaselined
+    // 2026-11-04 against the 2026-11-01..04 CI runs, worst 414.8).
+    {32, 370},
     {128, 450},
     {512, 450},
     {2048, 450},
