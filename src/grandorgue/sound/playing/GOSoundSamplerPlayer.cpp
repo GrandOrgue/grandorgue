@@ -150,12 +150,24 @@ bool GOSoundSamplerPlayer::ProcessSampler(
      *
      *     playback gain * (2 ^ -sampler.pipe_section->sample_bits)
      */
+    // Make the sampler follow the changes of its provider that were made after
+    // the sampler had been started (for example, by the voicing controls).
+    // Must be done before ReadBlock() because the stream rate is changed here,
+    // and before p_SoundProvider may be reset below
+    const GOSoundProvider *pProvider = sampler.p_SoundProvider;
+
+    if (pProvider) {
+      sampler.EnsureVolumeFactor(pProvider->GetGain());
+      sampler.EnsureTuningFactor(pProvider->GetTuning());
+    }
+
     GO_DECLARE_LOCAL_SOUND_BUFFER(tmpBuffer, 2, outBuffer.GetNFrames())
 
-    if (!sampler.stream.ReadBlock(tmpBuffer))
+    if (!sampler.stream.ReadBlock(
+          sampler.m_AppliedResamplerIncrement, tmpBuffer))
       sampler.p_SoundProvider = NULL;
 
-    sampler.fader.Process(amplitude, tmpBuffer);
+    sampler.fader.Process(amplitude * sampler.m_AppliedVolumeRatio, tmpBuffer);
     if (sampler.toneBalanceFilterState.IsToApply())
       sampler.toneBalanceFilterState.ProcessBuffer(tmpBuffer);
 
@@ -219,14 +231,18 @@ GOSoundSampler *GOSoundSamplerPlayer::CreateTaskSample(
       sampler->p_SoundProvider = pSoundProvider;
       sampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
       sampler->velocity = velocity;
-      sampler->stream.InitStream(
-        &m_resample,
-        section,
-        m_InterpolationType,
-        GetRandomFactor() * pSoundProvider->GetTuning() / (float)m_SampleRate);
+      const float tuningFactor = pSoundProvider->GetTuning();
+      const float volumeFactor = pSoundProvider->GetGain();
 
-      const float playback_gain
-        = pSoundProvider->GetGain() * section->GetNormGain();
+      sampler->stream.InitStream(&m_resample, section, m_InterpolationType);
+      sampler->InitResamplerIncrement(
+        tuningFactor,
+        GOSoundResample::rateToFractionIncrement(
+          GetRandomFactor() * tuningFactor * section->GetSampleRate()
+          / m_SampleRate));
+      sampler->InitVolumeFactor(volumeFactor);
+
+      const float playback_gain = volumeFactor * section->GetNormGain();
 
       sampler->fader.Setup(
         playback_gain, pSoundProvider->GetVelocityVolume(velocity));
@@ -255,9 +271,15 @@ void GOSoundSamplerPlayer::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
       GOSoundSampler *new_sampler = m_SamplerPool.GetSampler();
 
       if (new_sampler != NULL) {
-        float gain_target = pProvider->GetGain() * section->GetNormGain();
+        const float volumeFactor = pProvider->GetGain();
+        const float tuningFactor = pProvider->GetTuning();
+        float gain_target = volumeFactor * section->GetNormGain();
         unsigned crossFadeSamples
           = MsToSamples(pProvider->GetAttackSwitchCrossfadeLength());
+
+        // The new stream will take over the current rate of the old one, so
+        // it must already include the current tuning factor of the provider
+        pSampler->EnsureTuningFactor(tuningFactor);
 
         // copy old sampler to the new one
         *new_sampler = *pSampler;
@@ -269,8 +291,15 @@ void GOSoundSamplerPlayer::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
 
         // start new section stream in the old sampler
         pSampler->m_WaveTremulantStateFor = section->GetWaveTremulantStateFor();
+
         pSampler->stream.InitAlignedStream(
           section, m_InterpolationType, &new_sampler->stream);
+        pSampler->InitResamplerIncrement(
+          tuningFactor,
+          GOSoundResample::scaleResamplerPosIncrement(
+            new_sampler->m_AppliedResamplerIncrement,
+            (float)section->GetSampleRate()
+              / new_sampler->stream.GetSampleRate()));
         pSampler->p_SoundProvider = pProvider;
         pSampler->time = m_CurrentTime + 1;
 
@@ -278,6 +307,7 @@ void GOSoundSamplerPlayer::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
           gain_target,
           new_sampler->fader.GetVelocityVolume(),
           crossFadeSamples);
+        pSampler->InitVolumeFactor(volumeFactor);
         pSampler->is_release = false;
 
         new_sampler->toneBalanceFilterState.Init(
@@ -328,7 +358,8 @@ void GOSoundSamplerPlayer::CreateReleaseSampler(GOSoundSampler *handle) {
         = release_section->GetWaveTremulantStateFor();
 
       unsigned gain_decay_length = 0;
-      float gain_target = this_pipe->GetGain() * release_section->GetNormGain();
+      const float volumeFactor = this_pipe->GetGain();
+      float gain_target = volumeFactor * release_section->GetNormGain();
       const bool not_a_tremulant = isWindchestTask(handle->m_SamplerTaskId);
 
       if (not_a_tremulant) {
@@ -407,17 +438,32 @@ void GOSoundSamplerPlayer::CreateReleaseSampler(GOSoundSampler *handle) {
         new_sampler->fader.StartDecreasingVolume(
           MsToSamples(gain_decay_length));
 
+      new_sampler->InitVolumeFactor(volumeFactor);
+
+      const float tuningFactor = this_pipe->GetTuning();
+
       if (
         m_IsReleaseAlignmentEnabled
         && release_section->SupportsStreamAlignment()) {
         new_sampler->stream.InitAlignedStream(
           release_section, m_InterpolationType, &handle->stream);
+        // The aligned stream takes over the current rate of the attack stream,
+        // which must already include the current tuning factor of the pipe
+        handle->EnsureTuningFactor(tuningFactor);
+        new_sampler->InitResamplerIncrement(
+          tuningFactor,
+          GOSoundResample::scaleResamplerPosIncrement(
+            handle->m_AppliedResamplerIncrement,
+            (float)release_section->GetSampleRate()
+              / handle->stream.GetSampleRate()));
       } else {
         new_sampler->stream.InitStream(
-          &m_resample,
-          release_section,
-          m_InterpolationType,
-          this_pipe->GetTuning() / (float)m_SampleRate);
+          &m_resample, release_section, m_InterpolationType);
+        new_sampler->InitResamplerIncrement(
+          tuningFactor,
+          GOSoundResample::rateToFractionIncrement(
+            tuningFactor / (float)m_SampleRate
+            * release_section->GetSampleRate()));
       }
       new_sampler->is_release = true;
 

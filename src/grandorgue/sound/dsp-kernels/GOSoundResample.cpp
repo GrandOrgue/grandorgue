@@ -21,8 +21,9 @@
 
 #include "GOSoundResample.h"
 
+#include <algorithm>
 #include <cassert>
-#include <math.h>
+#include <cmath>
 #include <stdlib.h>
 
 #ifndef M_PI
@@ -30,16 +31,25 @@
 #endif
 
 void GOSoundResample::ResamplingPosition::Init(
-  float factor, unsigned startIndex, const ResamplingPosition *pOld) {
+  unsigned startIndex, unsigned startFraction) {
+  assert(startFraction < UPSAMPLE_FACTOR);
   m_index = startIndex;
-  m_fraction = pOld ? pOld->m_fraction : 0;
-  m_FractionIncrement = pOld
-    ? (unsigned)roundf(factor * pOld->m_FractionIncrement)
-    : rateToFractionIncrement(factor);
+  m_fraction = startFraction;
+}
+
+unsigned GOSoundResample::scaleResamplerPosIncrement(
+  unsigned resamplerPosIncrement, float ratio) {
+  assert(resamplerPosIncrement > 0);
+  assert(ratio > 0.0f);
+
+  return (unsigned)std::clamp<float>(
+    std::round(ratio * resamplerPosIncrement),
+    MIN_FRACTION_INCREMENT,
+    MAX_FRACTION_INCREMENT);
 }
 
 static double sinc(const double arg) {
-  return (arg == 0) ? 1.0 : sin(M_PI * arg) / (M_PI * arg);
+  return (arg == 0) ? 1.0 : std::sin(M_PI * arg) / (M_PI * arg);
 }
 
 #if 0
@@ -76,7 +86,7 @@ static void create_nyquist_filter(
   const double inv_taps = 1.0 / nb_subfilters;
   for (i = 0; i < filter_length; i++) {
     double a = (i - filter_length / 2) * inv_taps * M_PI;
-    double f = (i - filter_length / 2) ? (sin(a) / a) : 1.0;
+    double f = (i - filter_length / 2) ? (std::sin(a) / a) : 1.0;
     output[i] = f;
   }
 }
@@ -128,10 +138,13 @@ float *GOSoundResample::NewResampledMono(
   unsigned from_samplerate,
   unsigned to_samplerate) {
   ResamplingPosition resamplingPos;
+  const unsigned resamplingPosIncrement
+    = rateToFractionIncrement((float)from_samplerate / to_samplerate);
 
-  resamplingPos.Init((float)from_samplerate / to_samplerate);
+  resamplingPos.Init();
 
-  unsigned new_len = resamplingPos.AvailableTargetSamples(len);
+  unsigned new_len
+    = resamplingPos.AvailableTargetSamples(len, resamplingPosIncrement);
 
   if (!new_len)
     return NULL;
@@ -145,7 +158,7 @@ float *GOSoundResample::NewResampledMono(
   PolyphaseResampler resampler(*this);
 
   resampler.ResampleBlock<BoundedPtrFrameVector<float, float, 1>, 1>(
-    resamplingPos, w, out, new_len);
+    resamplingPosIncrement, resamplingPos, w, out, new_len);
   len = new_len;
   return out;
 }

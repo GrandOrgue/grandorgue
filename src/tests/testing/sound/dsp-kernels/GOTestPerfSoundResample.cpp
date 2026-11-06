@@ -131,6 +131,9 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_STEREO24_POLYPHASE[] = {
 // GetRandomFactor() * tuning / outputSampleRate. With an integral factor the
 // fraction would stay zero and only r_coefs[0] would ever be read.
 static constexpr float RESAMPLING_FACTOR = 1.0594631f;
+// The same factor as the resampling increment
+static constexpr unsigned FRACTION_INCREMENT
+  = GOSoundResample::rateToFractionIncrement(RESAMPLING_FACTOR);
 
 /**
  * Calculates a source length sufficient for resampling nOutFrames output
@@ -160,7 +163,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatLinear() {
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
-    resamplingPos.Init(RESAMPLING_FACTOR);
+    resamplingPos.Init();
 
     GOSoundResample::PtrFrameVector<float, float, 1> fV(src.data());
 
@@ -171,7 +174,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatLinear() {
         resamplingPos.SetIndex(0);
         linearResampler
           .ResampleBlock<GOSoundResample::PtrFrameVector<float, float, 1>, 1>(
-            resamplingPos, fV, out.data(), nOutFrames);
+            FRACTION_INCREMENT, resamplingPos, fV, out.data(), nOutFrames);
       },
       1,
       true);
@@ -197,7 +200,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatPolyphase() {
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
-    resamplingPos.Init(RESAMPLING_FACTOR);
+    resamplingPos.Init();
 
     GOSoundResample::PtrFrameVector<float, float, 1> fV(src.data());
 
@@ -208,7 +211,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockMonoFloatPolyphase() {
         resamplingPos.SetIndex(0);
         polyphaseResampler
           .ResampleBlock<GOSoundResample::PtrFrameVector<float, float, 1>, 1>(
-            resamplingPos, fV, out.data(), nOutFrames);
+            FRACTION_INCREMENT, resamplingPos, fV, out.data(), nOutFrames);
       },
       1,
       true);
@@ -234,7 +237,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Linear() {
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
-    resamplingPos.Init(RESAMPLING_FACTOR);
+    resamplingPos.Init();
 
     GOSoundResample::PtrFrameVector<GOInt24, int, 2> fV(src.data());
 
@@ -245,7 +248,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Linear() {
         resamplingPos.SetIndex(0);
         linearResampler
           .ResampleBlock<GOSoundResample::PtrFrameVector<GOInt24, int, 2>, 2>(
-            resamplingPos, fV, out.data(), nOutFrames);
+            FRACTION_INCREMENT, resamplingPos, fV, out.data(), nOutFrames);
       },
       2,
       true);
@@ -271,7 +274,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Polyphase() {
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
-    resamplingPos.Init(RESAMPLING_FACTOR);
+    resamplingPos.Init();
 
     GOSoundResample::PtrFrameVector<GOInt24, int, 2> fV(src.data());
 
@@ -282,7 +285,7 @@ void GOTestPerfSoundResample::TestPerfResampleBlockStereo24Polyphase() {
         resamplingPos.SetIndex(0);
         polyphaseResampler
           .ResampleBlock<GOSoundResample::PtrFrameVector<GOInt24, int, 2>, 2>(
-            resamplingPos, fV, out.data(), nOutFrames);
+            FRACTION_INCREMENT, resamplingPos, fV, out.data(), nOutFrames);
       },
       2,
       true);
@@ -405,12 +408,12 @@ void GOTestPerfSoundResample::TestPerfResampleBlockVariableRatePlanarLinear() {
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
-    resamplingPos.Init(1.0f);
+    resamplingPos.Init();
 
     GOSoundResample::PtrFrameVector<float, float, N_PLANAR_PERF_CHANNELS> fV(
       src.data());
     const std::vector<uint16_t> increments(
-      nOutFrames, (uint16_t)resamplingPos.GetFractionIncrement());
+      nOutFrames, (uint16_t)GOSoundResample::UPSAMPLE_FACTOR);
 
     RunAndEvaluateTest(
       "ResampleBlockVariableRatePlanarLinear",
@@ -454,12 +457,12 @@ void GOTestPerfSoundResample::
 
     GOSoundResample::ResamplingPosition resamplingPos;
 
-    resamplingPos.Init(1.0f);
+    resamplingPos.Init();
 
     GOSoundResample::PtrFrameVector<float, float, N_PLANAR_PERF_CHANNELS> fV(
       src.data());
     const std::vector<uint16_t> increments(
-      nOutFrames, (uint16_t)resamplingPos.GetFractionIncrement());
+      nOutFrames, (uint16_t)GOSoundResample::UPSAMPLE_FACTOR);
 
     RunAndEvaluateTest(
       "ResampleBlockVariableRatePlanarPolyphase",
@@ -512,7 +515,7 @@ void GOTestPerfSoundResample::run_constant_rate_planar(
     Ring ring(src.data(), N_PLANAR_PERF_CHANNELS, nRingFrames, nTailFrames);
     GOSoundResample::ResamplingPosition resamplingPos;
 
-    resamplingPos.Init(1.0f);
+    resamplingPos.Init();
     resamplingPos.Inc(1000); // a non-zero fraction
 
     // Every iteration starts from the same position
@@ -524,6 +527,7 @@ void GOTestPerfSoundResample::run_constant_rate_planar(
       [&resamplingPos, &startPos, &resampler, &ring, &out, nOutFrames]() {
         resamplingPos = startPos;
         resampler.template ResampleBlockConstantRatePlanar<Ring>(
+          GOSoundResample::UPSAMPLE_FACTOR,
           resamplingPos,
           ring,
           nOutFrames,

@@ -71,6 +71,12 @@ public:
   static constexpr unsigned UPSAMPLE_MASK = UPSAMPLE_FACTOR - 1;
 
   /**
+   * The smallest non-zero increment: the slowest resampling that still moves
+   * the position forward.
+   */
+  static constexpr unsigned MIN_FRACTION_INCREMENT = 1;
+
+  /**
    * The largest increment in 1/UPSAMPLE_FACTOR units that
    * ResamplingPosition::Inc(unsigned) accepts: the fraction of a position is
    * always below UPSAMPLE_FACTOR, so the fraction plus such an increment cannot
@@ -112,6 +118,28 @@ public:
     // both comparisons; 0 is allowed (a rate below half a unit rounds to 0)
     assert(rate >= 0.0f && rate <= MAX_RATE);
     return (unsigned)((double)rate * UPSAMPLE_FACTOR + 0.5);
+  }
+
+  /**
+   * Scales a resampling increment by a ratio, e.g. when the pitch of a playing
+   * stream is changed. The caller should always scale the same base increment,
+   * not the result of the previous scaling, so repeated changes do not
+   * accumulate rounding errors.
+   * @param resamplerPosIncrement the base increment; must be non-zero
+   * @param ratio the new rate divided by the rate of the base increment; must
+   *   be positive
+   * @return the scaled increment limited to MIN_FRACTION_INCREMENT..
+   *   MAX_FRACTION_INCREMENT
+   */
+  static unsigned scaleResamplerPosIncrement(
+    unsigned resamplerPosIncrement, float ratio);
+
+  /**
+   * @param resamplerPosIncrement a resampling increment
+   * @return whether the increment is exactly one source frame per target frame
+   */
+  static constexpr bool isSameRate(unsigned resamplerPosIncrement) {
+    return resamplerPosIncrement == UPSAMPLE_FACTOR;
   }
 
   /**
@@ -161,19 +189,15 @@ public:
     unsigned m_index;
     // a fractional part in 1/UPSAMPLE_FACTOR units
     unsigned m_fraction;
-    // Increment of the source position for one target sample in
-    //   1/UPSAMPLE_FACTOR units
-    unsigned m_FractionIncrement;
 
     /**
      * Advances the position by the increment with no checks. The preconditions
      * are the ones of Inc(unsigned): IsValid() and the increment not above
      * MAX_FRACTION_INCREMENT.
-     * @param fractionIncrement the source-position advance in
-     *   1/UPSAMPLE_FACTOR units
+     * @param resamplerPosIncrement the source-position advance
      */
-    GO_FORCE_INLINE void Advance(unsigned fractionIncrement) {
-      m_fraction += fractionIncrement;
+    GO_FORCE_INLINE void Advance(unsigned resamplerPosIncrement) {
+      m_fraction += resamplerPosIncrement;
       m_index += m_fraction >> UPSAMPLE_BITS;
       m_fraction &= UPSAMPLE_MASK;
     }
@@ -182,84 +206,54 @@ public:
     inline unsigned GetIndex() const { return m_index; }
     inline void SetIndex(unsigned newIndex) { m_index = newIndex; }
     inline unsigned GetFraction() const { return m_fraction; }
-    inline unsigned GetFractionIncrement() const { return m_FractionIncrement; }
 
     /**
-     * @return whether the position satisfies the class invariants: the
-     *   fraction is below UPSAMPLE_FACTOR and the constant increment does not
-     *   exceed MAX_FRACTION_INCREMENT. A zero increment is valid. Used in
-     *   asserts and tests.
+     * @return whether the position satisfies the class invariant: the
+     *   fraction is below UPSAMPLE_FACTOR. Used in asserts and tests.
      */
-    inline bool IsValid() const {
-      return m_fraction < UPSAMPLE_FACTOR
-        && m_FractionIncrement <= MAX_FRACTION_INCREMENT;
-    }
+    inline bool IsValid() const { return m_fraction < UPSAMPLE_FACTOR; }
 
     /**
-     * @return whether the source rate equals the target rate, i.e. the
-     *   constant increment is exactly one source frame per target frame and
-     *   GetResamplingFactor() is 1.0
+     * Sets the position. The resampling rate is not a part of the position:
+     * it is passed to the resampling functions as a separate parameter.
+     * @param startIndex the integer part
+     * @param startFraction the fractional part in 1/UPSAMPLE_FACTOR units; must
+     *   be below UPSAMPLE_FACTOR
      */
-    inline bool IsSameRate() const {
-      return m_FractionIncrement == UPSAMPLE_FACTOR;
-    }
-
-    /**
-     * A resampling factor equals to (source length / target length) or to
-     * (source sample rate / target sample rate)
-     * @return the resampling factor
-     */
-    inline float GetResamplingFactor() const {
-      return (float)m_FractionIncrement / UPSAMPLE_FACTOR;
-    }
-
-    void Init(
-      float factor,
-      unsigned startIndex = 0,
-      const ResamplingPosition *pOld = nullptr);
+    void Init(unsigned startIndex = 0, unsigned startFraction = 0);
 
     /**
      * Advance the position for the next target frame by an explicit
-     * increment, for a time-varying resampling rate (e.g. vibrato). Unlike
-     * Inc(), this does not use m_FractionIncrement, so it does not disturb
-     * AvailableTargetSamples() or GetResamplingFactor() for streams that
-     * also use the constant-rate path.
-     * @param fractionIncrement the source-position advance for this one
-     *   target frame, in 1/UPSAMPLE_FACTOR units; must not exceed
-     *   MAX_FRACTION_INCREMENT, so that the sum with the fraction (which is
-     *   below UPSAMPLE_FACTOR) does not wrap around unsigned.
+     * increment.
+     * @param resamplerPosIncrement the source-position advance for this one
+     *   target frame; must not exceed MAX_FRACTION_INCREMENT, so that the sum
+     *   with the fraction (which is below UPSAMPLE_FACTOR) does not wrap around
+     *   unsigned.
      */
-    GO_FORCE_INLINE void Inc(unsigned fractionIncrement) {
-      assert(fractionIncrement <= MAX_FRACTION_INCREMENT);
-      Advance(fractionIncrement);
+    GO_FORCE_INLINE void Inc(unsigned resamplerPosIncrement) {
+      assert(resamplerPosIncrement <= MAX_FRACTION_INCREMENT);
+      Advance(resamplerPosIncrement);
     }
-
-    /**
-     * Advance the position for the next target frame using the stream's
-     * constant resampling rate. Equivalent to Inc(m_FractionIncrement), but
-     * with no per-call checks: the resampling functions validate the position
-     * (IsValid()) once per block.
-     */
-    GO_FORCE_INLINE void Inc() { Advance(m_FractionIncrement); }
 
     /**
      * Calculates the target samples length from given source position to the
      * end index
      * @param endIndex the first index position after the last source sample
+     * @param resamplerPosIncrement the constant resampling increment; must be
+     *   non-zero: it is the divisor
      * @result - the number of tatget samples can be received before the current
      *   position exceeds endIndex specified
-     * Requires a non-zero constant increment (GetFractionIncrement() > 0): it
-     * is the divisor.
      */
-    inline unsigned AvailableTargetSamples(unsigned endIndex) {
-      assert(m_FractionIncrement > 0);
+    inline unsigned AvailableTargetSamples(
+      unsigned endIndex, unsigned resamplerPosIncrement) {
+      assert(resamplerPosIncrement > 0);
       return m_index < endIndex ? unsigned(
                (
                  // for preventing owerflowing if endIndex >= 2**19 ~ 550000
                  uint64_t(endIndex - m_index) * UPSAMPLE_FACTOR
-                 + m_FractionIncrement - 1 // for rounding up
+                 + resamplerPosIncrement - 1 // for rounding up
                  - m_fraction)
-               / m_FractionIncrement)
+               / resamplerPosIncrement)
                                 : 0;
     }
   };
@@ -635,6 +629,9 @@ public:
     /**
      * Do actual resampling of an input sample block to the output block of the
      *   given number of frames, at the stream's constant resampling rate
+     * @param resamplingPosIncrement the constant resampling increment: the
+     *   source position advance for every output frame, see
+     *   rateToFractionIncrement(). Must not exceed MAX_FRACTION_INCREMENT
      * @param resamplingPos A resampling position in the input stream. It is
      *   advanced during this call
      * @param fV a floating sample vector linked to the input stream
@@ -644,12 +641,14 @@ public:
      */
     template <class FrameVectorT, uint8_t nOutChannels>
     inline void ResampleBlock(
+      unsigned resamplingPosIncrement,
       ResamplingPosition &resamplingPos,
       FrameVectorT &fV,
       float *pOut,
       unsigned nOutFrames) const {
-      // Validated once per block: Inc() of the frame loop has no checks
+      // Validated once per block: Inc() of the frame loop checks only in Debug
       assert(resamplingPos.IsValid());
+      assert(resamplingPosIncrement <= MAX_FRACTION_INCREMENT);
       for (unsigned nFramesLeft = nOutFrames; nFramesLeft > 0; nFramesLeft--) {
         float outItem = 0.0f;
 
@@ -662,15 +661,16 @@ public:
           *(pOut++) = outItem;
         }
 
-        resamplingPos.Inc();
+        resamplingPos.Inc(resamplingPosIncrement);
         fV.NormalizePosition(resamplingPos);
       }
     }
 
     /**
      * Like ResampleBlockVariableRatePlanar(), but the source-position advance
-     * is constant: resamplingPos's own m_FractionIncrement is used for every
-     * output frame. Writes planar (channel-major) output. Every channel
+     * is constant: the same resamplingPosIncrement is used for every output
+     * frame.
+     * Writes planar (channel-major) output. Every channel
      * follows the same index/fraction trajectory, so each channel is
      * resampled from a local copy of resamplingPos by the interleaved
      * ResampleBlock() on a one-channel section of fV (fV.GetChannelVector());
@@ -680,8 +680,10 @@ public:
      * @tparam FrameVectorT a planar frame vector type that provides
      *   GetChannelVector(), e.g. RingPlanarFrameVector; other types do not
      *   compile
-     * @param resamplingPos a resampling position in the input stream with the
-     *   constant increment set; advanced during this call
+     * @param resamplingPosIncrement the constant resampling increment, see
+     *   ResampleBlock()
+     * @param resamplingPos a resampling position in the input stream; advanced
+     *   during this call
      * @param fV a floating sample vector linked to the input stream
      * @param nFramesTotalInBuffer each channel's total length, in items, of the
      *   buffer pFirstItemOfChannel0ToFill points into: the stride between one
@@ -695,6 +697,7 @@ public:
      */
     template <class FrameVectorT>
     inline void ResampleBlockConstantRatePlanar(
+      unsigned resamplingPosIncrement,
       ResamplingPosition &resamplingPos,
       FrameVectorT &fV,
       unsigned nFramesTotalInBuffer,
@@ -710,7 +713,8 @@ public:
         FrameVectorT channelFV = fV.GetChannelVector(channelI);
         ResamplingPosition pos = resamplingPos;
 
-        ResampleBlock<FrameVectorT, 1>(pos, channelFV, pOut, nFramesToFill);
+        ResampleBlock<FrameVectorT, 1>(
+          resamplingPosIncrement, pos, channelFV, pOut, nFramesToFill);
         if (++channelI >= nChannels) {
           resamplingPos = pos; // only the last channel commits back
           break;
@@ -723,9 +727,8 @@ public:
      * Like ResampleBlock(), but writes planar (channel-major) output
      * instead of interleaved, and the source-position advance is supplied
      * per output frame instead of being constant, for a time-varying
-     * resampling rate (vibrato). resamplingPos's own m_FractionIncrement is
-     * never read. This is the only variable-rate entry point in this
-     * class (the constant-rate planar one is
+     * resampling rate (vibrato). This is the only variable-rate entry point in
+     * this class (the constant-rate planar one is
      * ResampleBlockConstantRatePlanar()), and this is the method
      * GOSoundVibratoProcessor calls to resample straight into a
      * GOSoundBufferPlanarMutable, with no interleave/de-interleave step and no

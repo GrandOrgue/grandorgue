@@ -126,12 +126,13 @@ public:
  * into the correct range. */
 
 template <class ResamplerT, class WindowT>
-void GOSoundStream::DecodeBlock(float *pOut, unsigned nOutSamples) {
+void GOSoundStream::DecodeBlock(
+  unsigned resamplerPosIncrement, float *pOut, unsigned nOutSamples) {
   ResamplerT resampler(*resample);
   WindowT w(*this);
 
   resampler.template ResampleBlock<WindowT, 2>(
-    m_ResamplingPos, w, pOut, nOutSamples);
+    resamplerPosIncrement, m_ResamplingPos, w, pOut, nOutSamples);
 }
 
 GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
@@ -322,14 +323,12 @@ unsigned GOSoundStream::InitFromSection(
 void GOSoundStream::InitStream(
   const GOSoundResample *pResample,
   const GOSoundAudioSection *pSection,
-  GOSoundResample::InterpolationType interpolationType,
-  float sampleRateAdjustment) {
+  GOSoundResample::InterpolationType interpolationType) {
   resample = pResample;
 
   const unsigned startOffset = InitFromSection(pSection, 0, interpolationType);
 
-  m_ResamplingPos.Init(
-    sampleRateAdjustment * pSection->GetSampleRate(), startOffset);
+  m_ResamplingPos.Init(startOffset);
 }
 
 void GOSoundStream::InitAlignedStream(
@@ -352,13 +351,15 @@ void GOSoundStream::InitAlignedStream(
       = releaseAligner->GetPositionFor(history, pSection->GetChannels());
   }
   m_ResamplingPos.Init(
-    (float)pSection->GetSampleRate()
-      / pExistingStream->audio_section->GetSampleRate(),
-    startOffset,
-    &pExistingStream->m_ResamplingPos);
+    startOffset, pExistingStream->m_ResamplingPos.GetFraction());
 }
 
-bool GOSoundStream::ReadBlock(GOSoundBufferMutable &outBuffer) {
+unsigned GOSoundStream::GetSampleRate() const {
+  return audio_section->GetSampleRate();
+}
+
+bool GOSoundStream::ReadBlock(
+  unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer) {
   float *pData = outBuffer.GetData();
   unsigned nFrames = outBuffer.GetNFrames();
   bool res = true;
@@ -370,13 +371,15 @@ bool GOSoundStream::ReadBlock(GOSoundBufferMutable &outBuffer) {
       // whether we are playing the start or the end segment
       bool isToPlayMain = currSrcOffset < transition_position;
       unsigned finishPos = isToPlayMain ? transition_position : end_pos;
-      unsigned targetSamples
-        = std::min(m_ResamplingPos.AvailableTargetSamples(finishPos), nFrames);
+      unsigned targetSamples = std::min(
+        m_ResamplingPos.AvailableTargetSamples(
+          finishPos, resamplerPosIncrement),
+        nFrames);
 
       assert(targetSamples > 0);
       if (isToPlayMain) {
         assert(decode_call);
-        (this->*decode_call)(pData, targetSamples);
+        (this->*decode_call)(resamplerPosIncrement, pData, targetSamples);
       } else {
         assert(end_decode_call);
 
@@ -384,7 +387,7 @@ bool GOSoundStream::ReadBlock(GOSoundBufferMutable &outBuffer) {
         GoToEndSegment();
         // we continue to use the same position as before because end_ptr is a
         // "virtual" pointer: end_data - transition_offset
-        (this->*end_decode_call)(pData, targetSamples);
+        (this->*end_decode_call)(resamplerPosIncrement, pData, targetSamples);
       }
       pData += 2 * targetSamples;
       nFrames -= targetSamples;
