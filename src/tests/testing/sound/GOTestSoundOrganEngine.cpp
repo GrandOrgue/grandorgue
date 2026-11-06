@@ -28,6 +28,7 @@
 #include "sound/playing/GOSoundAudioSection.h"
 #include "sound/processing/GOSoundProcessingChain.h"
 #include "sound/providers/GOSoundProvider.h"
+#include "sound/providers/GOSoundProviderSynthedTrem.h"
 
 #include "GOBuffer.h"
 #include "GOMemoryPool.h"
@@ -859,7 +860,7 @@ void GOTestSoundOrganEngine::TestPlayingSamplerFollowsProviderChanges() {
   static constexpr unsigned FIRST_SETTLED_PERIOD_I
     = CHANGE_PERIOD_I + RAMP_PERIODS;
 
-  controller->AddWindchest(new GOWindchest(*controller));
+  controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
 
   // A period index that is never reached: the provider is never touched
   static constexpr unsigned NEVER_I = 100000;
