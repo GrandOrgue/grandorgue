@@ -886,11 +886,6 @@ void GOTestSoundResample::TestScaleResamplerPosIncrement() {
     GOSoundResample::scaleResamplerPosIncrement(UPSAMPLE_FACTOR, 1e-9f)
       == GOSoundResample::MIN_FRACTION_INCREMENT,
     "a tiny ratio must be limited to MIN_FRACTION_INCREMENT");
-
-  // a zero base stays zero
-  GOAssert(
-    GOSoundResample::scaleResamplerPosIncrement(0, 2.0f) == 0,
-    "a zero increment must stay zero");
 }
 
 void GOTestSoundResample::run() {

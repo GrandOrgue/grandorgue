@@ -125,11 +125,11 @@ public:
    * stream is changed. The caller should always scale the same base increment,
    * not the result of the previous scaling, so repeated changes do not
    * accumulate rounding errors.
-   * @param resamplerPosIncrement the base increment
+   * @param resamplerPosIncrement the base increment; must be non-zero
    * @param ratio the new rate divided by the rate of the base increment; must
    *   be positive
    * @return the scaled increment limited to MIN_FRACTION_INCREMENT..
-   *   MAX_FRACTION_INCREMENT, or 0 if the base increment is 0
+   *   MAX_FRACTION_INCREMENT
    */
   static unsigned scaleResamplerPosIncrement(
     unsigned resamplerPosIncrement, float ratio);

@@ -39,13 +39,13 @@ void GOSoundResample::ResamplingPosition::Init(
 
 unsigned GOSoundResample::scaleResamplerPosIncrement(
   unsigned resamplerPosIncrement, float ratio) {
+  assert(resamplerPosIncrement > 0);
   assert(ratio > 0.0f);
 
-  return resamplerPosIncrement ? (unsigned)std::clamp(
-           std::round(ratio * resamplerPosIncrement),
-           (float)MIN_FRACTION_INCREMENT,
-           (float)MAX_FRACTION_INCREMENT)
-                               : 0;
+  return (unsigned)std::clamp<float>(
+    std::round(ratio * resamplerPosIncrement),
+    MIN_FRACTION_INCREMENT,
+    MAX_FRACTION_INCREMENT);
 }
 
 static double sinc(const double arg) {
