@@ -160,6 +160,7 @@ bool GOSoundSamplerPlayer::ProcessSampler(
       sampler.EnsureVolumeFactor(pProvider->GetGain());
       sampler.EnsureTuningFactor(pProvider->GetTuning());
     }
+    sampler.toneBalanceFilterState.EnsureCoeffs();
 
     GO_DECLARE_LOCAL_SOUND_BUFFER(tmpBuffer, 2, outBuffer.GetNFrames())
 

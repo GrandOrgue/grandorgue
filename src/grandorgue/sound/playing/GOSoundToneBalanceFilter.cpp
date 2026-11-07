@@ -22,12 +22,57 @@ void GOSoundToneBalanceFilter::Init(int8_t value) {
     type = GOSoundOnePoleFilter::Type::TYPE_HPF;
     hz = 20 * pow(800.0, value / 99.0);
   }
-  GOSoundOnePoleFilter::computeCoeffs(type, hz, 0, m_samplerate, m_coeffs);
+
+  GOSoundOnePoleFilter::Coeffs newCoeffs;
+
+  GOSoundOnePoleFilter::computeCoeffs(type, hz, 0, m_samplerate, newCoeffs);
+  Publish(newCoeffs);
+}
+
+void GOSoundToneBalanceFilter::SetSamplerate(unsigned samplerate) {
+  m_samplerate = samplerate;
+  Publish(GOSoundOnePoleFilter::Coeffs());
+}
+
+void GOSoundToneBalanceFilter::Publish(
+  const GOSoundOnePoleFilter::Coeffs &newCoeffs) {
+  // the writers are never concurrent: they are called from the GUI thread
+  // or from the engine build, which does not run together with the GUI
+  // changes of the same filter
+  const unsigned startVersion = m_Version.load(std::memory_order_relaxed);
+
+  m_Version.store(startVersion + 1, std::memory_order_relaxed);
+  std::atomic_thread_fence(std::memory_order_release);
+  m_coeffs = newCoeffs;
+  m_Version.store(startVersion + 2, std::memory_order_release);
 }
 
 void GOSoundToneBalanceFilter::State::Init(
   const GOSoundToneBalanceFilter *filter) {
-  p_coeffs = filter ? &filter->m_coeffs : nullptr;
+  p_filter = filter;
+  m_coeffs = GOSoundOnePoleFilter::Coeffs();
+  m_Version = 1; // odd: the coefficients are not copied yet
   for (int i = 0; i < 2; i++)
     m_state[i] = 0;
+}
+
+void GOSoundToneBalanceFilter::State::EnsureCoeffs() {
+  if (p_filter) {
+    const unsigned version
+      = p_filter->m_Version.load(std::memory_order_acquire);
+
+    if (version != m_Version && !(version & 1)) {
+      const GOSoundOnePoleFilter::Coeffs copy = p_filter->m_coeffs;
+
+      std::atomic_thread_fence(std::memory_order_acquire);
+      // use the copy only if it was not written during copying
+      if (p_filter->m_Version.load(std::memory_order_relaxed) == version) {
+        m_Version = version;
+        m_coeffs = copy;
+        if (!copy.isActive)
+          for (int i = 0; i < 2; i++)
+            m_state[i] = 0;
+      }
+    }
+  }
 }
