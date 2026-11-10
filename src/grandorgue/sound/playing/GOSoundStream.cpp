@@ -7,6 +7,9 @@
 
 #include "GOSoundStream.h"
 
+#include <algorithm>
+#include <limits>
+
 #include <wx/log.h>
 
 #include "sound/buffer/GOSoundBufferMutable.h"
@@ -311,13 +314,36 @@ unsigned GOSoundStream::InitFromSection(
   GOSoundResample::InterpolationType interpolationType) {
   audio_section = pSection;
 
+  m_IsBandlimited
+    = interpolationType == GOSoundResample::GO_BANDLIMITED_INTERPOLATION;
+  const auto decoderInterpolation = m_IsBandlimited
+    ? GOSoundResample::GO_LINEAR_INTERPOLATION
+    : interpolationType;
+
   decode_call = getDecodeBlockFunctionFor(
-    pSection, pSection->IsCompressed(), interpolationType);
+    pSection, pSection->IsCompressed(), decoderInterpolation);
   // End segments are never compressed
   end_decode_call
-    = getDecodeBlockFunctionFor(pSection, false, interpolationType);
+    = getDecodeBlockFunctionFor(pSection, false, decoderInterpolation);
 
   return GoToStartSegment(startSegmentIndex);
+}
+
+void GOSoundStream::InitPosition(unsigned startOffset, unsigned fraction) {
+  m_ResamplingPos.Init(startOffset, m_IsBandlimited ? 0 : fraction);
+  if (m_IsBandlimited) {
+    constexpr unsigned N_HISTORY_FRAMES = GOSoundResample::BANDLIMITED_LEFT;
+    constexpr unsigned N_HISTORY_ITEMS = N_HISTORY_FRAMES * MAX_OUTPUT_CHANNELS;
+    constexpr unsigned RING_ITEMS
+      = BANDLIMITED_RING_FRAMES * MAX_OUTPUT_CHANNELS;
+
+    m_BandlimitedPosition
+      = N_HISTORY_FRAMES * GOSoundResample::UPSAMPLE_FACTOR + fraction;
+    m_DecodedEnd = N_HISTORY_FRAMES;
+    m_SourceEnd = std::numeric_limits<uint64_t>::max();
+    std::fill_n(m_DecodedRing, N_HISTORY_ITEMS, 0.0f);
+    std::fill_n(m_DecodedRing + RING_ITEMS, N_HISTORY_ITEMS, 0.0f);
+  }
 }
 
 void GOSoundStream::InitStream(
@@ -328,13 +354,13 @@ void GOSoundStream::InitStream(
 
   const unsigned startOffset = InitFromSection(pSection, 0, interpolationType);
 
-  m_ResamplingPos.Init(startOffset);
+  InitPosition(startOffset, 0);
 }
 
 void GOSoundStream::InitAlignedStream(
   const GOSoundAudioSection *pSection,
   GOSoundResample::InterpolationType interpolationType,
-  const GOSoundStream *pExistingStream) {
+  GOSoundStream *pExistingStream) {
   // Release section
   GOSoundReleaseAlignTable *releaseAligner = pSection->GetReleaseAligner();
 
@@ -350,8 +376,11 @@ void GOSoundStream::InitAlignedStream(
     startOffset
       = releaseAligner->GetPositionFor(history, pSection->GetChannels());
   }
-  m_ResamplingPos.Init(
-    startOffset, pExistingStream->m_ResamplingPos.GetFraction());
+  const unsigned fraction = pExistingStream->m_IsBandlimited
+    ? pExistingStream->m_BandlimitedPosition & GOSoundResample::UPSAMPLE_MASK
+    : pExistingStream->m_ResamplingPos.GetFraction();
+
+  InitPosition(startOffset, fraction);
 }
 
 unsigned GOSoundStream::GetSampleRate() const {
@@ -360,9 +389,19 @@ unsigned GOSoundStream::GetSampleRate() const {
 
 bool GOSoundStream::ReadBlock(
   unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer) {
+  assert(resamplerPosIncrement);
+  assert(outBuffer.GetNChannels() == MAX_OUTPUT_CHANNELS);
+
+  return m_IsBandlimited
+    ? ReadBandlimitedBlock(resamplerPosIncrement, outBuffer)
+    : ReadDecodedBlock(resamplerPosIncrement, outBuffer)
+      == outBuffer.GetNFrames();
+}
+
+unsigned GOSoundStream::ReadDecodedBlock(
+  unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer) {
   float *pData = outBuffer.GetData();
   unsigned nFrames = outBuffer.GetNFrames();
-  bool res = true;
 
   while (nFrames > 0) {
     unsigned currSrcOffset = m_ResamplingPos.GetIndex();
@@ -415,21 +454,99 @@ bool GOSoundStream::ReadBlock(
     } else { // no loop available
       outBuffer.GetSubBuffer(outBuffer.GetNFrames() - nFrames, nFrames)
         .FillWithSilence();
-      nFrames = 0;
-      res = false;
+      break;
     }
   }
-  return res;
+  return outBuffer.GetNFrames() - nFrames;
+}
+
+void GOSoundStream::EnsureDecodedWindow(
+  uint64_t center, unsigned nLookAheadFrames) {
+  constexpr unsigned RING_ITEMS = BANDLIMITED_RING_FRAMES * MAX_OUTPUT_CHANNELS;
+
+  while (m_DecodedEnd <= center + nLookAheadFrames && center < m_SourceEnd) {
+    const unsigned ringIndex = m_DecodedEnd % BANDLIMITED_RING_FRAMES;
+    const unsigned nFrames = DECODE_CHUNK - ringIndex % DECODE_CHUNK;
+    float *pData = m_DecodedRing + ringIndex * MAX_OUTPUT_CHANNELS;
+    GOSoundBufferMutable decoded(pData, MAX_OUTPUT_CHANNELS, nFrames);
+
+    if (m_SourceEnd == std::numeric_limits<uint64_t>::max()) {
+      const unsigned nDecoded
+        = ReadDecodedBlock(GOSoundResample::UPSAMPLE_FACTOR, decoded);
+
+      if (nDecoded < nFrames)
+        m_SourceEnd = m_DecodedEnd + nDecoded;
+    } else
+      decoded.FillWithSilence();
+
+    std::copy_n(pData, decoded.GetNItems(), pData + RING_ITEMS);
+    m_DecodedEnd += nFrames;
+  }
+}
+
+bool GOSoundStream::ReadBandlimitedBlock(
+  unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer) {
+  using Resample = GOSoundResample;
+  const Resample::BandlimitedResampler interpolator(resamplerPosIncrement);
+  const bool isDirect = Resample::isSameRate(resamplerPosIncrement)
+    && (m_BandlimitedPosition & Resample::UPSAMPLE_MASK) == 0;
+  const unsigned nLookAheadFrames = isDirect ? 0 : Resample::BANDLIMITED_RIGHT;
+  const unsigned nFrames = outBuffer.GetNFrames();
+  unsigned nRendered = 0;
+  float *pOut = outBuffer.GetData();
+  uint64_t center = m_BandlimitedPosition >> Resample::UPSAMPLE_BITS;
+
+  while (nRendered < nFrames && center < m_SourceEnd) {
+    if (m_DecodedEnd <= center + nLookAheadFrames)
+      EnsureDecodedWindow(center, nLookAheadFrames);
+
+    if (center < m_SourceEnd) {
+      const unsigned ringIndex
+        = (center - Resample::BANDLIMITED_LEFT) % BANDLIMITED_RING_FRAMES;
+      const float *pWindow = m_DecodedRing + ringIndex * MAX_OUTPUT_CHANNELS;
+
+      if (isDirect)
+        std::copy_n(
+          pWindow + Resample::BANDLIMITED_LEFT * MAX_OUTPUT_CHANNELS,
+          MAX_OUTPUT_CHANNELS,
+          pOut);
+      else
+        interpolator.InterpolateFrame(
+          pWindow, m_BandlimitedPosition & Resample::UPSAMPLE_MASK, pOut);
+
+      pOut += MAX_OUTPUT_CHANNELS;
+      ++nRendered;
+      m_BandlimitedPosition += resamplerPosIncrement;
+      center = m_BandlimitedPosition >> Resample::UPSAMPLE_BITS;
+    }
+  }
+  if (nRendered < nFrames)
+    outBuffer.GetSubBuffer(nRendered, nFrames - nRendered).FillWithSilence();
+  return nRendered == nFrames;
 }
 
 void GOSoundStream::GetHistory(
-  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const {
+  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) {
   uint8_t nChannels = audio_section->GetChannels();
   unsigned pos = m_ResamplingPos.GetIndex();
 
   memset(
     history, 0, sizeof(history[0][0]) * BLOCK_HISTORY * MAX_OUTPUT_CHANNELS);
-  if (pos >= transition_position)
+  if (m_IsBandlimited) {
+    const uint64_t center
+      = m_BandlimitedPosition >> GOSoundResample::UPSAMPLE_BITS;
+
+    EnsureDecodedWindow(center, BLOCK_HISTORY - 1);
+    if (center < m_SourceEnd) {
+      const unsigned ringIndex = center % BANDLIMITED_RING_FRAMES;
+      const float *pFrames = m_DecodedRing + ringIndex * MAX_OUTPUT_CHANNELS;
+
+      for (unsigned frameI = 0; frameI < BLOCK_HISTORY; ++frameI)
+        for (unsigned channelI = 0; channelI < nChannels; ++channelI)
+          history[frameI][channelI]
+            = int(pFrames[frameI * MAX_OUTPUT_CHANNELS + channelI]);
+    }
+  } else if (pos >= transition_position)
     for (unsigned i = 0; i < BLOCK_HISTORY; i++)
       for (uint8_t j = 0; j < nChannels; j++)
         history[i][j] = audio_section->GetSampleData(

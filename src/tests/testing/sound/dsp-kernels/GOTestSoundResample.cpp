@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <numbers>
 #include <vector>
 
 #include "sound/buffer/GOSoundBufferMutable.h"
@@ -19,6 +20,69 @@
 #include "GOTestScope.h"
 
 const std::string GOTestSoundResample::TEST_NAME = "GOTestSoundResample";
+
+void GOTestSoundResample::TestBandlimitedInterpolation() {
+  using Resample = GOSoundResample;
+  constexpr unsigned N_FRAMES = 16 * Resample::UPSAMPLE_FACTOR;
+  constexpr double TWO_PI = 2.0 * std::numbers::pi;
+  const unsigned increment
+    = Resample::rateToFractionIncrement(std::exp2(50.0f / 1200));
+  const unsigned imageBin = N_FRAMES - 15 * increment;
+  const Resample::BandlimitedResampler retuner(increment);
+  const Resample::BandlimitedResampler decimator(2 * Resample::UPSAMPLE_FACTOR);
+  float source[16][2];
+  float window[2 * Resample::BANDLIMITED_POINTS];
+  float stereo[2];
+  double wanted = 0;
+  double imageSine = 0;
+  double imageCosine = 0;
+
+  // Stereo quadrature checks both channel strides and the stopband gain
+  // independently of the phase of the input tone.
+  for (unsigned tapI = 0; tapI < Resample::BANDLIMITED_POINTS; ++tapI) {
+    const double phase = TWO_PI * 0.251 * tapI;
+
+    window[2 * tapI] = float(std::cos(phase));
+    window[2 * tapI + 1] = float(std::sin(phase));
+  }
+  decimator.InterpolateFrame(window, Resample::UPSAMPLE_FACTOR / 3, stereo);
+  GOAssert(
+    std::hypot(stereo[0], stereo[1]) < 0.00032f,
+    "2:1 playback should reject a tone just above the output Nyquist limit");
+
+  // Analyze a complete fixed-point period to avoid spectral leakage.
+  for (unsigned phaseI = 0; phaseI < 16; ++phaseI) {
+    const double phase
+      = TWO_PI * (double(phaseI) - Resample::BANDLIMITED_LEFT) / 16;
+
+    source[phaseI][0] = float(std::cos(phase));
+    source[phaseI][1] = float(std::sin(phase));
+  }
+
+  for (unsigned frameI = 0, position = 0; frameI < N_FRAMES;
+       ++frameI, position += increment) {
+    const unsigned index = position >> Resample::UPSAMPLE_BITS;
+    const double outputPhase = TWO_PI * (position % N_FRAMES) / N_FRAMES;
+    const double imagePhase = TWO_PI * imageBin * frameI / N_FRAMES;
+
+    for (unsigned tapI = 0; tapI < Resample::BANDLIMITED_POINTS; ++tapI) {
+      const unsigned inputPhase = (index + tapI) % 16;
+
+      window[2 * tapI] = source[inputPhase][0];
+      window[2 * tapI + 1] = source[inputPhase][1];
+    }
+    retuner.InterpolateFrame(
+      window, position & Resample::UPSAMPLE_MASK, stereo);
+    wanted
+      += stereo[0] * std::cos(outputPhase) + stereo[1] * std::sin(outputPhase);
+    imageSine += stereo[0] * std::sin(imagePhase);
+    imageCosine += stereo[0] * std::cos(imagePhase);
+  }
+  GOAssert(wanted / N_FRAMES > 0.99, "The retuned fundamental should pass");
+  GOAssert(
+    2 * std::hypot(imageSine, imageCosine) < wanted * 0.0001,
+    "The retuning image should be at least 80 dB below the fundamental");
+}
 
 /**
  * Relative comparison for two outputs computed by the same mathematical
@@ -889,6 +953,7 @@ void GOTestSoundResample::TestScaleResamplerPosIncrement() {
 }
 
 void GOTestSoundResample::run() {
+  GO_RUN_TEST(TestBandlimitedInterpolation())
   GO_RUN_TEST(TestScaleResamplerPosIncrement())
   GO_RUN_TEST(TestIsSameRate())
   GO_RUN_TEST(TestRingGetChannelVector())

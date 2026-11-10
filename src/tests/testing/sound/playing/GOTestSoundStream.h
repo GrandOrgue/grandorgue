@@ -88,6 +88,17 @@ private:
    */
   void TestCompressedLoopWrapMatchesUncompressed();
 
+  /** Compares bandlimited short-loop playback and a release across a retrigger.
+   */
+  void TestBandlimitedLoopAndRetrigger();
+
+  /** Measures the 3 kHz, +50-cent image through all three playback modes. */
+  void TestRetuningSuppressesImages();
+
+  /** Checks that native-rate bandlimited playback copies source frames exactly.
+   */
+  void TestBandlimitedNativeRate();
+
   /**
    * Tests that a silent ("BlankLoop"-like) attack is not used for release
    * alignment: SetupStreamAlignment must leave the release aligner null so

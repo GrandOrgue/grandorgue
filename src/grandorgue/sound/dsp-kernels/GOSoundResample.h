@@ -33,8 +33,7 @@
 /**
  * A stateless DSP kernel: this class provides algorithms for resampling
  * audio buffers
- * Now two algorithms are supported: Linear and Polyphase.
- * They calculate a next output sample based on a vector of a few continous
+ * The interpolators calculate an output sample from a window of consecutive
  * input samples.
  */
 
@@ -42,20 +41,17 @@ class GOSoundResample {
 public:
   static constexpr unsigned POLYPHASE_POINTS = 8;
   static constexpr unsigned LINEAR_POINTS = 2;
+  static constexpr unsigned BANDLIMITED_POINTS = 96;
+  static constexpr unsigned BANDLIMITED_LEFT = BANDLIMITED_POINTS / 2 - 1;
+  static constexpr unsigned BANDLIMITED_RIGHT
+    = BANDLIMITED_POINTS - BANDLIMITED_LEFT - 1;
 
   /**
    * The largest per-item input-vector length (VECTOR_LENGTH) of any
-   * resampler this class offers. Computed via std::max() from
-   * POLYPHASE_POINTS/LINEAR_POINTS rather than just naming whichever one
-   * happens to be larger today, so this stays correct on its own if a
-   * future resampler type changes which one that is. A caller that needs
-   * one fixed margin regardless of which InterpolationType it ends up
-   * using (e.g. a ring buffer's mirrored-tail length, which is
-   * MAX_POINTS - 1 frames, sized before the interpolation choice is
-   * necessarily fixed) should use this constant.
+   * resampler this class offers.
    */
   static constexpr unsigned MAX_POINTS
-    = std::max(POLYPHASE_POINTS, LINEAR_POINTS);
+    = std::max({LINEAR_POINTS, POLYPHASE_POINTS, BANDLIMITED_POINTS});
 
   /**
    * The largest number of channels a frame vector supports. It is the maximum
@@ -95,6 +91,7 @@ public:
   enum InterpolationType {
     GO_LINEAR_INTERPOLATION = 0,
     GO_POLYPHASE_INTERPOLATION = 1,
+    GO_BANDLIMITED_INTERPOLATION = 2,
   };
 
   /**
@@ -826,6 +823,49 @@ public:
     : public ScalarProductionResampler<POLYPHASE_POINTS> {
     inline PolyphaseResampler(const GOSoundResample &r)
       : ScalarProductionResampler<POLYPHASE_POINTS>(r.m_PolyphaseCoefs) {}
+  };
+
+  /** A centered interpolator whose low-pass bandwidth follows playback rate. */
+  class BandlimitedResampler {
+  public:
+    static constexpr unsigned N_PHASES = 128;
+
+    /**
+     * Selects a precomputed coefficient bank for a block's playback step.
+     * @param increment source frames per output frame in fixed-point units
+     */
+    explicit BandlimitedResampler(unsigned increment);
+
+    /**
+     * Reads an interleaved stereo window centered on the source position.
+     * The center is BANDLIMITED_LEFT frames from the start of the window.
+     * @param pInput BANDLIMITED_POINTS consecutive stereo frames
+     * @param fraction the position's fractional part in fixed-point units
+     * @param outStereo the two output samples
+     */
+    inline void InterpolateFrame(
+      const float *pInput, unsigned fraction, float *outStereo) const {
+      constexpr unsigned PHASE_STEP = UPSAMPLE_FACTOR / N_PHASES;
+      const unsigned phase = fraction / PHASE_STEP;
+      const float blend = (fraction % PHASE_STEP) / float(PHASE_STEP);
+      const float *pCoefs = p_Coefs[phase];
+      const float *pNextCoefs = p_Coefs[phase + 1];
+      float left = 0.0f;
+      float right = 0.0f;
+
+      for (unsigned tapI = 0; tapI < BANDLIMITED_POINTS; ++tapI) {
+        const float coef
+          = pCoefs[tapI] + blend * (pNextCoefs[tapI] - pCoefs[tapI]);
+
+        left += coef * pInput[2 * tapI];
+        right += coef * pInput[2 * tapI + 1];
+      }
+      outStereo[0] = left;
+      outStereo[1] = right;
+    }
+
+  private:
+    const float (*p_Coefs)[BANDLIMITED_POINTS];
   };
 
   /**

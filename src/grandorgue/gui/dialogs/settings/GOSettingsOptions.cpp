@@ -166,6 +166,7 @@ GOSettingsOptions::GOSettingsOptions(GOConfig &settings, wxWindow *parent)
   choices.clear();
   choices.push_back(_("Linear"));
   choices.push_back(_("Polyphase"));
+  choices.push_back(_("High-quality sinc"));
   grid->Add(
     new wxStaticText(this, wxID_ANY, _("Interpolation:")),
     0,

@@ -23,6 +23,13 @@ private:
   /* Maximum number of audio chanels in the source samples */
   static constexpr unsigned MAX_INPUT_CHANNELS = 2;
 
+  static constexpr unsigned DECODE_CHUNK = 32;
+  static constexpr unsigned BANDLIMITED_RING_FRAMES = 128;
+  static_assert(
+    BANDLIMITED_RING_FRAMES
+    >= GOSoundResample::BANDLIMITED_POINTS + DECODE_CHUNK);
+  static_assert(BANDLIMITED_RING_FRAMES % DECODE_CHUNK == 0);
+
   const GOSoundAudioSection *audio_section;
   const GOSoundResample *resample;
 
@@ -68,6 +75,15 @@ private:
    * MAX_WINDOW_LEN samples */
   int m_ReadAheadBuffer[MAX_INPUT_CHANNELS * MAX_WINDOW_LEN * 2];
 
+  bool m_IsBandlimited;
+  // The decoder runs at unity rate. This cursor tracks the audible position
+  // on its continuous timeline, in the resampler's fixed-point units.
+  uint64_t m_BandlimitedPosition;
+  uint64_t m_DecodedEnd;
+  uint64_t m_SourceEnd;
+  // The mirror keeps a filter window contiguous when it spans the ring seam.
+  float m_DecodedRing[2 * BANDLIMITED_RING_FRAMES * MAX_OUTPUT_CHANNELS];
+
   /* The block decode functions should provide whatever the normal resolution of
    * the audio is. The fade engine should ensure that this data is always
    * brought into the correct range. */
@@ -94,7 +110,23 @@ private:
     bool isCompressed,
     GOSoundResample::InterpolationType interpolationType);
 
-  void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
+  /** Reads the source frames at the audible position for release alignment. */
+  void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
+
+  /** Resets the decoder and, for bandlimited playback, its centered window. */
+  void InitPosition(unsigned startOffset, unsigned fraction);
+
+  /** Fills the buffer using the selected decoder, returning valid frames. */
+  unsigned ReadDecodedBlock(
+    unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer);
+
+  /** Decodes through the requested window or pads the source end with silence.
+   */
+  void EnsureDecodedWindow(uint64_t center, unsigned nLookAheadFrames);
+
+  /** Renders a block from the decoded ring, advancing the audible cursor. */
+  bool ReadBandlimitedBlock(
+    unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer);
 
   /**
    * Switches the stream to the start segment with the given index.
@@ -131,11 +163,13 @@ public:
    * Initializes a release stream aligned to the existing attack stream.
    * Uses release alignment table if available. The fractional part of the
    * position is taken from the existing stream.
+   * @param pExistingStream the attack stream, whose decoder may read ahead
+   *   for alignment without advancing its audible position
    */
   void InitAlignedStream(
     const GOSoundAudioSection *pSection,
     GOSoundResample::InterpolationType interpolationType,
-    const GOSoundStream *pExistingStream);
+    GOSoundStream *pExistingStream);
 
   /**
    * @return the sample rate of the audio section the stream plays. It is

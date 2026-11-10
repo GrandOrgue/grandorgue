@@ -52,6 +52,87 @@ static double sinc(const double arg) {
   return (arg == 0) ? 1.0 : std::sin(M_PI * arg) / (M_PI * arg);
 }
 
+namespace {
+
+constexpr unsigned N_BANDLIMITED_BANKS = 64;
+constexpr double KAISER_BETA = 7.86;
+// Half of the transition width in cycles per source frame.
+constexpr double HALF_TRANSITION_WIDTH = 0.035;
+
+// I0 for the Kaiser window. The argument is at most KAISER_BETA.
+double kaiser_bessel(double value) {
+  const double square = value * value / 4.0;
+  double sum = 1.0;
+  double term = 1.0;
+
+  for (unsigned termN = 1; termN <= 14; ++termN) {
+    term *= square / (termN * termN);
+    sum += term;
+  }
+  return sum;
+}
+
+struct BandlimitedTables {
+  static constexpr unsigned N_PHASES
+    = GOSoundResample::BandlimitedResampler::N_PHASES;
+  static constexpr unsigned N_TAPS = GOSoundResample::BANDLIMITED_POINTS;
+
+  float m_Coefs[N_BANDLIMITED_BANKS][N_PHASES + 1][N_TAPS];
+
+  BandlimitedTables() {
+    for (unsigned phaseI = 0; phaseI <= N_PHASES; ++phaseI) {
+      const double fraction = double(phaseI) / N_PHASES;
+      double distances[N_TAPS];
+      double window[N_TAPS];
+
+      for (unsigned tapI = 0; tapI < N_TAPS; ++tapI) {
+        const double distance
+          = double(tapI) - GOSoundResample::BANDLIMITED_LEFT - fraction;
+        const double relativeDistance = 2.0 * distance / N_TAPS;
+
+        distances[tapI] = distance;
+        window[tapI] = kaiser_bessel(
+          KAISER_BETA * std::sqrt(1.0 - relativeDistance * relativeDistance));
+      }
+
+      for (unsigned bankN = 1; bankN <= N_BANDLIMITED_BANKS; ++bankN) {
+        const double stopband = 0.5 * bankN / N_BANDLIMITED_BANKS;
+        const double cutoff
+          = stopband - std::min(HALF_TRANSITION_WIDTH, stopband / 2.0);
+        float(&coefs)[N_TAPS] = m_Coefs[bankN - 1][phaseI];
+        double sum = 0.0;
+
+        for (unsigned tapI = 0; tapI < N_TAPS; ++tapI) {
+          const double coef
+            = sinc(2.0 * cutoff * distances[tapI]) * window[tapI];
+
+          coefs[tapI] = float(coef);
+          sum += coef;
+        }
+        // Keep the gain at DC constant as the fractional position changes.
+        for (float &coef : coefs)
+          coef = float(coef / sum);
+      }
+    }
+  }
+};
+
+// Shared by all voices and ready before the audio callback can run.
+const BandlimitedTables BANDLIMITED_TABLES;
+
+} // namespace
+
+GOSoundResample::BandlimitedResampler::BandlimitedResampler(
+  unsigned increment) {
+  assert(increment);
+
+  // Round the bandwidth down to the next available bank.
+  const unsigned bankN = std::clamp(
+    N_BANDLIMITED_BANKS * UPSAMPLE_FACTOR / increment, 1u, N_BANDLIMITED_BANKS);
+
+  p_Coefs = BANDLIMITED_TABLES.m_Coefs[bankN - 1];
+}
+
 #if 0
 static
 void
@@ -121,6 +202,9 @@ unsigned GOSoundResample::getVectorLength(
     break;
   case GO_POLYPHASE_INTERPOLATION:
     res = PolyphaseResampler::VECTOR_LENGTH;
+    break;
+  case GO_BANDLIMITED_INTERPOLATION:
+    res = BANDLIMITED_POINTS;
     break;
 
   /* A compiler cannot guarantee that interpolation has a valid value.
