@@ -37,6 +37,11 @@ void GOTestSoundResample::TestBandlimitedInterpolation() {
   double imageSine = 0;
   double imageCosine = 0;
 
+  GOAssert(
+    Resample::getVectorLength(Resample::GO_BANDLIMITED_INTERPOLATION)
+      == Resample::BANDLIMITED_POINTS,
+    "High-quality sinc must report its full input window length");
+
   // Stereo quadrature checks both channel strides and the stopband gain
   // independently of the phase of the input tone.
   for (unsigned tapI = 0; tapI < Resample::BANDLIMITED_POINTS; ++tapI) {
