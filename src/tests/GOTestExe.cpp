@@ -80,6 +80,7 @@
 #include "testing/sound/tasks/GOTestSoundTaskBase.h"
 #include "testing/sound/tasks/GOTestSoundWindchestGroupTask.h"
 #include "testing/sound/tasks/GOTestSoundWindchestTask.h"
+#include "testing/threading/GOTestVersioned.h"
 
 enum ExitCode {
   OK = 0,
@@ -302,6 +303,7 @@ int main(int argc, char *argv[]) {
   GOTestSoundRecorderTask testSoundRecorderTask;
   GOTestSoundWindchestGroupTask testSoundWindchestGroupTask;
   GOTestPerfSoundTaskBase testPerfSoundTaskBase;
+  GOTestVersioned testVersioned;
   /* end of instanciation */
 
   if (exitCode == OK && isRunNeeded) {
