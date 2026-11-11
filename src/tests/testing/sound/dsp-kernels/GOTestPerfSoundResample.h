@@ -15,7 +15,8 @@
 /**
  * Measures GOSoundResample::ScalarProductionResampler::ResampleBlock()'s
  * and ResampleBlockVariableRatePlanar()'s / ResampleBlockConstantRatePlanar()'s
- * per-frame throughput, for both LinearResampler and PolyphaseResampler.
+ * per-frame throughput, for both LinearResampler and PolyphaseResampler,
+ * and BandlimitedResampler::InterpolateFrame() throughput.
  * The ResampleBlock() cases are the baseline any future refactor of it must
  * not regress.
  */
@@ -61,6 +62,9 @@ private:
 
   /** The same for PolyphaseResampler. */
   void TestPerfResampleBlockConstantRatePlanarPolyphase();
+
+  /** Measures the high-quality sinc kernel on fractional stereo frames. */
+  void TestPerfBandlimitedStereo();
 
   /** The common body of the two constant-rate planar tests.
    * @param name the test name for the report

@@ -39,9 +39,10 @@
     <title>DESCRIPTION</title>
     <para>
       GrandOrguePerfTest is a commandline tool built together with GrandOrgue to
-      test performance of the computer with different settings: Bits per sample,
-      Sample Rate, Loseless compression, Linear/Polyphase interpolation and
-      Sampes per buffer.
+      test performance of the computer with different bit depths, sample rates,
+      lossless compression settings, interpolation modes and buffer sizes.
+      Interpolation modes include Linear, Polyphase and High-quality sinc.
+      The sinc cases play the supplied 48 kHz samples at a 44.1 kHz engine rate.
     </para>
     <para>
       It outputs one line for each parameter set to the standard output. This

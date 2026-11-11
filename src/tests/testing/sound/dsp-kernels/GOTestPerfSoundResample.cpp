@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 
+#include "sound/buffer/GOSoundBufferManaged.h"
 #include "sound/dsp-kernels/GOSoundResample.h"
 
 #include "../GOSoundTestSignals.h"
@@ -566,6 +567,55 @@ void GOTestPerfSoundResample::
     BASELINE_CONSTANT_RATE_PLANAR_POLYPHASE);
 }
 
+void GOTestPerfSoundResample::TestPerfBandlimitedStereo() {
+  using Resample = GOSoundResample;
+  constexpr unsigned N_CHANNELS = 2;
+  // Initial floors are about half the slowest local Linux measurements
+  // (58.4 Mitems/s Release and 20.5 Mitems/s Debug) to allow CI variation.
+  static constexpr GOTestPerfSoundBufferBaseline BASELINES[] = {
+#ifdef NDEBUG
+    {128, 30},
+    {1024, 30},
+#else
+    {128, 10},
+    {1024, 10},
+#endif
+  };
+
+  std::cout << "\nPerformance test: BandlimitedResampler::InterpolateFrame "
+               "(stereo float)\n";
+
+  for (const auto &baseline : BASELINES) {
+    const unsigned nOutFrames = GOTestPerfOpaqueSize(baseline.m_BufferSize);
+    const unsigned nSrcFrames
+      = compute_src_frames(nOutFrames, Resample::BANDLIMITED_POINTS);
+    std::vector<float> src(nSrcFrames * N_CHANNELS);
+    GOSoundBufferManaged output(N_CHANNELS, nOutFrames);
+
+    GOSoundTestSignals::fillWithRamp(src);
+    RunAndEvaluateTest(
+      "BandlimitedStereo",
+      baseline,
+      [&src, &output, nOutFrames]() {
+        const Resample::BandlimitedResampler resampler(FRACTION_INCREMENT);
+        Resample::ResamplingPosition position;
+        float *pOut = output.GetData();
+
+        position.Init();
+        for (unsigned frameI = 0; frameI < nOutFrames; ++frameI) {
+          resampler.InterpolateFrame(
+            src.data() + N_CHANNELS * position.GetIndex(),
+            position.GetFraction(),
+            pOut);
+          pOut += N_CHANNELS;
+          position.Inc(FRACTION_INCREMENT);
+        }
+      },
+      N_CHANNELS,
+      true);
+  }
+}
+
 bool GOTestPerfSoundResample::setUp() {
   m_failedTests.clear();
 
@@ -589,6 +639,7 @@ void GOTestPerfSoundResample::run() {
   GO_RUN_TEST(TestPerfResampleBlockVariableRatePlanarPolyphase())
   GO_RUN_TEST(TestPerfResampleBlockConstantRatePlanarLinear())
   GO_RUN_TEST(TestPerfResampleBlockConstantRatePlanarPolyphase())
+  GO_RUN_TEST(TestPerfBandlimitedStereo())
   // It must stay here and not in tearDown(), because an exception thrown from
   // tearDown() is not counted as a test failure. Does nothing if no test was
   // run
