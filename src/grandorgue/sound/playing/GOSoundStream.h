@@ -17,18 +17,8 @@ class GOSoundBufferMutable;
 
 class GOSoundStream {
 private:
-  /* Maximum number of continous samples required for resampling of one target
-   * sample. The polyphase algorithm requires the longest sample vector */
-  static constexpr unsigned MAX_WINDOW_LEN = GOSoundResample::POLYPHASE_POINTS;
-  /* Maximum number of audio chanels in the source samples */
+  static constexpr unsigned MAX_WINDOW_LEN = GOSoundResample::MAX_POINTS;
   static constexpr unsigned MAX_INPUT_CHANNELS = 2;
-
-  static constexpr unsigned DECODE_CHUNK = 32;
-  static constexpr unsigned BANDLIMITED_RING_FRAMES = 128;
-  static_assert(
-    BANDLIMITED_RING_FRAMES
-    >= GOSoundResample::BANDLIMITED_POINTS + DECODE_CHUNK);
-  static_assert(BANDLIMITED_RING_FRAMES % DECODE_CHUNK == 0);
 
   const GOSoundAudioSection *audio_section;
   const GOSoundResample *resample;
@@ -75,14 +65,7 @@ private:
    * MAX_WINDOW_LEN samples */
   int m_ReadAheadBuffer[MAX_INPUT_CHANNELS * MAX_WINDOW_LEN * 2];
 
-  bool m_IsBandlimited;
-  // The decoder runs at unity rate. This cursor tracks the audible position
-  // on its continuous timeline, in the resampler's fixed-point units.
-  uint64_t m_BandlimitedPosition;
-  uint64_t m_DecodedEnd;
-  uint64_t m_SourceEnd;
-  // The mirror keeps a filter window contiguous when it spans the ring seam.
-  float m_DecodedRing[2 * BANDLIMITED_RING_FRAMES * MAX_OUTPUT_CHANNELS];
+  unsigned m_WindowLength;
 
   /* The block decode functions should provide whatever the normal resolution of
    * the audio is. The fade engine should ensure that this data is always
@@ -91,15 +74,10 @@ private:
   void DecodeBlock(
     unsigned resamplerPosIncrement, float *pOut, unsigned nOutSamples);
 
-  /* These functions must be static class members rather than file-scope
-   * functions because they reference the private typedef DecodeBlockFunction
-   * and the private nested window classes (StreamPtrWindow, StreamCacheWindow,
-   * StreamCacheReadAheadWindow). */
+  /** Chooses the decoder for a resampler and source format. */
+  template <class ResamplerT, uint8_t nChannels>
   static DecodeBlockFunction getDecodeBlockFunction(
-    uint8_t nChannels,
-    uint8_t nBitsPerSoundItem,
-    bool isCompressed,
-    GOSoundResample::InterpolationType interpolationType);
+    uint8_t nBitsPerSoundItem, bool isCompressed);
 
   /**
    * Returns a decode block function for the given audio section,
@@ -110,23 +88,9 @@ private:
     bool isCompressed,
     GOSoundResample::InterpolationType interpolationType);
 
-  /** Reads the source frames at the audible position for release alignment. */
-  void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]);
-
-  /** Resets the decoder and, for bandlimited playback, its centered window. */
-  void InitPosition(unsigned startOffset, unsigned fraction);
-
-  /** Fills the buffer using the selected decoder, returning valid frames. */
-  unsigned ReadDecodedBlock(
-    unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer);
-
-  /** Decodes through the requested window or pads the source end with silence.
+  /** Reads source frames at the shared window position for release alignment.
    */
-  void EnsureDecodedWindow(uint64_t center, unsigned nLookAheadFrames);
-
-  /** Renders a block from the decoded ring, advancing the audible cursor. */
-  bool ReadBandlimitedBlock(
-    unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer);
+  void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
 
   /**
    * Switches the stream to the start segment with the given index.
@@ -163,13 +127,12 @@ public:
    * Initializes a release stream aligned to the existing attack stream.
    * Uses release alignment table if available. The fractional part of the
    * position is taken from the existing stream.
-   * @param pExistingStream the attack stream, whose decoder may read ahead
-   *   for alignment without advancing its audible position
+   * @param pExistingStream the attack stream to align against
    */
   void InitAlignedStream(
     const GOSoundAudioSection *pSection,
     GOSoundResample::InterpolationType interpolationType,
-    GOSoundStream *pExistingStream);
+    const GOSoundStream *pExistingStream);
 
   /**
    * @return the sample rate of the audio section the stream plays. It is

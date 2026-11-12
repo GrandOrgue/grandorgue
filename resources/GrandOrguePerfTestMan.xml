@@ -42,7 +42,8 @@
       test performance of the computer with different bit depths, sample rates,
       lossless compression settings, interpolation modes and buffer sizes.
       Interpolation modes include Linear, Polyphase and High-quality sinc.
-      The sinc cases play the supplied 48 kHz samples at a 44.1 kHz engine rate.
+      All three modes play the supplied 48 kHz samples at a 44.1 kHz engine
+      rate to compare interpolation throughput.
     </para>
     <para>
       It outputs one line for each parameter set to the standard output. This

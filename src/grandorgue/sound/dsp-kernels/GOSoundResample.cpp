@@ -72,9 +72,18 @@ double kaiser_bessel(double value) {
   return sum;
 }
 
-struct BandlimitedTables {
-  static constexpr unsigned N_PHASES
-    = GOSoundResample::BandlimitedResampler::N_PHASES;
+// Round the bandwidth down to the next available bank.
+unsigned get_bandlimited_bank(unsigned increment) {
+  constexpr unsigned UNITY = GOSoundResample::UPSAMPLE_FACTOR;
+
+  return std::max(N_BANDLIMITED_BANKS * UNITY / std::max(increment, UNITY), 1u)
+    - 1;
+}
+
+} // namespace
+
+struct GOSoundResample::BandlimitedTables {
+  static constexpr unsigned N_PHASES = 1u << BANDLIMITED_PHASE_BITS;
   static constexpr unsigned N_TAPS = GOSoundResample::BANDLIMITED_POINTS;
 
   float m_Coefs[N_BANDLIMITED_BANKS][N_PHASES + 1][N_TAPS];
@@ -117,21 +126,10 @@ struct BandlimitedTables {
   }
 };
 
-// Shared by all voices and ready before the audio callback can run.
-const BandlimitedTables BANDLIMITED_TABLES;
-
-} // namespace
-
 GOSoundResample::BandlimitedResampler::BandlimitedResampler(
-  unsigned increment) {
-  assert(increment);
-
-  // Round the bandwidth down to the next available bank.
-  const unsigned bankN = std::clamp(
-    N_BANDLIMITED_BANKS * UPSAMPLE_FACTOR / increment, 1u, N_BANDLIMITED_BANKS);
-
-  p_Coefs = BANDLIMITED_TABLES.m_Coefs[bankN - 1];
-}
+  const GOSoundResample &resample, unsigned increment)
+  : ScalarProductionResampler(
+    resample.o_BandlimitedTables->m_Coefs[get_bandlimited_bank(increment)]) {}
 
 #if 0
 static
@@ -172,7 +170,8 @@ static void create_nyquist_filter(
   }
 }
 
-GOSoundResample::GOSoundResample() {
+GOSoundResample::GOSoundResample()
+  : o_BandlimitedTables(std::make_unique<const BandlimitedTables>()) {
   float temp[UPSAMPLE_FACTOR * POLYPHASE_POINTS];
 
   create_nyquist_filter(temp, POLYPHASE_POINTS, UPSAMPLE_FACTOR);
@@ -192,6 +191,8 @@ GOSoundResample::GOSoundResample() {
   }
 }
 
+GOSoundResample::~GOSoundResample() = default;
+
 unsigned GOSoundResample::getVectorLength(
   GOSoundResample::InterpolationType interpolation) {
   unsigned res;
@@ -204,7 +205,7 @@ unsigned GOSoundResample::getVectorLength(
     res = PolyphaseResampler::VECTOR_LENGTH;
     break;
   case GO_BANDLIMITED_INTERPOLATION:
-    res = BANDLIMITED_POINTS;
+    res = BandlimitedResampler::VECTOR_LENGTH;
     break;
 
   /* A compiler cannot guarantee that interpolation has a valid value.

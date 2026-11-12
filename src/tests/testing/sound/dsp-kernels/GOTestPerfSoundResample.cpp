@@ -570,20 +570,22 @@ void GOTestPerfSoundResample::
 void GOTestPerfSoundResample::TestPerfBandlimitedStereo() {
   using Resample = GOSoundResample;
   constexpr unsigned N_CHANNELS = 2;
-  // Initial floors are about half the slowest local Linux measurements
-  // (58.4 Mitems/s Release and 20.5 Mitems/s Debug) to allow CI variation.
+  // Local runs measured about 19-25 Mitems/s in Release and 5 in Debug.
+  // Leave room for variation on CI runners.
   static constexpr GOTestPerfSoundBufferBaseline BASELINES[] = {
 #ifdef NDEBUG
-    {128, 30},
-    {1024, 30},
+    {128, 15},
+    {1024, 15},
 #else
-    {128, 10},
-    {1024, 10},
+    {128, 3},
+    {1024, 3},
 #endif
   };
 
-  std::cout << "\nPerformance test: BandlimitedResampler::InterpolateFrame "
+  std::cout << "\nPerformance test: BandlimitedResampler::ResampleBlock "
                "(stereo float)\n";
+  using Stereo = Resample::PtrFrameVector<float, float, N_CHANNELS>;
+  const Resample resample;
 
   for (const auto &baseline : BASELINES) {
     const unsigned nOutFrames = GOTestPerfOpaqueSize(baseline.m_BufferSize);
@@ -591,25 +593,19 @@ void GOTestPerfSoundResample::TestPerfBandlimitedStereo() {
       = compute_src_frames(nOutFrames, Resample::BANDLIMITED_POINTS);
     std::vector<float> src(nSrcFrames * N_CHANNELS);
     GOSoundBufferManaged output(N_CHANNELS, nOutFrames);
+    Stereo source(src.data());
 
     GOSoundTestSignals::fillWithRamp(src);
     RunAndEvaluateTest(
       "BandlimitedStereo",
       baseline,
-      [&src, &output, nOutFrames]() {
-        const Resample::BandlimitedResampler resampler(FRACTION_INCREMENT);
+      [&resample, &source, &output, nOutFrames]() {
+        const Resample::BandlimitedResampler sinc(resample, FRACTION_INCREMENT);
         Resample::ResamplingPosition position;
-        float *pOut = output.GetData();
 
         position.Init();
-        for (unsigned frameI = 0; frameI < nOutFrames; ++frameI) {
-          resampler.InterpolateFrame(
-            src.data() + N_CHANNELS * position.GetIndex(),
-            position.GetFraction(),
-            pOut);
-          pOut += N_CHANNELS;
-          position.Inc(FRACTION_INCREMENT);
-        }
+        sinc.ResampleBlock<Stereo, N_CHANNELS>(
+          FRACTION_INCREMENT, position, source, output.GetData(), nOutFrames);
       },
       N_CHANNELS,
       true);

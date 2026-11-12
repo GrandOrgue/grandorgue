@@ -16,7 +16,7 @@
  * Measures GOSoundResample::ScalarProductionResampler::ResampleBlock()'s
  * and ResampleBlockVariableRatePlanar()'s / ResampleBlockConstantRatePlanar()'s
  * per-frame throughput, for both LinearResampler and PolyphaseResampler,
- * and BandlimitedResampler::InterpolateFrame() throughput.
+ * and BandlimitedResampler::ResampleBlock() throughput.
  * The ResampleBlock() cases are the baseline any future refactor of it must
  * not regress.
  */

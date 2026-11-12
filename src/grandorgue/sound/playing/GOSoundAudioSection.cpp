@@ -29,8 +29,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-// maximal readahead is necessary for polyphase resampling
-static constexpr unsigned MAX_READAHEAD = GOSoundResample::POLYPHASE_POINTS;
+// End segments serve the widest interpolation window.
+static constexpr unsigned MAX_READAHEAD = GOSoundResample::MAX_POINTS;
 static constexpr unsigned DEFAULT_END_SEG_LENGTH = MAX_READAHEAD * 2;
 
 const unsigned GOSoundAudioSection::getMaxReadAhead() { return MAX_READAHEAD; }
@@ -206,13 +206,17 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
 
 unsigned GOSoundAudioSection::PickEndSegment(
   unsigned start_segment_index) const {
+  const unsigned startOffset
+    = m_StartSegments[start_segment_index].start_offset;
   const unsigned x = abs(rand());
   for (unsigned i = 0; i < m_EndSegments.size(); i++) {
     const unsigned idx = (i + x) % m_EndSegments.size();
     const EndSegment *end = &m_EndSegments[idx];
+
+    // A short loop's own end segment can start before the loop starts.
     if (
-      end->transition_offset
-      >= m_StartSegments[start_segment_index].start_offset)
+      end->transition_offset >= startOffset
+      || end->next_start_segment_index == (int)start_segment_index)
       return idx;
   }
   assert(0 && "should always find suitable end segment");
@@ -296,8 +300,10 @@ void GOSoundAudioSection::DoCrossfade(
   unsigned fade_length,
   unsigned loop_length,
   unsigned length) {
-  for (; dest_offset < length; dest_offset += loop_length)
-    for (unsigned pos = 0; pos < fade_length; pos++) {
+  for (; dest_offset < length; dest_offset += loop_length) {
+    const unsigned nFrames = std::min(fade_length, length - dest_offset);
+
+    for (unsigned pos = 0; pos < nFrames; pos++) {
       float factor = (cos(M_PI * (pos + 0.5) / fade_length) + 1.0) * 0.5;
 
       for (uint8_t j = 0; j < m_channels; j++) {
@@ -308,6 +314,7 @@ void GOSoundAudioSection::DoCrossfade(
         SetSampleData(dest, pos + dest_offset, j, (int)result);
       }
     }
+  }
 }
 
 void GOSoundAudioSection::Setup(
@@ -366,7 +373,7 @@ void GOSoundAudioSection::Setup(
       end_seg.end_pos = loop.m_EndPosition + 1;
       if (end_seg.end_pos > min_reqd_samples)
         min_reqd_samples = end_seg.end_pos;
-      end_seg.next_start_segment_index = i + 1;
+      end_seg.next_start_segment_index = m_StartSegments.size();
 
       const unsigned loop_length = end_seg.end_pos - start_seg.start_offset;
       wxString loopError;
@@ -381,24 +388,16 @@ void GOSoundAudioSection::Setup(
           i + 1);
 
       if (loopError.IsEmpty()) {
-        unsigned end_length;
+        // Switch to the end segment before a window can reach the loop fade
+        // or seam. For short loops keep the entire loop in the end segment.
+        const unsigned nFramesBeforeLoopEnd = std::min(
+          end_seg.end_pos,
+          std::max(
+            MAX_READAHEAD + fade_len,
+            loop_length < SHORT_LOOP_LENGTH ? loop_length : 0u));
+        const unsigned end_length = nFramesBeforeLoopEnd + MAX_READAHEAD;
 
-        // calculate the fade segment size and offsets
-        if (loop_length >= SHORT_LOOP_LENGTH) {
-          end_seg.transition_offset
-            = end_seg.end_pos - MAX_READAHEAD - fade_len;
-          end_length = DEFAULT_END_SEG_LENGTH + fade_len;
-        } else {
-          end_seg.transition_offset = start_seg.start_offset;
-          end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
-          if (
-            end_length < MAX_READAHEAD
-              + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH
-              + fade_len)
-            end_length = MAX_READAHEAD
-              + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH
-              + fade_len;
-        }
+        end_seg.transition_offset = end_seg.end_pos - nFramesBeforeLoopEnd;
         end_seg.end_size = end_length * m_BytesPerSample;
 
         // Allocate the fade segment
@@ -432,7 +431,7 @@ void GOSoundAudioSection::Setup(
           // would be easy readable without additional comments
           DoCrossfade(
             end_seg.end_data,
-            MAX_READAHEAD,
+            nFramesBeforeLoopEnd - fade_len,
             (const unsigned char *)pcm_data,
             start_seg.start_offset - fade_len,
             fade_len,

@@ -28,11 +28,14 @@ void GOTestSoundResample::TestBandlimitedInterpolation() {
   const unsigned increment
     = Resample::rateToFractionIncrement(std::exp2(50.0f / 1200));
   const unsigned imageBin = N_FRAMES - 15 * increment;
-  const Resample::BandlimitedResampler retuner(increment);
-  const Resample::BandlimitedResampler decimator(2 * Resample::UPSAMPLE_FACTOR);
-  float source[16][2];
+  const Resample resample;
+  const Resample::BandlimitedResampler retuner(resample, increment);
+  const Resample::BandlimitedResampler decimator(
+    resample, 2 * Resample::UPSAMPLE_FACTOR);
+  using Stereo = Resample::PtrFrameVector<float, float, 2>;
   float window[2 * Resample::BANDLIMITED_POINTS];
   float stereo[2];
+  Resample::ResamplingPosition position;
   double wanted = 0;
   double imageSine = 0;
   double imageCosine = 0;
@@ -50,38 +53,44 @@ void GOTestSoundResample::TestBandlimitedInterpolation() {
     window[2 * tapI] = float(std::cos(phase));
     window[2 * tapI + 1] = float(std::sin(phase));
   }
-  decimator.InterpolateFrame(window, Resample::UPSAMPLE_FACTOR / 3, stereo);
+  Stereo stopband(window);
+
+  position.Init(0, Resample::UPSAMPLE_FACTOR / 3);
+  decimator.ResampleBlock<Stereo, 2>(
+    2 * Resample::UPSAMPLE_FACTOR, position, stopband, stereo, 1);
   GOAssert(
     std::hypot(stereo[0], stereo[1]) < 0.00032f,
     "2:1 playback should reject a tone just above the output Nyquist limit");
 
   // Analyze a complete fixed-point period to avoid spectral leakage.
-  for (unsigned phaseI = 0; phaseI < 16; ++phaseI) {
+  const unsigned nSourceFrames
+    = Resample::getIndexIncrementByUnits(0, uint64_t(N_FRAMES) * increment)
+    + Resample::BANDLIMITED_POINTS;
+  std::vector<float> source(2 * nSourceFrames);
+  std::vector<float> output(2 * N_FRAMES);
+  Stereo tone(source.data());
+
+  for (unsigned frameI = 0; frameI < nSourceFrames; ++frameI) {
     const double phase
-      = TWO_PI * (double(phaseI) - Resample::BANDLIMITED_LEFT) / 16;
+      = TWO_PI * (double(frameI % 16) - Resample::BANDLIMITED_LEFT) / 16;
 
-    source[phaseI][0] = float(std::cos(phase));
-    source[phaseI][1] = float(std::sin(phase));
+    source[2 * frameI] = float(std::cos(phase));
+    source[2 * frameI + 1] = float(std::sin(phase));
   }
+  position.Init();
+  retuner.ResampleBlock<Stereo, 2>(
+    increment, position, tone, output.data(), N_FRAMES);
 
-  for (unsigned frameI = 0, position = 0; frameI < N_FRAMES;
-       ++frameI, position += increment) {
-    const unsigned index = position >> Resample::UPSAMPLE_BITS;
-    const double outputPhase = TWO_PI * (position % N_FRAMES) / N_FRAMES;
+  for (unsigned frameI = 0; frameI < N_FRAMES; ++frameI) {
+    const double outputPhase
+      = TWO_PI * ((frameI * increment) % N_FRAMES) / N_FRAMES;
     const double imagePhase = TWO_PI * imageBin * frameI / N_FRAMES;
+    const float left = output[2 * frameI];
+    const float right = output[2 * frameI + 1];
 
-    for (unsigned tapI = 0; tapI < Resample::BANDLIMITED_POINTS; ++tapI) {
-      const unsigned inputPhase = (index + tapI) % 16;
-
-      window[2 * tapI] = source[inputPhase][0];
-      window[2 * tapI + 1] = source[inputPhase][1];
-    }
-    retuner.InterpolateFrame(
-      window, position & Resample::UPSAMPLE_MASK, stereo);
-    wanted
-      += stereo[0] * std::cos(outputPhase) + stereo[1] * std::sin(outputPhase);
-    imageSine += stereo[0] * std::sin(imagePhase);
-    imageCosine += stereo[0] * std::cos(imagePhase);
+    wanted += left * std::cos(outputPhase) + right * std::sin(outputPhase);
+    imageSine += left * std::sin(imagePhase);
+    imageCosine += left * std::cos(imagePhase);
   }
   GOAssert(wanted / N_FRAMES > 0.99, "The retuned fundamental should pass");
   GOAssert(
@@ -98,6 +107,61 @@ void GOTestSoundResample::TestBandlimitedInterpolation() {
 static bool are_close(float expected, float actual) {
   return std::fabs(expected - actual)
     <= 1e-4f * std::max(1.0f, std::fabs(expected));
+}
+
+void GOTestSoundResample::TestBandlimitedVariableRatePlanar() {
+  using Resample = GOSoundResample;
+  using Ring = Resample::RingPlanarFrameVector<float, float>;
+  constexpr unsigned N_CHANNELS = 2;
+  constexpr unsigned N_RING_FRAMES = 127;
+  constexpr unsigned N_TAIL_FRAMES = Resample::BANDLIMITED_POINTS - 1;
+  constexpr unsigned N_PHYSICAL_FRAMES = N_RING_FRAMES + N_TAIL_FRAMES;
+  constexpr uint16_t INCREMENTS[] = {7391, 10325, 8839, 6943, 10051, 9027};
+  constexpr unsigned N_OUTPUT_FRAMES = std::size(INCREMENTS);
+  const Resample resample;
+  const Resample::BandlimitedResampler sinc(
+    resample, *std::max_element(std::begin(INCREMENTS), std::end(INCREMENTS)));
+  std::vector<float> input(N_CHANNELS * N_PHYSICAL_FRAMES);
+  float interleaved[N_CHANNELS * N_OUTPUT_FRAMES];
+  float planar[N_CHANNELS * N_OUTPUT_FRAMES];
+  Ring ring(input.data(), N_CHANNELS, N_RING_FRAMES, N_TAIL_FRAMES);
+  Resample::ResamplingPosition reference;
+
+  for (unsigned channelI = 0; channelI < N_CHANNELS; ++channelI)
+    for (unsigned frameI = 0; frameI < N_PHYSICAL_FRAMES; ++frameI)
+      input[channelI * N_PHYSICAL_FRAMES + frameI]
+        = std::sin(float(frameI % N_RING_FRAMES) * (0.07f + 0.01f * channelI));
+
+  reference.Init(N_RING_FRAMES - 2, 27);
+  Resample::ResamplingPosition position = reference;
+
+  for (unsigned frameI = 0; frameI < N_OUTPUT_FRAMES; ++frameI)
+    sinc.ResampleBlock<Ring, N_CHANNELS>(
+      INCREMENTS[frameI],
+      reference,
+      ring,
+      interleaved + N_CHANNELS * frameI,
+      1);
+  sinc.ResampleBlockVariableRatePlanar(
+    position,
+    ring,
+    INCREMENTS,
+    N_OUTPUT_FRAMES,
+    N_CHANNELS,
+    planar,
+    N_OUTPUT_FRAMES);
+
+  for (unsigned channelI = 0; channelI < N_CHANNELS; ++channelI)
+    for (unsigned frameI = 0; frameI < N_OUTPUT_FRAMES; ++frameI)
+      GOAssert(
+        are_close(
+          interleaved[frameI * N_CHANNELS + channelI],
+          planar[channelI * N_OUTPUT_FRAMES + frameI]),
+        "Variable-rate sinc output must match the interleaved reference");
+  GOAssert(
+    position.GetIndex() == reference.GetIndex()
+      && position.GetFraction() == reference.GetFraction(),
+    "Planar playback must advance the position once per frame");
 }
 
 template <class ResamplerT>
@@ -831,7 +895,7 @@ static void assert_constant_rate_planar(
   const std::string &caseName) {
   using Ring = GOSoundResample::RingPlanarFrameVector<float, float>;
   static constexpr unsigned N_RING_FRAMES = 40;
-  static constexpr unsigned N_TAIL_FRAMES = GOSoundResample::POLYPHASE_POINTS;
+  static constexpr unsigned N_TAIL_FRAMES = ResamplerT::VECTOR_LENGTH;
   static constexpr unsigned N_PHYSICAL_FRAMES = N_RING_FRAMES + N_TAIL_FRAMES;
   static constexpr unsigned N_OUT_FRAMES = 30;
   static constexpr unsigned START_INDEX = 30;
@@ -911,6 +975,13 @@ void GOTestSoundResample::TestConstantRatePlanar() {
         nChannels,
         rate,
         "polyphase " + name);
+      assert_constant_rate_planar(
+        *this,
+        GOSoundResample::BandlimitedResampler(
+          resample, GOSoundResample::rateToFractionIncrement(rate)),
+        nChannels,
+        rate,
+        "sinc " + name);
     }
 }
 
@@ -959,6 +1030,7 @@ void GOTestSoundResample::TestScaleResamplerPosIncrement() {
 
 void GOTestSoundResample::run() {
   GO_RUN_TEST(TestBandlimitedInterpolation())
+  GO_RUN_TEST(TestBandlimitedVariableRatePlanar())
   GO_RUN_TEST(TestScaleResamplerPosIncrement())
   GO_RUN_TEST(TestIsSameRate())
   GO_RUN_TEST(TestRingGetChannelVector())

@@ -39,7 +39,8 @@ std::unique_ptr<GOSoundAudioSection> GOTestSoundStream::CreateAudioSection(
   unsigned nFrames,
   bool isCompressed,
   const GOWaveLoop *pLoop,
-  bool isSilent) {
+  bool isSilent,
+  unsigned loopCrossfadeMs) {
   const unsigned nSamples = nChannels * nFrames;
   std::vector<GOInt24> pcmData(nSamples);
   std::vector<GOWaveLoop> loops;
@@ -67,7 +68,7 @@ std::unique_ptr<GOSoundAudioSection> GOTestSoundStream::CreateAudioSection(
     &loops,
     BOOL3_DEFAULT,
     isCompressed,
-    0,
+    loopCrossfadeMs,
     0);
   return pSection;
 }
@@ -345,19 +346,22 @@ void GOTestSoundStream::TestCompressedLoopWrapMatchesUncompressed() {
 
 void GOTestSoundStream::TestBandlimitedLoopAndRetrigger() {
   constexpr auto MODE = GOSoundResample::GO_BANDLIMITED_INTERPOLATION;
-  constexpr unsigned N_NOTE_FRAMES = 211;
   constexpr unsigned INCREMENT
     = GOSoundResample::rateToFractionIncrement(1.0293f);
-  const GOWaveLoop loop = {190, 207};
+  const GOWaveLoop loop = {190, 253};
   const GOSoundResample resample;
 
-  auto capture = [&](bool isCompressed, unsigned nFramesPerRead) {
-    const auto pAttack = CreateAudioSection(1, N_FRAMES, isCompressed, &loop);
+  auto capture = [&](
+                   bool isCompressed,
+                   unsigned nNoteFrames,
+                   unsigned nFramesPerRead) {
+    const auto pAttack
+      = CreateAudioSection(1, N_FRAMES, isCompressed, &loop, false, 1);
     const auto pRelease = CreateAudioSection(1, 4096, isCompressed);
-    std::vector<float> audio(2 * (N_NOTE_FRAMES + 2 * N_FRAMES_PER_BLOCK));
-    GOSoundBufferMutable attackAudio(audio.data(), 2, N_NOTE_FRAMES);
+    std::vector<float> audio(2 * (nNoteFrames + 2 * N_FRAMES_PER_BLOCK));
+    GOSoundBufferMutable attackAudio(audio.data(), 2, nNoteFrames);
     GOSoundBufferMutable tailAudio(
-      audio.data() + 2 * N_NOTE_FRAMES, 2, N_FRAMES_PER_BLOCK);
+      audio.data() + 2 * nNoteFrames, 2, N_FRAMES_PER_BLOCK);
     GOSoundBufferMutable repeatAudio(
       tailAudio.GetData() + tailAudio.GetNItems(), 2, N_FRAMES_PER_BLOCK);
     GOSoundStream attack;
@@ -365,17 +369,17 @@ void GOTestSoundStream::TestBandlimitedLoopAndRetrigger() {
     GOSoundStream repeat;
 
     GOAssert(
-      pAttack->IsCompressed() == isCompressed,
+      pAttack->IsCompressed() == isCompressed
+        && pRelease->IsCompressed() == isCompressed,
       "The loop fixture must exercise the requested decoding path");
     pRelease->SetupStreamAlignment({pAttack.get()}, 0);
     GOAssert(
       pRelease->SupportsStreamAlignment(), "The release must be alignable");
     attack.InitStream(&resample, pAttack.get(), MODE);
 
-    for (unsigned frameI = 0; frameI < N_NOTE_FRAMES;
-         frameI += nFramesPerRead) {
+    for (unsigned frameI = 0; frameI < nNoteFrames; frameI += nFramesPerRead) {
       auto buffer = attackAudio.GetSubBuffer(
-        frameI, std::min(nFramesPerRead, N_NOTE_FRAMES - frameI));
+        frameI, std::min(nFramesPerRead, nNoteFrames - frameI));
 
       GOAssert(attack.ReadBlock(INCREMENT, buffer), "Short loop must continue");
     }
@@ -393,10 +397,29 @@ void GOTestSoundStream::TestBandlimitedLoopAndRetrigger() {
     return audio;
   };
 
-  const auto raw = capture(false, N_NOTE_FRAMES);
-  const auto compressed = capture(true, 17);
+  // Align once in the decoded attack and once after wrapping the short loop.
+  for (unsigned nNoteFrames : {83u, 263u}) {
+    const auto raw = capture(false, nNoteFrames, nNoteFrames);
+    const auto compressed = capture(true, nNoteFrames, 17);
 
-  GOAssert(raw == compressed, "Loop and release must match across decoders");
+    // Release builds may reassociate the sum differently for packed and
+    // decoded samples. Allow two PCM units on this 24-bit fixture.
+    const auto mismatch = std::mismatch(
+      raw.begin(), raw.end(), compressed.begin(), [](float a, float b) {
+        return std::abs(a - b) <= 2.0f;
+      });
+
+    if (mismatch.first != raw.end())
+      GOAssert(
+        false,
+        std::format(
+          "Loop/release differs at item {} of the {}-frame note: raw={}, "
+          "compressed={}",
+          mismatch.first - raw.begin(),
+          nNoteFrames,
+          *mismatch.first,
+          *mismatch.second));
+  }
 }
 
 void GOTestSoundStream::TestRetuningSuppressesImages() {
@@ -446,7 +469,7 @@ void GOTestSoundStream::TestRetuningSuppressesImages() {
     GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_BLOCK_FRAMES)
 
     stream.InitStream(&resample, &section, mode);
-    // Discard the onset, including the new filter's initial zero padding.
+    // Measure a steady section of the loop.
     stream.ReadBlock(increment, buffer);
     for (unsigned offset = 0; offset < N_OUTPUT_FRAMES;
          offset += N_BLOCK_FRAMES) {
@@ -489,40 +512,50 @@ void GOTestSoundStream::TestRetuningSuppressesImages() {
     "High-quality sinc must suppress the image below -100 dBc");
 }
 
-void GOTestSoundStream::TestBandlimitedNativeRate() {
+void GOTestSoundStream::TestNativeRateCopiesWindowCenter() {
+  using Resample = GOSoundResample;
   constexpr unsigned N_OUTPUT_FRAMES = 777;
+  constexpr unsigned N_REFERENCE_FRAMES
+    = N_OUTPUT_FRAMES + Resample::BANDLIMITED_LEFT;
   const GOWaveLoop loop = {190, 207};
-  const GOSoundResample resample;
+  const Resample resample;
 
   for (unsigned nChannels : {1u, 2u})
     for (bool isCompressed : {false, true}) {
       const auto pSection
         = CreateAudioSection(nChannels, N_FRAMES, isCompressed, &loop);
-      std::vector<float> expected(2 * N_OUTPUT_FRAMES);
-      std::vector<float> actual(expected.size());
-      GOSoundBufferMutable reference(expected.data(), 2, N_OUTPUT_FRAMES);
+      std::vector<float> expected(2 * N_REFERENCE_FRAMES);
+      std::vector<float> actual(2 * N_OUTPUT_FRAMES);
+      GOSoundBufferMutable reference(expected.data(), 2, N_REFERENCE_FRAMES);
       GOSoundBufferMutable output(actual.data(), 2, N_OUTPUT_FRAMES);
       GOSoundStream linear;
-      GOSoundStream bandlimited;
 
       linear.InitStream(
-        &resample, pSection.get(), GOSoundResample::GO_LINEAR_INTERPOLATION);
-      bandlimited.InitStream(
-        &resample,
-        pSection.get(),
-        GOSoundResample::GO_BANDLIMITED_INTERPOLATION);
+        &resample, pSection.get(), Resample::GO_LINEAR_INTERPOLATION);
       GOAssert(
         linear.ReadBlock(FRACTION_INCREMENT, reference),
         "The reference loop must continue");
-      for (unsigned offset = 0; offset < N_OUTPUT_FRAMES; offset += 17) {
-        auto block = output.GetSubBuffer(
-          offset, std::min(17u, N_OUTPUT_FRAMES - offset));
+      for (const auto mode :
+           {Resample::GO_LINEAR_INTERPOLATION,
+            Resample::GO_POLYPHASE_INTERPOLATION,
+            Resample::GO_BANDLIMITED_INTERPOLATION}) {
+        const unsigned center = Resample::getVectorLength(mode) / 2 - 1;
+        GOSoundStream stream;
 
+        stream.InitStream(&resample, pSection.get(), mode);
+        for (unsigned offset = 0; offset < N_OUTPUT_FRAMES; offset += 17) {
+          auto block = output.GetSubBuffer(
+            offset, std::min(17u, N_OUTPUT_FRAMES - offset));
+
+          GOAssert(
+            stream.ReadBlock(FRACTION_INCREMENT, block),
+            "Native-rate playback must continue");
+        }
         GOAssert(
-          bandlimited.ReadBlock(FRACTION_INCREMENT, block),
-          "Native-rate playback must continue");
+          std::equal(
+            actual.begin(), actual.end(), expected.begin() + 2 * center),
+          "Native-rate playback must copy the centre source frame exactly");
       }
-      GOAssert(actual == expected, "Native-rate playback must be lossless");
     }
 }
 
@@ -569,5 +602,5 @@ void GOTestSoundStream::run() {
   GO_RUN_TEST(TestInitAlignedStreamWithSilentAttack())
   GO_RUN_TEST(TestBandlimitedLoopAndRetrigger())
   GO_RUN_TEST(TestRetuningSuppressesImages())
-  GO_RUN_TEST(TestBandlimitedNativeRate())
+  GO_RUN_TEST(TestNativeRateCopiesWindowCenter())
 }

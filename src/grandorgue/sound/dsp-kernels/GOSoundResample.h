@@ -27,6 +27,7 @@
 #include <cmath>
 #include <cstdint>
 #include <limits>
+#include <memory>
 
 #include "go_compiler.h"
 
@@ -43,8 +44,7 @@ public:
   static constexpr unsigned LINEAR_POINTS = 2;
   static constexpr unsigned BANDLIMITED_POINTS = 96;
   static constexpr unsigned BANDLIMITED_LEFT = BANDLIMITED_POINTS / 2 - 1;
-  static constexpr unsigned BANDLIMITED_RIGHT
-    = BANDLIMITED_POINTS - BANDLIMITED_LEFT - 1;
+  static constexpr unsigned BANDLIMITED_PHASE_BITS = 7;
 
   /**
    * The largest per-item input-vector length (VECTOR_LENGTH) of any
@@ -569,57 +569,111 @@ public:
   // The coefficients for polyphase interpolation
   float m_PolyphaseCoefs[UPSAMPLE_FACTOR][POLYPHASE_POINTS];
 
+private:
+  struct BandlimitedTables;
+  // The tables are owned by the resampler, outside the stack and audio path.
+  std::unique_ptr<const BandlimitedTables> o_BandlimitedTables;
+
+public:
   GOSoundResample();
+  ~GOSoundResample();
 
   /**
    * A resampler that calculates a next output sample as a scalar production of
    * the vector of continous input samples and the vector of coefficients
    */
-  template <unsigned nPoints> class ScalarProductionResampler {
+  template <unsigned nPoints, unsigned nPhaseBits = UPSAMPLE_BITS>
+  class ScalarProductionResampler {
   private:
-    // precalculated coefficients for each resampling position fraction
-    const float (&r_coefs)[UPSAMPLE_FACTOR][nPoints];
+    static_assert(nPoints >= 2);
+    static_assert(nPhaseBits <= UPSAMPLE_BITS);
+    static constexpr unsigned N_ROWS
+      = (1u << nPhaseBits) + (nPhaseBits < UPSAMPLE_BITS ? 1 : 0);
+    const float (&r_coefs)[N_ROWS][nPoints];
 
   protected:
-    inline ScalarProductionResampler(
-      const float (&coefs)[UPSAMPLE_FACTOR][nPoints])
+    inline ScalarProductionResampler(const float (&coefs)[N_ROWS][nPoints])
       : r_coefs(coefs) {}
 
   public:
-    /**
-     * @return Necessary number of continous input samples for calculating one
-     * output sample
-     */
+    /** Number of consecutive source frames needed for one output frame. */
     static constexpr unsigned VECTOR_LENGTH = nPoints;
 
   private:
-    /**
-     * Computes one output item: the scalar product of nPoints input
-     * samples (fV, seeked to pos's current index and the given channel)
-     * and the coefficient row for pos's current fraction. Does not advance
-     * pos - shared by ResampleBlock() (interleaved output, called once per
-     * in-range channel with the same shared resamplingPos) and
-     * ResampleBlockVariableRatePlanar() (planar output, called once per
-     * channel against that channel's own local position copy) - the only
-     * difference between those two callers is what they do with the
-     * returned item and how/when they advance the position afterwards, not
-     * how the item itself is computed.
-     * @param pos the position to seek fV to; not advanced by this call
-     * @param fV a floating sample vector linked to the input stream
-     * @param ch channel to seek fV to; must be below fV's own channel count
-     * @return the computed output item
-     */
+    /** Selects a coefficient row, blending adjacent phases if needed. */
+    GO_FORCE_INLINE const float *GetCoefficientRow(
+      unsigned fraction, float *outBlend) const {
+      const float *pRow;
+
+      if constexpr (nPhaseBits == UPSAMPLE_BITS)
+        pRow = r_coefs[fraction];
+      else {
+        constexpr unsigned BLEND_BITS = UPSAMPLE_BITS - nPhaseBits;
+        constexpr unsigned BLEND_STEPS = 1u << BLEND_BITS;
+        const unsigned phase = fraction >> BLEND_BITS;
+        const float weight
+          = (fraction & (BLEND_STEPS - 1)) / float(BLEND_STEPS);
+        const float *pFirst = r_coefs[phase];
+        const float *pNext = r_coefs[phase + 1];
+
+        for (unsigned tapI = 0; tapI < nPoints; ++tapI)
+          outBlend[tapI] = pFirst[tapI] + weight * (pNext[tapI] - pFirst[tapI]);
+        pRow = outBlend;
+      }
+      return pRow;
+    }
+
+    /** Computes one channel from the selected row without advancing index. */
     template <class FrameVectorT>
     GO_FORCE_INLINE float ComputeOutputItem(
-      const ResamplingPosition &pos, FrameVectorT &fV, unsigned ch) const {
-      const float(&coefs)[nPoints] = r_coefs[pos.GetFraction()];
-      const float *pCoef = coefs;
+      unsigned index,
+      FrameVectorT &fV,
+      unsigned channelI,
+      const float *pCoef) const {
       float outItem = 0.0f;
 
-      fV.Seek(pos.GetIndex(), ch);
-      for (unsigned j = 0; j < nPoints; j++)
+      fV.Seek(index, channelI);
+      for (unsigned tapI = 0; tapI < nPoints; ++tapI)
         outItem += fV.NextItem() * *(pCoef++);
       return outItem;
+    }
+
+    /** Copies or filters interleaved frames with one row selection per frame.
+     */
+    template <bool isDirect, class FrameVectorT, uint8_t nOutChannels>
+    inline void ResampleFrames(
+      unsigned increment,
+      ResamplingPosition &position,
+      FrameVectorT &fV,
+      float *pOut,
+      unsigned nOutFrames) const {
+      [[maybe_unused]] float blend[nPoints];
+
+      for (unsigned frameI = 0; frameI < nOutFrames; ++frameI) {
+        const unsigned index = position.GetIndex();
+        const float *pRow = nullptr;
+        float outItem = 0.0f;
+
+        if constexpr (!isDirect)
+          pRow = GetCoefficientRow(position.GetFraction(), blend);
+        for (uint8_t channelI = 0; channelI < nOutChannels; ++channelI) {
+          if (channelI < fV.m_NChannels) {
+            if constexpr (isDirect) {
+              // Seek to the start of the window so compressed and ring
+              // vectors still read within the same bounds as the filter.
+              fV.Seek(index, channelI);
+              for (unsigned tapI = 0; tapI < nPoints / 2 - 1; ++tapI)
+                (void)fV.NextItem();
+              outItem = fV.NextItem();
+            } else
+              outItem = ComputeOutputItem(index, fV, channelI, pRow);
+          }
+          // Repeat the last item when expanding a mono source to stereo.
+          *(pOut++) = outItem;
+        }
+        position.Inc(increment);
+        fV.NormalizePosition(position);
+      }
     }
 
   public:
@@ -628,7 +682,8 @@ public:
      *   given number of frames, at the stream's constant resampling rate
      * @param resamplingPosIncrement the constant resampling increment: the
      *   source position advance for every output frame, see
-     *   rateToFractionIncrement(). Must not exceed MAX_FRACTION_INCREMENT
+     *   rateToFractionIncrement(). Must not exceed MAX_FRACTION_INCREMENT.
+     *   At unity rate with zero fraction, copies the centre of each window.
      * @param resamplingPos A resampling position in the input stream. It is
      *   advanced during this call
      * @param fV a floating sample vector linked to the input stream
@@ -643,24 +698,15 @@ public:
       FrameVectorT &fV,
       float *pOut,
       unsigned nOutFrames) const {
-      // Validated once per block: Inc() of the frame loop checks only in Debug
       assert(resamplingPos.IsValid());
       assert(resamplingPosIncrement <= MAX_FRACTION_INCREMENT);
-      for (unsigned nFramesLeft = nOutFrames; nFramesLeft > 0; nFramesLeft--) {
-        float outItem = 0.0f;
-
-        for (uint8_t ch = 0; ch < nOutChannels; ch++) {
-          if (ch < fV.m_NChannels) {
-            outItem = ComputeOutputItem(resamplingPos, fV, ch);
-          }
-          /* else copy the calculated item from the previous channel. It is
-           * useful only for resampling a mono stream to a stereo one */
-          *(pOut++) = outItem;
-        }
-
-        resamplingPos.Inc(resamplingPosIncrement);
-        fV.NormalizePosition(resamplingPos);
-      }
+      if (
+        isSameRate(resamplingPosIncrement) && resamplingPos.GetFraction() == 0)
+        ResampleFrames<true, FrameVectorT, nOutChannels>(
+          resamplingPosIncrement, resamplingPos, fV, pOut, nOutFrames);
+      else
+        ResampleFrames<false, FrameVectorT, nOutChannels>(
+          resamplingPosIncrement, resamplingPos, fV, pOut, nOutFrames);
     }
 
     /**
@@ -788,6 +834,8 @@ public:
            --nFramesLeft, ++pCheckedIncrement)
         fV.AssertIncrementFits(*pCheckedIncrement);
 #endif
+      float blend[nPoints];
+
       for (unsigned ch = 0; ch < nChannels; ch++) {
         ResamplingPosition pos = resamplingPos;
         float *pOut = pFirstItemOfChannel0ToFill + ch * nFramesTotalInBuffer;
@@ -796,7 +844,9 @@ public:
 
         for (unsigned nFramesLeft = nFramesToFill; nFramesLeft > 0;
              --nFramesLeft, ++pIncrement) {
-          *(pOut++) = ComputeOutputItem(pos, fV, ch);
+          const float *pRow = GetCoefficientRow(pos.GetFraction(), blend);
+
+          *(pOut++) = ComputeOutputItem(pos.GetIndex(), fV, ch, pRow);
           pos.Inc(*pIncrement);
           fV.NormalizePosition(pos);
         }
@@ -811,7 +861,7 @@ public:
    * vector of two coefficients
    */
   struct LinearResampler : public ScalarProductionResampler<LINEAR_POINTS> {
-    inline LinearResampler(const GOSoundResample &r)
+    inline LinearResampler(const GOSoundResample &r, unsigned = UPSAMPLE_FACTOR)
       : ScalarProductionResampler<LINEAR_POINTS>(r.m_LinearCoefs) {}
   };
 
@@ -821,51 +871,22 @@ public:
    */
   struct PolyphaseResampler
     : public ScalarProductionResampler<POLYPHASE_POINTS> {
-    inline PolyphaseResampler(const GOSoundResample &r)
+    inline PolyphaseResampler(
+      const GOSoundResample &r, unsigned = UPSAMPLE_FACTOR)
       : ScalarProductionResampler<POLYPHASE_POINTS>(r.m_PolyphaseCoefs) {}
   };
 
-  /** A centered interpolator whose low-pass bandwidth follows playback rate. */
-  class BandlimitedResampler {
-  public:
-    static constexpr unsigned N_PHASES = 128;
-
+  /** A sinc interpolator whose low-pass bandwidth follows playback rate. */
+  struct BandlimitedResampler : public ScalarProductionResampler<
+                                  BANDLIMITED_POINTS,
+                                  BANDLIMITED_PHASE_BITS> {
     /**
-     * Selects a precomputed coefficient bank for a block's playback step.
-     * @param increment source frames per output frame in fixed-point units
+     * Selects a precomputed bank for the block's largest playback increment.
+     * The window starts at the stream index and its centre is BANDLIMITED_LEFT
+     * frames later. For variable-rate rendering pass the maximum increment of
+     * the block so the same cutoff is safe for every frame.
      */
-    explicit BandlimitedResampler(unsigned increment);
-
-    /**
-     * Reads an interleaved stereo window centered on the source position.
-     * The center is BANDLIMITED_LEFT frames from the start of the window.
-     * @param pInput BANDLIMITED_POINTS consecutive stereo frames
-     * @param fraction the position's fractional part in fixed-point units
-     * @param outStereo the two output samples
-     */
-    inline void InterpolateFrame(
-      const float *pInput, unsigned fraction, float *outStereo) const {
-      constexpr unsigned PHASE_STEP = UPSAMPLE_FACTOR / N_PHASES;
-      const unsigned phase = fraction / PHASE_STEP;
-      const float blend = (fraction % PHASE_STEP) / float(PHASE_STEP);
-      const float *pCoefs = p_Coefs[phase];
-      const float *pNextCoefs = p_Coefs[phase + 1];
-      float left = 0.0f;
-      float right = 0.0f;
-
-      for (unsigned tapI = 0; tapI < BANDLIMITED_POINTS; ++tapI) {
-        const float coef
-          = pCoefs[tapI] + blend * (pNextCoefs[tapI] - pCoefs[tapI]);
-
-        left += coef * pInput[2 * tapI];
-        right += coef * pInput[2 * tapI + 1];
-      }
-      outStereo[0] = left;
-      outStereo[1] = right;
-    }
-
-  private:
-    const float (*p_Coefs)[BANDLIMITED_POINTS];
+    BandlimitedResampler(const GOSoundResample &resample, unsigned increment);
   };
 
   /**

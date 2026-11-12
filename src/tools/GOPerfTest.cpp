@@ -221,24 +221,15 @@ int GOPerfTestApp::OnRun() {
   constexpr unsigned N_SAMPLERS = 300;
 
   // The supplied WAV files are at 48 kHz. A 44.1 kHz engine rate exercises
-  // sinc interpolation instead of the native-rate copy path.
+  // all three interpolators with the same workload.
   for (unsigned bitsPerSample : {8u, 16u, 24u})
-    for (bool isCompressed : {true, false}) {
-      RunTest(
-        bitsPerSample,
-        isCompressed,
-        N_SAMPLERS,
-        44100,
-        Resample::GO_LINEAR_INTERPOLATION,
-        128);
-      RunTest(
-        bitsPerSample,
-        isCompressed,
-        N_SAMPLERS,
-        44100,
-        Resample::GO_BANDLIMITED_INTERPOLATION,
-        128);
-    }
+    for (bool isCompressed : {true, false})
+      for (const auto interpolation :
+           {Resample::GO_LINEAR_INTERPOLATION,
+            Resample::GO_POLYPHASE_INTERPOLATION,
+            Resample::GO_BANDLIMITED_INTERPOLATION})
+        RunTest(
+          bitsPerSample, isCompressed, N_SAMPLERS, 44100, interpolation, 128);
   for (const auto interpolation :
        {Resample::GO_POLYPHASE_INTERPOLATION,
         Resample::GO_LINEAR_INTERPOLATION})
