@@ -95,6 +95,12 @@ private:
    */
   void TestInitAlignedStreamWithSilentAttack();
 
+  /** Checks alignment after Polyphase has decoded ahead of the cursor. */
+  void TestPolyphaseAlignmentMatchesUncompressed();
+
+  /** Checks start segment numbering after dropping a loop. */
+  void TestRejectedLoopKeepsStartSegmentIndex();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

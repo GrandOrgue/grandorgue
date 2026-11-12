@@ -197,6 +197,69 @@ void GOTestSoundStream::TestInitAlignedStreamWithSilentAttack() {
     "silent");
 }
 
+void GOTestSoundStream::TestPolyphaseAlignmentMatchesUncompressed() {
+  constexpr auto MODE = GOSoundResample::GO_POLYPHASE_INTERPOLATION;
+  const auto pRaw = CreateAudioSection(1, N_FRAMES, false);
+  const auto pCompressed = CreateAudioSection(1, N_FRAMES, true);
+  const auto pRelease = CreateAudioSection(1, 4096, false);
+  const GOSoundResample resample;
+
+  GOAssert(pCompressed->IsCompressed(), "The attack must use compression");
+  pRelease->SetupStreamAlignment({pRaw.get()}, 0);
+  GOAssert(
+    pRelease->SupportsStreamAlignment(), "The release must be alignable");
+
+  auto captureRelease =
+    [&](const GOSoundAudioSection &section, unsigned nAttackFrames) {
+      GOSoundStream attack;
+      GOSoundStream release;
+      GO_DECLARE_LOCAL_SOUND_BUFFER(attackBuffer, 2, nAttackFrames)
+      GO_DECLARE_LOCAL_SOUND_BUFFER(releaseBuffer, 2, N_FRAMES_PER_BLOCK)
+
+      attack.InitStream(&resample, &section, MODE);
+      GOAssert(
+        attack.ReadBlock(FRACTION_INCREMENT, attackBuffer), "Attack played");
+      release.InitAlignedStream(pRelease.get(), MODE, &attack);
+      GOAssert(
+        release.ReadBlock(FRACTION_INCREMENT, releaseBuffer), "Release played");
+      return std::vector<float>(
+        releaseBuffer.GetData(),
+        releaseBuffer.GetData() + releaseBuffer.GetNItems());
+    };
+
+  for (unsigned nAttackFrames : {83u, N_FRAMES - 3})
+    GOAssert(
+      captureRelease(*pRaw, nAttackFrames)
+        == captureRelease(*pCompressed, nAttackFrames),
+      "Polyphase release alignment must use the same frames across decoders");
+}
+
+void GOTestSoundStream::TestRejectedLoopKeepsStartSegmentIndex() {
+  const std::vector<GOWaveLoop> loops = {{64, 150}, {151, 161}, {200, 399}};
+  const std::vector<GOInt24> pcm(N_FRAMES);
+  GOSoundAudioSection section(m_pool);
+
+  section.Setup(
+    nullptr,
+    nullptr,
+    pcm.data(),
+    GOWave::SF_SIGNEDINT24_24,
+    1,
+    SECTION_RATE,
+    N_FRAMES,
+    &loops,
+    BOOL3_DEFAULT,
+    false,
+    1,
+    0);
+
+  // The second loop is shorter than the 48-frame crossfade and is rejected.
+  GOAssert(
+    section.GetEndSegment(1).next_start_segment_index == 2
+      && section.GetStartSegment(2).start_offset == loops[2].m_StartPosition,
+    "The last loop must point to its accepted start segment");
+}
+
 void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
   // Two loops with different end_pos: a long loop and a short loop placed
   // so PickEndSegment can pick either for some start segments. With the
@@ -366,4 +429,6 @@ void GOTestSoundStream::run() {
   GO_RUN_TEST(TestInitAlignedStream())
   GO_RUN_TEST(TestCompressedLoopWrapMatchesUncompressed())
   GO_RUN_TEST(TestInitAlignedStreamWithSilentAttack())
+  GO_RUN_TEST(TestPolyphaseAlignmentMatchesUncompressed())
+  GO_RUN_TEST(TestRejectedLoopKeepsStartSegmentIndex())
 }

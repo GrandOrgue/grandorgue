@@ -68,6 +68,11 @@ private:
    * MAX_WINDOW_LEN samples */
   int m_ReadAheadBuffer[MAX_INPUT_CHANNELS * MAX_WINDOW_LEN * 2];
 
+  using ReadAheadFrameFunction
+    = const int *(*)(const GOSoundStream &, unsigned);
+  // Reads a frame already decoded by a compressed read-ahead window.
+  ReadAheadFrameFunction m_ReadAheadFrame;
+
   /* The block decode functions should provide whatever the normal resolution of
    * the audio is. The fade engine should ensure that this data is always
    * brought into the correct range. */

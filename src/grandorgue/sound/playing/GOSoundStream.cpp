@@ -6,6 +6,7 @@
  */
 
 #include "GOSoundStream.h"
+#include <algorithm>
 
 #include <wx/log.h>
 
@@ -68,6 +69,11 @@ private:
   static constexpr unsigned WINDOW_SAMPLES = nChannels * windowLen;
   static constexpr unsigned BUFFER_SAMPLES = WINDOW_SAMPLES * 2;
 
+  /** Returns the item offset of a source frame in the first buffer half. */
+  static unsigned GetFrameOffset(unsigned index) {
+    return nChannels * (index % windowLen);
+  }
+
   GOSoundCompressionCache &r_cache;
   int *p_begin;
   int *p_end;
@@ -80,13 +86,23 @@ public:
       p_begin(stream.m_ReadAheadBuffer),
       p_end(p_begin + BUFFER_SAMPLES) {}
 
+  /**
+   * Returns the channels of a frame already in the read-ahead window.
+   * @param stream the stream owning the populated read-ahead buffer
+   * @param index the source frame index, within the decoded window
+   */
+  static const int *GetDecodedFrame(
+    const GOSoundStream &stream, unsigned index) {
+    return stream.m_ReadAheadBuffer + GetFrameOffset(index);
+  }
+
   inline void Seek(unsigned index, uint8_t channelN) {
     unsigned readAheadIndexTo = index + windowLen;
 
     if (r_cache.m_position < readAheadIndexTo) {
       unsigned writePosition = std::max(r_cache.m_position, index);
       // pWrite1 points somewhere in the first half of the buffer
-      int *pWrite1 = p_begin + nChannels * (writePosition % windowLen);
+      int *pWrite1 = p_begin + GetFrameOffset(writePosition);
       // pWrite2 points somewhere in the second half of the buffer
       int *pWrite2 = pWrite1 + WINDOW_SAMPLES;
 
@@ -289,8 +305,10 @@ unsigned GOSoundStream::GoToStartSegment(unsigned startSegmentIndex) {
 
   // start segment
   ptr = pData;
-  cache = startSegment.cache;
-  cache.m_ptr = pData + (intptr_t)cache.m_ptr;
+  if (audio_section->IsCompressed()) {
+    cache = startSegment.cache;
+    cache.m_ptr = pData + (intptr_t)cache.m_ptr;
+  }
 
   // end segment
   transition_position = endSegment.transition_offset;
@@ -310,6 +328,17 @@ unsigned GOSoundStream::InitFromSection(
   unsigned startSegmentIndex,
   GOSoundResample::InterpolationType interpolationType) {
   audio_section = pSection;
+  m_ReadAheadFrame = nullptr;
+  if (
+    pSection->IsCompressed()
+    && interpolationType == GOSoundResample::GO_POLYPHASE_INTERPOLATION) {
+    constexpr unsigned WINDOW_LENGTH
+      = GOSoundResample::PolyphaseResampler::VECTOR_LENGTH;
+
+    m_ReadAheadFrame = pSection->GetChannels() == 1
+      ? &StreamCacheReadAheadWindow<false, WINDOW_LENGTH, 1>::GetDecodedFrame
+      : &StreamCacheReadAheadWindow<false, WINDOW_LENGTH, 2>::GetDecodedFrame;
+  }
 
   decode_call = getDecodeBlockFunctionFor(
     pSection, pSection->IsCompressed(), interpolationType);
@@ -424,28 +453,38 @@ bool GOSoundStream::ReadBlock(
 
 void GOSoundStream::GetHistory(
   int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const {
-  uint8_t nChannels = audio_section->GetChannels();
-  unsigned pos = m_ResamplingPos.GetIndex();
+  const uint8_t nChannels = audio_section->GetChannels();
+  const unsigned start = std::min(m_ResamplingPos.GetIndex(), end_pos);
+  const bool isCompressed = audio_section->IsCompressed();
+  GOSoundCompressionCache tmpCache;
+
+  if (isCompressed)
+    tmpCache = cache;
 
   memset(
     history, 0, sizeof(history[0][0]) * BLOCK_HISTORY * MAX_OUTPUT_CHANNELS);
-  if (pos >= transition_position)
-    for (unsigned i = 0; i < BLOCK_HISTORY; i++)
-      for (uint8_t j = 0; j < nChannels; j++)
-        history[i][j] = audio_section->GetSampleData(
-          end_ptr, pos - transition_position + i, j);
-  else if (!audio_section->IsCompressed())
-    for (unsigned i = 0; i < BLOCK_HISTORY; i++)
-      for (uint8_t j = 0; j < nChannels; j++)
-        history[i][j] = audio_section->GetSampleData(ptr, pos + i, j);
-  else {
-    GOSoundCompressionCache tmpCache = cache;
+  for (unsigned frameI = 0; frameI < BLOCK_HISTORY; ++frameI) {
+    const unsigned index = start + frameI;
 
-    for (unsigned i = 0; i < BLOCK_HISTORY; i++) {
-      for (uint8_t j = 0; j < nChannels; j++)
-        history[i][j] = tmpCache.m_value[j];
-      tmpCache.DecompressionStep(
-        nChannels, audio_section->GetBitsPerSample() >= 20);
+    if (index >= transition_position || !isCompressed) {
+      // The end segment pointer is already offset to the source index origin.
+      const auto *pData
+        = index >= transition_position ? end_ptr : audio_section->GetData();
+
+      for (unsigned channelI = 0; channelI < nChannels; ++channelI)
+        history[frameI][channelI]
+          = audio_section->GetSampleData(pData, index, channelI);
+    } else if (m_ReadAheadFrame && index < cache.m_position) {
+      std::copy_n(m_ReadAheadFrame(*this, index), nChannels, history[frameI]);
+    } else {
+      while (tmpCache.m_position <= index)
+        tmpCache.DecompressionStep(
+          nChannels, audio_section->GetBitsPerSample() >= 20);
+
+      const int *pValues
+        = tmpCache.m_position == index + 1 ? tmpCache.m_value : tmpCache.m_prev;
+
+      std::copy_n(pValues, nChannels, history[frameI]);
     }
   }
 }
