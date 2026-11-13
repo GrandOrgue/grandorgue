@@ -95,8 +95,9 @@ private:
    */
   void TestInitAlignedStreamWithSilentAttack();
 
-  /** Checks alignment after Polyphase has decoded ahead of the cursor. */
-  void TestPolyphaseAlignmentMatchesUncompressed();
+  /** Compares raw and compressed release alignment across segment boundaries.
+   */
+  void TestReleaseAlignmentMatchesUncompressed();
 
   /** Checks start segment numbering after dropping a loop. */
   void TestRejectedLoopKeepsStartSegmentIndex();

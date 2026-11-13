@@ -6,6 +6,7 @@
  */
 
 #include "GOSoundStream.h"
+
 #include <algorithm>
 
 #include <wx/log.h>
@@ -13,7 +14,6 @@
 #include "sound/buffer/GOSoundBufferMutable.h"
 
 #include "GOSoundAudioSection.h"
-#include "GOSoundReleaseAlignTable.h"
 
 /* Block reading functions */
 
@@ -69,11 +69,6 @@ private:
   static constexpr unsigned WINDOW_SAMPLES = nChannels * windowLen;
   static constexpr unsigned BUFFER_SAMPLES = WINDOW_SAMPLES * 2;
 
-  /** Returns the item offset of a source frame in the first buffer half. */
-  static unsigned GetFrameOffset(unsigned index) {
-    return nChannels * (index % windowLen);
-  }
-
   GOSoundCompressionCache &r_cache;
   int *p_begin;
   int *p_end;
@@ -86,23 +81,13 @@ public:
       p_begin(stream.m_ReadAheadBuffer),
       p_end(p_begin + BUFFER_SAMPLES) {}
 
-  /**
-   * Returns the channels of a frame already in the read-ahead window.
-   * @param stream the stream owning the populated read-ahead buffer
-   * @param index the source frame index, within the decoded window
-   */
-  static const int *GetDecodedFrame(
-    const GOSoundStream &stream, unsigned index) {
-    return stream.m_ReadAheadBuffer + GetFrameOffset(index);
-  }
-
   inline void Seek(unsigned index, uint8_t channelN) {
     unsigned readAheadIndexTo = index + windowLen;
 
     if (r_cache.m_position < readAheadIndexTo) {
       unsigned writePosition = std::max(r_cache.m_position, index);
       // pWrite1 points somewhere in the first half of the buffer
-      int *pWrite1 = p_begin + GetFrameOffset(writePosition);
+      int *pWrite1 = p_begin + nChannels * (writePosition % windowLen);
       // pWrite2 points somewhere in the second half of the buffer
       int *pWrite2 = pWrite1 + WINDOW_SAMPLES;
 
@@ -151,7 +136,30 @@ void GOSoundStream::DecodeBlock(
     resamplerPosIncrement, m_ResamplingPos, w, pOut, nOutSamples);
 }
 
-GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
+template <class WindowT>
+std::array<int, MAX_OUTPUT_CHANNELS> GOSoundStream::ReadFrame(
+  unsigned frameIndex) {
+  static_assert(WindowT::m_NChannels <= MAX_OUTPUT_CHANNELS);
+
+  WindowT w(*this);
+  std::array<int, MAX_OUTPUT_CHANNELS> items{};
+  int *pItem = items.data();
+
+  for (uint8_t channelI = 0; channelI < WindowT::m_NChannels; ++channelI) {
+    w.Seek(frameIndex, channelI);
+    *(pItem++) = w.NextItem();
+  }
+  return items;
+}
+
+template <class WindowT, class ResamplerT>
+GOSoundStream::Decoder GOSoundStream::makeDecoder() {
+  return {
+    &GOSoundStream::DecodeBlock<ResamplerT, WindowT>,
+    &GOSoundStream::ReadFrame<WindowT>};
+}
+
+GOSoundStream::Decoder GOSoundStream::getDecoder(
   uint8_t nChannels,
   uint8_t nBitsPerSoundItem,
   bool isCompressed,
@@ -162,65 +170,65 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
       // Polyphase interpolation + compressed audio
       if (nChannels == 1) {
         if (nBitsPerSoundItem >= 20)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::PolyphaseResampler,
+          return makeDecoder<
             StreamCacheReadAheadWindow<
               true,
               GOSoundResample::PolyphaseResampler::VECTOR_LENGTH,
-              1>>;
+              1>,
+            GOSoundResample::PolyphaseResampler>();
 
         assert(nBitsPerSoundItem >= 12);
-        return &GOSoundStream::DecodeBlock<
-          GOSoundResample::PolyphaseResampler,
+        return makeDecoder<
           StreamCacheReadAheadWindow<
             false,
             GOSoundResample::PolyphaseResampler::VECTOR_LENGTH,
-            1>>;
+            1>,
+          GOSoundResample::PolyphaseResampler>();
       } else if (nChannels == 2) {
         if (nBitsPerSoundItem >= 20)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::PolyphaseResampler,
+          return makeDecoder<
             StreamCacheReadAheadWindow<
               true,
               GOSoundResample::PolyphaseResampler::VECTOR_LENGTH,
-              2>>;
+              2>,
+            GOSoundResample::PolyphaseResampler>();
 
         assert(nBitsPerSoundItem >= 12);
-        return &GOSoundStream::DecodeBlock<
-          GOSoundResample::PolyphaseResampler,
+        return makeDecoder<
           StreamCacheReadAheadWindow<
             false,
             GOSoundResample::PolyphaseResampler::VECTOR_LENGTH,
-            2>>;
+            2>,
+          GOSoundResample::PolyphaseResampler>();
       }
     } else {
       // Polyphase interpolation + uncompressed audio
       if (nChannels == 1) {
         if (nBitsPerSoundItem <= 8)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::PolyphaseResampler,
-            StreamPtrWindow<GOInt8, 1>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt8, 1>,
+            GOSoundResample::PolyphaseResampler>();
         if (nBitsPerSoundItem <= 16)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::PolyphaseResampler,
-            StreamPtrWindow<GOInt16, 1>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt16, 1>,
+            GOSoundResample::PolyphaseResampler>();
         if (nBitsPerSoundItem <= 24)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::PolyphaseResampler,
-            StreamPtrWindow<GOInt24, 1>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt24, 1>,
+            GOSoundResample::PolyphaseResampler>();
       } else if (nChannels == 2) {
         if (nBitsPerSoundItem <= 8)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::PolyphaseResampler,
-            StreamPtrWindow<GOInt8, 2>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt8, 2>,
+            GOSoundResample::PolyphaseResampler>();
         if (nBitsPerSoundItem <= 16)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::PolyphaseResampler,
-            StreamPtrWindow<GOInt16, 2>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt16, 2>,
+            GOSoundResample::PolyphaseResampler>();
         if (nBitsPerSoundItem <= 24)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::PolyphaseResampler,
-            StreamPtrWindow<GOInt24, 2>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt24, 2>,
+            GOSoundResample::PolyphaseResampler>();
       }
     }
   } else {
@@ -229,66 +237,66 @@ GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunction(
       // Linear interpolation + compressed audio
       if (nChannels == 1) {
         if (nBitsPerSoundItem >= 20)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamCacheWindow<true, 1>>;
+          return makeDecoder<
+            StreamCacheWindow<true, 1>,
+            GOSoundResample::LinearResampler>();
 
         assert(nBitsPerSoundItem >= 12);
-        return &GOSoundStream::DecodeBlock<
-          GOSoundResample::LinearResampler,
-          StreamCacheWindow<false, 1>>;
+        return makeDecoder<
+          StreamCacheWindow<false, 1>,
+          GOSoundResample::LinearResampler>();
       } else if (nChannels == 2) {
         if (nBitsPerSoundItem >= 20)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamCacheWindow<true, 2>>;
+          return makeDecoder<
+            StreamCacheWindow<true, 2>,
+            GOSoundResample::LinearResampler>();
 
         assert(nBitsPerSoundItem >= 12);
-        return &GOSoundStream::DecodeBlock<
-          GOSoundResample::LinearResampler,
-          StreamCacheWindow<false, 2>>;
+        return makeDecoder<
+          StreamCacheWindow<false, 2>,
+          GOSoundResample::LinearResampler>();
       }
     } else {
       // Linear interpolation + uncompressed audio
       if (nChannels == 1) {
         if (nBitsPerSoundItem <= 8)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamPtrWindow<GOInt8, 1>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt8, 1>,
+            GOSoundResample::LinearResampler>();
         if (nBitsPerSoundItem <= 16)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamPtrWindow<GOInt16, 1>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt16, 1>,
+            GOSoundResample::LinearResampler>();
         if (nBitsPerSoundItem <= 24)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamPtrWindow<GOInt24, 1>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt24, 1>,
+            GOSoundResample::LinearResampler>();
       } else if (nChannels == 2) {
         if (nBitsPerSoundItem <= 8)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamPtrWindow<GOInt8, 2>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt8, 2>,
+            GOSoundResample::LinearResampler>();
         if (nBitsPerSoundItem <= 16)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamPtrWindow<GOInt16, 2>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt16, 2>,
+            GOSoundResample::LinearResampler>();
         if (nBitsPerSoundItem <= 24)
-          return &GOSoundStream::DecodeBlock<
-            GOSoundResample::LinearResampler,
-            StreamPtrWindow<GOInt24, 2>>;
+          return makeDecoder<
+            StreamPtrWindow<GOInt24, 2>,
+            GOSoundResample::LinearResampler>();
       }
     }
   }
 
   assert(0 && "unsupported decoder configuration");
-  return NULL;
+  return {};
 }
 
-GOSoundStream::DecodeBlockFunction GOSoundStream::getDecodeBlockFunctionFor(
+GOSoundStream::Decoder GOSoundStream::getDecoderFor(
   const GOSoundAudioSection *pSection,
   bool isCompressed,
   GOSoundResample::InterpolationType interpolationType) {
-  return getDecodeBlockFunction(
+  return getDecoder(
     pSection->GetChannels(),
     pSection->GetBitsPerSample(),
     isCompressed,
@@ -328,23 +336,10 @@ unsigned GOSoundStream::InitFromSection(
   unsigned startSegmentIndex,
   GOSoundResample::InterpolationType interpolationType) {
   audio_section = pSection;
-  m_ReadAheadFrame = nullptr;
-  if (
-    pSection->IsCompressed()
-    && interpolationType == GOSoundResample::GO_POLYPHASE_INTERPOLATION) {
-    constexpr unsigned WINDOW_LENGTH
-      = GOSoundResample::PolyphaseResampler::VECTOR_LENGTH;
-
-    m_ReadAheadFrame = pSection->GetChannels() == 1
-      ? &StreamCacheReadAheadWindow<false, WINDOW_LENGTH, 1>::GetDecodedFrame
-      : &StreamCacheReadAheadWindow<false, WINDOW_LENGTH, 2>::GetDecodedFrame;
-  }
-
-  decode_call = getDecodeBlockFunctionFor(
-    pSection, pSection->IsCompressed(), interpolationType);
+  m_decoder
+    = getDecoderFor(pSection, pSection->IsCompressed(), interpolationType);
   // End segments are never compressed
-  end_decode_call
-    = getDecodeBlockFunctionFor(pSection, false, interpolationType);
+  m_EndDecoder = getDecoderFor(pSection, false, interpolationType);
 
   return GoToStartSegment(startSegmentIndex);
 }
@@ -373,7 +368,7 @@ void GOSoundStream::InitAlignedStream(
     pSection, pSection->GetReleaseStartSegment(), interpolationType);
 
   if (releaseAligner) {
-    int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS];
+    GOSoundReleaseAlignTable::History history;
 
     pExistingStream->GetHistory(history);
     startOffset
@@ -407,16 +402,18 @@ bool GOSoundStream::ReadBlock(
 
       assert(targetSamples > 0);
       if (isToPlayMain) {
-        assert(decode_call);
-        (this->*decode_call)(resamplerPosIncrement, pData, targetSamples);
+        assert(m_decoder.fmDecodeBlock);
+        (this->*m_decoder.fmDecodeBlock)(
+          resamplerPosIncrement, pData, targetSamples);
       } else {
-        assert(end_decode_call);
+        assert(m_EndDecoder.fmDecodeBlock);
 
         // Setup ptr and position required by the end-block
         GoToEndSegment();
         // we continue to use the same position as before because end_ptr is a
         // "virtual" pointer: end_data - transition_offset
-        (this->*end_decode_call)(resamplerPosIncrement, pData, targetSamples);
+        (this->*m_EndDecoder.fmDecodeBlock)(
+          resamplerPosIncrement, pData, targetSamples);
       }
       pData += 2 * targetSamples;
       nFrames -= targetSamples;
@@ -452,39 +449,20 @@ bool GOSoundStream::ReadBlock(
 }
 
 void GOSoundStream::GetHistory(
-  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const {
-  const uint8_t nChannels = audio_section->GetChannels();
-  const unsigned start = std::min(m_ResamplingPos.GetIndex(), end_pos);
-  const bool isCompressed = audio_section->IsCompressed();
-  GOSoundCompressionCache tmpCache;
+  GOSoundReleaseAlignTable::History &outHistory) const {
+  // The window may decode ahead. Keep the playing stream's state intact.
+  GOSoundStream stream = *this;
+  unsigned frameIndex = std::min(m_ResamplingPos.GetIndex(), end_pos);
 
-  if (isCompressed)
-    tmpCache = cache;
+  static_assert(BLOCK_HISTORY <= MAX_WINDOW_LEN);
+  for (auto &frame : outHistory) {
+    const bool isInEndSegment = frameIndex >= transition_position;
+    const ReadFrameFunction fmReadFrame
+      = (isInEndSegment ? m_EndDecoder : m_decoder).fmReadFrame;
 
-  memset(
-    history, 0, sizeof(history[0][0]) * BLOCK_HISTORY * MAX_OUTPUT_CHANNELS);
-  for (unsigned frameI = 0; frameI < BLOCK_HISTORY; ++frameI) {
-    const unsigned index = start + frameI;
-
-    if (index >= transition_position || !isCompressed) {
-      // The end segment pointer is already offset to the source index origin.
-      const auto *pData
-        = index >= transition_position ? end_ptr : audio_section->GetData();
-
-      for (unsigned channelI = 0; channelI < nChannels; ++channelI)
-        history[frameI][channelI]
-          = audio_section->GetSampleData(pData, index, channelI);
-    } else if (m_ReadAheadFrame && index < cache.m_position) {
-      std::copy_n(m_ReadAheadFrame(*this, index), nChannels, history[frameI]);
-    } else {
-      while (tmpCache.m_position <= index)
-        tmpCache.DecompressionStep(
-          nChannels, audio_section->GetBitsPerSample() >= 20);
-
-      const int *pValues
-        = tmpCache.m_position == index + 1 ? tmpCache.m_value : tmpCache.m_prev;
-
-      std::copy_n(pValues, nChannels, history[frameI]);
-    }
+    if (isInEndSegment)
+      stream.GoToEndSegment();
+    assert(fmReadFrame);
+    frame = (stream.*fmReadFrame)(frameIndex++);
   }
 }

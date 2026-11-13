@@ -213,7 +213,7 @@ void GOSoundReleaseAlignTable::ComputeTable(
 }
 
 unsigned GOSoundReleaseAlignTable::GetPositionFor(
-  int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS], unsigned nChannels) const {
+  const History &history, unsigned nChannels) const {
   /* Get combined release f's and v's */
   int f_mod = 0;
   int v_mod = 0;
