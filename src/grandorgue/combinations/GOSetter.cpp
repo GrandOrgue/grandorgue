@@ -58,6 +58,8 @@ static const GOMidiObjectContext MIDI_CONTEXT_TEMPERAMENT(
   wxT("Temperament"), _("Temperament"));
 static const GOMidiObjectContext MIDI_CONTEXT_TRANSPOSE(
   wxT("Transpose"), _("Transpose"));
+static const GOMidiObjectContext MIDI_CONTEXT_VOLUME(
+  wxT("Volume"), _("Volume"));
 
 const wxString GOSetter::KEY_REFRESH_FILES = wxT("RefreshFiles");
 const wxString GOSetter::KEY_PREV_FILE = wxT("PrevFile");
@@ -68,6 +70,10 @@ const wxString GOSetter::KEY_SAVE_FILE = wxT("SaveFile");
 const wxString GOSetter::KEY_SAVE_SETTINGS = wxT("Save");
 
 const wxString GOSetter::KEY_ON_STATE = wxT("OnState");
+
+const wxString GOSetter::KEY_VOLUME_DOWN = wxT("VolumeDown");
+const wxString GOSetter::KEY_VOLUME_UP = wxT("VolumeUp");
+const wxString GOSetter::KEY_VOLUME_LABEL = wxT("VolumeLabel");
 
 const wxString GOSetter::GROUP_REFRESH_FILES = wxT("SetterRefreshFiles");
 const wxString GOSetter::GROUP_PREV_FILE = wxT("SetterPrevFile");
@@ -707,6 +713,18 @@ static const GOElementCreator::ButtonDefinitionEntry BUTTON_DEFS[] = {
    true,
    false,
    &MIDI_CONTEXT_TRANSPOSE},
+  {GOSetter::KEY_VOLUME_DOWN,
+   GOSetter::ID_SETTER_VOLUME_DOWN,
+   true,
+   true,
+   false,
+   &MIDI_CONTEXT_VOLUME},
+  {GOSetter::KEY_VOLUME_UP,
+   GOSetter::ID_SETTER_VOLUME_UP,
+   true,
+   true,
+   false,
+   &MIDI_CONTEXT_VOLUME},
 
   {GOSetter::KEY_ON_STATE,
    GOSetter::ID_SETTER_ON,
@@ -749,6 +767,7 @@ GOSetter::GOSetter(GOOrganController *organController)
     m_BankDisplay(*organController, &MIDI_CONTEXT_BANKED_GENERALS),
     m_CrescendoDisplay(*organController, &MIDI_CONTEXT_CRESCENDOS),
     m_TransposeDisplay(*organController, &MIDI_CONTEXT_TRANSPOSE),
+    m_VolumeDisplay(*organController, &MIDI_CONTEXT_VOLUME),
     m_NameDisplay(*organController, &MIDI_CONTEXT_SETTER),
     m_CrescendoCtrl(*organController) {
   CreateButtons(*m_OrganController, BUTTON_DEFS);
@@ -884,6 +903,8 @@ void GOSetter::Load(GOConfigReader &cfg) {
     cfg, wxT("SetterTransposeDown"), _("-"));
   m_buttons[ID_SETTER_TRANSPOSE_UP]->Init(
     cfg, wxT("SetterTransposeUp"), _("+"));
+  m_buttons[ID_SETTER_VOLUME_DOWN]->Init(cfg, wxT("SetterVolumeDown"), _("-"));
+  m_buttons[ID_SETTER_VOLUME_UP]->Init(cfg, wxT("SetterVolumeUp"), _("+"));
 
   m_buttons[ID_SETTER_ON]->Init(cfg, wxT("SetterOn"), _("ON"));
   m_buttons[ID_SETTER_ON]->Display(true);
@@ -899,6 +920,7 @@ void GOSetter::Load(GOConfigReader &cfg) {
   m_CrescendoDisplay.Init(
     cfg, wxT("SetterCrescendoPosition"), _("crescendo position"));
   m_TransposeDisplay.Init(cfg, wxT("SetterTranspose"), _("transpose"));
+  m_VolumeDisplay.Init(cfg, wxT("SetterVolume"), _("volume"));
   m_NameDisplay.Init(cfg, wxT("SetterName"), _("organ name"));
   m_CurrFileDisplay.Init(cfg, KEY_CURR_FILE_NAME, _("current file name"));
 
@@ -1434,6 +1456,11 @@ void GOSetter::ButtonStateChanged(int id, bool newState) {
       value--;
     SetTranspose(value);
   } break;
+  case ID_SETTER_VOLUME_DOWN:
+  case ID_SETTER_VOLUME_UP:
+    m_OrganController->SetGain(
+      m_OrganController->GetGain() + (id == ID_SETTER_VOLUME_UP ? 1 : -1));
+    break;
   case ID_SETTER_AUDIO_PANIC: {
     wxCommandEvent event(wxEVT_MENU, ID_AUDIO_PANIC);
     wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
@@ -1457,6 +1484,7 @@ void GOSetter::PreparePlayback() {
     wxString::Format(wxT("%d"), m_crescendopos + 1));
   m_BankDisplay.SetContent(wxString::Format(wxT("%c"), m_bank + wxT('A')));
   UpdateTranspose();
+  UpdateGain();
 }
 
 void GOSetter::OnCombinationsLoaded(
@@ -1658,6 +1686,11 @@ void GOSetter::SetTranspose(int value) {
   UpdateTranspose();
 }
 
+void GOSetter::UpdateGain() {
+  m_VolumeDisplay.SetContent(
+    wxString::Format(wxT("%d dB"), m_OrganController->GetGain()));
+}
+
 void GOSetter::UpdateModified(bool modified) {
   if (m_buttons.size())
     m_buttons[ID_SETTER_SAVE_SETTINGS]->Display(modified);
@@ -1688,6 +1721,9 @@ GOLabelControl *GOSetter::GetLabelControl(const wxString &name, bool is_panel) {
 
   if (name == wxT("TransposeLabel"))
     return &m_TransposeDisplay;
+
+  if (name == KEY_VOLUME_LABEL)
+    return &m_VolumeDisplay;
 
   if (name == KEY_CURR_FILE_NAME)
     return &m_CurrFileDisplay;

@@ -1,3 +1,4 @@
+- Added volume -/+ buttons to master control panel
 - Fixed crash on receiving or playing a malformed GrandOrgue setup SysEx MIDI message shorter than 8 bytes
 - Fixed loop transitions, loop crossfade bounds and release alignment for pipe samples
 - Fixed crashing or hanging when importing settings or resetting an organ to defaults while it is playing https://github.com/GrandOrgue/grandorgue/issues/2687

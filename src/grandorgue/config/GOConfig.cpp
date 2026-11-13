@@ -271,6 +271,14 @@ static const internal_midi_object_desc INTERNAL_MIDI_DESCS[] = {
    29,
    _("Measure +"),
    GOMetronome::P_BUTTON_DEFS + GOMetronome::ID_METRONOME_MEASURE_P1},
+  {INITIAL_MASTER,
+   30,
+   _("Volume -"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_VOLUME_DOWN},
+  {INITIAL_MASTER,
+   31,
+   _("Volume +"),
+   GOSetter::P_BUTTON_DEFS + GOSetter::ID_SETTER_VOLUME_UP},
 };
 
 static const GOConfigEnum INITIAL_LOAD_TYPES({

@@ -330,8 +330,8 @@ GOAppWindow::GOAppWindow(
     wxDefaultPosition,
     wxSize(50, wxDefaultCoord),
     wxSP_ARROW_KEYS,
-    -120,
-    20);
+    GOOrganController::MIN_GAIN_DB,
+    GOOrganController::MAX_GAIN_DB);
   m_ToolBar->AddControl(m_Volume);
   m_VolumeControl = new wxControl(m_ToolBar, wxID_ANY);
   m_VolumeControlTool = m_ToolBar->AddControl(m_VolumeControl);
@@ -1299,12 +1299,8 @@ void GOAppWindow::OnHelp(wxCommandEvent &event) {
 }
 
 void GOAppWindow::OnSettingsVolume(wxCommandEvent &event) {
-  long n = m_Volume->GetValue();
-
   if (p_OrganController)
-    p_OrganController->SetGain(n);
-  for (unsigned i = 0; i < m_VolumeGauge.size(); i++)
-    m_VolumeGauge[i]->ResetClip();
+    p_OrganController->SetGain(m_Volume->GetValue());
 }
 
 void GOAppWindow::OnSettingsPolyphony(wxCommandEvent &event) {
@@ -1369,7 +1365,12 @@ void GOAppWindow::OnChangeSetter(wxCommandEvent &event) {
 }
 
 void GOAppWindow::OnChangeVolume(wxCommandEvent &event) {
-  m_Volume->SetValue(event.GetInt());
+  const int gain = event.GetInt();
+
+  if (m_Volume->GetValue() != gain) // no echo while the user is typing
+    m_Volume->SetValue(gain);
+  for (auto *pGauge : m_VolumeGauge)
+    pGauge->ResetClip();
 }
 
 void GOAppWindow::OnKeyCommand(wxKeyEvent &event) {

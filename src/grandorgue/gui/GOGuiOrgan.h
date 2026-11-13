@@ -52,6 +52,8 @@ private:
     void BeforeSave() override { r_GuiOrgan.SyncState(); }
     void OnSave(GOConfigWriter &cfg) override { r_GuiOrgan.SaveOrganGui(cfg); }
     void OnClear() override { r_GuiOrgan.ClearOrganGui(); }
+    /** Forwards the new gain to the toolbar volume spin */
+    void OnGainChanged(int gain) override { r_GuiOrgan.SyncGainSpin(gain); }
 
   public:
     /**
@@ -142,6 +144,12 @@ private:
   void LoadOrganGui(GOConfigReader &cfg);
 
   void SyncState();
+
+  /**
+   * Sends the gain to the toolbar volume spin of the main window
+   * @param gain the gain in dB
+   */
+  void SyncGainSpin(int gain);
 
   /**
    * Saves GUI-only data with no auto-save path of its own (currently just

@@ -115,6 +115,13 @@ void GOGuiOrgan::SyncState() {
   GODocumentBase::SyncState();
 }
 
+void GOGuiOrgan::SyncGainSpin(int gain) {
+  wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
+
+  event.SetInt(gain);
+  wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
+}
+
 void GOGuiOrgan::SaveOrganGui(GOConfigWriter &cfg) {
   m_StopWindowSizeKeeper.Save(cfg);
 }
@@ -180,11 +187,7 @@ GOOrganController *GOGuiOrgan::LoadOrgan(
   if (error.IsEmpty()) {
     cfg.AddOrgan(mp_controller->GetOrganInfo());
     cfg.Flush();
-    {
-      wxCommandEvent event(wxEVT_SETVALUE, ID_METER_AUDIO_SPIN);
-      event.SetInt(mp_controller->GetGain());
-      wxTheApp->GetTopWindow()->GetEventHandler()->AddPendingEvent(event);
-    }
+    SyncGainSpin(mp_controller->GetGain());
 
     wxCommandEvent event(wxEVT_WINTITLE, 0);
     event.SetString(mp_controller->GetOrganName());

@@ -202,6 +202,13 @@ private:
    */
   virtual void OnClear() {}
 
+  /**
+   * Called by SetGain() after the master gain has changed. GUI-aware
+   * subclasses override it to sync the toolbar volume spin.
+   * @param gain the new gain in dB
+   */
+  virtual void OnGainChanged(int gain) {}
+
 public:
   GOOrganController(GOConfig &config);
   virtual ~GOOrganController();
@@ -358,9 +365,20 @@ public:
     const wxString &filename,
     const GOConfig::MidiChannelMappingChooser &chooseMapping);
 
+  /** The lowest master gain in dB accepted by SetGain() */
+  static constexpr int MIN_GAIN_DB = -120;
+  /** The highest master gain in dB accepted by SetGain() */
+  static constexpr int MAX_GAIN_DB = 20;
+
+  /** @return the current master gain in dB */
   int GetGain() const { return m_SoundEngine.GetGain(); }
-  /** Sets the master gain and forwards it to the sound engine. */
-  void SetGain(int gain) { m_SoundEngine.SetGain(gain); }
+  /**
+   * Sets the master gain clamped to MIN_GAIN_DB..MAX_GAIN_DB, forwards it to
+   * the sound engine, refreshes the setter's volume label and calls
+   * OnGainChanged(). Does nothing if the gain is not changed.
+   * @param gain the requested gain in dB, may be out of the range
+   */
+  void SetGain(int gain);
 
   /** Returns true if the sound engine is running. */
   bool IsStarted() const { return m_SoundEngine.IsWorking(); }
