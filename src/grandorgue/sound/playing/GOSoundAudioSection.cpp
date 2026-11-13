@@ -17,7 +17,6 @@
 
 #include "loader/GOLoaderFilename.h"
 #include "model/GOCacheObject.h"
-#include "sound/dsp-kernels/GOSoundResample.h"
 
 #include "GOAlloc.h"
 #include "GOMemoryPool.h"
@@ -29,9 +28,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-// maximal readahead is necessary for polyphase resampling
-static constexpr unsigned MAX_READAHEAD = GOSoundResample::POLYPHASE_POINTS;
-static constexpr unsigned DEFAULT_END_SEG_LENGTH = MAX_READAHEAD * 2;
+static constexpr unsigned DEFAULT_END_SEG_LENGTH
+  = GOSoundAudioSection::MAX_READAHEAD * 2;
 
 const unsigned GOSoundAudioSection::getMaxReadAhead() { return MAX_READAHEAD; }
 

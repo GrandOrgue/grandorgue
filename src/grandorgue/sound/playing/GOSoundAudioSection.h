@@ -35,6 +35,9 @@ public:
    * attack containing only quantization noise. */
   static constexpr unsigned SILENT_AMPLITUDE_THRESHOLD = 4;
 
+  /** Minimum number of stored frames starting at an end segment's end_pos. */
+  static constexpr unsigned MAX_READAHEAD = GOSoundResample::POLYPHASE_POINTS;
+
   static const unsigned getMaxReadAhead();
 
   struct StartSegment {
@@ -49,8 +52,8 @@ public:
    * loop start. It is necessary for read-ahead when resampling
    */
   struct EndSegmentDescription {
-    /* A position after the last copied sample in the end segment.
-     * An end segment has more MAX_READAHEAD samples after end_pos:
+    /* The position after the last frame played from the end segment.
+     * Starting at end_pos, the segment stores at least MAX_READAHEAD frames:
      *     - A loop end segment contains a copy of samples from the loop start
      *     - A release end segment contains zero samples
      */

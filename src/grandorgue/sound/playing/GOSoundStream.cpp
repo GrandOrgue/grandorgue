@@ -454,7 +454,7 @@ void GOSoundStream::GetHistory(
   GOSoundStream stream = *this;
   unsigned frameIndex = std::min(m_ResamplingPos.GetIndex(), end_pos);
 
-  static_assert(BLOCK_HISTORY <= MAX_WINDOW_LEN);
+  static_assert(BLOCK_HISTORY <= GOSoundAudioSection::MAX_READAHEAD);
   for (auto &frame : outHistory) {
     const bool isInEndSegment = frameIndex >= transition_position;
     const ReadFrameFunction fmReadFrame
