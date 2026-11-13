@@ -84,8 +84,45 @@ void GOTestMidiEvent::TestRodgersStopChangeTooShort() {
     "An 8-byte Rodgers stop change message should be ignored");
 }
 
+void GOTestMidiEvent::TestGoSetup() {
+  GOMidiMap map;
+  GOMidiEvent event;
+
+  /* F0 7D 47 4F 1c vv vv F7: the shortest valid message, 8 bytes */
+  event.FromMidi({0xF0, 0x7D, 0x47, 0x4F, 0x1C, 0x01, 0x02, 0xF7}, map);
+
+  GOAssert(
+    event.GetMidiType() == GOMidiEvent::MIDI_SYSEX_GO_SETUP,
+    "A valid GrandOrgue setup message should be recognized");
+  GOAssert(
+    event.GetChannel() == 13,
+    std::format("Channel should be 13, got {}", event.GetChannel()));
+  GOAssert(
+    event.GetValue() == 0x82,
+    std::format("Value should be 0x82, got {}", event.GetValue()));
+}
+
+void GOTestMidiEvent::TestGoSetupTooShort() {
+  GOMidiMap map;
+  GOMidiEvent event;
+
+  /* F0 7D 47 4F 1c F7: 6 bytes, msg.size() - 7 would wrap around */
+  event.FromMidi({0xF0, 0x7D, 0x47, 0x4F, 0x1C, 0xF7}, map);
+  GOAssert(
+    event.GetMidiType() == GOMidiEvent::MIDI_NONE,
+    "A 6-byte GrandOrgue setup message should be ignored");
+
+  /* F0 7D 47 4F 1c vv F7: 7 bytes, msg.size() - 8 would wrap around */
+  event.FromMidi({0xF0, 0x7D, 0x47, 0x4F, 0x1C, 0x05, 0xF7}, map);
+  GOAssert(
+    event.GetMidiType() == GOMidiEvent::MIDI_NONE,
+    "A 7-byte GrandOrgue setup message should be ignored");
+}
+
 void GOTestMidiEvent::run() {
   GO_RUN_TEST(TestRodgersStopChange())
   GO_RUN_TEST(TestRodgersStopChangeEmptyData())
   GO_RUN_TEST(TestRodgersStopChangeTooShort())
+  GO_RUN_TEST(TestGoSetup())
+  GO_RUN_TEST(TestGoSetupTooShort())
 }
