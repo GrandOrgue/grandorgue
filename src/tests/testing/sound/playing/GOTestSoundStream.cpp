@@ -46,7 +46,8 @@ std::unique_ptr<GOSoundAudioSection> GOTestSoundStream::CreateAudioSection(
       pcmData[i] = (i % 2) ? 1 : -1;
   else
     for (unsigned i = 0; i < nSamples; i++)
-      pcmData[i] = (i % 100) * 30000 - 1500000;
+      // Keep the per-channel slope compressible for stereo fixtures too.
+      pcmData[i] = (int(i % 100) * 30000 - 1500000) / int(nChannels);
 
   if (pLoop)
     loops.push_back(*pLoop);
@@ -195,6 +196,85 @@ void GOTestSoundStream::TestInitAlignedStreamWithSilentAttack() {
     !pRelease->SupportsStreamAlignment(),
     "A release should have no aligner when the only joinable attack is "
     "silent");
+}
+
+void GOTestSoundStream::TestReleaseAlignmentMatchesUncompressed() {
+  const GOSoundResample resample;
+  const unsigned transitionOffset
+    = N_FRAMES - GOSoundAudioSection::getMaxReadAhead();
+
+  for (unsigned nChannels : {1u, 2u}) {
+    const auto pRaw = CreateAudioSection(nChannels, N_FRAMES, false);
+    const auto pCompressed = CreateAudioSection(nChannels, N_FRAMES, true);
+    const auto pRelease = CreateAudioSection(nChannels, 4096, false);
+
+    GOAssert(pCompressed->IsCompressed(), "The attack must use compression");
+    pRelease->SetupStreamAlignment({pRaw.get()}, 0);
+    GOAssert(
+      pRelease->SupportsStreamAlignment(), "The release must be alignable");
+
+    auto captureRelease = [&](
+                            const GOSoundAudioSection &section,
+                            GOSoundResample::InterpolationType mode,
+                            unsigned nAttackFrames) {
+      GOSoundStream attack;
+      GOSoundStream release;
+      GO_DECLARE_LOCAL_SOUND_BUFFER(attackBuffer, 2, nAttackFrames)
+      GO_DECLARE_LOCAL_SOUND_BUFFER(releaseBuffer, 2, N_FRAMES_PER_BLOCK)
+
+      attack.InitStream(&resample, &section, mode);
+      GOAssert(
+        attack.ReadBlock(FRACTION_INCREMENT, attackBuffer), "Attack played");
+      release.InitAlignedStream(pRelease.get(), mode, &attack);
+      GOAssert(
+        release.ReadBlock(FRACTION_INCREMENT, releaseBuffer), "Release played");
+      return std::vector<float>(
+        releaseBuffer.GetData(),
+        releaseBuffer.GetData() + releaseBuffer.GetNItems());
+    };
+
+    // Exercise a window in the main data, a history straddling the segment
+    // boundary and a history entirely in the end segment.
+    for (const auto mode :
+         {GOSoundResample::GO_LINEAR_INTERPOLATION,
+          GOSoundResample::GO_POLYPHASE_INTERPOLATION})
+      for (unsigned nAttackFrames : {83u, transitionOffset - 1, N_FRAMES - 3})
+        GOAssert(
+          captureRelease(*pRaw, mode, nAttackFrames)
+            == captureRelease(*pCompressed, mode, nAttackFrames),
+          std::format(
+            "Release must match across decoders (mode {}, {} channels, frame "
+            "{})",
+            unsigned(mode),
+            nChannels,
+            nAttackFrames));
+  }
+}
+
+void GOTestSoundStream::TestRejectedLoopKeepsStartSegmentIndex() {
+  const std::vector<GOWaveLoop> loops = {{64, 150}, {151, 161}, {200, 399}};
+  const std::vector<GOInt24> pcm(N_FRAMES);
+  GOSoundAudioSection section(m_pool);
+
+  section.Setup(
+    nullptr,
+    nullptr,
+    pcm.data(),
+    GOWave::SF_SIGNEDINT24_24,
+    1,
+    SECTION_RATE,
+    N_FRAMES,
+    &loops,
+    BOOL3_DEFAULT,
+    false,
+    1,
+    0);
+
+  // The second loop is shorter than the 48-frame crossfade and is rejected.
+  GOAssert(
+    section.GetEndSegment(1).next_start_segment_index == 2
+      && section.GetStartSegment(2).start_offset == loops[2].m_StartPosition,
+    "The last loop must point to its accepted start segment");
 }
 
 void GOTestSoundStream::TestLoopTransitionAcrossDifferentEndPos() {
@@ -366,4 +446,6 @@ void GOTestSoundStream::run() {
   GO_RUN_TEST(TestInitAlignedStream())
   GO_RUN_TEST(TestCompressedLoopWrapMatchesUncompressed())
   GO_RUN_TEST(TestInitAlignedStreamWithSilentAttack())
+  GO_RUN_TEST(TestReleaseAlignmentMatchesUncompressed())
+  GO_RUN_TEST(TestRejectedLoopKeepsStartSegmentIndex())
 }

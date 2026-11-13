@@ -8,6 +8,7 @@
 #ifndef GOSOUNDRELEASEALIGNTABLE_H
 #define GOSOUNDRELEASEALIGNTABLE_H
 
+#include <array>
 #include <optional>
 
 #include "GOSoundAudioSection.h"
@@ -89,8 +90,11 @@ public:
     unsigned int sample_rate,
     unsigned start_position);
 
-  unsigned GetPositionFor(
-    int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS], unsigned nChannels) const;
+  /** Source frames starting at the stream position, one item per channel. */
+  using History
+    = std::array<std::array<int, MAX_OUTPUT_CHANNELS>, BLOCK_HISTORY>;
+
+  unsigned GetPositionFor(const History &history, unsigned nChannels) const;
 };
 
 #endif /* GOSOUNDRELEASEALIGNTABLE_H */

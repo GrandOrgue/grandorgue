@@ -95,6 +95,13 @@ private:
    */
   void TestInitAlignedStreamWithSilentAttack();
 
+  /** Compares raw and compressed release alignment across segment boundaries.
+   */
+  void TestReleaseAlignmentMatchesUncompressed();
+
+  /** Checks start segment numbering after dropping a loop. */
+  void TestRejectedLoopKeepsStartSegmentIndex();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;

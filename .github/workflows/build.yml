@@ -186,7 +186,7 @@ jobs:
             prepare: osx
             build_on: osx
 
-          - run_on: macos-14 # arm64
+          - run_on: macos-15 # arm64
             for: osx
             prepare: osx
             build_on: osx

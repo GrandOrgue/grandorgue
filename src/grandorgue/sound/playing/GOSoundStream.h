@@ -8,9 +8,12 @@
 #ifndef GOSOUNDSTREAM_H
 #define GOSOUNDSTREAM_H
 
+#include <array>
+
 #include "sound/dsp-kernels/GOSoundResample.h"
 
 #include "GOSoundCompressionCache.h"
+#include "GOSoundReleaseAlignTable.h"
 
 class GOSoundAudioSection;
 class GOSoundBufferMutable;
@@ -33,15 +36,37 @@ private:
   template <bool format16, unsigned windowLen, uint8_t nChannels>
   class StreamCacheReadAheadWindow;
 
-  typedef void (GOSoundStream::*DecodeBlockFunction)(
+  /**
+   * Decodes a block from the current resampling position.
+   * @param resamplerPosIncrement source advance per output frame
+   * @param pOut interleaved stereo output frames
+   * @param nOutSamples number of output frames
+   */
+  using DecodeBlockFunction = void (GOSoundStream::*)(
     unsigned resamplerPosIncrement, float *pOut, unsigned nOutSamples);
 
-  /* Method used to decode stream */
-  DecodeBlockFunction decode_call;
+  /**
+   * Reads one unscaled, unresampled source frame at its absolute index in
+   * the audio section. For a compressed window, indices must be at or ahead
+   * of the current position and must not decrease between calls. The window
+   * may decode ahead, so use this on a copy of a playing stream. For the end
+   * segment, first switch to its data with GoToEndSegment().
+   * @param frameIndex index of the source frame to read
+   * @return one item per channel, with unused channels zeroed
+   */
+  using ReadFrameFunction = std::array<int, MAX_OUTPUT_CHANNELS> (
+    GOSoundStream::*)(unsigned frameIndex);
 
-  /* Cached method used to decode the data in end_ptr. This is just the
-   * uncompressed version of decode_call */
-  DecodeBlockFunction end_decode_call;
+  /** Pairs the block decoder and frame reader of the same window. */
+  struct Decoder {
+    DecodeBlockFunction fmDecodeBlock;
+    ReadFrameFunction fmReadFrame;
+  };
+
+  /** Decoder of the main audio section data. */
+  Decoder m_decoder;
+  /** Decoder of the uncompressed end segment. */
+  Decoder m_EndDecoder;
 
   /* Current pointer. Used in the DecodeBlock functions. May be a real pointer
    * to the audio section data or an end segment vir tual pointer */
@@ -60,13 +85,14 @@ private:
 
   GOSoundResample::ResamplingPosition m_ResamplingPos;
 
-  /* for decoding compressed format */
-  GOSoundCompressionCache cache;
+  /* The cache and ring are initialized so the stream can be copied before
+   * any compressed data has been decoded. */
+  GOSoundCompressionCache cache{};
 
   /* A ring buffer for resampling of compressed samples. It has double
    * MAX_WINDOW_LEN length for having a continous memory region of
    * MAX_WINDOW_LEN samples */
-  int m_ReadAheadBuffer[MAX_INPUT_CHANNELS * MAX_WINDOW_LEN * 2];
+  int m_ReadAheadBuffer[MAX_INPUT_CHANNELS * MAX_WINDOW_LEN * 2]{};
 
   /* The block decode functions should provide whatever the normal resolution of
    * the audio is. The fade engine should ensure that this data is always
@@ -75,26 +101,57 @@ private:
   void DecodeBlock(
     unsigned resamplerPosIncrement, float *pOut, unsigned nOutSamples);
 
-  /* These functions must be static class members rather than file-scope
-   * functions because they reference the private typedef DecodeBlockFunction
-   * and the private nested window classes (StreamPtrWindow, StreamCacheWindow,
-   * StreamCacheReadAheadWindow). */
-  static DecodeBlockFunction getDecodeBlockFunction(
+  /**
+   * Reads a source frame through the same window type as its block decoder.
+   * @tparam WindowT source frame vector type
+   * @param frameIndex absolute source frame index
+   * @return the stored items of the frame with unused channels zeroed
+   */
+  template <class WindowT>
+  std::array<int, MAX_OUTPUT_CHANNELS> ReadFrame(unsigned frameIndex);
+
+  /**
+   * Pairs decoding and frame reading for one window.
+   * @tparam WindowT source frame vector type for both functions
+   * @tparam ResamplerT resampler used for block decoding
+   */
+  template <class WindowT, class ResamplerT> static Decoder makeDecoder();
+
+  /**
+   * Returns the decoder for a source format and interpolation type.
+   * It is a static class member because it uses the private Decoder type and
+   * the private window classes.
+   * @param nChannels number of channels, 1 or 2
+   * @param nBitsPerSoundItem bit depth of the audio data
+   * @param isCompressed whether the audio data is compressed
+   * @param interpolationType resampler to use
+   * @return the decoder, with both functions null for an unsupported format
+   */
+  static Decoder getDecoder(
     uint8_t nChannels,
     uint8_t nBitsPerSoundItem,
     bool isCompressed,
     GOSoundResample::InterpolationType interpolationType);
 
   /**
-   * Returns a decode block function for the given audio section,
-   * compression flag and interpolation type.
+   * Returns the decoder for the audio data of a section.
+   * @param pSection section providing the channel count and bit depth
+   * @param isCompressed whether the data is compressed, false for end segments
+   * @param interpolationType resampler to use
+   * @return the decoder for the given section and interpolation type
    */
-  static DecodeBlockFunction getDecodeBlockFunctionFor(
+  static Decoder getDecoderFor(
     const GOSoundAudioSection *pSection,
     bool isCompressed,
     GOSoundResample::InterpolationType interpolationType);
 
-  void GetHistory(int history[BLOCK_HISTORY][MAX_OUTPUT_CHANNELS]) const;
+  /**
+   * Reads BLOCK_HISTORY source frames for release alignment on a copy of the
+   * stream. An overshoot at the section end starts in the end-segment padding.
+   * @param outHistory frames starting at the current source index, clamped
+   *   to the section end, with unused channels zeroed
+   */
+  void GetHistory(GOSoundReleaseAlignTable::History &outHistory) const;
 
   /**
    * Switches the stream to the start segment with the given index.

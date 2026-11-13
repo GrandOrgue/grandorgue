@@ -17,7 +17,6 @@
 
 #include "loader/GOLoaderFilename.h"
 #include "model/GOCacheObject.h"
-#include "sound/dsp-kernels/GOSoundResample.h"
 
 #include "GOAlloc.h"
 #include "GOMemoryPool.h"
@@ -29,9 +28,8 @@
 #define M_PI 3.14159265358979323846
 #endif
 
-// maximal readahead is necessary for polyphase resampling
-static constexpr unsigned MAX_READAHEAD = GOSoundResample::POLYPHASE_POINTS;
-static constexpr unsigned DEFAULT_END_SEG_LENGTH = MAX_READAHEAD * 2;
+static constexpr unsigned DEFAULT_END_SEG_LENGTH
+  = GOSoundAudioSection::MAX_READAHEAD * 2;
 
 const unsigned GOSoundAudioSection::getMaxReadAhead() { return MAX_READAHEAD; }
 
@@ -296,8 +294,10 @@ void GOSoundAudioSection::DoCrossfade(
   unsigned fade_length,
   unsigned loop_length,
   unsigned length) {
-  for (; dest_offset < length; dest_offset += loop_length)
-    for (unsigned pos = 0; pos < fade_length; pos++) {
+  for (; dest_offset < length; dest_offset += loop_length) {
+    const unsigned nFrames = std::min(fade_length, length - dest_offset);
+
+    for (unsigned pos = 0; pos < nFrames; pos++) {
       float factor = (cos(M_PI * (pos + 0.5) / fade_length) + 1.0) * 0.5;
 
       for (uint8_t j = 0; j < m_channels; j++) {
@@ -308,6 +308,7 @@ void GOSoundAudioSection::DoCrossfade(
         SetSampleData(dest, pos + dest_offset, j, (int)result);
       }
     }
+  }
 }
 
 void GOSoundAudioSection::Setup(
@@ -366,7 +367,7 @@ void GOSoundAudioSection::Setup(
       end_seg.end_pos = loop.m_EndPosition + 1;
       if (end_seg.end_pos > min_reqd_samples)
         min_reqd_samples = end_seg.end_pos;
-      end_seg.next_start_segment_index = i + 1;
+      end_seg.next_start_segment_index = m_StartSegments.size();
 
       const unsigned loop_length = end_seg.end_pos - start_seg.start_offset;
       wxString loopError;
