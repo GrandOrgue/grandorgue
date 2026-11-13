@@ -36,7 +36,7 @@ public:
   static constexpr unsigned SILENT_AMPLITUDE_THRESHOLD = 4;
 
   /** Minimum number of stored frames starting at an end segment's end_pos. */
-  static constexpr unsigned MAX_READAHEAD = GOSoundResample::POLYPHASE_POINTS;
+  static constexpr unsigned MAX_READAHEAD = GOSoundResample::MAX_POINTS;
 
   static const unsigned getMaxReadAhead();
 

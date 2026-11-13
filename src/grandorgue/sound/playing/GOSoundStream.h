@@ -20,9 +20,9 @@ class GOSoundBufferMutable;
 
 class GOSoundStream {
 private:
-  /* Maximum number of continous samples required for resampling of one target
-   * sample. The polyphase algorithm requires the longest sample vector */
-  static constexpr unsigned MAX_WINDOW_LEN = GOSoundResample::POLYPHASE_POINTS;
+  /* Maximum number of consecutive source frames needed to resample one
+   * output frame. The widest resampler determines the read-ahead capacity. */
+  static constexpr unsigned MAX_WINDOW_LEN = GOSoundResample::MAX_POINTS;
   /* Maximum number of audio chanels in the source samples */
   static constexpr unsigned MAX_INPUT_CHANNELS = 2;
 
@@ -116,6 +116,29 @@ private:
    * @tparam ResamplerT resampler used for block decoding
    */
   template <class WindowT, class ResamplerT> static Decoder makeDecoder();
+
+  /**
+   * Returns the decoder for a resampler and a compile-time channel count.
+   * @tparam ResamplerT resampler used by the block decoder
+   * @tparam nChannels number of input channels, 1 or 2
+   * @param nBitsPerSoundItem bit depth of the audio data
+   * @param isCompressed whether the audio data is compressed
+   * @return the decoder for that format
+   */
+  template <class ResamplerT, uint8_t nChannels>
+  static Decoder getDecoder(uint8_t nBitsPerSoundItem, bool isCompressed);
+
+  /**
+   * Selects the mono or stereo decoder for a resampler.
+   * @tparam ResamplerT resampler used by the block decoder
+   * @param nChannels number of input channels, 1 or 2
+   * @param nBitsPerSoundItem bit depth of the audio data
+   * @param isCompressed whether the audio data is compressed
+   * @return the decoder for that format
+   */
+  template <class ResamplerT>
+  static Decoder getDecoder(
+    uint8_t nChannels, uint8_t nBitsPerSoundItem, bool isCompressed);
 
   /**
    * Returns the decoder for a source format and interpolation type.

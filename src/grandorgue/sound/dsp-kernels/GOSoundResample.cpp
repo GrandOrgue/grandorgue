@@ -52,6 +52,84 @@ static double sinc(const double arg) {
   return (arg == 0) ? 1.0 : std::sin(M_PI * arg) / (M_PI * arg);
 }
 
+namespace {
+
+constexpr unsigned N_BANDLIMITED_BANKS = 64;
+constexpr double KAISER_BETA = 7.86;
+// Half of the transition width in cycles per source frame.
+constexpr double HALF_TRANSITION_WIDTH = 0.035;
+
+// I0 for the Kaiser window. The argument is at most KAISER_BETA.
+double kaiser_bessel(double value) {
+  const double square = value * value / 4.0;
+  double sum = 1.0;
+  double term = 1.0;
+
+  for (unsigned termN = 1; termN <= 14; ++termN) {
+    term *= square / (termN * termN);
+    sum += term;
+  }
+  return sum;
+}
+
+// Round the bandwidth down to the next available bank.
+unsigned get_bandlimited_bank(unsigned increment) {
+  constexpr unsigned UNITY = GOSoundResample::UPSAMPLE_FACTOR;
+
+  return std::max(N_BANDLIMITED_BANKS * UNITY / std::max(increment, UNITY), 1u)
+    - 1;
+}
+
+} // namespace
+
+struct GOSoundResample::BandlimitedTables {
+  static constexpr unsigned N_PHASES = 1u << BANDLIMITED_PHASE_BITS;
+
+  float m_Coefs[N_BANDLIMITED_BANKS][N_PHASES + 1][BANDLIMITED_POINTS];
+
+  BandlimitedTables() {
+    for (unsigned phaseI = 0; phaseI <= N_PHASES; ++phaseI) {
+      const double fraction = double(phaseI) / N_PHASES;
+      double distances[BANDLIMITED_POINTS];
+      double window[BANDLIMITED_POINTS];
+
+      for (unsigned pointI = 0; pointI < BANDLIMITED_POINTS; ++pointI) {
+        const double distance
+          = double(pointI) - GOSoundResample::BANDLIMITED_LEFT - fraction;
+        const double relativeDistance = 2.0 * distance / BANDLIMITED_POINTS;
+
+        distances[pointI] = distance;
+        window[pointI] = kaiser_bessel(
+          KAISER_BETA * std::sqrt(1.0 - relativeDistance * relativeDistance));
+      }
+
+      for (unsigned bankN = 1; bankN <= N_BANDLIMITED_BANKS; ++bankN) {
+        const double stopband = 0.5 * bankN / N_BANDLIMITED_BANKS;
+        const double cutoff
+          = stopband - std::min(HALF_TRANSITION_WIDTH, stopband / 2.0);
+        float(&coefs)[BANDLIMITED_POINTS] = m_Coefs[bankN - 1][phaseI];
+        double sum = 0.0;
+
+        for (unsigned pointI = 0; pointI < BANDLIMITED_POINTS; ++pointI) {
+          const double coef
+            = sinc(2.0 * cutoff * distances[pointI]) * window[pointI];
+
+          coefs[pointI] = float(coef);
+          sum += coef;
+        }
+        // Keep the gain at DC constant as the fractional position changes.
+        for (float &coef : coefs)
+          coef = float(coef / sum);
+      }
+    }
+  }
+};
+
+GOSoundResample::BandlimitedResampler::BandlimitedResampler(
+  const GOSoundResample &resample, unsigned increment)
+  : ScalarProductionResampler(
+    resample.o_BandlimitedTables->m_Coefs[get_bandlimited_bank(increment)]) {}
+
 #if 0
 static
 void
@@ -91,14 +169,19 @@ static void create_nyquist_filter(
   }
 }
 
-GOSoundResample::GOSoundResample() {
+GOSoundResample::GOSoundResample()
+  : o_BandlimitedTables(std::make_unique<const BandlimitedTables>()) {
   float temp[UPSAMPLE_FACTOR * POLYPHASE_POINTS];
 
   create_nyquist_filter(temp, POLYPHASE_POINTS, UPSAMPLE_FACTOR);
   apply_lanczos_window(temp, UPSAMPLE_FACTOR * POLYPHASE_POINTS);
 
   /* Split up the filter into the sub-filters and reverse the coefficient
-   * arrays. */
+   * arrays. At phase zero the peak at the middle point of the Nyquist
+   * filter moves to the reversed row's centre point. */
+  static_assert(
+    PolyphaseResampler::CENTRE_POINT
+    == POLYPHASE_POINTS - 1 - POLYPHASE_POINTS / 2);
   for (unsigned i = 0; i < UPSAMPLE_FACTOR; i++) {
     for (unsigned j = 0; j < POLYPHASE_POINTS; j++) {
       m_PolyphaseCoefs[i][(POLYPHASE_POINTS - 1) - j]
@@ -111,6 +194,8 @@ GOSoundResample::GOSoundResample() {
   }
 }
 
+GOSoundResample::~GOSoundResample() = default;
+
 unsigned GOSoundResample::getVectorLength(
   GOSoundResample::InterpolationType interpolation) {
   unsigned res;
@@ -121,6 +206,9 @@ unsigned GOSoundResample::getVectorLength(
     break;
   case GO_POLYPHASE_INTERPOLATION:
     res = PolyphaseResampler::VECTOR_LENGTH;
+    break;
+  case GO_BANDLIMITED_INTERPOLATION:
+    res = BandlimitedResampler::VECTOR_LENGTH;
     break;
 
   /* A compiler cannot guarantee that interpolation has a valid value.

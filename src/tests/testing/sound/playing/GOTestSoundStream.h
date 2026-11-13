@@ -31,13 +31,15 @@ private:
    * If pLoop is not null, the section is created with the given loop points.
    * If isSilent is true, the PCM data only contains quantization-noise-level
    * values (a "BlankLoop"-like placeholder) instead of the usual sawtooth.
+   * @param loopCrossfadeMs loop crossfade length in milliseconds
    */
   std::unique_ptr<GOSoundAudioSection> CreateAudioSection(
     unsigned nChannels,
     unsigned nFrames,
     bool isCompressed,
     const GOWaveLoop *pLoop = nullptr,
-    bool isSilent = false);
+    bool isSilent = false,
+    unsigned loopCrossfadeMs = 0);
 
   /**
    * Tests ReadBlock for the given interpolation, compression and channel
@@ -87,6 +89,16 @@ private:
    * after a wrap - no assumption about "realistic" sample values is needed.
    */
   void TestCompressedLoopWrapMatchesUncompressed();
+
+  /** Compares bandlimited short-loop playback and a release across a retrigger.
+   */
+  void TestBandlimitedLoopAndRetrigger();
+
+  /** Measures the 3 kHz, +50-cent image through all three playback modes. */
+  void TestRetuningSuppressesImages();
+
+  /** Checks exact-rate playback copies each mode's window centre. */
+  void TestNativeRateCopiesWindowCenter();
 
   /**
    * Tests that a silent ("BlankLoop"-like) attack is not used for release

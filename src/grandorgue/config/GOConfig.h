@@ -47,6 +47,7 @@ public:
   enum InterpolationType {
     INTERPOLATION_LINEAR = 0,
     INTERPOLATION_POLYPHASE,
+    INTERPOLATION_BANDLIMITED,
   };
   enum MetronomeSoundType {
     METRONOME_SOUND_BELL,
