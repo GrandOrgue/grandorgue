@@ -342,6 +342,33 @@ Key CMake options (see `CMakeLists.txt` for full list):
   - ✅ `if (pEngine)`, `return p_Engine.load();`
   - ❌ `if (pEngine != nullptr)`, `return p_Engine.load() != nullptr;`
 
+### Naming: Pointers to Functions and Members
+
+- **Prefixes** show how the thing is applied:
+
+  | Kind | Member | Local / parameter | Container | Reference to container | Output parameter | Applied as |
+  |---|---|---|---|---|---|---|
+  | function pointer `R (*)(A)`, `std::function`, lambda, functor | `f_validate`, `f_OnAfterRun` | `fGetColumnWidth` | `mf_handlers` | `rf_handlers` | `outFGetColumnWidth` | `fGetColumnWidth(i)` |
+  | pointer to member function `R (C::*)(A)` | `fm_DecodeBlock` | `fmGetThisValue` | `mfm_getters` | `rfm_getters` | `outFmGetThisValue` | `(obj.*fmGetThisValue)()` |
+  | pointer to data member `T C::*` | `pm_value` | `pmGlobalValue` | `mpm_values` | `rpm_values` | `outPmGlobalValue` | `obj.*pmGlobalValue` |
+
+  - ❌ `pValidate`, `getRampFrames`, `onAfterRun`, `pFunc`, `setPointerFun`, `decode_call`,
+    `globalValue`
+  - `f` means "called like a function": it covers both raw function pointers (free or static
+    member functions) and callable objects
+  - The container/reference letter comes first: `mf_` is a container of `f`, `fm` is a pointer to a
+    member function, `pm` is a pointer to a data member, `mp_` is a container of non-owning pointers
+  - Simple names lowercase, compound names PascalCase after `_`, as for `m_`; camelCase after the
+    prefix for locals and parameters
+- **Name after the prefix**: a verb phrase for a function or a member function (`fmSetPointer`,
+  `fValidate`), `On…` for an event-like callback (`f_OnAfterRun`), a noun for a data member
+  (`pmGlobalValue`); no `Func`/`Fun`/`Function` suffix. A bare `f` is not allowed: ✅ `fVisit`
+- **Type aliases**: `using` rather than `typedef`, PascalCase with the suffix `Function` for a
+  function or member function pointer type and `Member` for a data member pointer type
+  - ✅ `using DecodeBlockFunction = void (GOSoundStream::*)(unsigned, float *, unsigned);`
+  - Aliases required by wxWidgets event macros (`wxMsgBoxFunction`) keep the wx style
+- Null checks, lazy renaming of existing code: as for other pointers (`if (fmCallback)`)
+
 ### Naming: Output Parameters
 
 - Place at **end** of parameter lists, prefix with `out`
