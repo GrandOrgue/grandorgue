@@ -31,13 +31,15 @@ private:
    * If pLoop is not null, the section is created with the given loop points.
    * If isSilent is true, the PCM data only contains quantization-noise-level
    * values (a "BlankLoop"-like placeholder) instead of the usual sawtooth.
+   * @param loopCrossfadeMs loop crossfade length in milliseconds
    */
   std::unique_ptr<GOSoundAudioSection> CreateAudioSection(
     unsigned nChannels,
     unsigned nFrames,
     bool isCompressed,
     const GOWaveLoop *pLoop = nullptr,
-    bool isSilent = false);
+    bool isSilent = false,
+    unsigned loopCrossfadeMs = 0);
 
   /**
    * Tests ReadBlock for the given interpolation, compression and channel
@@ -88,6 +90,16 @@ private:
    */
   void TestCompressedLoopWrapMatchesUncompressed();
 
+  /** Compares bandlimited short-loop playback and a release across a retrigger.
+   */
+  void TestBandlimitedLoopAndRetrigger();
+
+  /** Measures the 3 kHz, +50-cent image through all three playback modes. */
+  void TestRetuningSuppressesImages();
+
+  /** Checks that native-rate playback starts at frame 0 in every mode. */
+  void TestNativeRateStartsAtFirstFrame();
+
   /**
    * Tests that a silent ("BlankLoop"-like) attack is not used for release
    * alignment: SetupStreamAlignment must leave the release aligner null so
@@ -98,6 +110,10 @@ private:
   /** Compares raw and compressed release alignment across segment boundaries.
    */
   void TestReleaseAlignmentMatchesUncompressed();
+
+  /** Checks short releases and note-offs before the window leaves the prologue.
+   */
+  void TestReleaseAlignmentFallsBackToStart();
 
   /** Checks start segment numbering after dropping a loop. */
   void TestRejectedLoopKeepsStartSegmentIndex();

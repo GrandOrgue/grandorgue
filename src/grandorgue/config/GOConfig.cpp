@@ -299,7 +299,7 @@ GOConfig::GOConfig(
       GENERAL,
       wxT("InterpolationType"),
       INTERPOLATION_LINEAR,
-      INTERPOLATION_POLYPHASE,
+      INTERPOLATION_BANDLIMITED,
       INTERPOLATION_DEFAULT),
     WaveFormatBytesPerSample(this, GENERAL, wxT("WaveFormat"), 1, 4, 4),
     RecordDownmix(this, GENERAL, wxT("RecordDownmix"), false),

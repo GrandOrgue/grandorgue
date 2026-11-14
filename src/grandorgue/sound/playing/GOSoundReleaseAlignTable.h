@@ -94,6 +94,12 @@ public:
   using History
     = std::array<std::array<int, MAX_OUTPUT_CHANNELS>, BLOCK_HISTORY>;
 
+  /**
+   * Looks up the matching window start for the provided source frames.
+   * @param history source frames of the other stream
+   * @param nChannels number of channels to match
+   * @return an absolute section offset, or 0 if the table is empty
+   */
   unsigned GetPositionFor(const History &history, unsigned nChannels) const;
 };
 

@@ -8,6 +8,7 @@
 #include "GOSoundAudioSection.h"
 
 #include <algorithm>
+#include <limits>
 
 #include <wx/intl.h>
 #include <wx/log.h>
@@ -204,13 +205,17 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
 
 unsigned GOSoundAudioSection::PickEndSegment(
   unsigned start_segment_index) const {
+  const unsigned startOffset
+    = m_StartSegments[start_segment_index].start_offset;
   const unsigned x = abs(rand());
   for (unsigned i = 0; i < m_EndSegments.size(); i++) {
     const unsigned idx = (i + x) % m_EndSegments.size();
     const EndSegment *end = &m_EndSegments[idx];
+
+    // A short loop's own end segment can start before the loop starts.
     if (
-      end->transition_offset
-      >= m_StartSegments[start_segment_index].start_offset)
+      end->transition_offset >= startOffset
+      || end->next_start_segment_index == (int)start_segment_index)
       return idx;
   }
   assert(0 && "should always find suitable end segment");
@@ -263,7 +268,7 @@ void GOSoundAudioSection::GetMaxAmplitudeAndDerivative() {
   m_MaxAbsDerivative = 0;
 
   int f_p = 0; /* to avoid compiler warning */
-  for (unsigned int i = 0; i < m_SampleCount; i++) {
+  for (unsigned int i = PROLOGUE_LENGTH; i < m_SampleCount; i++) {
     /* Get sum of amplitudes in channels */
     int f = 0;
     for (unsigned int j = 0; j < m_channels; j++) {
@@ -276,7 +281,7 @@ void GOSoundAudioSection::GetMaxAmplitudeAndDerivative() {
     m_MaxAbsAmplitude
       = std::max(m_MaxAbsAmplitude, static_cast<unsigned>(std::abs(f)));
 
-    if (i != 0) {
+    if (i != PROLOGUE_LENGTH) {
       /* Get v */
       int v = f - f_p;
       m_MaxAbsDerivative
@@ -311,6 +316,23 @@ void GOSoundAudioSection::DoCrossfade(
   }
 }
 
+void GOSoundAudioSection::CopyPaddedFrames(
+  const unsigned char *pPcm,
+  unsigned startFrame,
+  unsigned nFrames,
+  unsigned char *outPData) const {
+  const unsigned nZeroFrames
+    = std::min(nFrames, limitedDiff(PROLOGUE_LENGTH, startFrame));
+  const unsigned nZeroBytes = nZeroFrames * m_BytesPerSample;
+  const unsigned firstPcmFrame = limitedDiff(startFrame, PROLOGUE_LENGTH);
+
+  memset(outPData, 0, nZeroBytes);
+  memcpy(
+    outPData + nZeroBytes,
+    pPcm + size_t(firstPcmFrame) * m_BytesPerSample,
+    size_t(nFrames - nZeroFrames) * m_BytesPerSample);
+}
+
 void GOSoundAudioSection::Setup(
   const GOCacheObject *pObjectFor,
   const GOLoaderFilename *pLoaderFilename,
@@ -340,7 +362,13 @@ void GOSoundAudioSection::Setup(
 
   m_BytesPerSample = bytes_per_sample * pcm_data_channels;
 
-  unsigned total_alloc_samples = pcm_data_nb_samples;
+  const auto *pPcm = static_cast<const unsigned char *>(pcm_data);
+  const unsigned nFrames = PROLOGUE_LENGTH + pcm_data_nb_samples;
+  unsigned total_alloc_samples = nFrames;
+
+  if (nFrames < pcm_data_nb_samples)
+    throw GOOutOfMemory();
+
   /* Create a start segment */
   {
     StartSegment start_seg;
@@ -358,13 +386,13 @@ void GOSoundAudioSection::Setup(
       EndSegment end_seg;
       const GOWaveLoop &loop = (*loop_points)[i];
 
-      start_seg.start_offset = loop.m_StartPosition;
+      start_seg.start_offset = PROLOGUE_LENGTH + loop.m_StartPosition;
       /* According to
        * https://www.mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/RIFFNEW.pdf
        * dwEnd is the position of the last sample of the loop, but we need the
        * first position after this sample
        */
-      end_seg.end_pos = loop.m_EndPosition + 1;
+      end_seg.end_pos = PROLOGUE_LENGTH + loop.m_EndPosition + 1;
       if (end_seg.end_pos > min_reqd_samples)
         min_reqd_samples = end_seg.end_pos;
       end_seg.next_start_segment_index = m_StartSegments.size();
@@ -375,31 +403,23 @@ void GOSoundAudioSection::Setup(
       if (fade_len > loop_length - 1)
         loopError = wxString::Format(
           _("The loop %u is ignored: it is too short for crossfade"), i + 1);
-      else if (start_seg.start_offset < fade_len)
+      else if (loop.m_StartPosition < fade_len)
         loopError = wxString::Format(
           _("The loop %u is ignored: not enough samples for crossfade before "
             "it's start"),
           i + 1);
 
       if (loopError.IsEmpty()) {
-        unsigned end_length;
+        // Switch to the end segment before a window can reach the loop fade
+        // or seam. For short loops keep the entire loop in the end segment.
+        const unsigned nFramesBeforeLoopEnd = std::min(
+          end_seg.end_pos,
+          std::max(
+            MAX_READAHEAD + fade_len,
+            loop_length < SHORT_LOOP_LENGTH ? loop_length : 0u));
+        const unsigned end_length = nFramesBeforeLoopEnd + MAX_READAHEAD;
 
-        // calculate the fade segment size and offsets
-        if (loop_length >= SHORT_LOOP_LENGTH) {
-          end_seg.transition_offset
-            = end_seg.end_pos - MAX_READAHEAD - fade_len;
-          end_length = DEFAULT_END_SEG_LENGTH + fade_len;
-        } else {
-          end_seg.transition_offset = start_seg.start_offset;
-          end_length = SHORT_LOOP_LENGTH + MAX_READAHEAD;
-          if (
-            end_length < MAX_READAHEAD
-              + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH
-              + fade_len)
-            end_length = MAX_READAHEAD
-              + (SHORT_LOOP_LENGTH / loop_length) * SHORT_LOOP_LENGTH
-              + fade_len;
-        }
+        end_seg.transition_offset = end_seg.end_pos - nFramesBeforeLoopEnd;
         end_seg.end_size = end_length * m_BytesPerSample;
 
         // Allocate the fade segment
@@ -413,19 +433,17 @@ void GOSoundAudioSection::Setup(
         end_seg.end_ptr
           = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
-        const unsigned nBytesToCopy
-          = (end_seg.end_pos - end_seg.transition_offset) * m_BytesPerSample;
+        const unsigned nFramesToCopy
+          = end_seg.end_pos - end_seg.transition_offset;
+        const unsigned nBytesToCopy = nFramesToCopy * m_BytesPerSample;
 
-        // Fill the fade seg with transition data, then with the loop start data
-        memcpy(
-          end_seg.end_data,
-          ((const unsigned char *)pcm_data)
-            + end_seg.transition_offset * m_BytesPerSample,
-          nBytesToCopy);
+        // Fill the fade segment from the source, including any leading zeros,
+        // then from the loop start.
+        CopyPaddedFrames(
+          pPcm, end_seg.transition_offset, nFramesToCopy, end_seg.end_data);
         loop_memcpy(
-          ((unsigned char *)end_seg.end_data) + nBytesToCopy,
-          ((const unsigned char *)pcm_data)
-            + loop.m_StartPosition * m_BytesPerSample,
+          end_seg.end_data + nBytesToCopy,
+          pPcm + loop.m_StartPosition * m_BytesPerSample,
           loop_length * m_BytesPerSample,
           end_seg.end_size - nBytesToCopy);
         if (fade_len > 0)
@@ -433,9 +451,9 @@ void GOSoundAudioSection::Setup(
           // would be easy readable without additional comments
           DoCrossfade(
             end_seg.end_data,
-            MAX_READAHEAD,
-            (const unsigned char *)pcm_data,
-            start_seg.start_offset - fade_len,
+            nFramesBeforeLoopEnd - fade_len,
+            pPcm,
+            loop.m_StartPosition - fade_len,
             fade_len,
             loop_length,
             end_length);
@@ -458,7 +476,7 @@ void GOSoundAudioSection::Setup(
     /* Create a default end segment */
     EndSegment end_seg;
 
-    end_seg.end_pos = pcm_data_nb_samples;
+    end_seg.end_pos = nFrames;
     end_seg.next_start_segment_index = -1;
     end_seg.end_size = m_BytesPerSample * DEFAULT_END_SEG_LENGTH;
     end_seg.end_data = (unsigned char *)m_Pool.Alloc(end_seg.end_size, true);
@@ -470,22 +488,20 @@ void GOSoundAudioSection::Setup(
     end_seg.end_ptr
       = end_seg.end_data - m_BytesPerSample * end_seg.transition_offset;
 
-    const unsigned nBytesToCopy
-      = (end_seg.end_pos - end_seg.transition_offset) * m_BytesPerSample;
+    const unsigned nFramesToCopy = end_seg.end_pos - end_seg.transition_offset;
+    const unsigned nBytesToCopy = nFramesToCopy * m_BytesPerSample;
 
-    memcpy(
-      end_seg.end_data,
-      ((const unsigned char *)pcm_data)
-        + m_BytesPerSample * end_seg.transition_offset,
-      nBytesToCopy);
-    memset(
-      ((unsigned char *)end_seg.end_data) + nBytesToCopy,
-      0,
-      end_seg.end_size - nBytesToCopy);
+    CopyPaddedFrames(
+      pPcm, end_seg.transition_offset, nFramesToCopy, end_seg.end_data);
+    memset(end_seg.end_data + nBytesToCopy, 0, end_seg.end_size - nBytesToCopy);
 
     m_EndSegments.push_back(end_seg);
   }
 
+  if (
+    total_alloc_samples
+    > std::numeric_limits<unsigned>::max() / m_BytesPerSample)
+    throw GOOutOfMemory();
   m_AllocSize = total_alloc_samples * m_BytesPerSample;
   m_data = (unsigned char *)m_Pool.Alloc(m_AllocSize, !compress);
   if (m_data == NULL)
@@ -496,8 +512,7 @@ void GOSoundAudioSection::Setup(
   m_IsCompressed = false;
   m_WaveTremulantStateFor = waveTremulantStateFor;
 
-  /* Store the main data blob. */
-  memcpy(m_data, pcm_data, m_AllocSize);
+  CopyPaddedFrames(pPcm, 0, total_alloc_samples, m_data);
 
   GetMaxAmplitudeAndDerivative();
 
@@ -592,7 +607,8 @@ void GOSoundAudioSection::SetupStreamAlignment(
       max_amplitude,
       max_derivative,
       m_SampleRate,
-      m_StartSegments[m_ReleaseStartSegment].start_offset);
+      std::max(
+        m_StartSegments[m_ReleaseStartSegment].start_offset, PROLOGUE_LENGTH));
   }
 }
 
@@ -604,7 +620,7 @@ GOSampleStatistic GOSoundAudioSection::GetStatistic() {
     size += m_EndSegments[i].end_size;
   stat.SetEndSegmentSize(size);
   stat.SetMemorySize(size + m_AllocSize);
-  stat.SetBitsPerSample(m_BitsPerSample, m_SampleCount, m_MaxAmplitude);
+  stat.SetBitsPerSample(m_BitsPerSample, GetLength(), m_MaxAmplitude);
 
   return stat;
 }

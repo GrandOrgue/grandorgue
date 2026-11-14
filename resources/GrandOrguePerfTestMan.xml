@@ -4,7 +4,7 @@
   GrandOrgue - free pipe organ simulator
 
   Copyright 2006 Milan Digital Audio LLC
-  Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+  Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
   License GPL-2.0 or later
   (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
 -->
@@ -39,9 +39,11 @@
     <title>DESCRIPTION</title>
     <para>
       GrandOrguePerfTest is a commandline tool built together with GrandOrgue to
-      test performance of the computer with different settings: Bits per sample,
-      Sample Rate, Loseless compression, Linear/Polyphase interpolation and
-      Sampes per buffer.
+      test performance of the computer with different bit depths, sample rates,
+      lossless compression settings, interpolation modes and buffer sizes.
+      Interpolation modes include Linear, Polyphase and High-quality sinc.
+      All three modes play the supplied 48 kHz samples at a 44.1 kHz engine
+      rate to compare interpolation throughput.
     </para>
     <para>
       It outputs one line for each parameter set to the standard output. This
