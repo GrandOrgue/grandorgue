@@ -43,6 +43,9 @@ private:
 public:
   GOWindchest(GOOrganModel &organModel);
 
+  /** Unregisters the lifecycle listener registered by the constructor. */
+  ~GOWindchest();
+
   const wxString &GetHardName() const { return m_HardName; }
   void SetHardName(const wxString &name) { m_HardName = name; }
 

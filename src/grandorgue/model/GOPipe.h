@@ -21,6 +21,8 @@ class GOTemperament;
 
 class GOPipe : protected GOOrganLifecycleListener {
 private:
+  /** The registry the constructor registered the pipe in */
+  GOEventHandlerList &r_HandlerList;
   unsigned m_Velocity;
   std::vector<unsigned> m_Velocities;
 

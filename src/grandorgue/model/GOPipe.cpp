@@ -14,14 +14,15 @@
 
 GOPipe::GOPipe(
   GOEventHandlerList *handlerList, GORank *rank, unsigned midi_key_number)
-  : m_Velocity(0),
+  : r_HandlerList(*handlerList),
+    m_Velocity(0),
     m_Velocities(1),
     m_Rank(rank),
     m_MidiKeyNumber(midi_key_number) {
-  handlerList->RegisterLifecycleListener(this);
+  r_HandlerList.RegisterLifecycleListener(this);
 }
 
-GOPipe::~GOPipe() {}
+GOPipe::~GOPipe() { r_HandlerList.UnRegisterLifecycleListener(this); }
 
 unsigned GOPipe::RegisterReference(GOPipe *pipe) {
   unsigned id = m_Velocities.size();

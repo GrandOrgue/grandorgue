@@ -12,8 +12,18 @@
 
 #include "model/GOOrganModel.h"
 
-void GOMainWindowData::Load(GOConfigReader &cfg) {
+GOMainWindowData::GOMainWindowData(
+  GOOrganModel &organModel, const wxString &group)
+  : r_OrganModel(organModel) {
+  m_group = group;
   r_OrganModel.RegisterSaveableObject(this);
+}
+
+GOMainWindowData::~GOMainWindowData() {
+  r_OrganModel.UnregisterSaveableObject(this);
+}
+
+void GOMainWindowData::Load(GOConfigReader &cfg) {
   m_rect.x = cfg.ReadInteger(
     CMBSetting, m_group, wxT("WindowX"), -20, 10000, false, 0);
   m_rect.y = cfg.ReadInteger(
