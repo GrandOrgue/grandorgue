@@ -276,7 +276,14 @@ unsigned GOSoundStream::InitFromSection(
   // End segments are never compressed
   m_EndDecoder = getDecoderFor(pSection, false, interpolationType);
 
-  return GoToStartSegment(startSegmentIndex);
+  const unsigned startOffset = GoToStartSegment(startSegmentIndex);
+  const unsigned centrePoint
+    = GOSoundResample::getCentrePoint(interpolationType);
+
+  assert(centrePoint <= GOSoundAudioSection::PROLOGUE_LENGTH);
+  return startSegmentIndex
+    ? startOffset
+    : startOffset + GOSoundAudioSection::PROLOGUE_LENGTH - centrePoint;
 }
 
 void GOSoundStream::InitStream(
@@ -302,12 +309,21 @@ void GOSoundStream::InitAlignedStream(
   unsigned startOffset = InitFromSection(
     pSection, pSection->GetReleaseStartSegment(), interpolationType);
 
-  if (releaseAligner) {
+  // Alignment matches PCM at the window start. Use the natural start while
+  // the attack's matching frames would include the zero prologue.
+  if (
+    releaseAligner
+    && pExistingStream->m_ResamplingPos.GetIndex()
+      >= GOSoundAudioSection::PROLOGUE_LENGTH) {
     GOSoundReleaseAlignTable::History history;
 
     pExistingStream->GetHistory(history);
-    startOffset
+    const unsigned alignedOffset
       = releaseAligner->GetPositionFor(history, pSection->GetChannels());
+
+    // A short section can have an empty alignment table.
+    if (alignedOffset)
+      startOffset = alignedOffset;
   }
   m_ResamplingPos.Init(
     startOffset, pExistingStream->m_ResamplingPos.GetFraction());

@@ -259,6 +259,26 @@ unsigned GOSoundResample::getVectorLength(
   return res;
 }
 
+unsigned GOSoundResample::getCentrePoint(InterpolationType interpolation) {
+  unsigned centrePoint;
+
+  switch (interpolation) {
+  case GO_LINEAR_INTERPOLATION:
+    centrePoint = LinearResampler::CENTRE_POINT;
+    break;
+  case GO_POLYPHASE_INTERPOLATION:
+    centrePoint = PolyphaseResampler::CENTRE_POINT;
+    break;
+  case GO_BANDLIMITED_INTERPOLATION:
+    centrePoint = BandlimitedResampler::CENTRE_POINT;
+    break;
+  default:
+    assert(false);
+    centrePoint = 0;
+  }
+  return centrePoint;
+}
+
 float *GOSoundResample::NewResampledMono(
   const float *data,
   unsigned &len,

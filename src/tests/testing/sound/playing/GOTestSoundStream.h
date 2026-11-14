@@ -97,8 +97,8 @@ private:
   /** Measures the 3 kHz, +50-cent image through all three playback modes. */
   void TestRetuningSuppressesImages();
 
-  /** Checks exact-rate playback copies each mode's window centre. */
-  void TestNativeRateCopiesWindowCenter();
+  /** Checks that native-rate playback starts at frame 0 in every mode. */
+  void TestNativeRateStartsAtFirstFrame();
 
   /**
    * Tests that a silent ("BlankLoop"-like) attack is not used for release
@@ -110,6 +110,10 @@ private:
   /** Compares raw and compressed release alignment across segment boundaries.
    */
   void TestReleaseAlignmentMatchesUncompressed();
+
+  /** Checks short releases and note-offs before the window leaves the prologue.
+   */
+  void TestReleaseAlignmentFallsBackToStart();
 
   /** Checks start segment numbering after dropping a loop. */
   void TestRejectedLoopKeepsStartSegmentIndex();

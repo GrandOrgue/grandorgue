@@ -40,6 +40,12 @@ public:
 
   static const unsigned getMaxReadAhead();
 
+  /**
+   * Zero frames stored before the first PCM frame. The initial window starts
+   * PROLOGUE_LENGTH - CENTRE_POINT frames in, so its centre is at PCM frame 0.
+   */
+  static constexpr unsigned PROLOGUE_LENGTH = GOSoundResample::MAX_CENTRE_POINT;
+
   struct StartSegment {
     /* Sample offset into entire audio section where data begins. */
     unsigned start_offset;
@@ -190,6 +196,19 @@ private:
       sampleData, position, m_channels, channel, m_BitsPerSample, value);
   }
 
+  /**
+   * Copies a range of section frames from PCM and the leading zero prologue.
+   * @param pPcm the original PCM starting at its first sample frame
+   * @param startFrame the first frame in padded section coordinates
+   * @param nFrames how many frames to copy
+   * @param outPData the destination for the copied frames
+   */
+  void CopyPaddedFrames(
+    const unsigned char *pPcm,
+    unsigned startFrame,
+    unsigned nFrames,
+    unsigned char *outPData) const;
+
 public:
   inline static unsigned limitedDiff(unsigned a, unsigned b) {
     return (a > b) ? a - b : 0;
@@ -212,7 +231,10 @@ public:
     return m_WaveTremulantStateFor;
   }
 
-  inline unsigned GetLength() const { return m_SampleCount; }
+  /** Length of the stored PCM in frames, excluding the zero prologue. */
+  inline unsigned GetLength() const {
+    return limitedDiff(m_SampleCount, PROLOGUE_LENGTH);
+  }
 
   unsigned GetReleaseCrossfadeLength() const {
     return m_ReleaseCrossfadeLength;

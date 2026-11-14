@@ -967,6 +967,19 @@ public:
   static_assert(LinearResampler::CENTRE_POINT == 0);
   static_assert(BandlimitedResampler::CENTRE_POINT == BANDLIMITED_LEFT);
 
+  /** The largest CENTRE_POINT of all resamplers. */
+  static constexpr unsigned MAX_CENTRE_POINT = std::max(
+    {LinearResampler::CENTRE_POINT,
+     PolyphaseResampler::CENTRE_POINT,
+     BandlimitedResampler::CENTRE_POINT});
+
+  /**
+   * Returns the window point at the interpolated position at zero fraction.
+   * @param interpolation the interpolation type
+   * @return the centre point, at most MAX_CENTRE_POINT
+   */
+  static unsigned getCentrePoint(InterpolationType interpolation);
+
   /**
    * Returns the necessary sample vector length for the given interpolation type
    * @param interpolation - the interpolation type

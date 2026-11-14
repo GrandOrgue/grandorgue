@@ -87,16 +87,23 @@ void GOTestSoundStream::TestReadBlock(
     = interpolationType == GOSoundResample::GO_BANDLIMITED_INTERPOLATION;
   const unsigned increment
     = isBandlimited ? FRACTION_INCREMENT * 5 / 4 : FRACTION_INCREMENT;
-  const unsigned nOutputFrames = isBandlimited ? N_FRAMES * 4 / 5 : N_FRAMES;
+  const unsigned centrePoint
+    = GOSoundResample::getCentrePoint(interpolationType);
   const auto pSection = CreateAudioSection(nChannels, N_FRAMES, isCompressed);
   GOSoundResample resample;
+  GOSoundResample::ResamplingPosition startPosition;
   GOSoundStream stream;
+
+  GOAssert(pSection->GetLength() == N_FRAMES, "Length excludes the prologue");
+  startPosition.Init();
+  const unsigned nOutputFrames
+    = startPosition.AvailableTargetSamples(N_FRAMES + centrePoint, increment);
 
   stream.InitStream(&resample, pSection.get(), interpolationType);
 
   GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
 
-  for (unsigned frameI = 0; frameI < nOutputFrames;
+  for (unsigned frameI = 0; frameI + N_FRAMES_PER_BLOCK <= nOutputFrames;
        frameI += N_FRAMES_PER_BLOCK) {
     const bool result = stream.ReadBlock(increment, buffer);
 
@@ -104,6 +111,17 @@ void GOTestSoundStream::TestReadBlock(
       result,
       std::format(
         "ReadBlock should return true while frames available ({})", label));
+  }
+
+  const unsigned nRemainingFrames = nOutputFrames % N_FRAMES_PER_BLOCK;
+
+  if (nRemainingFrames) {
+    auto tail = buffer.GetSubBuffer(0, nRemainingFrames);
+
+    GOAssert(
+      stream.ReadBlock(increment, tail),
+      std::format(
+        "ReadBlock should render the last partial block ({})", label));
   }
 
   // ReadBlock should return false after exhaustion
@@ -208,9 +226,11 @@ void GOTestSoundStream::TestInitAlignedStreamWithSilentAttack() {
 }
 
 void GOTestSoundStream::TestReleaseAlignmentMatchesUncompressed() {
+  using Resample = GOSoundResample;
+  constexpr unsigned PROLOGUE = GOSoundAudioSection::PROLOGUE_LENGTH;
   const GOSoundResample resample;
   const unsigned transitionOffset
-    = N_FRAMES - GOSoundAudioSection::getMaxReadAhead();
+    = PROLOGUE + N_FRAMES - GOSoundAudioSection::getMaxReadAhead();
 
   for (unsigned nChannels : {1u, 2u}) {
     const auto pRaw = CreateAudioSection(nChannels, N_FRAMES, false);
@@ -245,18 +265,80 @@ void GOTestSoundStream::TestReleaseAlignmentMatchesUncompressed() {
     // Exercise a window in the main data, a history straddling the segment
     // boundary and a history entirely in the end segment.
     for (const auto mode :
-         {GOSoundResample::GO_LINEAR_INTERPOLATION,
-          GOSoundResample::GO_POLYPHASE_INTERPOLATION})
-      for (unsigned nAttackFrames : {83u, transitionOffset - 1, N_FRAMES - 3})
+         {Resample::GO_LINEAR_INTERPOLATION,
+          Resample::GO_POLYPHASE_INTERPOLATION,
+          Resample::GO_BANDLIMITED_INTERPOLATION})
+      for (unsigned windowStart :
+           {PROLOGUE + 83u, transitionOffset - 1, PROLOGUE + N_FRAMES - 3}) {
+        const unsigned nAttackFrames
+          = windowStart - (PROLOGUE - Resample::getCentrePoint(mode));
+
         GOAssert(
           captureRelease(*pRaw, mode, nAttackFrames)
             == captureRelease(*pCompressed, mode, nAttackFrames),
           std::format(
-            "Release must match across decoders (mode {}, {} channels, frame "
-            "{})",
+            "Release must match across decoders (mode {}, {} channels, window "
+            "start {})",
             unsigned(mode),
             nChannels,
-            nAttackFrames));
+            windowStart));
+      }
+  }
+}
+
+void GOTestSoundStream::TestReleaseAlignmentFallsBackToStart() {
+  using Resample = GOSoundResample;
+  const Resample resample;
+  const auto pShortRelease = CreateAudioSection(1, N_FRAMES, false);
+  const auto pLongRelease = CreateAudioSection(1, 4096, false);
+
+  for (bool isCompressed : {false, true}) {
+    const auto pAttack = CreateAudioSection(1, N_FRAMES, isCompressed);
+
+    GOAssert(
+      pAttack->IsCompressed() == isCompressed,
+      "The attack must exercise the selected decoder");
+    pShortRelease->SetupStreamAlignment({pAttack.get()}, 0);
+    pLongRelease->SetupStreamAlignment({pAttack.get()}, 0);
+    GOAssert(
+      pShortRelease->SupportsStreamAlignment()
+        && pLongRelease->SupportsStreamAlignment(),
+      "Both releases must exercise aligned stream initialization");
+
+    auto checkReleaseStart = [&](
+                               const GOSoundAudioSection &section,
+                               Resample::InterpolationType mode,
+                               unsigned nAttackFrames) {
+      GOSoundStream attack;
+      GOSoundStream release;
+      GOSoundStream reference;
+
+      GO_DECLARE_LOCAL_SOUND_BUFFER(attackBuffer, 2, nAttackFrames)
+      GO_DECLARE_LOCAL_SOUND_BUFFER(releaseBuffer, 2, N_FRAMES_PER_BLOCK)
+      GO_DECLARE_LOCAL_SOUND_BUFFER(expected, 2, N_FRAMES_PER_BLOCK)
+
+      attack.InitStream(&resample, pAttack.get(), mode);
+      GOAssert(
+        attack.ReadBlock(FRACTION_INCREMENT, attackBuffer), "Attack played");
+      release.InitAlignedStream(&section, mode, &attack);
+      reference.InitStream(&resample, &section, mode);
+      GOAssert(
+        release.ReadBlock(FRACTION_INCREMENT, releaseBuffer)
+          && reference.ReadBlock(FRACTION_INCREMENT, expected),
+        "Release must play");
+      GOAssert(
+        std::equal(
+          releaseBuffer.GetData(),
+          releaseBuffer.GetData() + releaseBuffer.GetNItems(),
+          expected.GetData()),
+        "Release must start at the first PCM frame when alignment is "
+        "unavailable");
+    };
+
+    // The short release has an empty table. The long one has a valid table,
+    // but the attack's matching frames still lie in the zero prologue.
+    checkReleaseStart(*pShortRelease, Resample::GO_LINEAR_INTERPOLATION, 83);
+    checkReleaseStart(*pLongRelease, Resample::GO_BANDLIMITED_INTERPOLATION, 1);
   }
 }
 
@@ -282,7 +364,8 @@ void GOTestSoundStream::TestRejectedLoopKeepsStartSegmentIndex() {
   // The second loop is shorter than the 48-frame crossfade and is rejected.
   GOAssert(
     section.GetEndSegment(1).next_start_segment_index == 2
-      && section.GetStartSegment(2).start_offset == loops[2].m_StartPosition,
+      && section.GetStartSegment(2).start_offset
+        == GOSoundAudioSection::PROLOGUE_LENGTH + loops[2].m_StartPosition,
     "The last loop must point to its accepted start segment");
 }
 
@@ -592,34 +675,39 @@ void GOTestSoundStream::TestRetuningSuppressesImages() {
     "High-quality sinc must suppress the image below -100 dBc");
 }
 
-void GOTestSoundStream::TestNativeRateCopiesWindowCenter() {
+void GOTestSoundStream::TestNativeRateStartsAtFirstFrame() {
   using Resample = GOSoundResample;
   constexpr unsigned N_OUTPUT_FRAMES = 777;
-  constexpr unsigned N_REFERENCE_FRAMES
-    = N_OUTPUT_FRAMES + Resample::BANDLIMITED_LEFT;
-  const GOWaveLoop loop = {190, 207};
+  // The first loop end segment overlaps the prologue, including when the
+  // decoder can read the padded main data of a compressed section.
+  const GOWaveLoop loop = {35, 52};
   const Resample resample;
 
   for (unsigned nChannels : {1u, 2u})
     for (bool isCompressed : {false, true}) {
       const auto pSection
         = CreateAudioSection(nChannels, N_FRAMES, isCompressed, &loop);
-      std::vector<float> expected(2 * N_REFERENCE_FRAMES);
+      std::vector<float> expected(2 * N_OUTPUT_FRAMES);
       std::vector<float> actual(2 * N_OUTPUT_FRAMES);
-      GOSoundBufferMutable reference(expected.data(), 2, N_REFERENCE_FRAMES);
+      GOSoundBufferMutable reference(expected.data(), 2, N_OUTPUT_FRAMES);
       GOSoundBufferMutable output(actual.data(), 2, N_OUTPUT_FRAMES);
       GOSoundStream linear;
 
+      GOAssert(
+        pSection->IsCompressed() == isCompressed,
+        "The short loop must exercise the selected decoder");
       linear.InitStream(
         &resample, pSection.get(), Resample::GO_LINEAR_INTERPOLATION);
       GOAssert(
         linear.ReadBlock(FRACTION_INCREMENT, reference),
         "The reference loop must continue");
+      GOAssert(
+        expected[0] == float(-1500000 / int(nChannels)),
+        "Linear playback must start at the first frame of the sample");
       for (const auto mode :
            {Resample::GO_LINEAR_INTERPOLATION,
             Resample::GO_POLYPHASE_INTERPOLATION,
             Resample::GO_BANDLIMITED_INTERPOLATION}) {
-        const unsigned center = Resample::getVectorLength(mode) / 2 - 1;
         GOSoundStream stream;
 
         stream.InitStream(&resample, pSection.get(), mode);
@@ -632,9 +720,8 @@ void GOTestSoundStream::TestNativeRateCopiesWindowCenter() {
             "Native-rate playback must continue");
         }
         GOAssert(
-          std::equal(
-            actual.begin(), actual.end(), expected.begin() + 2 * center),
-          "Native-rate playback must copy the centre source frame exactly");
+          actual == expected,
+          "Native-rate playback must start at the first frame in every mode");
       }
     }
 }
@@ -681,8 +768,9 @@ void GOTestSoundStream::run() {
   GO_RUN_TEST(TestCompressedLoopWrapMatchesUncompressed())
   GO_RUN_TEST(TestInitAlignedStreamWithSilentAttack())
   GO_RUN_TEST(TestReleaseAlignmentMatchesUncompressed())
+  GO_RUN_TEST(TestReleaseAlignmentFallsBackToStart())
   GO_RUN_TEST(TestRejectedLoopKeepsStartSegmentIndex())
   GO_RUN_TEST(TestBandlimitedLoopAndRetrigger())
   GO_RUN_TEST(TestRetuningSuppressesImages())
-  GO_RUN_TEST(TestNativeRateCopiesWindowCenter())
+  GO_RUN_TEST(TestNativeRateStartsAtFirstFrame())
 }
