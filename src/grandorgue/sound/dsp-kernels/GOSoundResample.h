@@ -27,7 +27,6 @@
 #include <cmath>
 #include <cstdint>
 #include <limits>
-#include <memory>
 
 #include "go_compiler.h"
 
@@ -43,8 +42,22 @@ public:
   static constexpr unsigned POLYPHASE_POINTS = 8;
   static constexpr unsigned LINEAR_POINTS = 2;
   static constexpr unsigned BANDLIMITED_POINTS = 96;
+  /** The window point at the interpolated position when the fraction is 0 */
   static constexpr unsigned BANDLIMITED_LEFT = BANDLIMITED_POINTS / 2 - 1;
+  /**
+    The upper fraction bits select a stored phase of the bandlimited
+    coefficients. The remaining fraction bits blend the two neighbouring phases
+  */
   static constexpr unsigned BANDLIMITED_PHASE_BITS = 7;
+  /** The number of stored phases of the bandlimited coefficients */
+  static constexpr unsigned N_BANDLIMITED_PHASES = 1u << BANDLIMITED_PHASE_BITS;
+  /** Includes the row at fraction 1 for blending with the last phase */
+  static constexpr unsigned N_BANDLIMITED_ROWS = N_BANDLIMITED_PHASES + 1;
+  /**
+    The number of cutoff banks. The stopband edge of bank bankI is
+    0.5 * (bankI + 1) / N_BANDLIMITED_BANKS cycles per source frame
+  */
+  static constexpr unsigned N_BANDLIMITED_BANKS = 64;
 
   /**
    * The largest per-item input-vector length (VECTOR_LENGTH) of any
@@ -564,22 +577,32 @@ public:
     }
   };
 
-  // These cofficients are calculated in the constructor and are not more
-  // changed
+  /*
+    The first constructor call fills these tables once per process. Resamplers
+    then read the same coefficients throughout playback
+  */
 
   // The coefficients for linear interpolation
-  float m_LinearCoefs[UPSAMPLE_FACTOR][LINEAR_POINTS];
+  static float m_LinearCoefs[UPSAMPLE_FACTOR][LINEAR_POINTS];
   // The coefficients for polyphase interpolation
-  float m_PolyphaseCoefs[UPSAMPLE_FACTOR][POLYPHASE_POINTS];
+  static float m_PolyphaseCoefs[UPSAMPLE_FACTOR][POLYPHASE_POINTS];
+  /*
+    The coefficients for bandlimited interpolation. Each cutoff bank includes
+    an extra row for blending with the last phase
+  */
+  static float m_BandlimitedCoefs[N_BANDLIMITED_BANKS][N_BANDLIMITED_ROWS]
+                                 [BANDLIMITED_POINTS];
 
 private:
-  struct BandlimitedTables;
-  // The tables are owned by the resampler, outside the stack and audio path.
-  std::unique_ptr<const BandlimitedTables> o_BandlimitedTables;
+  /** Fills all coefficient tables. The constructor calls it once per process */
+  static void fillCoefs();
 
 public:
+  /**
+    Fills the shared coefficient tables on first construction, thread-safely.
+    Construct a resampler before starting real-time playback
+  */
   GOSoundResample();
-  ~GOSoundResample();
 
   /**
    * A resampler that calculates a next output sample as a scalar production of
@@ -928,12 +951,17 @@ public:
                                   BANDLIMITED_POINTS,
                                   BANDLIMITED_PHASE_BITS> {
     /**
-     * Selects a precomputed bank for the block's largest playback increment.
-     * The window starts at the stream index and its centre is BANDLIMITED_LEFT
-     * frames later. For variable-rate rendering pass the maximum increment of
-     * the block so the same cutoff is safe for every frame.
-     */
-    BandlimitedResampler(const GOSoundResample &resample, unsigned increment);
+      Selects a precomputed bank for the block's largest playback increment.
+      The window starts at the stream index and its centre is BANDLIMITED_LEFT
+      frames later
+      @param resample the resampler, taken for the same interface as the other
+        resamplers. The coefficient tables are shared
+      @param maxIncrement the largest source position advance per output
+        frame in 1/UPSAMPLE_FACTOR units, from 0 to MAX_FRACTION_INCREMENT.
+        For a constant rate, pass the increment itself
+    */
+    BandlimitedResampler(
+      const GOSoundResample &resample, unsigned maxIncrement);
   };
 
   static_assert(LinearResampler::CENTRE_POINT == 0);
