@@ -20,9 +20,9 @@ class GOSoundBufferMutable;
 
 class GOSoundStream {
 private:
-  /* Maximum number of continous samples required for resampling of one target
-   * sample. The polyphase algorithm requires the longest sample vector */
-  static constexpr unsigned MAX_WINDOW_LEN = GOSoundResample::POLYPHASE_POINTS;
+  /* Maximum number of consecutive source frames needed to resample one
+   * output frame. The widest resampler determines the read-ahead capacity. */
+  static constexpr unsigned MAX_WINDOW_LEN = GOSoundResample::MAX_POINTS;
   /* Maximum number of audio chanels in the source samples */
   static constexpr unsigned MAX_INPUT_CHANNELS = 2;
 
@@ -118,6 +118,29 @@ private:
   template <class WindowT, class ResamplerT> static Decoder makeDecoder();
 
   /**
+   * Returns the decoder for a resampler and a compile-time channel count.
+   * @tparam ResamplerT resampler used by the block decoder
+   * @tparam nChannels number of input channels, 1 or 2
+   * @param nBitsPerSoundItem bit depth of the audio data
+   * @param isCompressed whether the audio data is compressed
+   * @return the decoder for that format
+   */
+  template <class ResamplerT, uint8_t nChannels>
+  static Decoder getDecoder(uint8_t nBitsPerSoundItem, bool isCompressed);
+
+  /**
+   * Selects the mono or stereo decoder for a resampler.
+   * @tparam ResamplerT resampler used by the block decoder
+   * @param nChannels number of input channels, 1 or 2
+   * @param nBitsPerSoundItem bit depth of the audio data
+   * @param isCompressed whether the audio data is compressed
+   * @return the decoder for that format
+   */
+  template <class ResamplerT>
+  static Decoder getDecoder(
+    uint8_t nChannels, uint8_t nBitsPerSoundItem, bool isCompressed);
+
+  /**
    * Returns the decoder for a source format and interpolation type.
    * It is a static class member because it uses the private Decoder type and
    * the private window classes.
@@ -166,7 +189,11 @@ private:
   /**
    * Initializes audio_section, sets up decode functions and switches
    * to the start segment with the given index.
-   * Returns start_offset of the start segment.
+   * @param pSection the section to play
+   * @param startSegmentIndex the index of the start segment
+   * @param interpolationType the resampler to use
+   * @return the first window start. For segment 0 this centres the window on
+   *   the first PCM frame. Other segments use their stored start offset.
    */
   unsigned InitFromSection(
     const GOSoundAudioSection *pSection,
@@ -203,10 +230,12 @@ public:
 
   /**
    * Reads an audio buffer from an audio section stream.
+   * One-shot playback reads until the window start passes the last PCM frame.
+   * The final windows can contain a short filter tail or silence.
    * @param resamplerPosIncrement the constant resampling increment, see
    *   GOSoundResample::rateToFractionIncrement(); must be non-zero
    * @param outBuffer the buffer to fill
-   * @return whether the sample has not ended yet
+   * @return whether the requested frames could all be rendered
    */
   bool ReadBlock(
     unsigned resamplerPosIncrement, GOSoundBufferMutable &outBuffer);

@@ -15,6 +15,7 @@
 #include "config/GOConfig.h"
 #include "model/GOWindchest.h"
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
+#include "sound/dsp-kernels/GOSoundResample.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "sound/providers/GOSoundProviderWave.h"
 
@@ -39,7 +40,7 @@ public:
     bool compress,
     unsigned sample_instances,
     unsigned sample_rate,
-    unsigned interpolation,
+    GOSoundResample::InterpolationType interpolation,
     unsigned samples_per_frame);
 };
 
@@ -66,8 +67,11 @@ void GOPerfTestApp::RunTest(
   bool compress,
   unsigned sample_instances,
   unsigned sample_rate,
-  unsigned interpolation,
+  GOSoundResample::InterpolationType interpolation,
   unsigned samples_per_frame) {
+  static constexpr const wxChar *INTERPOLATION_NAMES[]
+    = {wxT("Linear"), wxT("Polyphase"), wxT("High-quality sinc")};
+
   try {
     GOConfig settings("perftest", "");
     GOOrganController *organController = new GOOrganController(settings);
@@ -174,7 +178,7 @@ void GOPerfTestApp::RunTest(
         bits_per_sample,
         sample_rate,
         wxString(compress ? wxT("Y") : wxT("N")),
-        wxString(interpolation == 0 ? wxT("Linear") : wxT("Polyphase")),
+        wxString(INTERPOLATION_NAMES[interpolation]),
         samples_per_frame,
         diff.ToLong(),
         playback_time * 1000.0 * pipes.size() / diff.ToLong());
@@ -213,24 +217,25 @@ bool GOPerfTestApp::OnInit() {
 }
 
 int GOPerfTestApp::OnRun() {
-  const int samplers = 300;
-  RunTest(8, true, samplers, 44100, 0, 128);
-  RunTest(8, false, samplers, 44100, 0, 128);
-  RunTest(16, true, samplers, 44100, 0, 128);
-  RunTest(16, false, samplers, 44100, 0, 128);
-  RunTest(24, true, samplers, 44100, 0, 128);
-  RunTest(24, false, samplers, 44100, 0, 128);
-  RunTest(8, true, samplers, 48000, 1, 1024);
-  RunTest(8, false, samplers, 48000, 1, 1024);
-  RunTest(16, true, samplers, 48000, 1, 1024);
-  RunTest(16, false, samplers, 48000, 1, 1024);
-  RunTest(24, true, samplers, 48000, 1, 1024);
-  RunTest(24, false, samplers, 48000, 1, 1024);
-  RunTest(8, true, samplers, 48000, 0, 1024);
-  RunTest(8, false, samplers, 48000, 0, 1024);
-  RunTest(16, true, samplers, 48000, 0, 1024);
-  RunTest(16, false, samplers, 48000, 0, 1024);
-  RunTest(24, true, samplers, 48000, 0, 1024);
-  RunTest(24, false, samplers, 48000, 0, 1024);
+  using Resample = GOSoundResample;
+  constexpr unsigned N_SAMPLERS = 300;
+
+  // The supplied WAV files are at 48 kHz. A 44.1 kHz engine rate exercises
+  // all three interpolators with the same workload.
+  for (unsigned bitsPerSample : {8u, 16u, 24u})
+    for (bool isCompressed : {true, false})
+      for (const auto interpolation :
+           {Resample::GO_LINEAR_INTERPOLATION,
+            Resample::GO_POLYPHASE_INTERPOLATION,
+            Resample::GO_BANDLIMITED_INTERPOLATION})
+        RunTest(
+          bitsPerSample, isCompressed, N_SAMPLERS, 44100, interpolation, 128);
+  for (const auto interpolation :
+       {Resample::GO_POLYPHASE_INTERPOLATION,
+        Resample::GO_LINEAR_INTERPOLATION})
+    for (unsigned bitsPerSample : {8u, 16u, 24u})
+      for (bool isCompressed : {true, false})
+        RunTest(
+          bitsPerSample, isCompressed, N_SAMPLERS, 48000, interpolation, 1024);
   return 0;
 }

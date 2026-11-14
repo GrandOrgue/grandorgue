@@ -25,6 +25,12 @@ class GOTestSoundResample : public GOTest {
 private:
   static const std::string TEST_NAME;
 
+  /** Checks interpolation images at +50 cents and foldback at 2:1. */
+  void TestBandlimitedInterpolation();
+
+  /** Compares variable-rate planar sinc playback with interleaved playback. */
+  void TestBandlimitedVariableRatePlanar();
+
   /** ResampleBlockVariableRatePlanar() fed a constant-increment array must
    * match ResampleBlock()'s own output (within a small relative tolerance -
    * see the test's own comment) and final ResamplingPosition state

@@ -3863,6 +3863,12 @@ With this option checked an alternate algorithm will be used for Bas/Mel coupler
           <para>This dropdown controls the method used to interpolate the waveform when resampling the samples.</para>
           <variablelist>
             <varlistentry>
+              <term>High-quality sinc</term>
+              <listitem>
+                <simpara>Reduces artifacts when retuning pipes or converting sample rates. It uses more CPU and can reduce available polyphony.</simpara>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
               <term>Polyphase</term>
               <listitem>
                 <simpara>This method gives better audio results at the expense of higher CPU load.</simpara>

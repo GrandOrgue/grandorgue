@@ -1,3 +1,4 @@
+- Added the High-quality sinc interpolation mode for pipe playback https://github.com/GrandOrgue/grandorgue/discussions/1559
 - Fixed crash on receiving or playing a malformed GrandOrgue setup SysEx MIDI message shorter than 8 bytes
 - Fixed loop transitions, loop crossfade bounds and release alignment for pipe samples
 - Fixed crashing or hanging when importing settings or resetting an organ to defaults while it is playing https://github.com/GrandOrgue/grandorgue/issues/2687
@@ -4998,4 +4999,5 @@
 - removed unwanted exe from trunk and left it in release
 # 0.3.1.5 (2009-06-08)
 - change exe release name
+
 # 0.3.1.3 (2009-06-08)

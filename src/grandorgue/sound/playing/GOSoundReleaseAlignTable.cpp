@@ -133,9 +133,10 @@ void GOSoundReleaseAlignTable::ComputeTable(
    * release offset table. This length is defined by the
    * PHASE_ALIGN_MIN_FREQUENCY macro and should be set to the lowest
    * frequency pipe you would ever expect... if this length is greater
-   * than the length of the release, truncate it */
+   * than the length of the release, the table stays empty */
   unsigned required_search_len = sample_rate / PHASE_ALIGN_MIN_FREQUENCY;
-  unsigned release_len = release.GetLength();
+  const unsigned release_len
+    = GOSoundAudioSection::PROLOGUE_LENGTH + release.GetLength();
   if (release_len < required_search_len + BLOCK_HISTORY + start_position)
     return;
   /* If number of samples in the release is not enough to fill the release
