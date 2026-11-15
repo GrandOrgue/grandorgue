@@ -159,6 +159,8 @@ bool GOSoundSamplerPlayer::ProcessSampler(
     if (pProvider) {
       sampler.EnsureVolumeFactor(pProvider->GetGain());
       sampler.EnsureTuningFactor(pProvider->GetTuning());
+      sampler.toneBalanceFilterState.EnsureCoeffs(
+        pProvider->GetToneFilterCoeffs());
     }
 
     GO_DECLARE_LOCAL_SOUND_BUFFER(tmpBuffer, 2, outBuffer.GetNFrames())
@@ -248,8 +250,6 @@ GOSoundSampler *GOSoundSamplerPlayer::CreateTaskSample(
         playback_gain, pSoundProvider->GetVelocityVolume(velocity));
       sampler->delay = delay_samples;
       sampler->time = start_time;
-      sampler->toneBalanceFilterState.Init(
-        sampler->p_SoundProvider->GetToneBalance());
       sampler->is_release = isRelease;
       sampler->m_SamplerTaskId = samplerTaskId;
       sampler->m_MixWindchestTaskId = samplerTaskId;
@@ -309,9 +309,6 @@ void GOSoundSamplerPlayer::SwitchToAnotherAttack(GOSoundSampler *pSampler) {
           crossFadeSamples);
         pSampler->InitVolumeFactor(volumeFactor);
         pSampler->is_release = false;
-
-        new_sampler->toneBalanceFilterState.Init(
-          new_sampler->p_SoundProvider->GetToneBalance());
 
         StartSampler(new_sampler);
       }
@@ -484,8 +481,6 @@ void GOSoundSamplerPlayer::CreateReleaseSampler(GOSoundSampler *handle) {
        * GOSoundSampler::m_MixWindchestTaskId. */
       new_sampler->m_MixWindchestTaskId = handle->m_MixWindchestTaskId;
       new_sampler->m_AudioGroupId = handle->m_AudioGroupId;
-      new_sampler->toneBalanceFilterState.Init(
-        new_sampler->p_SoundProvider->GetToneBalance());
       StartSampler(new_sampler);
       handle->time = m_CurrentTime;
     }

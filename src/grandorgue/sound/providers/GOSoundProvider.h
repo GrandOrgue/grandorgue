@@ -42,7 +42,6 @@ protected:
   float m_MidiPitchFract;
   float m_Gain;
   float m_Tuning;
-  int8_t m_ToneBalanceValue;
   GOSoundToneBalanceFilter m_ToneBalance;
   bool m_IsWaveTremulantActive;
   unsigned m_ReleaseTail;
@@ -88,8 +87,10 @@ public:
   int8_t GetToneBalanceValue() const;
   void SetToneBalanceValue(int8_t value);
   void SetToneBalanceFilterSamplerate(unsigned samplerate);
-  const GOSoundToneBalanceFilter *GetToneBalance() const {
-    return &m_ToneBalance;
+  /** @return the coefficients of the tone balance filter. A playing sampler
+   * follows them via GOSoundToneBalanceFilter::State::EnsureCoeffs() */
+  const GOSoundToneBalanceFilter::CoeffsVersioned &GetToneFilterCoeffs() const {
+    return m_ToneBalance.GetCoeffs();
   }
   unsigned GetReleaseTail() const { return m_ReleaseTail; }
   void SetReleaseTail(unsigned releaseTail) { m_ReleaseTail = releaseTail; }
@@ -115,7 +116,7 @@ inline float GOSoundProvider::GetGain() const { return m_Gain; }
 inline float GOSoundProvider::GetTuning() const { return m_Tuning; }
 
 inline int8_t GOSoundProvider::GetToneBalanceValue() const {
-  return m_ToneBalanceValue;
+  return m_ToneBalance.GetValue();
 }
 
 #endif /* GOSOUNDPROVIDER_H_ */
