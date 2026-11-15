@@ -7,6 +7,8 @@
 
 #include "GOGUIPanelView.h"
 
+#include <algorithm>
+
 #include <wx/app.h>
 #include <wx/display.h>
 #include <wx/frame.h>
@@ -44,7 +46,12 @@ GOGUIPanelView *GOGUIPanelView::createWithFrame(
 
 GOGUIPanelView::GOGUIPanelView(
   GODocumentBase *doc, GOGUIPanel *panel, wxTopLevelWindow *topWindow)
-  : wxScrolledWindow(topWindow),
+  : wxScrolledWindow(
+      topWindow,
+      wxID_ANY,
+      wxDefaultPosition,
+      wxDefaultSize,
+      wxScrolledWindowStyle | wxCLIP_CHILDREN),
     GODocumentView(doc, topWindow),
     m_panelwidget(new GOGUIPanelWidget(panel, this)),
     m_panel(panel),
@@ -52,6 +59,7 @@ GOGUIPanelView::GOGUIPanelView(
   // Set a black background color (especially useful if user switches to full
   // screen)
   topWindow->SetBackgroundColour(*wxBLACK);
+  SetBackgroundColour(*wxBLACK);
 
   // Set maximum size to the size the window would have with scaling 100%
   // However, still within the default maximum limits, whatever those may be
@@ -69,25 +77,13 @@ GOGUIPanelView::GOGUIPanelView(
   // At this point, the new window may fill the whole display and still not be
   // large enough to show all contents. So, before showing anything, lets see
   // what scaling is needed to fit the content completely to the window.
-  wxSize scaledsize = m_panelwidget->SetInitialSize(topWindow->GetClientSize());
+  const wxSize scaledSize
+    = m_panelwidget->SetInitialSize(topWindow->GetClientSize());
 
+  SetScrollRate(5, 5);
+  PositionPanel(scaledSize);
   topWindow->Show();
   topWindow->Update();
-
-  // Ensure that scrollbars will appear when they are needed
-  // Current design aims for avoiding this as much as possible
-  this->SetScrollRate(5, 5);
-  this->SetVirtualSize(scaledsize);
-
-  // Set position of panelwidget to initial value
-  m_panelwidget->SetPosition(wxPoint(0, 0));
-  // In a direction where the actual window size is larger than the
-  // size of the panel (=scaledsize), the panel needs to be centered
-  wxSize actualsize = GetParent()->GetClientSize();
-  if (actualsize.GetWidth() > scaledsize.GetWidth())
-    m_panelwidget->CentreOnParent(wxHORIZONTAL);
-  if (actualsize.GetHeight() > scaledsize.GetHeight())
-    m_panelwidget->CentreOnParent(wxVERTICAL);
 
   m_panel->SetView(this);
 
@@ -161,46 +157,24 @@ void GOGUIPanelView::Raise() {
 
 void GOGUIPanelView::OnSize(wxSizeEvent &event) {
   if (m_panelwidget) {
-    // Scale out the panel according the new size
+    // Freeze the view along with the child while the margins change.
+    wxWindowUpdateLocker lock(this);
+    const wxSize availableSize = GetSize() - GetWindowBorderSize();
 
-    const wxSize newSize = event.GetSize();
-
-    // UpdatePreviewSize(), SetPosition() and CentreOnParent() below each
-    // move/resize m_panelwidget natively on their own. Without freezing, the
-    // window manager can paint the in-between states (e.g. still at the old
-    // centering position right after the size already changed), which is
-    // seen as a brief flicker/jump whenever the panel is dragged past its
-    // native size and centering kicks in. The update locker suppresses
-    // repaints until all the geometry changes below are settled.
-    wxWindowUpdateLocker lock(m_panelwidget);
-
-    const wxSize maxSize = m_panelwidget->UpdatePreviewSize(newSize);
-
-    this->SetVirtualSize(maxSize);
-
-    int x, xu, y, yu;
-    GetScrollPixelsPerUnit(&xu, &yu);
-
-    GetViewStart(&x, &y);
-
-    if (xu && x * xu + maxSize.GetWidth() > newSize.GetWidth())
-      x = (newSize.GetWidth() - maxSize.GetWidth()) / xu;
-    if (yu && y * yu + maxSize.GetHeight() > newSize.GetHeight())
-      y = (newSize.GetHeight() - maxSize.GetHeight()) / yu;
-    this->Scroll(x, y);
-
-    // Reset the position of the panel, before centering it
-    // (some wrong value from previous centering may remain otherwise)
-    m_panelwidget->SetPosition(wxPoint(0, 0));
-
-    // In a direction where the actual window size is larger than the
-    // size of the panel (=scaledsize), the panel needs to be centered
-    wxSize actualsize = GetParent()->GetClientSize();
-
-    if (actualsize.GetWidth() > maxSize.GetWidth())
-      m_panelwidget->CentreOnParent(wxHORIZONTAL);
-    if (actualsize.GetHeight() > maxSize.GetHeight())
-      m_panelwidget->CentreOnParent(wxVERTICAL);
+    PositionPanel(m_panelwidget->UpdatePreviewSize(availableSize));
+    Refresh();
   }
   event.Skip();
+}
+
+void GOGUIPanelView::PositionPanel(const wxSize &panelSize) {
+  SetVirtualSize(panelSize);
+
+  const wxSize margin = GetClientSize() - panelSize;
+
+  Scroll(margin.x >= 0 ? 0 : -1, margin.y >= 0 ? 0 : -1);
+  m_panelwidget->Move(
+    CalcScrolledPosition(
+      wxPoint(std::max(0, margin.x) / 2, std::max(0, margin.y) / 2)),
+    wxSIZE_ALLOW_MINUS_ONE);
 }

@@ -27,6 +27,8 @@ public:
   void Load(GOConfigReader &cfg, wxString group);
   void Layout();
 
+  /** Marks the artwork behind the keys as part of the panel background. */
+  bool IsBackground() const override { return true; }
   void PrepareDraw(double scale, GOBitmap *background);
   void Draw(GODC &dc);
 };

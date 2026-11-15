@@ -62,6 +62,8 @@ public:
   virtual void Load(GOConfigReader &cfg, wxString group);
   virtual void Layout();
 
+  /** True for static artwork used behind the organ controls. */
+  virtual bool IsBackground() const { return false; }
   virtual void PrepareDraw(double scale, GOBitmap *background);
   virtual void Draw(GODC &dc);
   virtual const wxRect &GetBoundingRect();

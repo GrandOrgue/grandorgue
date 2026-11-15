@@ -23,6 +23,8 @@ public:
 
   void Load(GOConfigReader &cfg, wxString group);
 
+  /** Marks ODF panel images as part of the panel background. */
+  bool IsBackground() const override { return true; }
   void PrepareDraw(double scale, GOBitmap *background);
   void Draw(GODC &dc);
 };

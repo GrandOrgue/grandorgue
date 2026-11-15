@@ -28,6 +28,9 @@ private:
   void OnSize(wxSizeEvent &event);
   void OnCharHook(wxKeyEvent &e);
 
+  /** Centers the panel where it fits and preserves scrolling on other axes. */
+  void PositionPanel(const wxSize &panelSize);
+
 public:
   GOGUIPanelView(
     GODocumentBase *doc, GOGUIPanel *panel, wxTopLevelWindow *parent);

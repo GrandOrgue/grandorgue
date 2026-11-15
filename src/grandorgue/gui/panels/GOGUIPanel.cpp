@@ -801,14 +801,23 @@ GOGUIDisplayMetrics *GOGUIPanel::GetDisplayMetrics() { return o_metrics; }
 
 GOGUILayoutEngine *GOGUIPanel::GetLayoutEngine() { return o_layout; }
 
-void GOGUIPanel::PrepareDraw(double scale, GOBitmap *background) {
-  for (unsigned i = 0; i < m_controls.size(); i++)
-    m_controls[i]->PrepareDraw(scale, background);
+void GOGUIPanel::DrawBackground(GODC &dc) {
+  for (GOGUIControl *pControl : m_controls)
+    if (pControl->IsBackground()) {
+      pControl->PrepareDraw(1, nullptr);
+      pControl->Draw(dc);
+    }
+}
+
+void GOGUIPanel::PrepareDraw(double scale, GOBitmap *pBackground) {
+  for (GOGUIControl *pControl : m_controls)
+    pControl->PrepareDraw(
+      scale, pControl->IsBackground() ? nullptr : pBackground);
 }
 
 void GOGUIPanel::Draw(GODC &dc) {
-  for (unsigned i = 0; i < m_controls.size(); i++)
-    m_controls[i]->Draw(dc);
+  for (GOGUIControl *pControl : m_controls)
+    pControl->Draw(dc);
 }
 
 void GOGUIPanel::BasicLoad(

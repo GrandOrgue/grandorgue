@@ -36,6 +36,8 @@ public:
   void Init(GOConfigReader &cfg, wxString group);
   void Layout();
 
+  /** Marks the console textures as part of the panel background. */
+  bool IsBackground() const override { return true; }
   void PrepareDraw(double scale, GOBitmap *background);
   void Draw(GODC &dc);
 };

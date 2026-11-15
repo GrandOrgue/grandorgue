@@ -113,7 +113,9 @@ public:
   void AddControl(GOGUIControl *control);
   GOGUIDisplayMetrics *GetDisplayMetrics();
   GOGUILayoutEngine *GetLayoutEngine();
-  void PrepareDraw(double scale, GOBitmap *background);
+  /** Draws the background artwork at native scale for alpha compositing. */
+  void DrawBackground(GODC &dc);
+  void PrepareDraw(double scale, GOBitmap *pBackground);
   void Draw(GODC &dc);
   const wxImage *GetWoodImage(unsigned woodImageNumber) const;
   const wxImage *LoadImage(const wxString &filename, const wxString &maskname);
