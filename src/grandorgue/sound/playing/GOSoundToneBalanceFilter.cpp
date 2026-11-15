@@ -10,6 +10,7 @@
 #include <cmath>
 
 void GOSoundToneBalanceFilter::Init(int8_t value) {
+  m_value = value;
   GOSoundOnePoleFilter::Type type;
   double hz = 0;
 
@@ -22,12 +23,22 @@ void GOSoundToneBalanceFilter::Init(int8_t value) {
     type = GOSoundOnePoleFilter::Type::TYPE_HPF;
     hz = 20 * pow(800.0, value / 99.0);
   }
-  GOSoundOnePoleFilter::computeCoeffs(type, hz, 0, m_samplerate, m_coeffs);
+
+  GOSoundOnePoleFilter::Coeffs newCoeffs;
+
+  GOSoundOnePoleFilter::computeCoeffs(type, hz, 0, m_samplerate, newCoeffs);
+  m_coeffs.Publish(newCoeffs);
 }
 
-void GOSoundToneBalanceFilter::State::Init(
-  const GOSoundToneBalanceFilter *filter) {
-  p_coeffs = filter ? &filter->m_coeffs : nullptr;
-  for (int i = 0; i < 2; i++)
-    m_state[i] = 0;
+void GOSoundToneBalanceFilter::SetSamplerate(unsigned samplerate) {
+  m_samplerate = samplerate;
+  Init(m_value);
+}
+
+void GOSoundToneBalanceFilter::State::EnsureCoeffs(
+  const CoeffsVersioned &coeffsVersioned) {
+  const bool wasToApply = IsToApply();
+
+  if (coeffsVersioned.RenewSnapshot(m_coeffs) && !wasToApply && IsToApply())
+    m_state[0] = m_state[1] = 0;
 }
