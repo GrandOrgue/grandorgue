@@ -49,10 +49,12 @@ set(go_tests
     sound/GOTestSoundOrganEngineFactories.cpp
     sound/GOTestSoundOrganEngineStress.cpp
     sound/GOTestSoundWindchestGroupTaskGrid.cpp
+    sound/GOTestWaveFileBuilder.cpp
     sound/mappers/GOTestPerfSoundEnclosureShelfMapper.cpp
     sound/mappers/GOTestSoundEnclosureShelfMapper.cpp
     sound/playing/GOTestPerfSoundPlayingFader.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
+    sound/playing/GOTestSoundItemAccessor.cpp
     sound/playing/GOTestSoundPlayingFader.cpp
     sound/playing/GOTestSoundSampler.cpp
     sound/playing/GOTestSoundStream.cpp

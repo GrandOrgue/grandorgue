@@ -14,6 +14,7 @@
 
 #include "GOMemoryPool.h"
 #include "GOTest.h"
+#include "GOWave.h"
 
 class GOSoundAudioSection;
 struct GOWaveLoop;
@@ -39,6 +40,27 @@ private:
     bool isCompressed,
     const GOWaveLoop *pLoop = nullptr,
     bool isSilent = false,
+    unsigned loopCrossfadeMs = 0);
+
+  /**
+   * Creates an audio section from samples of the given format at 48000 Hz.
+   * The items are typed by the format (float for SF_IEEE_FLOAT), so the data
+   * is passed as void *, as GOSoundAudioSection::Setup() takes it.
+   * @param pPcmData interleaved samples, nChannels * nFrames items
+   * @param format the format of the items
+   * @param nChannels number of channels, 1 or 2
+   * @param nFrames number of frames
+   * @param isCompressed whether the data is stored in compressed format
+   * @param pLoop if not null, the loop points of the section
+   * @param loopCrossfadeMs loop crossfade length in milliseconds
+   */
+  std::unique_ptr<GOSoundAudioSection> CreateAudioSection(
+    const void *pPcmData,
+    GOWave::SAMPLE_FORMAT format,
+    unsigned nChannels,
+    unsigned nFrames,
+    bool isCompressed,
+    const GOWaveLoop *pLoop = nullptr,
     unsigned loopCrossfadeMs = 0);
 
   /**
@@ -111,12 +133,52 @@ private:
    */
   void TestReleaseAlignmentMatchesUncompressed();
 
+  /**
+   * Checks that GetHistory() of a float attack, uncompressed and compressed,
+   * is the same as that of the same data stored as integers.
+   */
+  void TestFloatHistoryMatchesInt();
+
+  /**
+   * Checks that a float section, uncompressed and compressed, is read the same
+   * after SaveCache() and LoadCache().
+   */
+  void TestFloatCacheRoundTrip();
+
+  /**
+   * Checks that GOSoundProviderWave loads a stereo float file with its own
+   * depth as a float section and with 24 bits as an integer one.
+   */
+  void TestProviderLoadsFloatWave();
+
   /** Checks short releases and note-offs before the window leaves the prologue.
    */
   void TestReleaseAlignmentFallsBackToStart();
 
   /** Checks start segment numbering after dropping a loop. */
   void TestRejectedLoopKeepsStartSegmentIndex();
+
+  /** Checks that an uncompressed float section is read as it is. */
+  void TestFloatRead();
+
+  /**
+   * Checks that a looped float section read with the polyphase interpolation
+   * matches the same data stored as integers.
+   */
+  void TestFloatPolyphaseLoopMatchesInt();
+
+  /**
+   * Checks that a compressed float loop, including its end segment, is read
+   * exactly as the same data stored as integers.
+   */
+  void TestCompressedFloatMatchesInt();
+
+  /**
+   * Checks that the loop crossfade of an uncompressed float section is
+   * computed in float: values beyond full scale are not clamped and values
+   * below the Q23 resolution are not rounded.
+   */
+  void TestFloatLoopCrossfadeKeepsFloats();
 
 public:
   std::string GetName() override { return TEST_NAME; }

@@ -221,6 +221,7 @@ sound/effects/GOSoundVibratoProcessorState.cpp
 sound/interfaces/GOSoundCallbackConnector.cpp
 sound/mappers/GOSoundEnclosureShelfMapper.cpp
 sound/playing/GOSoundAudioSection.cpp
+sound/playing/GOSoundItemAccessor.cpp
 sound/playing/GOSoundPlayingFader.cpp
 sound/playing/GOSoundReleaseAlignTable.cpp
 sound/playing/GOSoundSampler.cpp
