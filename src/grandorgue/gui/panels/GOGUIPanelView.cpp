@@ -11,6 +11,7 @@
 #include <wx/display.h>
 #include <wx/frame.h>
 #include <wx/image.h>
+#include <wx/region.h>
 #include <wx/toplevel.h>
 #include <wx/wupdlock.h>
 
@@ -160,7 +161,11 @@ void GOGUIPanelView::Raise() {
 }
 
 void GOGUIPanelView::OnSize(wxSizeEvent &event) {
+  wxRegion exposed;
+
   if (m_panelwidget) {
+    exposed = wxRegion(m_panelwidget->GetRect());
+
     // Scale out the panel according the new size
 
     const wxSize newSize = event.GetSize();
@@ -201,6 +206,15 @@ void GOGUIPanelView::OnSize(wxSizeEvent &event) {
       m_panelwidget->CentreOnParent(wxHORIZONTAL);
     if (actualsize.GetHeight() > maxSize.GetHeight())
       m_panelwidget->CentreOnParent(wxVERTICAL);
+  }
+
+  // The view may have erased its background before the panel was moved.
+  // After thawing the panel, erase the part of the view it just uncovered.
+  if (!exposed.IsEmpty()) {
+    exposed.Subtract(m_panelwidget->GetRect());
+    exposed.Intersect(GetClientRect());
+    for (wxRegionIterator rect(exposed); rect; ++rect)
+      RefreshRect(rect.GetRect(), true);
   }
   event.Skip();
 }
