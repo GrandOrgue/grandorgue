@@ -46,6 +46,14 @@ public:
    */
   static constexpr unsigned PROLOGUE_LENGTH = GOSoundResample::MAX_CENTRE_POINT;
 
+  /**
+   * Bumped when the cache content or layout of a section changes without
+   * changing sizeof(), because GOOrganController::GenerateCacheHash() relies on
+   * sizeof() to detect layout changes. It is added to the hash so that the
+   * caches created before such a change are not used.
+   */
+  static constexpr unsigned CACHE_VERSION = 1;
+
   struct StartSegment {
     /* Sample offset into entire audio section where data begins. */
     unsigned start_offset;
