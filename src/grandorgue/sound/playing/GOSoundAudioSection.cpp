@@ -50,6 +50,7 @@ void GOSoundAudioSection::ClearData() {
   m_BytesPerSample = 0;
   m_WaveTremulantStateFor = BOOL3_DEFAULT;
   m_IsCompressed = false;
+  m_IsFloat = false;
   m_channels = 0;
   if (m_data) {
     m_Pool.Free(m_data);
@@ -83,6 +84,8 @@ bool GOSoundAudioSection::LoadCache(GOCache &cache) {
   if (!cache.Read(&m_WaveTremulantStateFor, sizeof(m_WaveTremulantStateFor)))
     return false;
   if (!cache.Read(&m_IsCompressed, sizeof(m_IsCompressed)))
+    return false;
+  if (!cache.Read(&m_IsFloat, sizeof(m_IsFloat)))
     return false;
   if (!cache.Read(&m_channels, sizeof(m_channels)))
     return false;
@@ -152,6 +155,8 @@ bool GOSoundAudioSection::SaveCache(GOCacheWriter &cache) const {
   if (!cache.Write(&m_WaveTremulantStateFor, sizeof(m_WaveTremulantStateFor)))
     return false;
   if (!cache.Write(&m_IsCompressed, sizeof(m_IsCompressed)))
+    return false;
+  if (!cache.Write(&m_IsFloat, sizeof(m_IsFloat)))
     return false;
   if (!cache.Write(&m_channels, sizeof(m_channels)))
     return false;
@@ -299,6 +304,8 @@ void GOSoundAudioSection::DoCrossfade(
   unsigned fade_length,
   unsigned loop_length,
   unsigned length) {
+  const GOSoundItemAccessor accessor = CreateItemAccessor();
+
   for (; dest_offset < length; dest_offset += loop_length) {
     const unsigned nFrames = std::min(fade_length, length - dest_offset);
 
@@ -306,11 +313,11 @@ void GOSoundAudioSection::DoCrossfade(
       float factor = (cos(M_PI * (pos + 0.5) / fade_length) + 1.0) * 0.5;
 
       for (uint8_t j = 0; j < m_channels; j++) {
-        float val1 = GetSampleData(dest, pos + dest_offset, j);
-        float val2 = GetSampleData(src, pos + src_offset, j);
-        float result = val1 * factor + val2 * (1 - factor);
+        const float val1 = accessor.GetFloatItem(dest, pos + dest_offset, j);
+        const float val2 = accessor.GetFloatItem(src, pos + src_offset, j);
+        const float result = val1 * factor + val2 * (1 - factor);
 
-        SetSampleData(dest, pos + dest_offset, j, (int)result);
+        accessor.SetFloatItem(dest, pos + dest_offset, j, result);
       }
     }
   }
@@ -333,6 +340,21 @@ void GOSoundAudioSection::CopyPaddedFrames(
     size_t(nFrames - nZeroFrames) * m_BytesPerSample);
 }
 
+void GOSoundAudioSection::ConvertEndSegmentsToRawUnits() {
+  assert(m_IsFloat && m_IsCompressed);
+  for (EndSegment &rEndSegment : m_EndSegments) {
+    // An int32 item replaces the float of the same position in place. The
+    // pool does not align its allocations, as for the 16-bit and 24-bit items
+    const GOFloat32 *pFloats = (const GOFloat32 *)rEndSegment.end_data;
+
+    std::transform(
+      pFloats,
+      pFloats + rEndSegment.end_size / sizeof(GOFloat32),
+      (GOInt32 *)rEndSegment.end_data,
+      GOWave::floatToIntQ23);
+  }
+}
+
 void GOSoundAudioSection::Setup(
   const GOCacheObject *pObjectFor,
   const GOLoaderFilename *pLoaderFilename,
@@ -351,6 +373,12 @@ void GOSoundAudioSection::Setup(
 
   m_channels = pcm_data_channels;
   m_BitsPerSample = wave_bits_per_sample(pcm_data_format);
+  m_IsFloat = pcm_data_format == GOWave::SF_IEEE_FLOAT;
+  // Set before the segments are built: DoCrossfade() decodes through
+  // IsFloatData() while the end segments are created
+  m_IsCompressed = false;
+  // An uncompressed float section is stored as it is, so its norm gain is 1.0
+  m_SampleFracBits = m_BitsPerSample <= 24 ? m_BitsPerSample - 1 : 0;
   compress = (compress) && (m_BitsPerSample > 8);
 
   unsigned fade_len = loopCrossfadeLength * pcm_data_sample_rate / 1000;
@@ -508,16 +536,21 @@ void GOSoundAudioSection::Setup(
     throw GOOutOfMemory();
   m_SampleRate = pcm_data_sample_rate;
   m_SampleCount = total_alloc_samples;
-  m_SampleFracBits = m_BitsPerSample - 1;
-  m_IsCompressed = false;
   m_WaveTremulantStateFor = waveTremulantStateFor;
 
   CopyPaddedFrames(pPcm, 0, total_alloc_samples, m_data);
 
   GetMaxAmplitudeAndDerivative();
 
-  if (compress)
+  if (compress) {
     Compress(m_BitsPerSample > 16);
+    // Compress() may abort early and keep the float data
+    if (m_IsFloat && m_IsCompressed) {
+      ConvertEndSegmentsToRawUnits();
+      // The main block and the end segments are int32 raw units at 2^-23 FS now
+      m_SampleFracBits = 23;
+    }
+  }
 }
 
 void GOSoundAudioSection::Compress(bool format16) {

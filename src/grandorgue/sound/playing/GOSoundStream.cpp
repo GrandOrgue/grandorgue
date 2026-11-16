@@ -18,12 +18,12 @@
 
 /* Block reading functions */
 
-template <class SampleT, uint8_t nChannels>
+template <class SampleT, class ResItemT, uint8_t nChannels>
 class GOSoundStream::StreamPtrWindow
-  : public GOSoundResample::PtrFrameVector<SampleT, int, nChannels> {
+  : public GOSoundResample::PtrFrameVector<SampleT, ResItemT, nChannels> {
 public:
   inline StreamPtrWindow(GOSoundStream &stream)
-    : GOSoundResample::PtrFrameVector<SampleT, int, nChannels>(
+    : GOSoundResample::PtrFrameVector<SampleT, ResItemT, nChannels>(
       (SampleT *)stream.ptr) {}
 };
 
@@ -148,7 +148,14 @@ std::array<int, MAX_OUTPUT_CHANNELS> GOSoundStream::ReadFrame(
 
   for (uint8_t channelI = 0; channelI < WindowT::m_NChannels; ++channelI) {
     w.Seek(frameIndex, channelI);
-    *(pItem++) = w.NextItem();
+
+    const auto item = w.NextItem();
+
+    // The items of a float window are brought to the raw units of the section
+    if constexpr (std::is_floating_point_v<decltype(item)>)
+      *(pItem++) = GOWave::floatToIntQ23(item);
+    else
+      *(pItem++) = item;
   }
   return items;
 }
@@ -162,7 +169,10 @@ GOSoundStream::Decoder GOSoundStream::makeDecoder() {
 
 template <class ResamplerT, uint8_t nChannels>
 GOSoundStream::Decoder GOSoundStream::getDecoder(
-  uint8_t nBitsPerSoundItem, bool isCompressed) {
+  uint8_t nBitsPerSoundItem, bool isFloat, bool isCompressed) {
+  // A compressed section stores int32, so it needs no float decoder
+  assert(!isCompressed || !isFloat);
+
   Decoder decoder{};
 
   if (isCompressed) {
@@ -181,29 +191,45 @@ GOSoundStream::Decoder GOSoundStream::getDecoder(
     decoder = nBitsPerSoundItem >= 20 ? makeDecoder<Cache16, ResamplerT>()
                                       : makeDecoder<Cache8, ResamplerT>();
   } else if (nBitsPerSoundItem <= 8)
-    decoder = makeDecoder<StreamPtrWindow<GOInt8, nChannels>, ResamplerT>();
+    decoder
+      = makeDecoder<StreamPtrWindow<GOInt8, int, nChannels>, ResamplerT>();
   else if (nBitsPerSoundItem <= 16)
-    decoder = makeDecoder<StreamPtrWindow<GOInt16, nChannels>, ResamplerT>();
+    decoder
+      = makeDecoder<StreamPtrWindow<GOInt16, int, nChannels>, ResamplerT>();
   else if (nBitsPerSoundItem <= 24)
-    decoder = makeDecoder<StreamPtrWindow<GOInt24, nChannels>, ResamplerT>();
+    decoder
+      = makeDecoder<StreamPtrWindow<GOInt24, int, nChannels>, ResamplerT>();
+  else if (isFloat)
+    decoder
+      = makeDecoder<StreamPtrWindow<GOFloat32, float, nChannels>, ResamplerT>();
+  else
+    // int32 raw units of the end segments of a compressed float section
+    decoder
+      = makeDecoder<StreamPtrWindow<GOInt32, int, nChannels>, ResamplerT>();
   return decoder;
 }
 
 template <class ResamplerT>
 GOSoundStream::Decoder GOSoundStream::getDecoder(
-  uint8_t nChannels, uint8_t nBitsPerSoundItem, bool isCompressed) {
+  uint8_t nChannels,
+  uint8_t nBitsPerSoundItem,
+  bool isFloat,
+  bool isCompressed) {
   Decoder decoder{};
 
   if (nChannels == 1)
-    decoder = getDecoder<ResamplerT, 1>(nBitsPerSoundItem, isCompressed);
+    decoder
+      = getDecoder<ResamplerT, 1>(nBitsPerSoundItem, isFloat, isCompressed);
   else if (nChannels == 2)
-    decoder = getDecoder<ResamplerT, 2>(nBitsPerSoundItem, isCompressed);
+    decoder
+      = getDecoder<ResamplerT, 2>(nBitsPerSoundItem, isFloat, isCompressed);
   return decoder;
 }
 
 GOSoundStream::Decoder GOSoundStream::getDecoder(
   uint8_t nChannels,
   uint8_t nBitsPerSoundItem,
+  bool isFloat,
   bool isCompressed,
   GOSoundResample::InterpolationType interpolationType) {
   using Resample = GOSoundResample;
@@ -212,15 +238,15 @@ GOSoundStream::Decoder GOSoundStream::getDecoder(
   switch (interpolationType) {
   case Resample::GO_LINEAR_INTERPOLATION:
     decoder = getDecoder<Resample::LinearResampler>(
-      nChannels, nBitsPerSoundItem, isCompressed);
+      nChannels, nBitsPerSoundItem, isFloat, isCompressed);
     break;
   case Resample::GO_POLYPHASE_INTERPOLATION:
     decoder = getDecoder<Resample::PolyphaseResampler>(
-      nChannels, nBitsPerSoundItem, isCompressed);
+      nChannels, nBitsPerSoundItem, isFloat, isCompressed);
     break;
   case Resample::GO_BANDLIMITED_INTERPOLATION:
     decoder = getDecoder<Resample::BandlimitedResampler>(
-      nChannels, nBitsPerSoundItem, isCompressed);
+      nChannels, nBitsPerSoundItem, isFloat, isCompressed);
     break;
   }
   assert(decoder.fmDecodeBlock && "unsupported decoder configuration");
@@ -229,11 +255,13 @@ GOSoundStream::Decoder GOSoundStream::getDecoder(
 
 GOSoundStream::Decoder GOSoundStream::getDecoderFor(
   const GOSoundAudioSection *pSection,
+  bool isFloat,
   bool isCompressed,
   GOSoundResample::InterpolationType interpolationType) {
   return getDecoder(
     pSection->GetChannels(),
     pSection->GetBitsPerSample(),
+    isFloat,
     isCompressed,
     interpolationType);
 }
@@ -270,11 +298,14 @@ unsigned GOSoundStream::InitFromSection(
   const GOSoundAudioSection *pSection,
   unsigned startSegmentIndex,
   GOSoundResample::InterpolationType interpolationType) {
+  const bool isFloatData = pSection->IsFloatData();
+
   audio_section = pSection;
-  m_decoder
-    = getDecoderFor(pSection, pSection->IsCompressed(), interpolationType);
-  // End segments are never compressed
-  m_EndDecoder = getDecoderFor(pSection, false, interpolationType);
+  m_decoder = getDecoderFor(
+    pSection, isFloatData, pSection->IsCompressed(), interpolationType);
+  // End segments are never compressed: they are float exactly when the
+  // section is not compressed
+  m_EndDecoder = getDecoderFor(pSection, isFloatData, false, interpolationType);
 
   const unsigned startOffset = GoToStartSegment(startSegmentIndex);
   const unsigned centrePoint

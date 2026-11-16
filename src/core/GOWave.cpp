@@ -7,12 +7,15 @@
 
 #include "GOWave.h"
 
+#include <algorithm>
+#include <cassert>
 #include <wx/file.h>
 #include <wx/intl.h>
 #include <wx/log.h>
 
 #include "files/GOOpenedFile.h"
 
+#include "GOFloat32.h"
 #include "GOWavPack.h"
 #include "GOWavPackWriter.h"
 #include "GOWaveTypes.h"
@@ -27,6 +30,7 @@ void GOWave::SetInvalid() {
   m_CuePoint = -1;
   m_hasRelease = false;
   m_isPacked = false;
+  m_isFloat = false;
   m_Loops.clear();
 }
 
@@ -62,9 +66,11 @@ void GOWave::LoadFormatChunk(const uint8_t *ptr, unsigned long length) {
       _("< Bits per sample must be a multiple of 8 in this implementation");
   m_BytesPerSample = bitsPerSample / 8;
 
-  if (formatCode == 3 && m_BytesPerSample != 4)
+  // 32 bits is not necessarily float: the format code decides
+  m_isFloat = formatCode == 3;
+  if (m_isFloat && m_BytesPerSample != 4)
     throw(wxString) _("< Only 32bit IEEE float samples supported");
-  else if (formatCode == 1 && m_BytesPerSample > 3)
+  else if (!m_isFloat && m_BytesPerSample > 3)
     throw(wxString) _("< Unsupported PCM bit size");
 }
 
@@ -299,6 +305,18 @@ void GOWave::Close() {
 
 unsigned GOWave::GetBitsPerSample() const { return m_BytesPerSample * 8; }
 
+GOWave::SAMPLE_FORMAT GOWave::GetOwnFormat() const {
+  // 32-bit PCM will need its own branch here
+  return m_isFloat ? SF_IEEE_FLOAT : (SAMPLE_FORMAT)GetBitsPerSample();
+}
+
+GOWave::SAMPLE_FORMAT GOWave::GetMinIntFormat(unsigned bitsPerSample) const {
+  assert(bitsPerSample >= 8 && bitsPerSample <= 24);
+  // A float file (32 bits) is always deeper than the request, so it is
+  // converted; the same will hold for 32-bit PCM
+  return (SAMPLE_FORMAT)std::min(GetBitsPerSample(), bitsPerSample);
+}
+
 unsigned GOWave::GetChannels() const { return m_Channels; }
 
 bool GOWave::HasReleaseMarker() const { return m_hasRelease; }
@@ -346,6 +364,24 @@ template <class T> T GOWave::readNext(const uint8_t *&input) {
   return val;
 }
 
+bool GOWave::IsStoredAs(GOWave::SAMPLE_FORMAT readFormat) const {
+  bool isMatch;
+
+  if (readFormat == SF_IEEE_FLOAT)
+    // the stored floats are little-endian, while the output is native
+    isMatch = m_isFloat && GOIntHelper::isLittleEndian();
+  else if (m_isPacked)
+    // WavPack decodes integer data to int32 with 24 fractional bits
+    isMatch = false;
+  else
+    // 8-bit WAV data is offset binary, so it never matches a signed output;
+    // the stored integer bytes are little-endian, while the output is native
+    isMatch = GOIntHelper::isLittleEndian()
+      && ((m_BytesPerSample == 2 && readFormat == SF_SIGNEDSHORT_16)
+          || (m_BytesPerSample == 3 && readFormat == SF_SIGNEDINT24_24));
+  return isMatch;
+}
+
 void GOWave::ReadSamples(
   void *dest_buffer /** Pointer to received sample data */
   ,
@@ -380,107 +416,119 @@ void GOWave::ReadSamples(
   const uint8_t *input = m_SampleData.get();
   uint8_t *output = (uint8_t *)dest_buffer;
 
-  unsigned len = m_Channels * GetLength() / merge_count;
-  for (unsigned i = 0; i < len; i++) {
-    int value
-      = 0; /* Value will be stored with 24 fractional bits of precision */
-    for (unsigned j = 0; j < merge_count; j++) {
-      int val; /* Value will be stored with 24 fractional bits of precision */
-      if (m_isPacked && m_BytesPerSample != 4) {
-        val = readNext<int32_t>(input);
-        switch (m_BytesPerSample) {
-        case 1:
-          val <<= 16;
-          break;
-        case 2:
-          val <<= 8;
-          break;
+  const unsigned len = m_Channels * GetLength() / merge_count;
+
+  // The stored samples are already in the requested format: copy them
+  // unchanged instead of converting them sample by sample. Only the float
+  // case changes behaviour (the 16/24-bit conversion is already exact); the
+  // copy also keeps the common paths cheap.
+  if (merge_count == 1 && IsStoredAs(read_format))
+    std::copy(input, input + len * m_BytesPerSample, output);
+  else {
+    for (unsigned i = 0; i < len; i++) {
+      int value
+        = 0; /* Value will be stored with 24 fractional bits of precision */
+      for (unsigned j = 0; j < merge_count; j++) {
+        int val; /* Value will be stored with 24 fractional bits of precision */
+        if (m_isPacked && !m_isFloat) {
+          val = readNext<int32_t>(input);
+          switch (m_BytesPerSample) {
+          case 1:
+            val <<= 16;
+            break;
+          case 2:
+            val <<= 8;
+            break;
+          }
+        } else {
+          switch (m_BytesPerSample) {
+          case 1:
+            val = readNext<GOInt8>(input) - 0x80;
+            val <<= 16;
+            break;
+          case 2:
+            val = readNext<GOInt16LE>(input);
+            val <<= 8;
+            break;
+          case 3:
+            val = readNext<GOInt24LE>(input);
+            break;
+          case 4:
+            // A 32-bit PCM file would need its own branch here
+            if (!m_isFloat)
+              throw(wxString) _("Unsupported format: 32-bit integer PCM");
+            val = readNext<float>(input) * SCALE_24_BITS;
+            break;
+          default:
+            throw(wxString) _("bad format!");
+          }
         }
-      } else {
-        switch (m_BytesPerSample) {
-        case 1:
-          val = readNext<GOInt8>(input) - 0x80;
-          val <<= 16;
-          break;
-        case 2:
-          val = readNext<GOInt16LE>(input);
-          val <<= 8;
-          break;
-        case 3:
-          val = readNext<GOInt24LE>(input);
-          break;
-        case 4:
-          val = readNext<float>(input) * (float)(1 << 23);
-          break;
-        default:
-          throw(wxString) _("bad format!");
-        }
+
+        if (select_channel && select_channel != j + 1)
+          continue;
+        value += val;
       }
+      if (select_channel == 0 && merge_count > 1)
+        value = value / (int)merge_count;
 
-      if (select_channel && select_channel != j + 1)
-        continue;
-      value += val;
-    }
-    if (select_channel == 0 && merge_count > 1)
-      value = value / (int)merge_count;
-
-    switch (read_format) {
-    case SF_SIGNEDBYTE_8:
-      writeNext<GOInt8>(output, value >> 16);
-      break;
-    case SF_SIGNEDSHORT_9:
-      writeNext<GOInt16>(output, value >> 15);
-      break;
-    case SF_SIGNEDSHORT_10:
-      writeNext<GOInt16>(output, value >> 14);
-      break;
-    case SF_SIGNEDSHORT_11:
-      writeNext<GOInt16>(output, value >> 13);
-      break;
-    case SF_SIGNEDSHORT_12:
-      writeNext<GOInt16>(output, value >> 12);
-      break;
-    case SF_SIGNEDSHORT_13:
-      writeNext<GOInt16>(output, value >> 11);
-      break;
-    case SF_SIGNEDSHORT_14:
-      writeNext<GOInt16>(output, value >> 10);
-      break;
-    case SF_SIGNEDSHORT_15:
-      writeNext<GOInt16>(output, value >> 9);
-      break;
-    case SF_SIGNEDSHORT_16:
-      writeNext<GOInt16>(output, value >> 8);
-      break;
-    case SF_SIGNEDINT24_17:
-      writeNext<GOInt24>(output, value >> 7);
-      break;
-    case SF_SIGNEDINT24_18:
-      writeNext<GOInt24>(output, value >> 6);
-      break;
-    case SF_SIGNEDINT24_19:
-      writeNext<GOInt24>(output, value >> 5);
-      break;
-    case SF_SIGNEDINT24_20:
-      writeNext<GOInt24>(output, value >> 4);
-      break;
-    case SF_SIGNEDINT24_21:
-      writeNext<GOInt24>(output, value >> 3);
-      break;
-    case SF_SIGNEDINT24_22:
-      writeNext<GOInt24>(output, value >> 2);
-      break;
-    case SF_SIGNEDINT24_23:
-      writeNext<GOInt24>(output, value >> 1);
-      break;
-    case SF_SIGNEDINT24_24:
-      writeNext<GOInt24>(output, value);
-      break;
-    case SF_IEEE_FLOAT:
-      writeNext<float>(output, value / (float)(1 << 23));
-      break;
-    default:
-      throw(wxString) _("bad return format!");
+      switch (read_format) {
+      case SF_SIGNEDBYTE_8:
+        writeNext<GOInt8>(output, value >> 16);
+        break;
+      case SF_SIGNEDSHORT_9:
+        writeNext<GOInt16>(output, value >> 15);
+        break;
+      case SF_SIGNEDSHORT_10:
+        writeNext<GOInt16>(output, value >> 14);
+        break;
+      case SF_SIGNEDSHORT_11:
+        writeNext<GOInt16>(output, value >> 13);
+        break;
+      case SF_SIGNEDSHORT_12:
+        writeNext<GOInt16>(output, value >> 12);
+        break;
+      case SF_SIGNEDSHORT_13:
+        writeNext<GOInt16>(output, value >> 11);
+        break;
+      case SF_SIGNEDSHORT_14:
+        writeNext<GOInt16>(output, value >> 10);
+        break;
+      case SF_SIGNEDSHORT_15:
+        writeNext<GOInt16>(output, value >> 9);
+        break;
+      case SF_SIGNEDSHORT_16:
+        writeNext<GOInt16>(output, value >> 8);
+        break;
+      case SF_SIGNEDINT24_17:
+        writeNext<GOInt24>(output, value >> 7);
+        break;
+      case SF_SIGNEDINT24_18:
+        writeNext<GOInt24>(output, value >> 6);
+        break;
+      case SF_SIGNEDINT24_19:
+        writeNext<GOInt24>(output, value >> 5);
+        break;
+      case SF_SIGNEDINT24_20:
+        writeNext<GOInt24>(output, value >> 4);
+        break;
+      case SF_SIGNEDINT24_21:
+        writeNext<GOInt24>(output, value >> 3);
+        break;
+      case SF_SIGNEDINT24_22:
+        writeNext<GOInt24>(output, value >> 2);
+        break;
+      case SF_SIGNEDINT24_23:
+        writeNext<GOInt24>(output, value >> 1);
+        break;
+      case SF_SIGNEDINT24_24:
+        writeNext<GOInt24>(output, value);
+        break;
+      case SF_IEEE_FLOAT:
+        writeNext<GOFloat32>(output, intQ23ToFloat(value));
+        break;
+      default:
+        throw(wxString) _("bad return format!");
+      }
     }
   }
 }
@@ -519,7 +567,7 @@ bool GOWave::Save(GOBuffer<uint8_t> &buf) {
   header.Append((const uint8_t *)&wav, sizeof(wav));
   GO_WAVECHUNKHEADER head;
   GO_WAVEFORMATPCM fmt;
-  fmt.wf.wFormatTag = m_BytesPerSample == 4 ? 3 : 1;
+  fmt.wf.wFormatTag = m_isFloat ? 3 : 1;
   fmt.wf.nChannels = GetChannels();
   fmt.wf.nSamplesPerSec = GetSampleRate();
   fmt.wf.nAvgBytesPerSec = GetSampleRate() * GetChannels() * m_BytesPerSample;

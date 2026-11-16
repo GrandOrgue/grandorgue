@@ -20,6 +20,9 @@ class GOSoundBufferMutable;
 
 class GOSoundStream {
 private:
+  // Access for unit tests, as in GOSoundVibratoProcessor
+  friend class GOTestSoundStream;
+
   /* Maximum number of consecutive source frames needed to resample one
    * output frame. The widest resampler determines the read-ahead capacity. */
   static constexpr unsigned MAX_WINDOW_LEN = GOSoundResample::MAX_POINTS;
@@ -29,7 +32,8 @@ private:
   const GOSoundAudioSection *audio_section;
   const GOSoundResample *resample;
 
-  template <class SampleT, uint8_t nChannels> class StreamPtrWindow;
+  template <class SampleT, class ResItemT, uint8_t nChannels>
+  class StreamPtrWindow;
 
   template <bool format16, uint8_t nChannels> class StreamCacheWindow;
 
@@ -122,23 +126,31 @@ private:
    * @tparam ResamplerT resampler used by the block decoder
    * @tparam nChannels number of input channels, 1 or 2
    * @param nBitsPerSoundItem bit depth of the audio data
+   * @param isFloat whether the uncompressed items above 24 bits are IEEE
+   *   floats, otherwise int32; false if isCompressed
    * @param isCompressed whether the audio data is compressed
    * @return the decoder for that format
    */
   template <class ResamplerT, uint8_t nChannels>
-  static Decoder getDecoder(uint8_t nBitsPerSoundItem, bool isCompressed);
+  static Decoder getDecoder(
+    uint8_t nBitsPerSoundItem, bool isFloat, bool isCompressed);
 
   /**
    * Selects the mono or stereo decoder for a resampler.
    * @tparam ResamplerT resampler used by the block decoder
    * @param nChannels number of input channels, 1 or 2
    * @param nBitsPerSoundItem bit depth of the audio data
+   * @param isFloat whether the uncompressed items above 24 bits are IEEE
+   *   floats, otherwise int32; false if isCompressed
    * @param isCompressed whether the audio data is compressed
    * @return the decoder for that format
    */
   template <class ResamplerT>
   static Decoder getDecoder(
-    uint8_t nChannels, uint8_t nBitsPerSoundItem, bool isCompressed);
+    uint8_t nChannels,
+    uint8_t nBitsPerSoundItem,
+    bool isFloat,
+    bool isCompressed);
 
   /**
    * Returns the decoder for a source format and interpolation type.
@@ -146,6 +158,8 @@ private:
    * the private window classes.
    * @param nChannels number of channels, 1 or 2
    * @param nBitsPerSoundItem bit depth of the audio data
+   * @param isFloat whether the uncompressed items above 24 bits are IEEE
+   *   floats, otherwise int32; false if isCompressed
    * @param isCompressed whether the audio data is compressed
    * @param interpolationType resampler to use
    * @return the decoder, with both functions null for an unsupported format
@@ -153,18 +167,22 @@ private:
   static Decoder getDecoder(
     uint8_t nChannels,
     uint8_t nBitsPerSoundItem,
+    bool isFloat,
     bool isCompressed,
     GOSoundResample::InterpolationType interpolationType);
 
   /**
    * Returns the decoder for the audio data of a section.
    * @param pSection section providing the channel count and bit depth
+   * @param isFloat whether the uncompressed items above 24 bits are IEEE
+   *   floats, otherwise int32; false if isCompressed
    * @param isCompressed whether the data is compressed, false for end segments
    * @param interpolationType resampler to use
    * @return the decoder for the given section and interpolation type
    */
   static Decoder getDecoderFor(
     const GOSoundAudioSection *pSection,
+    bool isFloat,
     bool isCompressed,
     GOSoundResample::InterpolationType interpolationType);
 
@@ -232,6 +250,10 @@ public:
    * Reads an audio buffer from an audio section stream.
    * One-shot playback reads until the window start passes the last PCM frame.
    * The final windows can contain a short filter tail or silence.
+   * The output is in the raw units of the audio section, not normalised: the
+   * caller must multiply it by GOSoundAudioSection::GetNormGain() (2^-7 for 8
+   * bits, 2^-15 for 16 bits, 2^-23 for 24 bits and a compressed float, 1.0 for
+   * an uncompressed float) to get the full scale of 1.0.
    * @param resamplerPosIncrement the constant resampling increment, see
    *   GOSoundResample::rateToFractionIncrement(); must be non-zero
    * @param outBuffer the buffer to fill

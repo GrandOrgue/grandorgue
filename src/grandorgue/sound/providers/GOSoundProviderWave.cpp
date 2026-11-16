@@ -24,13 +24,9 @@ void GOSoundProviderWave::SetAmplitude(float fixed_amplitude, float gain) {
   m_Gain = fixed_amplitude * powf(10.0f, gain * 0.05f);
 }
 
-unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample) {
-  if (bits_per_sample <= 8)
-    return 1;
-  else if (bits_per_sample <= 16)
-    return 2;
-  else
-    return 3;
+unsigned GOSoundProviderWave::getBytesPerSample(GOWave::SAMPLE_FORMAT format) {
+  return format == GOWave::SF_IEEE_FLOAT ? sizeof(float)
+                                         : ((unsigned)format + 7) / 8;
 }
 
 void GOSoundProviderWave::AddAttackSection(
@@ -41,7 +37,7 @@ void GOSoundProviderWave::AddAttackSection(
   int attack_start,
   const std::vector<GOWaveLoop> *pSrcLoops,
   GOBool3 waveTremulantStateFor,
-  unsigned bits_per_sample,
+  GOWave::SAMPLE_FORMAT format,
   unsigned channels,
   bool compress,
   LoopLoadType loop_mode,
@@ -123,8 +119,8 @@ void GOSoundProviderWave::AddAttackSection(
   section->Setup(
     p_ObjectFor,
     &loaderFilename,
-    data + attack_pos * GetBytesPerSample(bits_per_sample) * channels,
-    (GOWave::SAMPLE_FORMAT)bits_per_sample,
+    data + attack_pos * getBytesPerSample(format) * channels,
+    format,
     channels,
     wave.GetSampleRate(),
     wave.GetLength(),
@@ -144,7 +140,7 @@ void GOSoundProviderWave::AddReleaseSection(
   unsigned max_playback_time,
   int cue_point,
   int release_end,
-  unsigned bits_per_sample,
+  GOWave::SAMPLE_FORMAT format,
   unsigned channels,
   bool compress,
   unsigned releaseCrossfadeLength) {
@@ -172,8 +168,8 @@ void GOSoundProviderWave::AddReleaseSection(
   section->Setup(
     p_ObjectFor,
     &loaderFilename,
-    data + release_offset * GetBytesPerSample(bits_per_sample) * channels,
-    (GOWave::SAMPLE_FORMAT)bits_per_sample,
+    data + release_offset * getBytesPerSample(format) * channels,
+    format,
     channels,
     wave.GetSampleRate(),
     release_samples,
@@ -238,9 +234,15 @@ void GOSoundProviderWave::LoadFromOneFile(
 
     wave.Open(openedFilePtr.get());
 
+    // FILE_OWN_DEPTH loads the file as it is, otherwise the file is not loaded
+    // deeper than requested
+    const GOWave::SAMPLE_FORMAT format = bits_per_sample == FILE_OWN_DEPTH
+      ? wave.GetOwnFormat()
+      : wave.GetMinIntFormat(bits_per_sample);
+
     /* allocate data to work with */
-    unsigned totalDataSize = wave.GetLength()
-      * GetBytesPerSample(bits_per_sample) * wave.GetChannels();
+    unsigned totalDataSize
+      = wave.GetLength() * getBytesPerSample(format) * wave.GetChannels();
     GOBuffer<char> data(totalDataSize);
 
     if (use_pitch) {
@@ -266,14 +268,7 @@ void GOSoundProviderWave::LoadFromOneFile(
       wave_channels = load_channels;
       channels = 1;
     }
-    if (bits_per_sample > wave.GetBitsPerSample())
-      bits_per_sample = wave.GetBitsPerSample();
-
-    wave.ReadSamples(
-      data.get(),
-      (GOWave::SAMPLE_FORMAT)bits_per_sample,
-      wave.GetSampleRate(),
-      wave_channels);
+    wave.ReadSamples(data.get(), format, wave.GetSampleRate(), wave_channels);
 
     if (is_attack)
       AddAttackSection(
@@ -284,7 +279,7 @@ void GOSoundProviderWave::LoadFromOneFile(
         attack_start,
         loops,
         waveTremulantStateFor,
-        bits_per_sample,
+        format,
         channels,
         compress,
         loop_mode,
@@ -305,7 +300,7 @@ void GOSoundProviderWave::LoadFromOneFile(
         max_playback_time,
         cue_point,
         release_end,
-        bits_per_sample,
+        format,
         channels,
         compress,
         releaseCrossfadeLength ? releaseCrossfadeLength
