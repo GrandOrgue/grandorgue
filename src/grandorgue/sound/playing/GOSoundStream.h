@@ -202,14 +202,24 @@ private:
 
 public:
   /**
-   * Initializes a stream to play this audio section from its beginning. The
-   * resampling rate is not stored in the stream: the owner passes it to
-   * ReadBlock().
+   * Initializes a stream to play this audio section from the beginning of a
+   * start segment. The resampling rate is not stored in the stream: the owner
+   * passes it to ReadBlock().
+   * @param startSegmentIndex the start segment to begin in: 0 starts at the
+   *   beginning of the file (the default, as for a pipe), 1 starts at the
+   *   first loop, the next ones at the next loops, see
+   *   GOSoundAudioSection::Setup(). For the segment 0 the first output frame
+   *   is the first frame of the file. For the other segments the window of the
+   *   interpolation starts at the first frame of the segment (the decoder
+   *   state of a compressed section is stored for this position), so the first
+   *   output frame is the one GOSoundResample::getCentrePoint(
+   *   interpolationType) frames after it (0 for the linear interpolation)
    */
   void InitStream(
     const GOSoundResample *pResample,
     const GOSoundAudioSection *pSection,
-    GOSoundResample::InterpolationType interpolationType);
+    GOSoundResample::InterpolationType interpolationType,
+    unsigned startSegmentIndex = 0);
 
   /**
    * Initializes a release stream aligned to the existing attack stream.
