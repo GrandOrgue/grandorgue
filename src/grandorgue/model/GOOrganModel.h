@@ -200,6 +200,9 @@ public:
 
   unsigned GetTremulantCount() const { return m_tremulants.size(); }
   GOTremulant *GetTremulant(unsigned index) { return m_tremulants[index]; }
+  const GOTremulant *GetTremulant(unsigned index) const {
+    return m_tremulants[index];
+  }
   /**
    * Find a tremulant by it's name
    * @param name - the name of tremulant to find

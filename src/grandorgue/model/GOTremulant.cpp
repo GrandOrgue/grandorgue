@@ -126,4 +126,6 @@ void GOTremulant::StartPlayback() {
     r_OrganModel.UpdateTremulant(this);
 }
 
-GOTremulantType GOTremulant::GetTremulantType() { return m_TremulantType; }
+GOTremulantType GOTremulant::GetTremulantType() const {
+  return m_TremulantType;
+}
