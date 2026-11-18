@@ -735,6 +735,8 @@ const GOSetter::ButtonDefinitionEntry *const GOSetter::P_BUTTON_DEFS
 
 GOSetter::GOSetter(GOOrganController *organController)
   : m_OrganController(organController),
+    m_IsCmbFileListPopulated(false),
+    m_CmbFilePos(-1),
     m_pos(0),
     m_NumericModeDigitsEntered(-1),
     m_NumericModeAccomulated(0),
@@ -761,9 +763,16 @@ GOSetter::GOSetter(GOOrganController *organController)
   m_OrganController->RegisterLifecycleListener(this);
   m_OrganController->RegisterCombinationButtonSet(this);
   m_OrganController->RegisterControlChangedHandler(this);
+  m_OrganController->RegisterSaveableObject(this);
 }
 
-GOSetter::~GOSetter() {}
+GOSetter::~GOSetter() {
+  // in the reverse order of the constructor
+  m_OrganController->UnregisterSaveableObject(this);
+  m_OrganController->UnRegisterControlChangedHandler(this);
+  m_OrganController->UnRegisterCombinationButtonSet(this);
+  m_OrganController->UnRegisterLifecycleListener(this);
+}
 
 static const wxString WX_OVERRIDE_MODE = wxT("OverrideMode");
 static const wxString WX_EMPTY_STRING = wxEmptyString;
@@ -780,8 +789,6 @@ wxString GOSetter::GetCrescendoCmbStateName(uint8_t crescendoIdx) const {
 }
 
 void GOSetter::Load(GOConfigReader &cfg) {
-  m_OrganController->RegisterSaveableObject(this);
-
   wxString buffer;
 
   m_framegeneral.resize(0);

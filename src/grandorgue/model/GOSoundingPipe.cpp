@@ -56,7 +56,11 @@ GOSoundingPipe::GOSoundingPipe(
     m_IsTemperamentOriginalBased(true),
     m_SoundProvider(this),
     m_PipeConfigNode(
-      &rank->GetPipeConfig(), *pOrganModel, this, &m_SoundProvider) {}
+      &rank->GetPipeConfig(), *pOrganModel, this, &m_SoundProvider) {
+  p_OrganModel->RegisterCacheObject(this);
+}
+
+GOSoundingPipe::~GOSoundingPipe() { p_OrganModel->UnRegisterCacheObject(this); }
 
 void GOSoundingPipe::Init(
   GOConfigReader &cfg,
@@ -64,7 +68,6 @@ void GOSoundingPipe::Init(
   const wxString &prefix,
   const wxString &filename) {
   SetGroupAndPrefix(group, prefix);
-  p_OrganModel->RegisterCacheObject(this);
   m_Filename = filename;
   m_PipeConfigNode.Init(cfg, group, prefix);
   m_OdfMidiKeyNumber = -1;
@@ -216,7 +219,6 @@ void GOSoundingPipe::LoadReleaseFileInfo(
 void GOSoundingPipe::Load(
   GOConfigReader &cfg, const wxString &group, const wxString &prefix) {
   SetGroupAndPrefix(group, prefix);
-  p_OrganModel->RegisterCacheObject(this);
   m_Filename = cfg.ReadStringTrim(ODFSetting, group, prefix);
   m_PipeConfigNode.Load(cfg, group, prefix);
   m_HarmonicNumber = cfg.ReadInteger(

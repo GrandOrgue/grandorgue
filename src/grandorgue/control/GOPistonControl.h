@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -24,6 +24,10 @@ private:
 
 public:
   GOPistonControl(GOOrganModel &organModel);
+
+  /** Unregisters the ControlChanged handler registered by the constructor. */
+  ~GOPistonControl();
+
   void Load(GOConfigReader &cfg, const wxString &group) override;
   void Push() override;
 };

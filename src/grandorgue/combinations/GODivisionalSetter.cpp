@@ -129,14 +129,17 @@ GODivisionalSetter::GODivisionalSetter(
   // callback
   CreateButtons(*organController, m_ButtonDefinitions);
   organController->RegisterCombinationButtonSet(this);
+  organController->RegisterSaveableObject(this);
 }
 
 GODivisionalSetter::~GODivisionalSetter() {
+  // in the reverse order of the constructor
+  m_OrganController->UnregisterSaveableObject(this);
+  m_OrganController->UnRegisterCombinationButtonSet(this);
   ClearCombinations();
   m_BankLabelsByName.clear();
   delete[] m_ButtonDefinitions;
   delete[] m_ManualMidiContexts;
-  m_OrganController->UnregisterSaveableObject(this);
 }
 
 void GODivisionalSetter::UpdateBankDisplay(unsigned manualN, uint8_t bankN) {
@@ -153,7 +156,6 @@ void GODivisionalSetter::Save(GOConfigWriter &cfg) {
 }
 
 void GODivisionalSetter::Load(GOConfigReader &cfg) {
-  m_OrganController->RegisterSaveableObject(this);
   m_BankLabelsByName.clear();
 
   // load for all manuals

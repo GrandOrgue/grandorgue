@@ -119,6 +119,9 @@ public:
     float max_volume,
     bool retune);
 
+  /** Unregisters the cache object registered by the constructor. */
+  ~GOSoundingPipe();
+
   void Init(
     GOConfigReader &cfg,
     const wxString &group,

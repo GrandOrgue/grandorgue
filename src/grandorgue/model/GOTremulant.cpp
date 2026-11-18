@@ -37,9 +37,14 @@ GOTremulant::GOTremulant(GOOrganModel &organModel)
     m_TremProvider(NULL),
     m_PlaybackHandle(0),
     m_LastStop(0),
-    m_TremulantN(0) {}
+    m_TremulantN(0) {
+  r_OrganModel.RegisterCacheObject(this);
+}
 
-GOTremulant::~GOTremulant() { DELETE_AND_NULL(m_TremProvider); }
+GOTremulant::~GOTremulant() {
+  r_OrganModel.UnRegisterCacheObject(this);
+  DELETE_AND_NULL(m_TremProvider);
+}
 
 void GOTremulant::Initialize() {}
 
@@ -73,7 +78,6 @@ void GOTremulant::Load(
     m_PlaybackHandle = 0;
   }
   GODrawstop::Load(cfg, group);
-  r_OrganModel.RegisterCacheObject(this);
 }
 
 void GOTremulant::SetupIsToStoreInCmb() {

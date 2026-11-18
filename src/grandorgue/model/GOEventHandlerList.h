@@ -92,6 +92,11 @@ public:
 
   void RegisterCacheObject(GOCacheObject *obj) { m_CacheObjects.Add(obj); }
 
+  /** Unregisters the cache object registered by RegisterCacheObject. */
+  void UnRegisterCacheObject(GOCacheObject *pObj) {
+    m_CacheObjects.Remove(pObj);
+  }
+
   void RegisterReferencingObject(GOReferencingObject *pObj) {
     m_ReferencingObjects.Add(pObj);
   }

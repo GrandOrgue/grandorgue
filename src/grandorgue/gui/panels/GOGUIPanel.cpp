@@ -56,9 +56,12 @@ GOGUIPanel::GOGUIPanel(
     o_metrics(0),
     o_layout(0),
     p_view(0),
-    m_InitialOpenWindow(false) {}
+    m_InitialOpenWindow(false) {
+  p_OrganController->RegisterSaveableObject(this);
+}
 
 GOGUIPanel::~GOGUIPanel() {
+  p_OrganController->UnregisterSaveableObject(this);
   if (o_layout)
     delete o_layout;
   if (o_metrics)
@@ -98,7 +101,6 @@ void GOGUIPanel::Init(
   wxString group,
   wxString group_name) {
   BasicLoad(cfg, group, false);
-  p_OrganController->RegisterSaveableObject(this);
   o_metrics = metrics;
   o_layout = new GOGUILayoutEngine(*o_metrics);
   m_Name = name;
@@ -186,7 +188,6 @@ void GOGUIPanel::Load(GOConfigReader &cfg, const wxString &group) {
     m_GroupName = cfg.ReadString(ODFSetting, panel_group, wxT("Group"), false);
   }
   BasicLoad(cfg, cfgGroup, is_main_panel);
-  p_OrganController->RegisterSaveableObject(this);
 
   o_metrics = new GOGUIHW1DisplayMetrics(cfg, panel_group);
   o_layout = new GOGUILayoutEngine(*o_metrics);

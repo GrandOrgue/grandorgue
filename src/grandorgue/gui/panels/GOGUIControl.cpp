@@ -19,17 +19,20 @@ GOGUIControl::GOGUIControl(GOGUIPanel *panel, GOControl *pControl)
   p_metrics = panel->GetDisplayMetrics();
   p_layout = panel->GetLayoutEngine();
   p_panel->GetOrganFile()->RegisterControlChangedHandler(this);
+  p_panel->GetOrganFile()->RegisterSaveableObject(this);
 }
 
-GOGUIControl::~GOGUIControl() {}
+GOGUIControl::~GOGUIControl() {
+  // in the reverse order of the constructor
+  p_panel->GetOrganFile()->UnregisterSaveableObject(this);
+  p_panel->GetOrganFile()->UnRegisterControlChangedHandler(this);
+}
 
 void GOGUIControl::Init(GOConfigReader &cfg, wxString group) {
-  p_panel->GetOrganFile()->RegisterSaveableObject(this);
   m_group = group;
 }
 
 void GOGUIControl::Load(GOConfigReader &cfg, wxString group) {
-  p_panel->GetOrganFile()->RegisterSaveableObject(this);
   m_group = group;
 }
 
