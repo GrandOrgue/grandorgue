@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -9,6 +9,17 @@
 
 #include <wx/font.h>
 #include <wx/intl.h>
+
+unsigned GOGUIDisplayMetrics::computeCellOffset(
+  unsigned nCells,
+  const std::function<unsigned(unsigned)> &getCellSize,
+  unsigned gap) {
+  unsigned offset = 0;
+
+  for (unsigned cellI = 0; cellI < nCells; ++cellI)
+    offset += getCellSize(cellI) + gap;
+  return offset;
+}
 
 GOGUIDisplayMetrics::GOGUIDisplayMetrics()
   : m_DispScreenSizeHoriz(0),
