@@ -12,6 +12,7 @@
 
 #include "buffer/GOSoundBufferPlanarMutable.h"
 #include "config/GOConfig.h"
+#include "dsp-kernels/GOSoundConversions.h"
 #include "effects/GOSoundShelfFilterProcessor.h"
 #include "mappers/GOSoundEnclosureShelfMapper.h"
 #include "model/GOEnclosure.h"
@@ -39,24 +40,20 @@
 std::vector<float> GOSoundOrganEngine::createDownmixGains(
   unsigned nAudioGroups) {
   // GOSoundOutputTask::DoRun() reads the linear form of this (see
-  // convertGainToScaleFactor()) as a row-major [outChannelI][groupI * 2 +
-  // groupChannelI] matrix with row stride nAudioGroups * 2 (not a fixed 4,
-  // which only matches that row stride when nAudioGroups == 1): row 0 (L)
-  // takes each group's left channel (even groupChannelI), row 1 (R),
-  // starting at the row-1 offset nOutputCount, takes each group's right
-  // channel.
+  // GOSoundConversions::gainToVolumeOrMute()) as a row-major
+  // [outChannelI][groupI * 2 + groupChannelI] matrix with row stride
+  // nAudioGroups * 2 (not a fixed 4, which only matches that row stride when
+  // nAudioGroups == 1): row 0 (L) takes each group's left channel (even
+  // groupChannelI), row 1 (R), starting at the row-1 offset nOutputCount, takes
+  // each group's right channel.
   const unsigned nOutputCount = nAudioGroups * 2;
-  std::vector<float> gains(nOutputCount * 2, GOAudioDeviceConfig::MUTE_VOLUME);
+  std::vector<float> gains(nOutputCount * 2, GOSoundConversions::MUTE_GAIN_DB);
 
   for (unsigned groupI = 0; groupI < nAudioGroups; groupI++) {
     gains[groupI * 2] = 0.0f;
     gains[nOutputCount + groupI * 2 + 1] = 0.0f;
   }
   return gains;
-}
-
-float GOSoundOrganEngine::convertGainToScaleFactor(float gain) {
-  return gain >= -120 && gain < 40 ? powf(10.0f, gain * 0.05f) : 0.0f;
 }
 
 std::vector<GOSoundOrganEngine::AudioOutputConfig> GOSoundOrganEngine::
@@ -82,7 +79,7 @@ std::vector<GOSoundOrganEngine::AudioOutputConfig> GOSoundOrganEngine::
       std::fill(
         scaleFactors.begin(),
         scaleFactors.end(),
-        GOAudioDeviceConfig::MUTE_VOLUME);
+        GOSoundConversions::MUTE_GAIN_DB);
 
       if (channelI < deviceOutputs.size()) {
         for (const auto &groupOutput : deviceOutputs[channelI]) {
@@ -164,7 +161,7 @@ GOSoundOrganEngine::~GOSoundOrganEngine() {}
 
 void GOSoundOrganEngine::SetGain(int gain) {
   m_gain = gain;
-  m_amplitude = powf(10.0f, m_gain * 0.05f);
+  m_amplitude = GOSoundConversions::gainToVolume(m_gain);
 }
 
 void GOSoundOrganEngine::SetFromConfig(GOConfig &config) {
@@ -346,7 +343,8 @@ void GOSoundOrganEngine::BuildEngine(
         if (k >= m_NAudioGroups * 2)
           break;
         scaleFactors[channelI * m_NAudioGroups * 2 + k]
-          = convertGainToScaleFactor(devConfig.scaleFactors[channelI][k]);
+          = GOSoundConversions::gainToVolumeOrMute(
+            devConfig.scaleFactors[channelI][k]);
       }
     }
     outputState.mp_task = std::make_unique<GOSoundOutputTask>(
@@ -370,7 +368,7 @@ void GOSoundOrganEngine::BuildEngine(
     std::vector<float> scaleFactors(gains.size());
 
     for (unsigned i = 0, n = gains.size(); i < n; i++)
-      scaleFactors[i] = convertGainToScaleFactor(gains[i]);
+      scaleFactors[i] = GOSoundConversions::gainToVolumeOrMute(gains[i]);
 
     mp_DownmixTask = std::make_unique<GOSoundOutputTask>(
       2, scaleFactors, m_NSamplesPerBuffer);
