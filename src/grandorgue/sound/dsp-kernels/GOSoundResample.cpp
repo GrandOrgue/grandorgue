@@ -31,6 +31,51 @@
 #define M_PI 3.14159265358979323846264338327950288
 #endif
 
+bool GOSoundResample::ChunkedIncrements::IsSupported(
+  unsigned nTotalSourceFrames, unsigned nTotalTargetFrames) {
+  const uint64_t nTotalSourceUnits = (uint64_t)nTotalSourceFrames
+    << UPSAMPLE_BITS;
+
+  return nTotalTargetFrames > 0
+    && nTotalSourceUnits
+    >= (uint64_t)MIN_FRACTION_INCREMENT * nTotalTargetFrames
+    && nTotalSourceUnits
+    <= (uint64_t)MAX_FRACTION_INCREMENT * nTotalTargetFrames;
+}
+
+GOSoundResample::ChunkedIncrements::ChunkedIncrements(
+  unsigned nTotalSourceFrames, unsigned nTotalTargetFrames)
+  : m_TotalSourceUnits((uint64_t)nTotalSourceFrames << UPSAMPLE_BITS),
+    m_NTotalTargetFrames(nTotalTargetFrames) {
+  assert(IsSupported(nTotalSourceFrames, nTotalTargetFrames));
+}
+
+unsigned GOSoundResample::ChunkedIncrements::NextChunkIncrement(
+  unsigned nChunkTargetFrames) {
+  assert(nChunkTargetFrames > 0);
+  assert(m_NDoneTargetFrames + nChunkTargetFrames <= m_NTotalTargetFrames);
+
+  /* The increment is the source units that are left over the target frames
+   * that are left, rounded down. So the position never passes the end
+   * (m_DoneSourceUnits <= m_TotalSourceUnits, the subtraction cannot wrap),
+   * and the average increment of the rest never falls, so it stays above
+   * MIN_FRACTION_INCREMENT. Rounding down the earlier chunks may raise the
+   * average of the rest above MAX_FRACTION_INCREMENT, so the increment is
+   * clamped to it; the position then ends short of the exact end, by less than
+   * m_NTotalTargetFrames source units */
+  const unsigned nRemainingTargetFrames
+    = m_NTotalTargetFrames - m_NDoneTargetFrames;
+  const uint64_t nRemainingSourceUnits = m_TotalSourceUnits - m_DoneSourceUnits;
+  const uint64_t increment = std::min<uint64_t>(
+    nRemainingSourceUnits / nRemainingTargetFrames, MAX_FRACTION_INCREMENT);
+
+  assert(
+    increment >= MIN_FRACTION_INCREMENT && increment <= MAX_FRACTION_INCREMENT);
+  m_DoneSourceUnits += increment * nChunkTargetFrames;
+  m_NDoneTargetFrames += nChunkTargetFrames;
+  return (unsigned)increment;
+}
+
 void GOSoundResample::ResamplingPosition::Init(
   unsigned startIndex, unsigned startFraction) {
   assert(startFraction < UPSAMPLE_FACTOR);

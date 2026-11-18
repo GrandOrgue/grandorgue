@@ -98,6 +98,25 @@ private:
    * be on the right side of the bound. */
   void TestComputeNUnitsToReach();
 
+  /** ChunkedIncrements never moves the position above the exact straight line
+   * from the start to the end, and ends short of the exact end by less than
+   * the last chunk, for several rates and chunk lengths, including a
+   * one-frame last chunk and a rate near MIN_RATE. */
+  void TestChunkedIncrementsError();
+
+  /** ChunkedIncrements gives the same increment to every chunk when the rate
+   * is exact (whole ratios and MIN_RATE), and GetDoneTargetFrames() follows
+   * the chunks. */
+  void TestChunkedIncrementsExactRates();
+
+  /** Near MAX_RATE the rounding of the earlier chunks cannot push the last
+   * increment above MAX_FRACTION_INCREMENT. */
+  void TestChunkedIncrementsNearMaxRate();
+
+  /** ChunkedIncrements::IsSupported() is exact at both bounds of the average
+   * increment, and false for no frames. */
+  void TestChunkedIncrementsIsSupported();
+
   /** GOSoundResample::isSameRate() is true only for the exact unity
    * increment, also after scaling it by the ratio 1.0. */
   void TestIsSameRate();
