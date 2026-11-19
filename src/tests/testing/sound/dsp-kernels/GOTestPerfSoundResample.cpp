@@ -43,6 +43,9 @@ const std::string GOTestPerfSoundResample::TEST_NAME
 // GrandOrgue/grandorgue and oleg68/GrandOrgue-official made 2026-10-17..31,
 // after commit 341191074 changed the iteration count) re-derived every table
 // from the worst throughput observed in that window with the same -10% margin.
+// Rebaselined again 2026-11-19 against the CI runs of both repos from
+// 2026-11-05..19 by the same rule; only the entries that fell below their
+// baseline were lowered (see the notes in the tables).
 // Format: {buffer_size, min_MItems_per_second} - see
 // GOTestPerfSoundBufferBase::RunAndEvaluateTest().
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_MONO_FLOAT_LINEAR[] = {
@@ -60,10 +63,12 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_MONO_FLOAT_LINEAR[] = {
   // machine when the full suite runs: observed as low as 221.2/247.6
   // Mitems/sec under full-suite contention in two separate runs, so it
   // keeps its own wider margin instead of the shared -10%.
-  {32, 190},
+  // Rebaselined 2026-11-19: min observed 185.4 (size=32) and 196.7
+  // (size=2048) on CI, -10%, rounded down to 2 significant figures.
+  {32, 160},
   {128, 160}, // a CI run 185.8 Mitems/sec, minus 10%
   {512, 190},
-  {2048, 200},
+  {2048, 170},
 #endif
 };
 
@@ -310,14 +315,17 @@ static constexpr GOTestPerfSoundBufferBaseline
     // Release, worst of local runs and GrandOrgue/grandorgue CI runs
     // 728.4/770.7/785.1/788.5, minus 10%, floored to 2 significant figures
     // (rebaselined 2026-10-31 against the 2026-10-17..31 CI runs of both
-    // repos).
-    {32, 650},
+    // repos); size=32 rebaselined 2026-11-19: min observed 648.8 on CI, -10%,
+    // rounded down to 2 significant figures.
+    {32, 580},
     {128, 690},
     {512, 700},
     {2048, 700},
 #else
-    // Debug, single local run 217.4/233.3/236.2/235.2.
-    {32, 190},
+    // Debug, single local run 217.4/233.3/236.2/235.2; size=32 rebaselined
+    // 2026-11-19: min observed 181.5 on CI, -10%, rounded down to 2
+    // significant figures.
+    {32, 160},
     {128, 200},
     {512, 210},
     {2048, 210},
