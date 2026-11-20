@@ -726,6 +726,62 @@ void GOTestSoundStream::TestNativeRateStartsAtFirstFrame() {
     }
 }
 
+void GOTestSoundStream::TestInitStreamAtLoopSegment() {
+  using Resample = GOSoundResample;
+  constexpr unsigned LOOP_START = 100;
+  constexpr unsigned LOOP_START_SEGMENT_INDEX = 1;
+  const GOWaveLoop loop = {LOOP_START, N_FRAMES - 1};
+  const auto pSection = CreateAudioSection(1, N_FRAMES, false, &loop);
+  const auto pCompressed = CreateAudioSection(1, N_FRAMES, true, &loop);
+  const Resample resample;
+
+  GOAssert(pCompressed->IsCompressed(), "The loop must be compressed");
+  for (const auto mode :
+       {Resample::GO_LINEAR_INTERPOLATION,
+        Resample::GO_POLYPHASE_INTERPOLATION,
+        Resample::GO_BANDLIMITED_INTERPOLATION}) {
+    // The window of the interpolation starts at the start of the segment, so
+    // the first output frame is the one centrePoint frames after it
+    const unsigned centrePoint = Resample::getCentrePoint(mode);
+    GOSoundStream stream;
+    GOSoundStream compressedStream;
+
+    stream.InitStream(
+      &resample, pSection.get(), mode, LOOP_START_SEGMENT_INDEX);
+    compressedStream.InitStream(
+      &resample, pCompressed.get(), mode, LOOP_START_SEGMENT_INDEX);
+
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
+    GO_DECLARE_LOCAL_SOUND_BUFFER(compressedBuffer, 2, N_FRAMES_PER_BLOCK)
+
+    GOAssert(
+      stream.ReadBlock(FRACTION_INCREMENT, buffer)
+        && compressedStream.ReadBlock(FRACTION_INCREMENT, compressedBuffer),
+      "a looped stream must not end");
+    // ReadBlock() gives raw units: the norm gain is applied by the caller.
+    // GetSample() counts from the start of the stored data, which begins with
+    // the prologue
+    for (unsigned frameI = 0; frameI < N_FRAMES_PER_BLOCK; frameI++)
+      GOAssert(
+        buffer.GetData()[frameI * 2]
+          == (float)pSection->GetSample(
+            GOSoundAudioSection::PROLOGUE_LENGTH + LOOP_START + centrePoint
+              + frameI,
+            0),
+        std::format(
+          "the loop start segment must start centrePoint ({}) frames after "
+          "the loop start",
+          centrePoint));
+    GOAssert(
+      memcmp(
+        buffer.GetData(),
+        compressedBuffer.GetData(),
+        buffer.GetNItems() * sizeof(float))
+        == 0,
+      "a compressed loop must start where the uncompressed one does");
+  }
+}
+
 void GOTestSoundStream::run() {
   for (unsigned nChannels : {1u, 2u}) {
     for (bool isCompressed : {false, true}) {
@@ -770,6 +826,7 @@ void GOTestSoundStream::run() {
   GO_RUN_TEST(TestReleaseAlignmentMatchesUncompressed())
   GO_RUN_TEST(TestReleaseAlignmentFallsBackToStart())
   GO_RUN_TEST(TestRejectedLoopKeepsStartSegmentIndex())
+  GO_RUN_TEST(TestInitStreamAtLoopSegment())
   GO_RUN_TEST(TestBandlimitedLoopAndRetrigger())
   GO_RUN_TEST(TestRetuningSuppressesImages())
   GO_RUN_TEST(TestNativeRateStartsAtFirstFrame())

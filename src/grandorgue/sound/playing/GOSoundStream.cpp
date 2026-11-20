@@ -289,10 +289,12 @@ unsigned GOSoundStream::InitFromSection(
 void GOSoundStream::InitStream(
   const GOSoundResample *pResample,
   const GOSoundAudioSection *pSection,
-  GOSoundResample::InterpolationType interpolationType) {
+  GOSoundResample::InterpolationType interpolationType,
+  unsigned startSegmentIndex) {
   resample = pResample;
 
-  const unsigned startOffset = InitFromSection(pSection, 0, interpolationType);
+  const unsigned startOffset
+    = InitFromSection(pSection, startSegmentIndex, interpolationType);
 
   m_ResamplingPos.Init(startOffset);
 }
