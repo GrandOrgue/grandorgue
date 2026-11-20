@@ -6,9 +6,14 @@
 
 #include "GOTestOrganController.h"
 
+#include <array>
+#include <cmath>
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
+
+#include <wx/intl.h>
 
 #include "config/GOConfig.h"
 #include "config/GOConfigFileWriter.h"
@@ -17,11 +22,16 @@
 #include "loader/GOOrganReader.h"
 #include "loader/GOProgressMonitor.h"
 #include "model/GOEnclosure.h"
+#include "model/GORank.h"
+#include "model/GOSoundingPipe.h"
 #include "model/GOWindchest.h"
+#include "temperaments/GOTemperament.h"
+#include "temperaments/GOTemperamentMtsEsp.h"
 
 #include "GOBuffer.h"
 #include "GOOrgan.h"
 #include "GOOrganController.h"
+#include "GOTemperamentFollower.h"
 #include "GOTestScope.h"
 
 // Smallest ODF that survives LoadOrganCoreData() to completion: one
@@ -46,6 +56,7 @@ void GOTestOrganController::run() {
   try {
     GO_RUN_TEST(TestOnStateLifecycleSending())
     GO_RUN_TEST(TestOrganCoreData())
+    GO_RUN_TEST(TestTemperamentFollower())
   } catch (const wxString &e) {
     throw GOTestException(
       std::string("Unexpected wxString exception: ") + e.ToStdString());
@@ -207,4 +218,118 @@ void GOTestOrganController::TestOrganCoreData() {
   GOAssert(
     controller->GetWindchestCount() == 0,
     "A second ClearOrganCoreData() call should be a safe no-op");
+}
+
+void GOTestOrganController::TestTemperamentFollower() {
+  // a fake master whose tuning and connection the test changes
+  std::array<double, 128> retunings;
+  bool hasMaster = false;
+
+  retunings.fill(0);
+
+  const GOTemperamentMtsEsp live(
+    [&retunings](unsigned noteNumber) { return retunings[noteNumber]; },
+    [&hasMaster] { return hasMaster; },
+    [] { return wxString(wxT("Meantone")); });
+  const wxString &label = controller->GetTemperamentLabel()->GetContent();
+  const GOTemperament fixed(wxT("Fixed"));
+  GOTemperamentFollower &follower = *controller->o_TemperamentFollower;
+  // stops following however the test ends, before `live` is destroyed
+  struct StopOnExit {
+    GOTemperamentFollower &r_follower;
+
+    ~StopOnExit() { r_follower.Stop(); }
+  } stopFollower{follower};
+
+  // a rank with one retuned pipe of note 61, owned by the organ
+  auto oRank = std::make_unique<GORank>(*controller);
+  GOSoundingPipe *pPipe
+    = new GOSoundingPipe(controller, oRank.get(), 1, 61, 8, 100, 100, true);
+
+  oRank->AddPipe(pPipe);
+  controller->AddRank(std::move(oRank));
+
+  controller->SetTemperament(live);
+  GOAssert(
+    follower.IsFollowing(), "Selecting a live temperament should follow it");
+  GOAssert(
+    label == wxT("MTS-ESP: ") + _("no master"),
+    "The label should show that no master is connected, got: "
+      + label.ToStdString());
+  controller->SetTemperament(live);
+  GOAssert(
+    follower.IsFollowing(),
+    "Selecting the live temperament again should still follow it");
+
+  // a change of the master reaches the pipe through the timer tick
+  retunings[61] = 0.25;
+  follower.HandleTimer();
+  GOAssert(
+    std::abs(pPipe->GetTemperamentOffset() - 25) < 1e-3,
+    "A changed tuning should be re-applied to the pipes of the organ");
+
+  // a master connecting is shown by the next tick
+  hasMaster = true;
+  follower.HandleTimer();
+  GOAssert(
+    label == wxT("MTS-ESP: Meantone"),
+    "The label should show the scale of the connected master, got: "
+      + label.ToStdString());
+
+  controller->SetTemperament(fixed);
+  GOAssert(
+    label == wxT("Fixed"),
+    "A temperament without a status should show only its title, got: "
+      + label.ToStdString());
+  GOAssert(
+    !follower.IsFollowing(),
+    "Selecting a temperament that is not live should stop following");
+
+  // the change detection, the timer's call made directly
+  unsigned nChanges = 0;
+  unsigned nStatusChanges = 0;
+  GOTemperamentFollower counting(
+    *controller->m_timer,
+    [&nChanges](const GOTemperament &) { ++nChanges; },
+    [&nStatusChanges](const GOTemperament &) { ++nStatusChanges; });
+  StopOnExit stopCounting{counting};
+
+  retunings.fill(0);
+  hasMaster = false;
+  counting.Follow(live);
+  counting.HandleTimer();
+  GOAssert(nChanges == 0, "An unchanged tuning should not be re-applied");
+  retunings[61] = 0.25;
+  counting.HandleTimer();
+  counting.HandleTimer();
+  GOAssert(
+    nChanges == 1,
+    "A changed tuning should be re-applied once, got: "
+      + std::to_string(nChanges));
+  GOAssert(
+    nStatusChanges == 0,
+    "A changed tuning alone should not report a status change");
+  // a master connecting with the equal temperament changes no offset
+  retunings.fill(0);
+  counting.HandleTimer();
+  hasMaster = true;
+  counting.HandleTimer();
+  counting.HandleTimer();
+  GOAssert(
+    nChanges == 2 && nStatusChanges == 1,
+    "A master connecting should report one status change and no tuning "
+    "change, got: "
+      + std::to_string(nStatusChanges) + " status and "
+      + std::to_string(nChanges) + " tuning changes in all");
+  counting.Stop();
+  retunings[61] = 0.5;
+  counting.HandleTimer();
+  GOAssert(nChanges == 2, "A stopped follower should not re-apply");
+
+  // clearing the organ stops following before the ranks are freed
+  controller->SetTemperament(live);
+  controller->ClearOrganCoreData();
+  GOAssert(
+    !follower.IsFollowing(),
+    "Clearing the organ core data should stop following");
 }

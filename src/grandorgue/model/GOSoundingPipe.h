@@ -48,6 +48,8 @@ private:
   float m_SampleMidiPitchFraction;
   bool m_RetunePipe;
   bool m_IsTemperamentOriginalBased;
+  // the temperament gives the absolute pitch of this retuned pipe
+  bool m_IsTemperamentAbsolutePitch;
   GOSoundProviderWave m_SoundProvider;
   GOPipeConfigNode m_PipeConfigNode;
 
@@ -68,11 +70,25 @@ private:
    */
   float GetManualTuningPitchOffset() const;
   /**
+   * Calculates the pitch offset that brings the sample pitch to the equal
+   * temperament, without any corrections
+   * @return pitch offset in cents
+   */
+  float GetSamplePitchOffset() const;
+  /**
    * Calculates a pitch offset for retuning from the sample pitch
    * to the equal temperament
    * @return pitch offset in cents
    */
   float GetAutoTuningPitchOffset() const;
+  /**
+   * Calculates a pitch offset for retuning from the sample pitch to the
+   * equal temperament for a temperament of absolute pitch: only the pitch
+   * corrections of the rank and the pipe apply, not the organ-wide and
+   * windchest ones
+   * @return pitch offset in cents
+   */
+  float GetAbsoluteTuningPitchOffset() const;
   void Validate();
 
   // Callbacks for GOCacheObject
@@ -142,6 +158,10 @@ public:
    *   PreparePlayback() in GOOrganController::StartOrgan().
    */
   unsigned GetEffectiveAudioGroupId() const;
+  /** The offset in cents the current temperament gives this pipe */
+  float GetTemperamentOffset() const { return m_TemperamentOffset; }
+  /** The current tuning factor of the pipe's sound (1 = as sampled) */
+  float GetTuning() const { return m_SoundProvider.GetTuning(); }
 };
 
 #endif

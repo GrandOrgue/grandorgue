@@ -258,6 +258,17 @@ else()
   set(ZITACONVOLVER_LIBRARIES zita-convolver)
 endif()
 
+# include the MTS-ESP client (ODDSound, 0BSD), compiled from its sources
+set(MTSESP_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/submodules/MTS-ESP/Client")
+if(NOT EXISTS "${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp")
+  message(
+    FATAL_ERROR
+    "${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp does not exist. "
+    "Possible the MTS-ESP submodule has not been updated. "
+    "Try to execute 'git submodule update --init --recursive' in the source directory"
+  )
+endif()
+
 # include cpptrace
 if(USE_INTERNAL_CPPTRACE)
   set(CPPTRACE_SRC_DIR "${CMAKE_SOURCE_DIR}/submodules/CppTrace")

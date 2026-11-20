@@ -35,6 +35,13 @@ private:
    * live GOMidiSystem or a configured GOMidiRecorder, which GOTestExe lacks.
    */
   void TestOnStateLifecycleSending();
+
+  /*
+   * A live temperament (MTS-ESP) is followed while it is selected, the
+   * follower re-applies it only when its offsets change, the temperament
+   * label shows its status when it changes, and clearing the organ stops it.
+   */
+  void TestTemperamentFollower();
 };
 
 #endif /* GOTESTORGANCONTROLLER_H */

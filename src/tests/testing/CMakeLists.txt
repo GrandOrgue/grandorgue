@@ -75,6 +75,7 @@ set(go_tests
     sound/tasks/GOTestSoundTaskBase.cpp
     sound/tasks/GOTestSoundWindchestGroupTask.cpp
     sound/tasks/GOTestSoundWindchestTask.cpp
+    temperaments/GOTestTemperament.cpp
     threading/GOTestVersioned.cpp
     GOTestNameMap.cpp
     GOTestOrganController.cpp
