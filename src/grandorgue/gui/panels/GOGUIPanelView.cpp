@@ -161,10 +161,10 @@ void GOGUIPanelView::Raise() {
 }
 
 void GOGUIPanelView::OnSize(wxSizeEvent &event) {
-  wxRegion exposed;
+  wxRegion exposedRegion;
 
   if (m_panelwidget) {
-    exposed = wxRegion(m_panelwidget->GetRect());
+    exposedRegion = wxRegion(m_panelwidget->GetRect());
 
     // Scale out the panel according the new size
 
@@ -208,13 +208,15 @@ void GOGUIPanelView::OnSize(wxSizeEvent &event) {
       m_panelwidget->CentreOnParent(wxVERTICAL);
   }
 
-  // The view may have erased its background before the panel was moved.
-  // After thawing the panel, erase the part of the view it just uncovered.
-  if (!exposed.IsEmpty()) {
-    exposed.Subtract(m_panelwidget->GetRect());
-    exposed.Intersect(GetClientRect());
-    for (wxRegionIterator rect(exposed); rect; ++rect)
-      RefreshRect(rect.GetRect(), true);
+  /* On Windows the frozen panel is moved without redrawing, and the view may
+     have erased its background before the move, so the area uncovered by the
+     panel gets WM_PAINT without a background erase. After thawing the panel,
+     erase that area explicitly. */
+  if (m_panelwidget) {
+    exposedRegion.Subtract(m_panelwidget->GetRect());
+    exposedRegion.Intersect(GetClientRect());
+    for (wxRegionIterator regionIt(exposedRegion); regionIt; ++regionIt)
+      RefreshRect(regionIt.GetRect(), true);
   }
   event.Skip();
 }

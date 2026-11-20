@@ -1,3 +1,4 @@
+- Fixed stale panel graphics remaining in the margins after maximizing a panel window on Windows https://github.com/GrandOrgue/grandorgue/pull/2720
 - Added the High-quality sinc interpolation mode for pipe playback https://github.com/GrandOrgue/grandorgue/discussions/1559
 - Fixed crash on receiving or playing a malformed GrandOrgue setup SysEx MIDI message shorter than 8 bytes
 - Fixed loop transitions, loop crossfade bounds and release alignment for pipe samples
