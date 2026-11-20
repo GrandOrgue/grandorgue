@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -13,6 +13,8 @@
 
 #include <wx/string.h>
 
+#include "sound/dsp-kernels/GOSoundConversions.h"
+
 #include "GOAudioDeviceNode.h"
 
 class GOConfigReader;
@@ -20,15 +22,11 @@ class GOConfigWriter;
 
 class GOAudioDeviceConfig : public GOAudioDeviceNode {
 public:
-  // volume values in dB
-  static constexpr float MUTE_VOLUME = -121.0f;
-  static constexpr float MIN_VOLUME = -120.0f;
-  static constexpr float DEFAULT_VOLUME = 0.0f;
-  static constexpr float MAX_VOLUME = 40.0f;
-
   static const wxString WX_AUDIO_DEVICES;
 
-  static bool isEnabled(float vol) { return vol >= MIN_VOLUME; }
+  static bool isEnabled(float vol) {
+    return vol >= GOSoundConversions::MIN_GAIN_DB;
+  }
 
   class GroupOutput {
   private:
@@ -56,7 +54,7 @@ private:
   std::vector<std::vector<GroupOutput>> m_ChannelOutputs;
 
   static float volumeFor(bool isForLeft, bool isLeft, float vol) {
-    return isLeft == isForLeft ? vol : MUTE_VOLUME;
+    return isLeft == isForLeft ? vol : GOSoundConversions::MUTE_GAIN_DB;
   }
 
   void ResizeChannels() { m_ChannelOutputs.resize(m_NChannels); }

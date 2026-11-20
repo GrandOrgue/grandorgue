@@ -22,6 +22,7 @@
 #include "config/GOConfig.h"
 #include "sound/GOSoundDefs.h"
 #include "sound/GOSoundSystem.h"
+#include "sound/dsp-kernels/GOSoundConversions.h"
 #include "sound/ports/GOSoundPortFactory.h"
 
 #include "GOSettingsDeviceMatchDialog.h"
@@ -35,7 +36,7 @@ public:
   uint8_t channel = 0;
   wxString m_GroupName;
   bool left = false;
-  float volume = GOAudioDeviceConfig::MUTE_VOLUME;
+  float volume = GOSoundConversions::MUTE_GAIN_DB;
 
   AudioItemData() : type(ROOT_NODE) {}
 
@@ -347,7 +348,7 @@ wxTreeItemId GOSettingsAudio::AddGroupNode(
     name,
     -1,
     -1,
-    new AudioItemData(name, left, GOAudioDeviceConfig::MUTE_VOLUME));
+    new AudioItemData(name, left, GOSoundConversions::MUTE_GAIN_DB));
   m_AudioOutput->Expand(current);
   m_AudioOutput->Expand(channel);
   UpdateVolume(current, volume);
@@ -368,11 +369,11 @@ void GOSettingsAudio::UpdateVolume(const wxTreeItemId &group, float volume) {
   wxString name = wxString::Format(
     data->left ? _("%s - left") : _("%s - right"), data->m_GroupName);
   if (
-    volume < GOAudioDeviceConfig::MIN_VOLUME
-    || volume > GOAudioDeviceConfig::MAX_VOLUME)
+    volume < GOSoundConversions::MIN_GAIN_DB
+    || volume > GOSoundConversions::MAX_GAIN_DB)
     volume = 0;
   data->volume = volume;
-  if (volume >= GOAudioDeviceConfig::MIN_VOLUME)
+  if (volume >= GOSoundConversions::MIN_GAIN_DB)
     m_AudioOutput->SetItemText(
       group, wxString::Format(_("%s: %f dB"), name, volume));
   else
@@ -665,20 +666,20 @@ void GOSettingsAudio::OnOutputProperties(wxCommandEvent &event) {
     UpdateDevice(selection);
   } else if (data && data->type == AudioItemData::GROUP_NODE) {
     wxString current = wxString::Format(
-      wxT("%f"), std::max(data->volume, GOAudioDeviceConfig::MIN_VOLUME));
+      wxT("%f"), std::max(data->volume, GOSoundConversions::MIN_GAIN_DB));
     current = wxGetTextFromUser(
       _("Please enter new volume in dB:"), _("Change audio group"), current);
     if (current == wxEmptyString)
       return;
     double volume;
     if (
-      !current.ToDouble(&volume) || volume < GOAudioDeviceConfig::MIN_VOLUME
-      || volume > GOAudioDeviceConfig::MAX_VOLUME) {
+      !current.ToDouble(&volume) || volume < GOSoundConversions::MIN_GAIN_DB
+      || volume > GOSoundConversions::MAX_GAIN_DB) {
       wxMessageBox(
         wxString::Format(
           _("Please enter a volume between %3.1f and %2.1f dB"),
-          GOAudioDeviceConfig::MIN_VOLUME,
-          GOAudioDeviceConfig::MAX_VOLUME),
+          GOSoundConversions::MIN_GAIN_DB,
+          GOSoundConversions::MAX_GAIN_DB),
         _("Error"),
         wxOK | wxICON_ERROR,
         this);

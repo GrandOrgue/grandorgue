@@ -71,7 +71,7 @@ public:
    * @brief Configuration for one audio output device.
    *
    * scaleFactors[ch][groupI*2+ch] = 0.0f means direct output of group groupI
-   * into channel ch. Other values = GOAudioDeviceConfig::MUTE_VOLUME (-121.0f).
+   * into channel ch. Other values = GOSoundConversions::MUTE_GAIN_DB (-121.0f).
    */
   struct AudioOutputConfig {
     unsigned channels;
@@ -109,26 +109,18 @@ public:
    * the row-major [outChannelI][groupI * 2 + groupChannelI] pattern where
    * each audio group's left channel feeds output channel 0 and right
    * channel feeds output channel 1: 0.0f dB (pass-through) at the selected
-   * position, GOAudioDeviceConfig::MUTE_VOLUME elsewhere.
+   * position, GOSoundConversions::MUTE_GAIN_DB elsewhere.
    *
    * The row stride is nAudioGroups * 2 - matching what
    * GOSoundOutputTask::DoRun() reads once converted to linear scale
-   * factors via convertGainToScaleFactor() - not a fixed 4, which only
-   * coincides with the real row stride when nAudioGroups == 1.
+   * factors via GOSoundConversions::gainToVolumeOrMute() - not a fixed 4, which
+   * only coincides with the real row stride when nAudioGroups == 1.
    *
    * Shared by createDefaultOutputConfigs() (used as dB, split per channel)
    * and BuildEngine()'s downmix task (converted to a linear scale factor at
    * the call site, same as any other device's scaleFactors).
    */
   static std::vector<float> createDownmixGains(unsigned nAudioGroups);
-
-  /**
-   * @brief Converts a gain in dB to a linear scale factor, the same rule
-   * BuildEngine() applies to every device's AudioOutputConfig::scaleFactors:
-   * gains outside [-120, 40) dB (e.g. GOAudioDeviceConfig::MUTE_VOLUME) are
-   * treated as silence (0.0f) rather than converted.
-   */
-  static float convertGainToScaleFactor(float gain);
 
   /**
    * @brief Creates output configurations from GOConfig.
@@ -141,8 +133,8 @@ public:
    *
    * For each group i:
    *   scaleFactors[0][i*2] = 0.0f (L),
-   *   scaleFactors[0][i*2+1] = MUTE_VOLUME (-121.0f) (R)
-   *   scaleFactors[1][i*2] = MUTE_VOLUME (-121.0f) (L)
+   *   scaleFactors[0][i*2+1] = MUTE_GAIN_DB (-121.0f) (R)
+   *   scaleFactors[1][i*2] = MUTE_GAIN_DB (-121.0f) (L)
    *   scaleFactors[1][i*2+1] = 0.0f (R)
    */
   static std::vector<AudioOutputConfig> createDefaultOutputConfigs(

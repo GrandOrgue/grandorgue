@@ -11,6 +11,7 @@
 #include <wx/log.h>
 
 #include "files/GOOpenedFile.h"
+#include "sound/dsp-kernels/GOSoundConversions.h"
 #include "sound/playing/GOSoundAudioSection.h"
 
 #include "GOBuffer.h"
@@ -21,7 +22,7 @@ void GOSoundProviderWave::SetAmplitude(float fixed_amplitude, float gain) {
   /* Amplitude is the combination of global amplitude volume and the stop
    * volume. 1000000 would correspond to sample playback at normal volume.
    */
-  m_Gain = fixed_amplitude * powf(10.0f, gain * 0.05f);
+  m_Gain = fixed_amplitude * GOSoundConversions::gainToVolume(gain);
 }
 
 unsigned GOSoundProviderWave::GetBytesPerSample(unsigned bits_per_sample) {

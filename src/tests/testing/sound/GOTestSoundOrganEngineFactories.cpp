@@ -9,8 +9,8 @@
 #include <format>
 #include <vector>
 
-#include "config/GOAudioDeviceConfig.h"
 #include "sound/GOSoundOrganEngine.h"
+#include "sound/dsp-kernels/GOSoundConversions.h"
 #include "sound/tasks/GOSoundBufferTaskBase.h"
 #include "sound/tasks/GOSoundOutputTask.h"
 
@@ -40,7 +40,7 @@ std::vector<float> convertGainsToScaleFactors(const std::vector<float> &gains) {
   std::vector<float> scaleFactors(gains.size());
 
   for (unsigned i = 0, n = gains.size(); i < n; i++)
-    scaleFactors[i] = GOSoundOrganEngine::convertGainToScaleFactor(gains[i]);
+    scaleFactors[i] = GOSoundConversions::gainToVolumeOrMute(gains[i]);
   return scaleFactors;
 }
 
@@ -52,10 +52,10 @@ void GOTestSoundOrganEngineFactories::TestDownmixGainsWithOneGroup() {
   GOAssert(gains.size() == 4, "1 group: gains should have 4 entries");
   GOAssert(gains[0] == 0.0f, "1 group: L should take group0.left");
   GOAssert(
-    gains[1] == GOAudioDeviceConfig::MUTE_VOLUME,
+    gains[1] == GOSoundConversions::MUTE_GAIN_DB,
     "1 group: L should not take group0.right");
   GOAssert(
-    gains[2] == GOAudioDeviceConfig::MUTE_VOLUME,
+    gains[2] == GOSoundConversions::MUTE_GAIN_DB,
     "1 group: R should not take group0.left");
   GOAssert(gains[3] == 0.0f, "1 group: R should take group0.right");
 }
@@ -127,13 +127,13 @@ void GOTestSoundOrganEngineFactories::TestDefaultOutputConfigs() {
           groupI));
       GOAssert(
         config.scaleFactors[0][groupI * 2 + 1]
-          == GOAudioDeviceConfig::MUTE_VOLUME,
+          == GOSoundConversions::MUTE_GAIN_DB,
         std::format(
           "{} group(s): L should mute group {}'s right channel",
           nAudioGroups,
           groupI));
       GOAssert(
-        config.scaleFactors[1][groupI * 2] == GOAudioDeviceConfig::MUTE_VOLUME,
+        config.scaleFactors[1][groupI * 2] == GOSoundConversions::MUTE_GAIN_DB,
         std::format(
           "{} group(s): R should mute group {}'s left channel",
           nAudioGroups,

@@ -11,6 +11,7 @@
 
 #include "loader/cache/GOCache.h"
 #include "loader/cache/GOCacheWriter.h"
+#include "sound/dsp-kernels/GOSoundConversions.h"
 #include "sound/playing/GOSoundAudioSection.h"
 #include "sound/playing/GOSoundReleaseAlignTable.h"
 
@@ -168,7 +169,7 @@ int GOSoundProvider::IsOneshot() const {
 }
 
 void GOSoundProvider::SetTuning(float cent) {
-  m_Tuning = pow(pow(2, 1.0 / 1200.0), cent);
+  m_Tuning = GOSoundConversions::centsToRatio(cent);
 }
 
 void GOSoundProvider::SetToneBalanceValue(int8_t value) {
