@@ -36,6 +36,8 @@
 #include "testing/model/GOTestSoundingPipe.h"
 #include "testing/model/GOTestSwitch.h"
 #include "testing/model/GOTestWindchest.h"
+#include "testing/model/registry/GOTestDynamicRegistry.h"
+#include "testing/model/registry/GOTestFreezableRegistry.h"
 #include "testing/scheduler/GOTestScheduler.h"
 #include "testing/sound/GOTestSoundCallbackConnector.h"
 #include "testing/sound/GOTestSoundOrganEngine.h"
@@ -257,6 +259,8 @@ int main(int argc, char *argv[]) {
   GOTestSoundingPipe testSoundingPipe;
   GOTestSwitch testSwitch;
   GOTestWindchest testWindchest;
+  GOTestDynamicRegistry testDynamicRegistry;
+  GOTestFreezableRegistry testFreezableRegistry;
   GOTestScheduler testScheduler;
   GOTestNameMap goTestNameMap;
   GOTestMidiSendProxy testMidiSendProxy;

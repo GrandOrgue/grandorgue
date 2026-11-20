@@ -230,6 +230,9 @@ void GOOrganModel::Load(GOConfigReader &cfg) {
     m_tremulants[i]->SetElementId(
       GetRecorderElementID(wxString::Format(wxT("T%d"), i)));
 
+  // ResolveReferences is the only reader of the referencing objects during
+  // the loading, so it is enough to freeze only this registry here
+  SetReferencingObjectsFrozen(true);
   for (GOReferencingObject *pObj : GetReferencingObjects())
     pObj->ResolveReferences();
 }
@@ -256,7 +259,6 @@ void GOOrganModel::LoadCmbButtons(GOConfigReader &cfg) {
 }
 
 void GOOrganModel::Cleanup() {
-  GOEventHandlerList::Cleanup();
   m_WindchestNByPipeConfig.clear();
   m_windchests.clear();
   m_manuals.clear();

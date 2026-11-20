@@ -186,9 +186,13 @@ void GOOrganController::ClearOrganCoreData() {
 }
 
 void GOOrganController::Clear() {
+  // OnClear() destroys the GUI objects, they unregister themselves
+  SetFrozen(false);
   ClearObjects();
   OnClear();
   ClearOrganCoreData();
+  // Releases the memory of the removed registrations
+  CompactRegistries();
 }
 
 void GOOrganController::SetOrganModified(bool modified) {
@@ -526,7 +530,9 @@ wxString GOOrganController::Load(
 
     LoadOrganCoreData(cfg);
     OnLoad(cfg);
-    // The combinations are read after the GUI is loaded
+    // The core data and the GUI are loaded: the registries are only read from
+    // now on
+    SetFrozen(true);
     ReadCombinations(cfg);
     m_setter->OnCombinationsLoaded(GetCombinationsDir(), wxEmptyString);
     ResetOrganModified();
