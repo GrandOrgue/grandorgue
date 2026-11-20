@@ -77,6 +77,7 @@ public:
   void SetName(const wxString &name) { m_Name = name; }
 
   GOPipeConfig &GetPipeConfig() { return m_PipeConfig; }
+  const GOPipeConfig &GetPipeConfig() const { return m_PipeConfig; }
 
   wxString GetEffectiveAudioGroup() const;
 

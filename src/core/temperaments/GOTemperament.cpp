@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -31,7 +31,7 @@ GOTemperament::GOTemperament(
 
 GOTemperament::~GOTemperament() {}
 
-float GOTemperament::GetOffset(unsigned index) const { return 0; }
+float GOTemperament::GetOffset(unsigned noteNumber) const { return 0; }
 
 wxString GOTemperament::GetName() const { return m_Name; }
 

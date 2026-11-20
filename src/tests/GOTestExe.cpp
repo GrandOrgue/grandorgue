@@ -82,6 +82,7 @@
 #include "testing/sound/tasks/GOTestSoundTaskBase.h"
 #include "testing/sound/tasks/GOTestSoundWindchestGroupTask.h"
 #include "testing/sound/tasks/GOTestSoundWindchestTask.h"
+#include "testing/temperaments/GOTestTemperament.h"
 #include "testing/threading/GOTestVersioned.h"
 
 enum ExitCode {
@@ -307,6 +308,7 @@ int main(int argc, char *argv[]) {
   GOTestSoundRecorderTask testSoundRecorderTask;
   GOTestSoundWindchestGroupTask testSoundWindchestGroupTask;
   GOTestPerfSoundTaskBase testPerfSoundTaskBase;
+  GOTestTemperament testTemperament;
   GOTestVersioned testVersioned;
   /* end of instanciation */
 

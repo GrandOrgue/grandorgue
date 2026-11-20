@@ -262,6 +262,7 @@ GOEvent.cpp
 GOKeyConvert.cpp
 GOMetronome.cpp
 GOOrganController.cpp
+GOTemperamentFollower.cpp
 GOVirtualCouplerController.cpp
 )
 

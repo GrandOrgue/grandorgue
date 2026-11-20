@@ -54,6 +54,7 @@ GOSoundingPipe::GOSoundingPipe(
     m_SampleMidiPitchFraction(0.0),
     m_RetunePipe(retune),
     m_IsTemperamentOriginalBased(true),
+    m_IsTemperamentAbsolutePitch(false),
     m_SoundProvider(this),
     m_PipeConfigNode(
       &rank->GetPipeConfig(), *pOrganModel, this, &m_SoundProvider) {
@@ -374,21 +375,38 @@ float GOSoundingPipe::GetManualTuningPitchOffset() const {
     + m_PipeConfigNode.GetEffectiveManualTuning();
 }
 
-float GOSoundingPipe::GetAutoTuningPitchOffset() const {
+float GOSoundingPipe::GetSamplePitchOffset() const {
   float pitchAdjustment = 0.0;
 
   // For any other temperament than original. Calculate pitchAdjustment by
   // converting from the original temperament to the equal one before using
-  // temperament offset. Take PitchCorrection into account. Also GUI tuning
-  // adjustments are added and ODF adjustments removed leaving difference.
+  // temperament offset.
   if (!m_PipeConfigNode.GetEffectiveIgnorePitch() && m_SampleMidiKeyNumber) {
     pitchAdjustment
       = log(m_HarmonicNumber / 8.0) / log(2) * 1200 // harmonic correction
       + ((int)m_MidiKeyNumber - m_SampleMidiKeyNumber) * 100 // note correction
       - m_SampleMidiPitchFraction; // fraction correction
   }
-  return pitchAdjustment + m_PipeConfigNode.GetEffectivePitchCorrection()
+  return pitchAdjustment;
+}
+
+float GOSoundingPipe::GetAutoTuningPitchOffset() const {
+  // Take PitchCorrection into account. Also GUI tuning adjustments are added
+  // and ODF adjustments removed leaving difference.
+  return GetSamplePitchOffset() + m_PipeConfigNode.GetEffectivePitchCorrection()
     + m_PipeConfigNode.GetEffectiveAutoTuningCorection(); // final correction
+}
+
+float GOSoundingPipe::GetAbsoluteTuningPitchOffset() const {
+  const GOPipeConfig &pipeConfig = m_PipeConfigNode.GetPipeConfig();
+  const GOPipeConfig &rankConfig = m_Rank->GetPipeConfig().GetPipeConfig();
+
+  // the organ-wide and windchest corrections set the pitch of the whole organ
+  // or division, which the temperament gives instead; the rank and pipe ones
+  // correct the samples and voice the ranks (e.g. a celeste)
+  return GetSamplePitchOffset() + rankConfig.GetPitchCorrection()
+    + pipeConfig.GetPitchCorrection() + rankConfig.GetAutoTuningCorrection()
+    + pipeConfig.GetAutoTuningCorrection();
 }
 
 void GOSoundingPipe::Validate() {
@@ -534,7 +552,8 @@ void GOSoundingPipe::UpdateAmplitude() {
 void GOSoundingPipe::UpdateTuning() {
   float pitchAdjustment = m_IsTemperamentOriginalBased
     ? GetManualTuningPitchOffset()
-    : GetAutoTuningPitchOffset();
+    : m_IsTemperamentAbsolutePitch ? GetAbsoluteTuningPitchOffset()
+                                   : GetAutoTuningPitchOffset();
 
   m_SoundProvider.SetTuning(pitchAdjustment + m_TemperamentOffset);
 }
@@ -564,10 +583,11 @@ void GOSoundingPipe::UpdateToneBalance() {
 
 void GOSoundingPipe::SetTemperament(const GOTemperament &temperament) {
   m_IsTemperamentOriginalBased = temperament.IsTemperamentOriginalBased();
+  m_IsTemperamentAbsolutePitch = m_RetunePipe && temperament.IsAbsolutePitch();
   if (!m_RetunePipe)
     m_TemperamentOffset = 0;
   else
-    m_TemperamentOffset = temperament.GetOffset(m_MidiKeyNumber % 12);
+    m_TemperamentOffset = temperament.GetOffset(m_MidiKeyNumber);
   UpdateTuning();
 }
 
