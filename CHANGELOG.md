@@ -1,3 +1,4 @@
+- Added the MTS-ESP temperament: pipes follow the tuning of a running MTS-ESP microtuning master, live
 - Added the High-quality sinc interpolation mode for pipe playback https://github.com/GrandOrgue/grandorgue/discussions/1559
 - Fixed crash on receiving or playing a malformed GrandOrgue setup SysEx MIDI message shorter than 8 bytes
 - Fixed loop transitions, loop crossfade bounds and release alignment for pipe samples

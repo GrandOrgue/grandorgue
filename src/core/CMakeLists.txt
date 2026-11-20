@@ -8,6 +8,7 @@ include_directories(${WAVPACK_INCLUDE_DIRS})
 include_directories(${ZLIB_INCLUDE_DIRS})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/go_defs.h)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${MTSESP_INCLUDE_DIRS})
 
 set(src
 archive/GOArchive.cpp
@@ -44,6 +45,7 @@ threading/threading_impl.cpp
 temperaments/GOTemperament.cpp
 temperaments/GOTemperamentCent.cpp
 temperaments/GOTemperamentList.cpp
+temperaments/GOTemperamentMtsEsp.cpp
 temperaments/GOTemperamentUser.cpp
 GOCompress.cpp
 GOCrashHandler.cpp
@@ -60,10 +62,13 @@ GOWave.cpp
 GOWavPack.cpp
 GOWavPackWriter.cpp
 go_path.cpp
+${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp
 )
 
 BUILD_LIBRARY(GrandOrgueCore ${src})
 target_link_libraries(GrandOrgueCore ${wxWidgets_LIBRARIES} ${WAVPACK_LIBRARIES} ${ZLIB_LIBRARIES})
+# the MTS-ESP client loads the MTS-ESP library at run time
+target_link_libraries(GrandOrgueCore ${CMAKE_DL_LIBS})
 # GOCrashHandler takes stack traces with cpptrace. PUBLIC because everything
 # linked against GrandOrgueCore gets the crash reporting as well
 if(TARGET cpptrace::cpptrace)

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -11,6 +11,7 @@
 
 #include "GOTemperament.h"
 #include "GOTemperamentCent.h"
+#include "GOTemperamentMtsEsp.h"
 #include "GOTemperamentUser.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
@@ -1688,4 +1689,7 @@ void GOTemperamentList::InitTemperaments() {
     0,
     4,
     -1));
+  // follows the tuning of an MTS-ESP master; after the built-in temperaments,
+  // before the user ones
+  m_Temperaments.push_back(new GOTemperamentMtsEsp());
 }

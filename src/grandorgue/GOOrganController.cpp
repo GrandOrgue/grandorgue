@@ -62,6 +62,7 @@
 #include "GOHash.h"
 #include "GOMetronome.h"
 #include "GOOrgan.h"
+#include "GOTemperamentFollower.h"
 #include "GOTimer.h"
 #include "go_path.h"
 
@@ -99,6 +100,14 @@ GOOrganController::GOOrganController(GOConfig &config)
   // GOMetronome (created by LoadOrganCoreData()) all assume GetTimer() is
   // non-null.
   m_timer = new GOTimer();
+  o_TemperamentFollower = std::make_unique<GOTemperamentFollower>(
+    *m_timer,
+    [this](const GOTemperament &temperament) {
+      ApplyTemperamentToRanks(temperament);
+    },
+    [this](const GOTemperament &temperament) {
+      UpdateTemperamentLabel(temperament);
+    });
   GOOrganModel::SetModelModificationListener(this);
   m_setter = new GOSetter(this);
   // Register m_setter for ownership immediately: m_elementcreators.clear()
@@ -154,6 +163,8 @@ void GOOrganController::ClearObjects() {
 }
 
 void GOOrganController::ClearOrganCoreData() {
+  // the follower must not re-apply a temperament to the ranks freed below
+  o_TemperamentFollower->Stop();
   if (m_IsOrganCoreDataLoaded) {
     // They refer to the enclosures that GOOrganModel::Cleanup() frees
     p_MasterEnclosure = nullptr;
@@ -994,9 +1005,26 @@ void GOOrganController::Reset() {
 }
 
 void GOOrganController::SetTemperament(const GOTemperament &temperament) {
-  m_TemperamentLabel.SetContent(temperament.GetTitle());
-  for (unsigned k = 0; k < m_ranks.size(); k++)
-    m_ranks[k]->SetTemperament(temperament);
+  // the follower reads the offsets and the status first, so a change of them
+  // after the reading is applied by the next timer tick
+  o_TemperamentFollower->Follow(temperament);
+  UpdateTemperamentLabel(temperament);
+  ApplyTemperamentToRanks(temperament);
+}
+
+void GOOrganController::UpdateTemperamentLabel(
+  const GOTemperament &temperament) {
+  const wxString title = temperament.GetTitle();
+  const wxString status = temperament.GetStatus();
+
+  m_TemperamentLabel.SetContent(
+    status.IsEmpty() ? title : title + wxT(": ") + status);
+}
+
+void GOOrganController::ApplyTemperamentToRanks(
+  const GOTemperament &temperament) {
+  for (auto *pRank : m_ranks)
+    pRank->SetTemperament(temperament);
 }
 
 void GOOrganController::SetTemperament(const wxString &name) {

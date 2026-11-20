@@ -8,6 +8,7 @@
 #ifndef GOORGANCONTROLLER_H
 #define GOORGANCONTROLLER_H
 
+#include <memory>
 #include <set>
 #include <utility>
 #include <vector>
@@ -51,6 +52,7 @@ class GOSoundProvider;
 class GOSoundRecorderTask;
 class GOSoundSystem;
 class GOTemperament;
+class GOTemperamentFollower;
 class GOTimer;
 typedef struct _GOHashType GOHashType;
 
@@ -79,6 +81,8 @@ private:
   GOTimer *m_timer;
   GOButtonControl *p_OnStateButton;
   wxString m_Temperament;
+  // re-applies a live temperament (MTS-ESP) when its offsets change
+  std::unique_ptr<GOTemperamentFollower> o_TemperamentFollower;
 
   float m_CurrentPitch; // organ pitch
   bool m_OrganModified; // always m_IsOrganModified >= IsModelModified()
@@ -168,6 +172,16 @@ private:
   void SendOnStateMidi(bool isOn);
   GOHashType GenerateCacheHash();
   void SetTemperament(const GOTemperament &temperament);
+  /**
+   * Sets the offsets of the temperament to the pipes of all ranks, without
+   * touching the temperament label
+   */
+  void ApplyTemperamentToRanks(const GOTemperament &temperament);
+  /**
+   * Shows the title of the temperament in the temperament label, followed by
+   * its status if it has one
+   */
+  void UpdateTemperamentLabel(const GOTemperament &temperament);
   void PreconfigRecorder();
 
   /**
