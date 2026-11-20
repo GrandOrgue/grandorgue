@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,8 @@
 #ifndef GOWAVE_H
 #define GOWAVE_H
 
+#include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <vector>
 
@@ -28,6 +30,8 @@ private:
   unsigned m_MidiNote;
   float m_PitchFract;
   bool m_isPacked;
+  /** The stored items are either IEEE floats (format code 3) or PCM */
+  bool m_isFloat;
   bool m_hasRelease;
   std::vector<GOWaveLoop> m_Loops;
 
@@ -59,6 +63,100 @@ public:
     SF_SIGNEDINT24_24 = 24,
     SF_IEEE_FLOAT
   } SAMPLE_FORMAT;
+
+  /** Raw units per full scale: the internal form has 24 fractional bits */
+  static constexpr float SCALE_24_BITS = (float)(1 << 23);
+
+private:
+  /**
+   * Converts interleaved frames: for every frame selects one channel or
+   * averages all the channels, and writes the result.
+   * @tparam ValueT the type of the items and of the result: int (Q23 items,
+   *   see readItem) or float
+   * @param nFrames the number of frames to convert
+   * @param nChannels the number of channels of a frame
+   * @param selectedChannelN the channel number from 1 to keep, or 0 to
+   *   average all the channels
+   * @param outputFormat the format of the output items
+   * @param pInput the position of the first frame; it is advanced
+   * @param pOutput the destination of the first result; it is advanced
+   */
+  template <typename ValueT>
+  void convertFrames(
+    unsigned nFrames,
+    unsigned nChannels,
+    unsigned selectedChannelN,
+    SAMPLE_FORMAT outputFormat,
+    const uint8_t *&pInput,
+    uint8_t *&pOutput) const;
+
+  /**
+   * @tparam ValueT the type of the result: int or float
+   * @param pInput the position of the item; it is advanced
+   * @return the next item of the file: the float itself of a float file for
+   *   ValueT = float, otherwise an int in Q23 (24 fractional bits of
+   *   precision)
+   */
+  template <typename ValueT> ValueT readItem(const uint8_t *&pInput) const;
+
+  /**
+   * Writes the value in the output format.
+   * @tparam ValueT the type of the value: a Q23 int or a float
+   * @param pOutput the destination; it is advanced
+   * @param value the value to write
+   * @param outputFormat the format of the output item
+   */
+  template <typename ValueT>
+  static void writeItem(
+    uint8_t *&pOutput, ValueT value, SAMPLE_FORMAT outputFormat);
+
+public:
+  /**
+   * @param value a float sample, full scale is +-1.0
+   * @return the sample as an integer in the Q23 format (23 fractional bits:
+   * full scale is 2^23 raw units), clamped to full scale
+   *
+   * The int32 items of a float section are Q23, the scale of a 24-bit section,
+   * so a float is handled by everything that works with 8/16/24-bit samples.
+   * Alternative considered: Q31 (the scale of a real 32-bit PCM), rejected:
+   * - a float has only 24 significant bits, so the other 8 would be zeros;
+   * - the compression stores the prediction deltas in 2-4 bytes, and Q31
+   *   deltas are 2^8 times larger than Q23 ones, so it would rarely pay off;
+   * - the amplitude, derivative and release alignment code holds the samples in
+   *   int/unsigned and multiplies them, which overflows at 2^31 (+1.0 does not
+   *   even fit in an int).
+   * A future 32-bit integer PCM needs its own scale (Q31) and wider arithmetic
+   * in that code; this int32 branch is then no longer free for it, so
+   * IsFloat() has to be checked first.
+   */
+  inline static int floatToIntQ23(float value) {
+    return (int)std::lroundf(std::clamp(value, -1.0f, 1.0f) * SCALE_24_BITS);
+  }
+
+  /**
+   * @param value an integer in Q23 (full scale is SCALE_24_BITS raw units)
+   * @return the value as a float, full scale is +-1.0. It is exact for
+   *   |value| <= 2^24 and the inverse of floatToIntQ23 within full scale.
+   */
+  inline static float intQ23ToFloat(int value) {
+    return (float)value / SCALE_24_BITS;
+  }
+
+  /**
+   * @return whether the stored samples are already in the requested format,
+   * so that they can be copied verbatim instead of being converted sample by
+   * sample
+   *
+   * Alternatives considered:
+   * - compare only the item size: wrong for the reduced-depth formats
+   *   (SF_SIGNEDSHORT_12, SF_SIGNEDINT24_20, ...), which need a shift, and
+   *   for packed (WavPack) integer data, which is decoded to int32;
+   * - include 8-bit PCM: its file data is offset binary while the output is
+   *   two's complement, so it always needs the bias conversion.
+   *
+   * @param readFormat the format requested by ReadSamples()
+   */
+  bool IsStoredAs(SAMPLE_FORMAT readFormat) const;
 
   GOWave();
   ~GOWave();
@@ -102,6 +200,27 @@ public:
 
   unsigned GetSampleRate() const;
   unsigned GetBitsPerSample() const;
+
+  /**
+   * @return whether the stored samples are IEEE floats rather than integers.
+   * Alternatives considered: GetBitsPerSample() == 32 and a 4-byte item size
+   * both identify a float only while 32-bit PCM is unsupported.
+   */
+  bool IsFloat() const { return m_isFloat; }
+
+  /**
+   * @return the format that holds the samples of the file without loss: the
+   *   integer format of the file's depth, or SF_IEEE_FLOAT for a float file
+   */
+  SAMPLE_FORMAT GetOwnFormat() const;
+
+  /**
+   * @param bitsPerSample the requested depth, 8..24
+   * @return the integer format of the smaller depth of the file and the
+   *   requested one; a float file is always converted to the requested depth
+   */
+  SAMPLE_FORMAT GetMinIntFormat(unsigned bitsPerSample) const;
+
   unsigned GetMidiNote() const;
   float GetPitchFract() const;
 

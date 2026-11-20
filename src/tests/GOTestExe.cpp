@@ -23,6 +23,7 @@
 #include "testing/GOTestNameMap.h"
 #include "testing/GOTestOrganController.h"
 #include "testing/combinations/GOTestDivisionalSetter.h"
+#include "testing/core/GOTestWave.h"
 #include "testing/gui/GOTestGUIDisplayMetrics.h"
 #include "testing/gui/GOTestGUILayoutEngine.h"
 #include "testing/loader/GOTestOrganReader.h"
@@ -68,6 +69,7 @@
 #include "testing/sound/mappers/GOTestSoundEnclosureShelfMapper.h"
 #include "testing/sound/playing/GOTestPerfSoundPlayingFader.h"
 #include "testing/sound/playing/GOTestReleaseAlignTable.h"
+#include "testing/sound/playing/GOTestSoundItemAccessor.h"
 #include "testing/sound/playing/GOTestSoundPlayingFader.h"
 #include "testing/sound/playing/GOTestSoundSampler.h"
 #include "testing/sound/playing/GOTestSoundStream.h"
@@ -246,6 +248,7 @@ int main(int argc, char *argv[]) {
 
   /* Instantiate all the test classes here */
   GOTestDivisionalSetter testDivisionalSetter;
+  GOTestWave testWave;
   GOTestGUIDisplayMetrics testGUIDisplayMetrics;
   GOTestGUILayoutEngine testGUILayoutEngine;
   GOTestOrganReader testOrganReader;
@@ -281,6 +284,7 @@ int main(int argc, char *argv[]) {
   GOTestSoundCallbackConnector testSoundCallbackConnector;
   GOTestSoundOrganEngineStress testSoundOrganEngineStress;
   GOTestReleaseAlignTable testReleaseAlignTable;
+  GOTestSoundItemAccessor testSoundItemAccessor;
   GOTestSoundPlayingFader testSoundPlayingFader;
   GOTestPerfSoundPlayingFader testPerfSoundPlayingFader;
   GOTestSoundSampler testSoundSampler;

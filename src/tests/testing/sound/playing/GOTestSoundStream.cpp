@@ -13,9 +13,19 @@
 #include <numbers>
 #include <vector>
 
+#include <wx/file.h>
+#include <wx/filename.h>
+#include <wx/wfstream.h>
+
+#include "config/GOConfig.h"
+#include "loader/GOFileStore.h"
+#include "loader/cache/GOCache.h"
+#include "loader/cache/GOCacheWriter.h"
 #include "sound/buffer/GOSoundBufferMutable.h"
 #include "sound/playing/GOSoundAudioSection.h"
 #include "sound/playing/GOSoundStream.h"
+#include "sound/providers/GOSoundProviderWave.h"
+#include "testing/sound/GOTestWaveFileBuilder.h"
 
 #include "GOInt.h"
 #include "GOTestScope.h"
@@ -43,7 +53,6 @@ std::unique_ptr<GOSoundAudioSection> GOTestSoundStream::CreateAudioSection(
   unsigned loopCrossfadeMs) {
   const unsigned nSamples = nChannels * nFrames;
   std::vector<GOInt24> pcmData(nSamples);
-  std::vector<GOWaveLoop> loops;
 
   if (isSilent)
     for (unsigned i = 0; i < nSamples; i++)
@@ -53,16 +62,34 @@ std::unique_ptr<GOSoundAudioSection> GOTestSoundStream::CreateAudioSection(
       // Keep the per-channel slope compressible for stereo fixtures too.
       pcmData[i] = (int(i % 100) * 30000 - 1500000) / int(nChannels);
 
-  if (pLoop)
-    loops.push_back(*pLoop);
+  return CreateAudioSection(
+    pcmData.data(),
+    GOWave::SF_SIGNEDINT24_24,
+    nChannels,
+    nFrames,
+    isCompressed,
+    pLoop,
+    loopCrossfadeMs);
+}
 
+std::unique_ptr<GOSoundAudioSection> GOTestSoundStream::CreateAudioSection(
+  const void *pPcmData,
+  GOWave::SAMPLE_FORMAT format,
+  unsigned nChannels,
+  unsigned nFrames,
+  bool isCompressed,
+  const GOWaveLoop *pLoop,
+  unsigned loopCrossfadeMs) {
+  std::vector<GOWaveLoop> loops;
   auto pSection = std::make_unique<GOSoundAudioSection>(m_pool);
 
+  if (pLoop)
+    loops.push_back(*pLoop);
   pSection->Setup(
     nullptr,
     nullptr,
-    pcmData.data(),
-    GOWave::SF_SIGNEDINT24_24,
+    pPcmData,
+    format,
     nChannels,
     SECTION_RATE,
     nFrames,
@@ -284,6 +311,69 @@ void GOTestSoundStream::TestReleaseAlignmentMatchesUncompressed() {
             windowStart));
       }
   }
+}
+
+void GOTestSoundStream::TestFloatHistoryMatchesInt() {
+  using Resample = GOSoundResample;
+  constexpr unsigned PROLOGUE = GOSoundAudioSection::PROLOGUE_LENGTH;
+  const Resample resample;
+  const unsigned transitionOffset
+    = PROLOGUE + N_FRAMES - GOSoundAudioSection::getMaxReadAhead();
+  std::vector<GOInt24> intData(N_FRAMES);
+  std::vector<float> floatData(N_FRAMES);
+
+  for (unsigned frameI = 0; frameI < N_FRAMES; frameI++) {
+    const int value = (int)(frameI % 100) * 30000 - 1500000;
+
+    intData[frameI] = value;
+    floatData[frameI] = value / GOWave::SCALE_24_BITS;
+  }
+
+  const auto pInt = CreateAudioSection(
+    intData.data(), GOWave::SF_SIGNEDINT24_24, 1, N_FRAMES, false);
+  const auto pFloat = CreateAudioSection(
+    floatData.data(), GOWave::SF_IEEE_FLOAT, 1, N_FRAMES, false);
+  const auto pFloatCompressed = CreateAudioSection(
+    floatData.data(), GOWave::SF_IEEE_FLOAT, 1, N_FRAMES, true);
+
+  GOAssert(pFloatCompressed->IsCompressed(), "The attack must use compression");
+
+  auto captureHistory = [&](
+                          const GOSoundAudioSection &section,
+                          GOSoundResample::InterpolationType mode,
+                          unsigned nAttackFrames) {
+    GOSoundStream stream;
+    GOSoundReleaseAlignTable::History history;
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, nAttackFrames)
+
+    stream.InitStream(&resample, &section, mode);
+    GOAssert(stream.ReadBlock(FRACTION_INCREMENT, buffer), "Attack played");
+    stream.GetHistory(history);
+    return history;
+  };
+
+  // A window in the main data, a history straddling the segment boundary and
+  // a history entirely in the end segment
+  for (const auto mode :
+       {Resample::GO_LINEAR_INTERPOLATION,
+        Resample::GO_POLYPHASE_INTERPOLATION})
+    for (unsigned windowStart :
+         {PROLOGUE + 83u, transitionOffset - 1, PROLOGUE + N_FRAMES - 3}) {
+      const unsigned nAttackFrames
+        = windowStart - (PROLOGUE - Resample::getCentrePoint(mode));
+      const auto expected = captureHistory(*pInt, mode, nAttackFrames);
+
+      GOAssert(
+        expected != GOSoundReleaseAlignTable::History{},
+        std::format("The history must not be empty (window {})", windowStart));
+      GOAssert(
+        captureHistory(*pFloat, mode, nAttackFrames) == expected,
+        std::format("Float history must equal int (window {})", windowStart));
+      GOAssert(
+        captureHistory(*pFloatCompressed, mode, nAttackFrames) == expected,
+        std::format(
+          "Compressed float history must equal int (window {})", windowStart));
+    }
 }
 
 void GOTestSoundStream::TestReleaseAlignmentFallsBackToStart() {
@@ -726,6 +816,314 @@ void GOTestSoundStream::TestNativeRateStartsAtFirstFrame() {
     }
 }
 
+void GOTestSoundStream::TestFloatRead() {
+  std::vector<float> pcmData(N_FRAMES);
+
+  for (unsigned frameI = 0; frameI < N_FRAMES; frameI++)
+    pcmData[frameI] = 0.001f * (int)(frameI % 100) - 0.05f;
+
+  const auto pSection = CreateAudioSection(
+    pcmData.data(), GOWave::SF_IEEE_FLOAT, 1, N_FRAMES, false);
+  GOSoundResample resample;
+  GOSoundStream stream;
+
+  GOAssert(!pSection->IsCompressed(), "the section must stay float");
+  GOAssert(pSection->GetNormGain() == 1.0f, "an uncompressed float has gain 1");
+  stream.InitStream(
+    &resample, pSection.get(), GOSoundResample::GO_LINEAR_INTERPOLATION);
+
+  GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
+
+  GOAssert(stream.ReadBlock(FRACTION_INCREMENT, buffer), "must have data");
+  for (unsigned frameI = 0; frameI < N_FRAMES_PER_BLOCK; frameI++)
+    GOAssert(
+      buffer.GetData()[frameI * 2] == pcmData[frameI],
+      "float samples must be read as they are");
+}
+
+void GOTestSoundStream::TestFloatPolyphaseLoopMatchesInt() {
+  constexpr float SCALE = GOWave::SCALE_24_BITS;
+  const GOWaveLoop loop = {100, N_FRAMES - 1};
+  std::vector<float> floatData(N_FRAMES);
+  std::vector<GOInt24> intData(N_FRAMES);
+
+  for (unsigned frameI = 0; frameI < N_FRAMES; frameI++) {
+    floatData[frameI] = 0.001f * (int)(frameI % 100) - 0.05f;
+    intData[frameI] = (int)lroundf(floatData[frameI] * SCALE);
+  }
+
+  const auto pFloat = CreateAudioSection(
+    floatData.data(), GOWave::SF_IEEE_FLOAT, 1, N_FRAMES, false, &loop);
+  const auto pInt = CreateAudioSection(
+    intData.data(), GOWave::SF_SIGNEDINT24_24, 1, N_FRAMES, false, &loop);
+  GOSoundResample resample;
+  GOSoundStream floatStream;
+  GOSoundStream intStream;
+
+  floatStream.InitStream(
+    &resample, pFloat.get(), GOSoundResample::GO_POLYPHASE_INTERPOLATION);
+  intStream.InitStream(
+    &resample, pInt.get(), GOSoundResample::GO_POLYPHASE_INTERPOLATION);
+
+  GO_DECLARE_LOCAL_SOUND_BUFFER(floatBuffer, 2, N_FRAMES_PER_BLOCK)
+  GO_DECLARE_LOCAL_SOUND_BUFFER(intBuffer, 2, N_FRAMES_PER_BLOCK)
+
+  // Read past the loop end more than once
+  for (unsigned blockI = 0; blockI < 25; blockI++) {
+    GOAssert(
+      floatStream.ReadBlock(FRACTION_INCREMENT, floatBuffer)
+        && intStream.ReadBlock(FRACTION_INCREMENT, intBuffer),
+      "a looped stream must not end");
+    for (unsigned n = floatBuffer.GetNItems(), itemI = 0; itemI < n; itemI++)
+      GOAssert(
+        std::abs(
+          floatBuffer.GetData()[itemI] - intBuffer.GetData()[itemI] / SCALE)
+          < 1e-6f,
+        "a float loop must match the same data as integers");
+  }
+}
+
+void GOTestSoundStream::TestCompressedFloatMatchesInt() {
+  constexpr float SCALE = GOWave::SCALE_24_BITS;
+  const GOWaveLoop loop = {100, N_FRAMES - 1};
+  std::vector<float> floatData(N_FRAMES);
+  std::vector<GOInt24> intData(N_FRAMES);
+
+  for (unsigned frameI = 0; frameI < N_FRAMES; frameI++) {
+    floatData[frameI] = 0.5f * sinf(frameI * 0.05f);
+    intData[frameI] = (int)lroundf(floatData[frameI] * SCALE);
+  }
+
+  const auto pFloat = CreateAudioSection(
+    floatData.data(), GOWave::SF_IEEE_FLOAT, 1, N_FRAMES, true, &loop);
+  const auto pInt = CreateAudioSection(
+    intData.data(), GOWave::SF_SIGNEDINT24_24, 1, N_FRAMES, true, &loop);
+
+  GOAssert(pFloat->IsCompressed(), "a smooth float loop must compress");
+  GOAssert(pFloat->GetNormGain() == 1.0f / SCALE, "gain of int32 raw units");
+
+  GOSoundResample resample;
+  GOSoundStream floatStream;
+  GOSoundStream intStream;
+
+  floatStream.InitStream(
+    &resample, pFloat.get(), GOSoundResample::GO_LINEAR_INTERPOLATION);
+  intStream.InitStream(
+    &resample, pInt.get(), GOSoundResample::GO_LINEAR_INTERPOLATION);
+
+  GO_DECLARE_LOCAL_SOUND_BUFFER(floatBuffer, 2, N_FRAMES_PER_BLOCK)
+  GO_DECLARE_LOCAL_SOUND_BUFFER(intBuffer, 2, N_FRAMES_PER_BLOCK)
+
+  // Read past the loop end, through the end segment
+  for (unsigned blockI = 0; blockI < 25; blockI++) {
+    GOAssert(
+      floatStream.ReadBlock(FRACTION_INCREMENT, floatBuffer)
+        && intStream.ReadBlock(FRACTION_INCREMENT, intBuffer),
+      "a looped stream must not end");
+    GOAssert(
+      memcmp(
+        floatBuffer.GetData(),
+        intBuffer.GetData(),
+        floatBuffer.GetNItems() * sizeof(float))
+        == 0,
+      "a compressed float loop must equal the same data as integers");
+  }
+}
+
+void GOTestSoundStream::TestFloatLoopCrossfadeKeepsFloats() {
+  constexpr unsigned LOOP_START = 100;
+  constexpr unsigned CROSSFADE_MS = 1;
+  constexpr unsigned N_FADE_FRAMES = CROSSFADE_MS * SECTION_RATE / 1000;
+  const GOWaveLoop loop = {LOOP_START, N_FRAMES - 1};
+  // {the value before the loop start, the value in the loop}: the first pair
+  // is beyond Q23 full scale, the second one is below the Q23 resolution
+  const std::pair<float, float> cases[] = {{-1.5f, 1.5f}, {1e-9f, 3e-9f}};
+
+  for (const auto &[beforeLoop, inLoop] : cases) {
+    std::vector<float> data(N_FRAMES);
+
+    for (unsigned frameI = 0; frameI < N_FRAMES; frameI++)
+      data[frameI] = frameI < LOOP_START ? beforeLoop : inLoop;
+
+    const auto pSection = CreateAudioSection(
+      data.data(),
+      GOWave::SF_IEEE_FLOAT,
+      1,
+      N_FRAMES,
+      false,
+      &loop,
+      CROSSFADE_MS);
+    const GOSoundAudioSection::EndSegment &endSegment
+      = pSection->GetEndSegment(0);
+    // the crossfaded frames end at the loop end
+    const unsigned fadeStartI
+      = endSegment.end_pos - endSegment.transition_offset - N_FADE_FRAMES;
+    const float tolerance
+      = 1e-6f * std::max(std::abs(beforeLoop), std::abs(inLoop));
+
+    for (unsigned frameI = 0; frameI < N_FADE_FRAMES; frameI++) {
+      const float factor
+        = (cos(M_PI * (frameI + 0.5) / N_FADE_FRAMES) + 1.0) * 0.5;
+      const float expected = inLoop * factor + beforeLoop * (1 - factor);
+      float actual;
+
+      memcpy(
+        &actual,
+        endSegment.end_data + (fadeStartI + frameI) * sizeof(float),
+        sizeof(float));
+      GOAssert(
+        std::abs(actual - expected) <= tolerance,
+        "a float loop crossfade must not be clamped or rounded to Q23");
+    }
+  }
+}
+
+void GOTestSoundStream::TestFloatCacheRoundTrip() {
+  const GOWaveLoop loop = {100, N_FRAMES - 1};
+  std::vector<float> floatData(N_FRAMES);
+  const GOSoundResample resample;
+
+  for (unsigned frameI = 0; frameI < N_FRAMES; frameI++)
+    floatData[frameI] = 0.5f * sinf(frameI * 0.05f);
+
+  // Reads past the loop end, through the end segment
+  auto readSection = [&](const GOSoundAudioSection &section) {
+    GOSoundStream stream;
+    std::vector<float> out;
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
+
+    stream.InitStream(
+      &resample, &section, GOSoundResample::GO_POLYPHASE_INTERPOLATION);
+    for (unsigned blockI = 0; blockI < 25; blockI++) {
+      GOAssert(stream.ReadBlock(FRACTION_INCREMENT, buffer), "must have data");
+      out.insert(
+        out.end(), buffer.GetData(), buffer.GetData() + buffer.GetNItems());
+    }
+    return out;
+  };
+
+  for (bool isCompressed : {false, true}) {
+    const auto pSaved = CreateAudioSection(
+      floatData.data(),
+      GOWave::SF_IEEE_FLOAT,
+      1,
+      N_FRAMES,
+      isCompressed,
+      &loop);
+    const wxString path = wxFileName::CreateTempFileName(wxT("goCacheTest"));
+
+    {
+      wxFileOutputStream stream(path);
+      GOCacheWriter writer(stream, false);
+
+      GOAssert(
+        writer.WriteHeader() && pSaved->SaveCache(writer),
+        "the section must be saved");
+      writer.Close();
+    }
+
+    wxFile file(path);
+    // The GOCache constructor maps the file into the pool and frees the pool's
+    // previous content, so the cache is loaded into a pool of its own, as an
+    // organ does. The loaded section must be destroyed before its pool
+    GOMemoryPool cachePool;
+    GOCache cache(file, cachePool);
+    GOSoundAudioSection loaded(cachePool);
+
+    GOAssert(
+      cache.ReadHeader() && loaded.LoadCache(cache),
+      "the section must be loaded");
+    cache.Close();
+    GOAssert(
+      loaded.IsCompressed() == pSaved->IsCompressed()
+        && loaded.GetNormGain() == pSaved->GetNormGain(),
+      std::format(
+        "The format must survive the cache (compressed {})", isCompressed));
+    GOAssert(
+      readSection(loaded) == readSection(*pSaved),
+      std::format(
+        "The loaded section must read as saved (compressed {})", isCompressed));
+    file.Close();
+    wxRemoveFile(path);
+  }
+}
+
+void GOTestSoundStream::TestProviderLoadsFloatWave() {
+  const GOWaveLoop loop = {100, N_FRAMES - 1};
+  std::vector<float> samples(2 * N_FRAMES);
+
+  for (unsigned frameI = 0; frameI < N_FRAMES; frameI++) {
+    samples[frameI * 2] = 0.001f * (int)(frameI % 100) - 0.05f;
+    samples[frameI * 2 + 1] = -samples[frameI * 2];
+  }
+
+  const wxString path = wxFileName::CreateTempFileName(wxT("goProviderTest"));
+
+  GOTestWaveFileBuilder::writeWavFile(
+    path, true, 32, 2, samples.data(), N_FRAMES, &loop);
+
+  GOConfig config(GetName(), "");
+  GOFileStore fileStore(config);
+  const GOSoundResample resample;
+
+  for (const unsigned bits : {GOSoundProviderWave::FILE_OWN_DEPTH, 24u}) {
+    const bool isOwn = bits == GOSoundProviderWave::FILE_OWN_DEPTH;
+    GOSoundProviderWave provider;
+    GOSoundProviderWave::AttackFileInfo attack;
+
+    attack.filename.AssignAbsolute(path);
+    attack.min_attack_velocity = 0;
+    attack.max_released_time = 0;
+    attack.max_playback_time = 0;
+    attack.attack_start = 0;
+    attack.cue_point = -1;
+    attack.release_end = -1;
+    attack.m_LoopCrossfadeLength = 0;
+    attack.m_ReleaseCrossfadeLength = 0;
+    attack.m_WaveTremulantStateFor = BOOL3_DEFAULT;
+    attack.load_release = false;
+    attack.percussive = false;
+    provider.LoadFromMultipleFiles(
+      fileStore,
+      m_pool,
+      {attack},
+      {},
+      bits,
+      2,
+      false,
+      GOSoundProviderWave::LOOP_LOAD_LONGEST,
+      true,
+      false);
+
+    const GOSoundAudioSection *pSection = provider.GetAttack(0, 0);
+
+    GOAssert(pSection, "the attack must be loaded");
+    GOAssert(
+      pSection->GetChannels() == 2
+        && pSection->GetBitsPerSample() == (isOwn ? 32u : 24u),
+      "the file must be loaded with the requested depth");
+
+    GOSoundStream stream;
+
+    GO_DECLARE_LOCAL_SOUND_BUFFER(buffer, 2, N_FRAMES_PER_BLOCK)
+
+    stream.InitStream(
+      &resample, pSection, GOSoundResample::GO_LINEAR_INTERPOLATION);
+    GOAssert(stream.ReadBlock(FRACTION_INCREMENT, buffer), "must have data");
+    for (unsigned itemI = 0; itemI < 2 * N_FRAMES_PER_BLOCK; itemI++) {
+      // Float is read as it is, 24-bit items are in raw units of 2^-23 FS
+      const float expected
+        = isOwn ? samples[itemI] : samples[itemI] * GOWave::SCALE_24_BITS;
+
+      GOAssert(
+        std::abs(buffer.GetData()[itemI] - expected) <= (isOwn ? 0.0f : 1.0f),
+        std::format(
+          "The loaded sample {} must match the file (bits {})", itemI, bits));
+    }
+  }
+  wxRemoveFile(path);
+}
+
 void GOTestSoundStream::run() {
   for (unsigned nChannels : {1u, 2u}) {
     for (bool isCompressed : {false, true}) {
@@ -768,8 +1166,15 @@ void GOTestSoundStream::run() {
   GO_RUN_TEST(TestCompressedLoopWrapMatchesUncompressed())
   GO_RUN_TEST(TestInitAlignedStreamWithSilentAttack())
   GO_RUN_TEST(TestReleaseAlignmentMatchesUncompressed())
+  GO_RUN_TEST(TestFloatHistoryMatchesInt())
+  GO_RUN_TEST(TestFloatCacheRoundTrip())
+  GO_RUN_TEST(TestProviderLoadsFloatWave())
   GO_RUN_TEST(TestReleaseAlignmentFallsBackToStart())
   GO_RUN_TEST(TestRejectedLoopKeepsStartSegmentIndex())
+  GO_RUN_TEST(TestFloatRead())
+  GO_RUN_TEST(TestFloatPolyphaseLoopMatchesInt())
+  GO_RUN_TEST(TestCompressedFloatMatchesInt())
+  GO_RUN_TEST(TestFloatLoopCrossfadeKeepsFloats())
   GO_RUN_TEST(TestBandlimitedLoopAndRetrigger())
   GO_RUN_TEST(TestRetuningSuppressesImages())
   GO_RUN_TEST(TestNativeRateStartsAtFirstFrame())

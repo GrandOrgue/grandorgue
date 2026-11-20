@@ -15,13 +15,16 @@
 #include "loader/GOLoaderFilename.h"
 
 #include "GOSoundProvider.h"
+#include "GOWave.h"
 #include "GOWaveLoop.h"
 
 class GOCacheObject;
-class GOWave;
 
 class GOSoundProviderWave : public GOSoundProvider {
 public:
+  /** Pass as bits_per_sample to load the samples in the file's own format */
+  static constexpr unsigned FILE_OWN_DEPTH = 0;
+
   enum LoopLoadType {
     /* Only the first loop with the earliest endpoint is loaded. This will
      * result in the minimal amount of memory being loaded for the sample.
@@ -67,7 +70,12 @@ public:
 private:
   // Used for error messages
   GOCacheObject *p_ObjectFor;
-  unsigned GetBytesPerSample(unsigned bits_per_sample);
+
+  /**
+   * @param format the format of the sample items
+   * @return the size of one sample item in bytes
+   */
+  static unsigned getBytesPerSample(GOWave::SAMPLE_FORMAT format);
 
   void AddAttackSection(
     GOMemoryPool &pool,
@@ -77,7 +85,7 @@ private:
     int attack_start,
     const std::vector<GOWaveLoop> *pSrcLoops,
     GOBool3 waveTremulantStateFor,
-    unsigned bits_per_sample,
+    GOWave::SAMPLE_FORMAT format,
     unsigned channels,
     bool compress,
     LoopLoadType loop_mode,
@@ -95,7 +103,7 @@ private:
     unsigned max_playback_time,
     int cue_point,
     int release_end,
-    unsigned bits_per_sample,
+    GOWave::SAMPLE_FORMAT format,
     unsigned channels,
     bool compress,
     unsigned releaseCrossfadeLength);

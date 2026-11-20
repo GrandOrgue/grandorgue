@@ -1,6 +1,7 @@
 set(go_tests
     # Add here your tests files
     combinations/GOTestDivisionalSetter.cpp
+    core/GOTestWave.cpp
     gui/GOTestGUIDisplayMetrics.cpp
     gui/GOTestGUILayoutEngine.cpp
     loader/GOTestOrganReader.cpp
@@ -46,10 +47,12 @@ set(go_tests
     sound/GOTestSoundOrganEngineFactories.cpp
     sound/GOTestSoundOrganEngineStress.cpp
     sound/GOTestSoundWindchestGroupTaskGrid.cpp
+    sound/GOTestWaveFileBuilder.cpp
     sound/mappers/GOTestPerfSoundEnclosureShelfMapper.cpp
     sound/mappers/GOTestSoundEnclosureShelfMapper.cpp
     sound/playing/GOTestPerfSoundPlayingFader.cpp
     sound/playing/GOTestReleaseAlignTable.cpp
+    sound/playing/GOTestSoundItemAccessor.cpp
     sound/playing/GOTestSoundPlayingFader.cpp
     sound/playing/GOTestSoundSampler.cpp
     sound/playing/GOTestSoundStream.cpp
