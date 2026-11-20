@@ -15,7 +15,6 @@
 #include "primitives/GODC.h"
 
 #include "GOGUIDisplayMetrics.h"
-#include "GOGUILayoutEngine.h"
 #include "GOGUIMouseState.h"
 #include "GOGUIPanel.h"
 
@@ -35,6 +34,9 @@ GOGUIButton::GOGUIButton(
     m_TextWidth(0),
     m_DispCol(0),
     m_DispRow(0),
+    m_GridType(
+      is_piston ? GOGUILayoutEngine::GRID_PUSHBUTTON
+                : GOGUILayoutEngine::GRID_DRAWSTOP),
     m_TileOffsetX(0),
     m_TileOffsetY(0) {
   assert(control);
@@ -45,33 +47,37 @@ void GOGUIButton::Init(
   wxString group,
   unsigned x_pos,
   unsigned y_pos,
-  unsigned image) {
+  unsigned dispImageNum,
+  const std::optional<wxString> &dispLabelText,
+  std::optional<GOGUILayoutEngine::GridType> gridType) {
   GOGUIControl::Init(cfg, group);
 
   m_DispCol = x_pos;
   m_DispRow = y_pos;
+  m_GridType = gridType.value_or(m_GridType);
 
   m_TextColor = wxColour(0x80, 0x00, 0x00);
   m_FontSize = 9;
   m_FontName = wxT("");
-  m_DispLabelText = p_ButtonControl->GetName();
+  m_DispLabelText = dispLabelText.value_or(p_ButtonControl->GetName());
 
   int x, y, w, h;
 
   wxString off_mask_file, on_mask_file;
   wxString on_file, off_file;
   if (m_IsPiston) {
-    int DispImageNum = image ? image : p_ButtonControl->IsReadOnly() ? 3 : 1;
-    off_file
-      = wxString::Format(wxT(GOBitmapPrefix "piston%02d_off"), DispImageNum);
-    on_file
-      = wxString::Format(wxT(GOBitmapPrefix "piston%02d_on"), DispImageNum);
+    int imageNum = dispImageNum       ? dispImageNum
+      : p_ButtonControl->IsReadOnly() ? 3
+                                      : 1;
+    off_file = wxString::Format(wxT(GOBitmapPrefix "piston%02d_off"), imageNum);
+    on_file = wxString::Format(wxT(GOBitmapPrefix "piston%02d_on"), imageNum);
   } else {
-    int DispImageNum = image ? image : p_ButtonControl->IsReadOnly() ? 4 : 1;
+    int imageNum = dispImageNum       ? dispImageNum
+      : p_ButtonControl->IsReadOnly() ? 4
+                                      : 1;
     off_file
-      = wxString::Format(wxT(GOBitmapPrefix "drawstop%02d_off"), DispImageNum);
-    on_file
-      = wxString::Format(wxT(GOBitmapPrefix "drawstop%02d_on"), DispImageNum);
+      = wxString::Format(wxT(GOBitmapPrefix "drawstop%02d_off"), imageNum);
+    on_file = wxString::Format(wxT(GOBitmapPrefix "drawstop%02d_on"), imageNum);
   }
 
   on_mask_file = wxEmptyString;
@@ -107,7 +113,10 @@ void GOGUIButton::Init(
   w = m_BoundingRect.GetWidth() - x;
   h = m_BoundingRect.GetHeight() - y;
   m_TextRect = wxRect(x, y, w, h);
-  m_TextWidth = m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14);
+  // an empty label draws no text
+  m_TextWidth = m_DispLabelText.IsEmpty()
+    ? 0
+    : m_TextRect.GetWidth() - (m_TextRect.GetWidth() < 50 ? 4 : 14);
 
   m_Font = p_metrics->GetControlLabelFont();
   m_Font.SetName(m_FontName);
@@ -118,6 +127,8 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
   GOGUIControl::Load(cfg, group);
   m_IsPiston = cfg.ReadBoolean(
     ODFSetting, group, wxT("DisplayAsPiston"), false, m_IsPiston);
+  m_GridType = m_IsPiston ? GOGUILayoutEngine::GRID_PUSHBUTTON
+                          : GOGUILayoutEngine::GRID_DRAWSTOP;
 
   m_TextColor = logicalToWxColour(cfg.ReadColor(
     ODFSetting, group, wxT("DispLabelColour"), false, wxT("Dark Red")));
@@ -357,14 +368,19 @@ void GOGUIButton::Load(GOConfigReader &cfg, wxString group) {
 }
 
 void GOGUIButton::Layout() {
-  int x, y;
-  if (m_IsPiston) {
-    p_layout->GetPushbuttonBlitPosition(m_DispRow, m_DispCol, x, y);
-    if (!m_DispKeyLabelOnLeft)
-      x -= 13;
-  } else {
-    p_layout->GetDrawstopBlitPosition(m_DispRow, m_DispCol, x, y);
-  }
+  int x = 0;
+  int y = 0;
+
+  p_layout->GetBlitPosition(
+    m_GridType,
+    m_DispRow,
+    m_DispCol,
+    m_BoundingRect.GetWidth(),
+    m_BoundingRect.GetHeight(),
+    x,
+    y);
+  if (m_IsPiston && !m_DispKeyLabelOnLeft)
+    x -= 13;
 
   SetPositionIfUnset(x, y);
 
