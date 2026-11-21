@@ -2,12 +2,13 @@
 
 set -e
 
-# Debian 13 (trixie) ships the UCRT-targeting mingw-w64 cross toolchain
-# (x86_64-w64-mingw32ucrt-gcc, GCC 14). Older Ubuntu releases only provide the
-# msvcrt-targeting one, built from the gcc-mingw-w64 26.x packaging whose
-# libstdc++ lacked the PR116159 fix, which is why a rebuilt toolchain used to
-# be downloaded from GccMingwW64. GCC 14 already contains that fix, so the
-# packaged toolchain is used as is.
+# Ubuntu 26.10 and Debian 14 (forky) ship the UCRT-targeting mingw-w64 cross
+# toolchain from gcc-mingw-w64 29 (x86_64-w64-mingw32ucrt-gcc, GCC 16).
+# GCC 16 is required: the libstdc++ runtime downloaded from MSYS2 is GCC 16,
+# and with the headers of an older GCC (e.g. 14 in Debian 13) the executables
+# import __emutls_v._ZSt11__once_call, which the GCC 16 libstdc++-6.dll does
+# not export (GCC commit r16-6251), so they do not start on Windows.
+# Older releases provide either the msvcrt-targeting toolchain or GCC < 16.
 sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
   g++-mingw-w64-ucrt64 \
   gcc-mingw-w64-ucrt64

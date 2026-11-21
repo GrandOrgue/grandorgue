@@ -199,10 +199,13 @@ jobs:
             for: win64
             prepare: "debian-based"
             build_on: linux
-            # The UCRT-targeting mingw-w64 cross toolchain is packaged by
-            # Debian 13 but not by the Ubuntu images (Debian 13 also ships
-            # mingw-w64 27, which the msvcrt-targeting Ubuntu packages lag)
-            container: debian:trixie
+            # The GCC 16 UCRT-targeting mingw-w64 cross toolchain is packaged
+            # by Ubuntu 26.10 (gcc-mingw-w64 29). It must be the same GCC
+            # generation as the libstdc++ runtime downloaded from MSYS2:
+            # with GCC 14 (Debian 13 or older) the executables import
+            # __emutls_v._ZSt11__once_call, which the GCC 16 libstdc++-6.dll
+            # does not export, so they fail to start on Windows
+            container: ubuntu:26.10
 
     runs-on: ${{ matrix.run_on }}
     container: ${{ matrix.container }}
