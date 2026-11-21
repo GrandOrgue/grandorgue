@@ -11,6 +11,7 @@
 #include <wx/display.h>
 #include <wx/frame.h>
 #include <wx/image.h>
+#include <wx/region.h>
 #include <wx/toplevel.h>
 #include <wx/wupdlock.h>
 
@@ -160,7 +161,11 @@ void GOGUIPanelView::Raise() {
 }
 
 void GOGUIPanelView::OnSize(wxSizeEvent &event) {
+  wxRegion exposedRegion;
+
   if (m_panelwidget) {
+    exposedRegion = wxRegion(m_panelwidget->GetRect());
+
     // Scale out the panel according the new size
 
     const wxSize newSize = event.GetSize();
@@ -201,6 +206,17 @@ void GOGUIPanelView::OnSize(wxSizeEvent &event) {
       m_panelwidget->CentreOnParent(wxHORIZONTAL);
     if (actualsize.GetHeight() > maxSize.GetHeight())
       m_panelwidget->CentreOnParent(wxVERTICAL);
+  }
+
+  /* On Windows the frozen panel is moved without redrawing, and the view may
+     have erased its background before the move, so the area uncovered by the
+     panel gets WM_PAINT without a background erase. After thawing the panel,
+     erase that area explicitly. */
+  if (m_panelwidget) {
+    exposedRegion.Subtract(m_panelwidget->GetRect());
+    exposedRegion.Intersect(GetClientRect());
+    for (wxRegionIterator regionIt(exposedRegion); regionIt; ++regionIt)
+      RefreshRect(regionIt.GetRect(), true);
   }
   event.Skip();
 }
