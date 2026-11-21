@@ -25,6 +25,7 @@ private:
   GOPipeConfig m_PipeConfig;
   GOStatisticCallback *m_StatisticCallback;
   wxString m_Name;
+  int m_MidiNoteNumber;
 
   void Save(GOConfigWriter &cfg) override { m_PipeConfig.Save(cfg); }
 
@@ -75,6 +76,16 @@ public:
 
   const wxString &GetName() const { return m_Name; }
   void SetName(const wxString &name) { m_Name = name; }
+
+  /**
+   * The midi note number of the pipe that owns this node.
+   * @return the midi note number or -1 if the node does not belong to a pipe
+   *   (a rank, a windchest or the organ root)
+   */
+  int GetMidiNoteNumber() const { return m_MidiNoteNumber; }
+  void SetMidiNoteNumber(int midiNoteNumber) {
+    m_MidiNoteNumber = midiNoteNumber;
+  }
 
   GOPipeConfig &GetPipeConfig() { return m_PipeConfig; }
 

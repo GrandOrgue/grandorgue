@@ -23,7 +23,8 @@ GOPipeConfigNode::GOPipeConfigNode(
     m_parent(parent),
     m_PipeConfig(organModel, callback),
     m_StatisticCallback(statistic),
-    m_Name() {
+    m_Name(),
+    m_MidiNoteNumber(-1) {
   r_OrganModel.RegisterSaveableObject(this);
   if (m_parent)
     m_parent->AddChild(this);
