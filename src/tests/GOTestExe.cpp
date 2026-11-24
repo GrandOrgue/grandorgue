@@ -23,6 +23,7 @@
 #include "testing/GOTestNameMap.h"
 #include "testing/GOTestOrganController.h"
 #include "testing/combinations/GOTestDivisionalSetter.h"
+#include "testing/core/GOTestWave.h"
 #include "testing/gui/GOTestGUIDisplayMetrics.h"
 #include "testing/gui/GOTestGUILayoutEngine.h"
 #include "testing/loader/GOTestOrganReader.h"
@@ -246,6 +247,7 @@ int main(int argc, char *argv[]) {
 
   /* Instantiate all the test classes here */
   GOTestDivisionalSetter testDivisionalSetter;
+  GOTestWave testWave;
   GOTestGUIDisplayMetrics testGUIDisplayMetrics;
   GOTestGUILayoutEngine testGUILayoutEngine;
   GOTestOrganReader testOrganReader;
