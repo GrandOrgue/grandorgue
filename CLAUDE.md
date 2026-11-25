@@ -376,6 +376,10 @@ Key CMake options (see `CMakeLists.txt` for full list):
   - ❌ `void GetAudioOutput(GOSoundBufferMutable &outputBuffer, unsigned outputIndex, bool isLast)`
 - An output parameter is usually a reference to an object. For a pointer or a container of pointers
   put `out` before the capitalised local prefix: `T *&outPData`, `std::vector<T *> &outMpInputs`
+- An in-out parameter that the function changes only partly (appends to a container, sets some
+  fields of an object) is placed at the end too and prefixed with `io`:
+  `std::vector<T *> &ioMpNodes`, `GOPipeConfig &ioPipeConfig`. `out` is used only for a parameter
+  that the function fully replaces
 
 ### Naming: Boolean Variables
 
@@ -398,7 +402,10 @@ Key CMake options (see `CMakeLists.txt` for full list):
 ### Naming: Types and Functions
 
 - **Classes/structs**: `PascalCase` (e.g., `GOSoundEngine`, `GOSoundBuffer`)
-- **Enum values**: `UPPER_CASE`, no prefix (e.g., `IDLE`, `WORKING`, `USED`)
+- **Enum values**: `UPPER_CASE` with a prefix showing which enum the value belongs to (e.g.,
+  `SETTING_GAIN`, `SETTING_TONE_BALANCE` of `enum ChangedSettingSelector`). The values of an
+  `enum class` have no prefix, because they are always used together with the name of the enum
+  (e.g., `ChangedSettingSelector::GAIN`)
 - **File-scope static functions**: `snake_case` (e.g., `assert_item_equal`, `fill_with_sine_wave`)
 - **Static class member functions**: `camelCase` (e.g., `fillWithSequential`, `computeOffset`)
 

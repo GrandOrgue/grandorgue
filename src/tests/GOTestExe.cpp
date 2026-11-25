@@ -23,6 +23,7 @@
 #include "testing/GOTestNameMap.h"
 #include "testing/GOTestOrganController.h"
 #include "testing/combinations/GOTestDivisionalSetter.h"
+#include "testing/core/GOTestWave.h"
 #include "testing/gui/GOTestGUIDisplayMetrics.h"
 #include "testing/gui/GOTestGUILayoutEngine.h"
 #include "testing/loader/GOTestOrganReader.h"
@@ -62,9 +63,11 @@
 #include "testing/sound/dsp-kernels/GOTestSoundResample.h"
 #include "testing/sound/effects/GOTestPerfSoundShelfFilterProcessor.h"
 #include "testing/sound/effects/GOTestPerfSoundVibratoPitchRateCurve.h"
+#include "testing/sound/effects/GOTestPerfSoundVibratoProcessor.h"
 #include "testing/sound/effects/GOTestSoundReverbProcessor.h"
 #include "testing/sound/effects/GOTestSoundShelfFilterProcessor.h"
 #include "testing/sound/effects/GOTestSoundVibratoPitchRateCurve.h"
+#include "testing/sound/effects/GOTestSoundVibratoProcessor.h"
 #include "testing/sound/mappers/GOTestPerfSoundEnclosureShelfMapper.h"
 #include "testing/sound/mappers/GOTestSoundEnclosureShelfMapper.h"
 #include "testing/sound/playing/GOTestPerfSoundPlayingFader.h"
@@ -247,6 +250,7 @@ int main(int argc, char *argv[]) {
 
   /* Instantiate all the test classes here */
   GOTestDivisionalSetter testDivisionalSetter;
+  GOTestWave testWave;
   GOTestGUIDisplayMetrics testGUIDisplayMetrics;
   GOTestGUILayoutEngine testGUILayoutEngine;
   GOTestOrganReader testOrganReader;
@@ -299,7 +303,9 @@ int main(int argc, char *argv[]) {
   GOTestSoundShelfFilterProcessor testSoundShelfFilterProcessor;
   GOTestPerfSoundShelfFilterProcessor testPerfSoundShelfFilterProcessor;
   GOTestSoundVibratoPitchRateCurve testSoundVibratoPitchRateCurve;
+  GOTestSoundVibratoProcessor testSoundVibratoProcessor;
   GOTestPerfSoundVibratoPitchRateCurve testPerfSoundVibratoPitchRateCurve;
+  GOTestPerfSoundVibratoProcessor testPerfSoundVibratoProcessor;
   GOTestSoundEnclosureShelfMapper testSoundEnclosureShelfMapper;
   GOTestPerfSoundEnclosureShelfMapper testPerfSoundEnclosureShelfMapper;
   GOTestSoundWindchestGroupTaskGrid testSoundWindchestGroupTaskGrid;

@@ -1,6 +1,7 @@
 set(go_tests
     # Add here your tests files
     combinations/GOTestDivisionalSetter.cpp
+    core/GOTestWave.cpp
     gui/GOTestGUIDisplayMetrics.cpp
     gui/GOTestGUILayoutEngine.cpp
     loader/GOTestOrganReader.cpp
@@ -37,9 +38,11 @@ set(go_tests
     sound/dsp-kernels/GOTestSoundResample.cpp
     sound/effects/GOTestPerfSoundShelfFilterProcessor.cpp
     sound/effects/GOTestPerfSoundVibratoPitchRateCurve.cpp
+    sound/effects/GOTestPerfSoundVibratoProcessor.cpp
     sound/effects/GOTestSoundReverbProcessor.cpp
     sound/effects/GOTestSoundShelfFilterProcessor.cpp
     sound/effects/GOTestSoundVibratoPitchRateCurve.cpp
+    sound/effects/GOTestSoundVibratoProcessor.cpp
     sound/GOSoundTestSignals.cpp
     sound/GOTestSoundCallbackConnector.cpp
     sound/GOTestSoundOrganEngine.cpp

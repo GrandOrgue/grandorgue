@@ -38,6 +38,8 @@ const std::string GOTestPerfSoundPlayingFader::TEST_NAME
 // Release entries were already within margin.
 // Rebaselined again 2026-11-04 against the CI runs of both repos from
 // 2026-11-01..04 by the same rule.
+// Rebaselined again 2026-11-19 against the CI runs of both repos from
+// 2026-11-05..19 by the same rule.
 // Format: {buffer_size, min_MItems_per_second}.
 static constexpr GOTestPerfSoundBufferBaseline BASELINE_CONSTANT_GAIN[] = {
 #ifdef NDEBUG
@@ -45,7 +47,7 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_CONSTANT_GAIN[] = {
   // GOSoundLinearFaderCore, minus 10%
   {32, 3000},
   {128, 4700},
-  {512, 520},
+  {512, 430},
   {2048, 520},
 #else
   // Debug, worst of the runs after the refactoring onto
@@ -65,7 +67,7 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_RAMP[] = {
   // -32% on 32 frames, -12% on 128, -3..-5% on 512 and 2048)
   {32, 1400},
   {128, 2000},
-  {512, 460},
+  {512, 380},
   {2048, 460},
 #else
   // Debug, worst of the runs after the refactoring onto

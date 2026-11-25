@@ -227,8 +227,8 @@ static constexpr GOTestPerfSoundBufferBaseline BASELINE_ADD_DEINTERLEAVE_FROM[]
                  // (observed as low as 1812.3 on 2026-08-26/28)
     {512, 1700}, // rebaselined 2026-10-31: min observed 1986.7 on CI, -10%
                  // margin, rounded down to 2 significant figures
-    {2048, 1610} // rebaselined 2026-09-01: min observed 2013.1 under
-                 // contention, -20% margin
+    {2048, 1400} // rebaselined 2026-11-19: min observed 1587.8 on CI, -10%
+                 // margin, rounded down to 2 significant figures
 #else
     {32, 370},  // debug, rebaselined 2026-10-31: min observed 417.8 on CI,
                 // -10% margin, rounded down to 2 significant figures

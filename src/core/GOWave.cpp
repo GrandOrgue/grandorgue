@@ -399,7 +399,7 @@ void GOWave::ReadSamples(
       } else {
         switch (m_BytesPerSample) {
         case 1:
-          val = readNext<GOInt8>(input) - 0x80;
+          val = readNext<GOUInt8>(input) - 0x80;
           val <<= 16;
           break;
         case 2:
@@ -596,7 +596,7 @@ bool GOWave::Save(GOBuffer<uint8_t> &buf) {
       int32_t val;
       switch (m_BytesPerSample) {
       case 1:
-        val = readNext<GOInt8>(input) - 0x80;
+        val = readNext<GOUInt8>(input) - 0x80;
         break;
       case 2:
         val = readNext<GOInt16LE>(input);
