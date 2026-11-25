@@ -14,7 +14,7 @@
 
 /**
  * Exercises GOWave::ReadSamples() on RIFF/WAVE files built in memory: the
- * decoding of 8-bit PCM and (later) of 16/24-bit PCM and 32-bit float.
+ * decoding of 8/16/24-bit PCM and 32-bit float.
  */
 class GOTestWave : public GOTest {
 private:
@@ -22,6 +22,22 @@ private:
 
   /** 8-bit PCM is offset binary: 0x00/0x80/0xFF/0x40 -> -128/0/+127/-64 */
   void TestEightBitSigned();
+
+  /** 16- and 24-bit PCM read in their own format come out unchanged */
+  void TestIntegersUnchanged();
+
+  /** A float file read as float stays bit-exact */
+  void TestFloatBitExact();
+
+  /**
+   * Selecting one channel of a stereo float file and its downmix to mono are
+   * computed in float, without rounding the samples to integers
+   */
+  void TestFloatChannelSelectionAndDownmix();
+
+  /** A 32-bit integer PCM file is rejected: 4 bytes is not necessarily float */
+  void TestThirtyTwoBitPcmRejected();
+  void TestOwnFormat();
 
 public:
   std::string GetName() override { return TEST_NAME; }
