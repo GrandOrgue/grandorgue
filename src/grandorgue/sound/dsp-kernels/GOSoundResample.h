@@ -111,6 +111,77 @@ public:
   };
 
   /**
+   * Gives the increments for resampling in chunks, so that the rounding error
+   * of the increments does not accumulate: nTotalTargetFrames target frames
+   * consume nTotalSourceFrames source frames, short of them by less than
+   * nTotalTargetFrames units (see below).
+   *
+   * One constant increment cannot do it: an increment is an integer number of
+   * 1/UPSAMPLE_FACTOR of a source frame, so its rounding error grows with
+   * every target frame, up to whole source frames for a long run. Here the
+   * increment of each chunk is the average of the rest, so the error of the
+   * earlier chunks is corrected by the later ones and ends in the last chunk.
+   * The corrected increment is clamped to MAX_FRACTION_INCREMENT, which matters
+   * only near the maximum rate. After the last chunk the position is short of
+   * the exact end by less than nTotalTargetFrames units (less than one source
+   * frame while nTotalTargetFrames < UPSAMPLE_FACTOR), and never beyond it.
+   */
+  class ChunkedIncrements {
+  private:
+    /* The source frames to consume in total, in source units: the number of
+     * the frames times UPSAMPLE_FACTOR. A source unit is 1/UPSAMPLE_FACTOR of
+     * a source frame, the unit of the increments */
+    const uint64_t m_TotalSourceUnits;
+    const unsigned m_NTotalTargetFrames;
+
+    /* The source position advanced by the chunks taken so far, in source
+     * units. It is proportional to the number of source frames consumed so
+     * far (frames * UPSAMPLE_FACTOR), and, unlike the whole frames, it also
+     * includes the fractional increments */
+    uint64_t m_DoneSourceUnits = 0;
+    unsigned m_NDoneTargetFrames = 0;
+
+  public:
+    /**
+     * @param nTotalSourceFrames the source frames to consume in total
+     * @param nTotalTargetFrames the target frames to render in total
+     * @return whether the constructor accepts them: both are positive and the
+     *   average increment is within MIN_FRACTION_INCREMENT..
+     *   MAX_FRACTION_INCREMENT. It is exact: a comparison of the rate with
+     *   MIN_RATE is not, because the rate is a float and MIN_RATE is half of
+     *   the smallest increment
+     */
+    static bool IsSupported(
+      unsigned nTotalSourceFrames, unsigned nTotalTargetFrames);
+
+    /**
+     * @param nTotalSourceFrames the source frames to consume in total
+     * @param nTotalTargetFrames the target frames to render in total; they
+     *   must be accepted by IsSupported()
+     */
+    ChunkedIncrements(unsigned nTotalSourceFrames, unsigned nTotalTargetFrames);
+
+    /**
+     * @return the target frames in the chunks taken so far: the index of the
+     *   first frame of the next chunk, up to nTotalTargetFrames
+     */
+    unsigned GetDoneTargetFrames() const { return m_NDoneTargetFrames; }
+
+    /**
+     * Takes the next chunk of the target frames and returns its increment.
+     * Call it once per ReadBlock(), in order, until nTotalTargetFrames are
+     * taken. It advances the done counters: GetDoneTargetFrames() grows by
+     * nChunkTargetFrames, and the source position done by the returned
+     * increment times nChunkTargetFrames.
+     * @param nChunkTargetFrames the length of the chunk in target (output)
+     *   frames, not in source frames; > 0; the chunks together must not
+     *   exceed nTotalTargetFrames
+     * @return the increment to pass to ReadBlock() for this chunk
+     */
+    unsigned NextChunkIncrement(unsigned nChunkTargetFrames);
+  };
+
+  /**
    * Converts a resampling-rate multiplier (source frames per target frame,
    * e.g. 1.0 = no change, 2^(cents/1200) for a pitch shift) into the
    * 1/UPSAMPLE_FACTOR-unit increment ResamplingPosition::Inc(unsigned) and
