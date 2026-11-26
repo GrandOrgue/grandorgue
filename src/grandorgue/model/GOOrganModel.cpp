@@ -19,6 +19,8 @@
 #include "midi/objects/GOMidiObjectContext.h"
 #include "modification/GOModificationListener.h"
 
+#include "go_clear_in_reverse.h"
+
 #include "GODivisionalCoupler.h"
 #include "GOEnclosure.h"
 #include "GOManual.h"
@@ -258,17 +260,26 @@ void GOOrganModel::LoadCmbButtons(GOConfigReader &cfg) {
     m_manuals[i]->LoadDivisionals(cfg);
 }
 
+void GOOrganModel::CleanupCmbButtons() {
+  go_clear_in_reverse(m_generals);
+  // the template refers to the controls that are deleted by Cleanup()
+  m_GeneralTemplate.Clear();
+}
+
 void GOOrganModel::Cleanup() {
+  go_clear_in_reverse(m_DivisionalCoupler);
+  go_clear_in_reverse(m_pistons);
+  go_clear_in_reverse(m_ranks);
+  go_clear_in_reverse(m_tremulants);
+  go_clear_in_reverse(m_switches);
+  go_clear_in_reverse(m_enclosures);
+  go_clear_in_reverse(m_manuals);
+  // The pipe config nodes of the ranks are children of the nodes of the
+  // windchests, but the destructors of the nodes detach each other in any
+  // order
+  go_clear_in_reverse(m_windchests);
   m_WindchestNByPipeConfig.clear();
-  m_windchests.clear();
-  m_manuals.clear();
-  m_enclosures.clear();
-  m_switches.clear();
-  m_tremulants.clear();
-  m_ranks.clear();
-  m_pistons.clear();
-  m_DivisionalCoupler.clear();
-  m_generals.clear();
+  assert(m_RootPipeConfigNode.GetChildCount() == 0);
 }
 
 void GOOrganModel::SetOrganModelModified(bool modified) {
@@ -297,6 +308,18 @@ unsigned GOOrganModel::AddWindchest(std::unique_ptr<GOWindchest> &&oWindchest) {
 
   m_WindchestNByPipeConfig[&pWindchest->GetPipeConfig()] = windchestN;
   return windchestN;
+}
+
+void GOOrganModel::RemoveWindchest(GOWindchest *pWindchest) {
+  const unsigned nWindchests = m_windchests.size();
+  const bool isLast
+    = nWindchests && m_windchests[nWindchests - 1] == pWindchest;
+
+  assert(isLast);
+  if (isLast) {
+    m_WindchestNByPipeConfig.erase(&pWindchest->GetPipeConfig());
+    m_windchests.pop_back();
+  }
 }
 
 unsigned GOOrganModel::GetManualAndPedalCount() {
@@ -343,6 +366,16 @@ unsigned GOOrganModel::AddEnclosure(std::unique_ptr<GOEnclosure> &&oEnclosure) {
   return m_enclosures.size() - 1;
 }
 
+void GOOrganModel::RemoveEnclosure(GOEnclosure *pEnclosure) {
+  const unsigned nEnclosures = m_enclosures.size();
+  const bool isLast
+    = nEnclosures && m_enclosures[nEnclosures - 1] == pEnclosure;
+
+  assert(isLast);
+  if (isLast)
+    m_enclosures.pop_back();
+}
+
 int GOOrganModel::FindSwitchByName(const wxString &name) const {
   int resIndex = -1;
 
@@ -368,6 +401,15 @@ int GOOrganModel::FindTremulantByName(const wxString &name) const {
 void GOOrganModel::AddRank(std::unique_ptr<GORank> &&oRank) {
   oRank->SetContext(&MIDI_CONTEXT_RANKS);
   m_ranks.push_back(std::move(oRank));
+}
+
+void GOOrganModel::RemoveRank(GORank *pRank) {
+  const unsigned nRanks = m_ranks.size();
+  const bool isLast = nRanks && m_ranks[nRanks - 1] == pRank;
+
+  assert(isLast);
+  if (isLast)
+    m_ranks.pop_back();
 }
 
 std::set<std::pair<unsigned, unsigned>> GOOrganModel::

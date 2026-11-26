@@ -90,6 +90,17 @@ public:
     std::vector<T *>::erase(std::vector<T *>::begin() + pos);
   }
 
+  /**
+   * Deletes the last element and removes it from the vector. The vector must
+   * not be empty.
+   */
+  void pop_back() {
+    T *pLast = std::vector<T *>::back();
+
+    std::vector<T *>::pop_back();
+    delete1(pLast);
+  }
+
   typename std::vector<T *>::const_iterator begin() const noexcept {
     return std::vector<T *>::begin();
   }

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2023 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -63,6 +63,13 @@ public:
 
   void InitGeneral();
   void InitDivisional(GOManual &manual);
+
+  /**
+   * Removes all elements. The counterpart of InitGeneral() and
+   * InitDivisional(): the elements refer to the controls of the model, so it
+   * must be called before they are deleted.
+   */
+  void Clear() { m_elements.clear(); }
 
   const std::vector<Element> &GetElements() const { return m_elements; };
   int FindElement(ElementType type, int manual, unsigned index) const;

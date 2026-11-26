@@ -159,6 +159,7 @@ void GOOrganController::ClearOrganCoreData() {
     p_MasterEnclosure = nullptr;
     mp_InternalEnclosures.clear();
 
+    GOOrganModel::CleanupCmbButtons();
     // Just to be sure, that the sound providers are freed before the pool
     GOOrganModel::Cleanup();
 
