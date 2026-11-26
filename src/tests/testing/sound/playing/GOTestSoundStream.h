@@ -118,6 +118,9 @@ private:
   /** Checks start segment numbering after dropping a loop. */
   void TestRejectedLoopKeepsStartSegmentIndex();
 
+  /** Checks that a stream started at segment 1 begins at the loop start. */
+  void TestInitStreamAtLoopSegment();
+
 public:
   std::string GetName() override { return TEST_NAME; }
   void run() override;
