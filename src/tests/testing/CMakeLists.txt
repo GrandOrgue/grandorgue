@@ -15,6 +15,8 @@ set(go_tests
     model/GOTestSoundingPipe.cpp
     model/GOTestSwitch.cpp
     model/GOTestWindchest.cpp
+    model/registry/GOTestDynamicRegistry.cpp
+    model/registry/GOTestFreezableRegistry.cpp
     scheduler/GOTestScheduler.cpp
     sound/buffer/GOTestPerfSoundBufferBase.cpp
     sound/buffer/GOTestPerfSoundBufferMutable.cpp

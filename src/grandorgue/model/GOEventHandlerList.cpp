@@ -10,16 +10,16 @@
 #include "control/GOControlChangedHandler.h"
 
 void GOEventHandlerList::SendControlChanged(GOControl *pControl) {
-  for (auto handler : m_ControlChangedHandlers.AsVector())
+  for (auto handler : mp_ControlChangedHandlers.AsVector())
     handler->ControlChanged(pControl);
 }
 
-void GOEventHandlerList::Cleanup() {
-  m_CacheObjects.Clear();
-  m_CombinationButtonSets.Clear();
-  m_ControlChangedHandlers.Clear();
-  m_MidiObjects.Clear();
-  m_MidiEventHandlers.Clear();
-  m_LifecycleListeners.Clear();
-  m_SaveableObjects.Clear();
+void GOEventHandlerList::SetFrozen(bool isToFreeze) {
+  mp_CacheObjects.SetFrozen(isToFreeze);
+  mp_ReferencingObjects.SetFrozen(isToFreeze);
+  mp_CombinationButtonSets.SetFrozen(isToFreeze);
+  mp_MidiObjects.SetFrozen(isToFreeze);
+  mp_MidiEventHandlers.SetFrozen(isToFreeze);
+  mp_LifecycleListeners.SetFrozen(isToFreeze);
+  mp_SaveableObjects.SetFrozen(isToFreeze);
 }
