@@ -36,6 +36,7 @@
 #include "testing/model/GOTestPipeConfigTreeNode.h"
 #include "testing/model/GOTestSoundingPipe.h"
 #include "testing/model/GOTestSwitch.h"
+#include "testing/model/GOTestTremulant.h"
 #include "testing/model/GOTestWindchest.h"
 #include "testing/model/registry/GOTestDynamicRegistry.h"
 #include "testing/model/registry/GOTestFreezableRegistry.h"
@@ -262,6 +263,7 @@ int main(int argc, char *argv[]) {
   GOTestPipeConfigTreeNode testPipeConfigTreeNode;
   GOTestSoundingPipe testSoundingPipe;
   GOTestSwitch testSwitch;
+  GOTestTremulant testTremulant;
   GOTestWindchest testWindchest;
   GOTestDynamicRegistry testDynamicRegistry;
   GOTestFreezableRegistry testFreezableRegistry;
