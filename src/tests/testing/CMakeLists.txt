@@ -68,11 +68,15 @@ set(go_tests
     sound/reverb/GOTestSoundReverb.cpp
     sound/tasks/GOSoundCooperativeTaskTestImpl.cpp
     sound/tasks/GOSoundTaskTestImpl.cpp
+    sound/tasks/GOSoundTremulantTaskTestFixture.cpp
     sound/tasks/GOSoundWindchestGroupTestFixture.cpp
     sound/tasks/GOTestPerfSoundTaskBase.cpp
     sound/tasks/GOTestSoundOutputTask.cpp
     sound/tasks/GOTestSoundRecorderTask.cpp
     sound/tasks/GOTestSoundTaskBase.cpp
+    sound/tasks/GOTestSoundTremulantTask.cpp
+    sound/tasks/GOTestSoundTremulantTaskPitch.cpp
+    sound/tasks/GOTestSoundTremulantWaveForm.cpp
     sound/tasks/GOTestSoundWindchestGroupTask.cpp
     sound/tasks/GOTestSoundWindchestTask.cpp
     threading/GOTestVersioned.cpp

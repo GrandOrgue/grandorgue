@@ -24,6 +24,7 @@
 #include "tasks/GOSoundReleaseTask.h"
 #include "tasks/GOSoundTouchTask.h"
 #include "tasks/GOSoundTremulantTask.h"
+#include "tasks/GOSoundTremulantWaveForm.h"
 #include "tasks/GOSoundWindchestGroupTask.h"
 #include "tasks/GOSoundWindchestTask.h"
 #include "threading/GOMutexLocker.h"
@@ -134,10 +135,7 @@ GOSoundOrganEngine::GOSoundOrganEngine(
     r_MemoryPool(memoryPool),
     mp_TouchTask(std::make_unique<GOSoundTouchTask>(r_MemoryPool)),
     m_SamplerPlayer(
-      m_WindchestGroupTaskGrid,
-      mp_WindchestTasks,
-      mp_TremulantTasks,
-      mp_ReleaseTask),
+      m_WindchestGroupTaskGrid, mo_WindchestTasks, mp_ReleaseTask),
     m_NAudioGroups(1),
     m_NAuxThreads(0),
     m_IsDownmix(false),
@@ -186,7 +184,7 @@ void GOSoundOrganEngine::SetFromConfig(GOConfig &config) {
 const GOSoundProcessingChain &GOSoundOrganEngine::GetWindchestChainAt(
   unsigned windchestN) {
   assert(!IsIdle());
-  // GetWindchestTaskAt() itself asserts windchestN < mp_WindchestTasks.size()
+  // GetWindchestTaskAt() itself asserts windchestN < mo_WindchestTasks.size()
   return GetWindchestTaskAt(windchestN).GetChain();
 }
 
@@ -210,7 +208,7 @@ const GOSoundProcessingChain &GOSoundOrganEngine::GetWindchestChainAt(
  * one every time (there is no live add/remove of enclosures on a running
  * engine). Teardown is symmetric by construction rather than by an explicit
  * step - each chain is owned by the GOSoundWindchestTask it is passed into,
- * so DestroyEngine()'s mp_WindchestTasks.clear() destroys every chain (and,
+ * so DestroyEngine()'s mo_WindchestTasks.clear() destroys every chain (and,
  * in turn, every processor/mapper it owns) at exactly the same [B2] step
  * that built them.
  * @param pWindchest the windchest to build the chain for, or nullptr for
@@ -245,32 +243,45 @@ void GOSoundOrganEngine::BuildEngine(
   // Fill out the start parameters
   m_NSamplesPerBuffer = nSamplesPerBuffer;
 
-  // [B1] Build tremulant tasks
-  for (unsigned n = r_OrganModel.GetTremulantCount(), tremI = 0; tremI < n;
-       tremI++)
-    mp_TremulantTasks.push_back(
-      new GOSoundTremulantTask(m_SamplerPlayer, m_NSamplesPerBuffer));
+  // [B1] Build tremulant tasks, each with its wave form
+  for (unsigned nTremulants = r_OrganModel.GetTremulantCount(), tremulantI = 0;
+       tremulantI < nTremulants;
+       tremulantI++) {
+    auto oTask = std::make_unique<GOSoundTremulantTask>(
+      *r_OrganModel.GetTremulant(tremulantI), m_NSamplesPerBuffer, sampleRate);
+    /* Two lines, not SwapWaveForm(BuildWaveForm()): SwapWaveForm() takes an
+     * lvalue reference to give the old wave form back, and a temporary cannot
+     * be bound to it */
+    std::unique_ptr<GOSoundTremulantWaveForm> oWaveForm
+      = oTask->BuildWaveForm();
+
+    // The engine is not running yet: no need to suspend it
+    oTask->SwapWaveForm(oWaveForm);
+    // The task had no wave form
+    assert(!oWaveForm);
+    mo_TremulantTasks.push_back(std::move(oTask));
+  }
 
   // [B2] Build windchest tasks
   // Special windchest task for detached releases (index 0 =
   // DETACHED_RELEASE_TASK_ID). Always gets a valid, empty chain, uniformly
   // with every other windchest.
-  mp_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
+  mo_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
     *this,
     nullptr,
     build_windchest_chain(nullptr, m_NSamplesPerBuffer, sampleRate)));
   for (unsigned n = r_OrganModel.GetWindchestCount(), wcI = 0; wcI < n; wcI++) {
     GOWindchest *const pWindchest = r_OrganModel.GetWindchest(wcI);
 
-    mp_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
+    mo_WindchestTasks.push_back(std::make_unique<GOSoundWindchestTask>(
       *this,
       pWindchest,
       build_windchest_chain(pWindchest, m_NSamplesPerBuffer, sampleRate)));
   }
 
   // [B3] Initialize windchests with tremulant tasks
-  for (auto &pWcTask : mp_WindchestTasks)
-    pWcTask->Init(mp_TremulantTasks);
+  for (auto &pWcTask : mo_WindchestTasks)
+    pWcTask->Init(mo_TremulantTasks);
 
   // [B4] Build the windchest-group task grid
   const unsigned nWindchests = r_OrganModel.GetWindchestCount() + 1;
@@ -400,9 +411,9 @@ void GOSoundOrganEngine::BuildEngine(
   // [B11] Add all tasks to scheduler
   m_scheduler.Clear();
   m_scheduler.SetRepeatCount(m_NReleaseRepeats);
-  for (GOSoundTremulantTask *pTremTask : mp_TremulantTasks)
-    m_scheduler.Add(pTremTask);
-  for (auto &pWcTask : mp_WindchestTasks)
+  for (auto &oTremTask : mo_TremulantTasks)
+    m_scheduler.Add(oTremTask.get());
+  for (auto &pWcTask : mo_WindchestTasks)
     m_scheduler.Add(pWcTask.get());
   m_WindchestGroupTaskGrid.ForEachTask(
     [this](GOSoundWindchestGroupTask *pTask) { m_scheduler.Add(pTask); });
@@ -475,10 +486,10 @@ void GOSoundOrganEngine::DestroyEngine() {
   // windchest tasks at [B2] below
 
   // [B2] Destroy windchest tasks
-  mp_WindchestTasks.clear();
+  mo_WindchestTasks.clear();
 
   // [B1] Destroy tremulant tasks
-  mp_TremulantTasks.clear();
+  mo_TremulantTasks.clear();
 
   m_SamplerPlayer.Destroy();
   m_LifecycleState.store(LifecycleState::IDLE);
@@ -566,7 +577,7 @@ GOSoundOrganEngine::AudioGroupRoutingChange GOSoundOrganEngine::
   for (unsigned audioGroupId : newAudioGroupIds)
     change.groupInputs[audioGroupId]
       = m_WindchestGroupTaskGrid.GetInputsForGroup(
-        audioGroupId, mp_WindchestTasks.size());
+        audioGroupId, mo_WindchestTasks.size());
 
   return change;
 }
@@ -577,6 +588,45 @@ void GOSoundOrganEngine::CommitSoundRoutingFor(
     m_scheduler.Add(pTask);
   for (auto &[audioGroupId, inputs] : change.groupInputs)
     mp_AudioGroupTasks[audioGroupId]->SetInputs(std::move(inputs));
+}
+
+GOSoundOrganEngine::TremulantWaveFormChange::TremulantWaveFormChange()
+  = default;
+
+GOSoundOrganEngine::TremulantWaveFormChange::TremulantWaveFormChange(
+  TremulantWaveFormChange &&)
+  = default;
+
+GOSoundOrganEngine::TremulantWaveFormChange &GOSoundOrganEngine::
+  TremulantWaveFormChange::operator=(TremulantWaveFormChange &&)
+  = default;
+
+GOSoundOrganEngine::TremulantWaveFormChange::~TremulantWaveFormChange()
+  = default;
+
+GOSoundOrganEngine::TremulantWaveFormChange GOSoundOrganEngine::
+  PrepareTremulantWaveForms(const std::set<unsigned> &tremulantIndices) {
+  // The tasks exist from BuildEngine() until DestroyEngine()
+  assert(m_LifecycleState.load() != LifecycleState::IDLE);
+
+  TremulantWaveFormChange change;
+
+  change.items.reserve(tremulantIndices.size());
+  for (unsigned tremulantI : tremulantIndices) {
+    assert(tremulantI < mo_TremulantTasks.size());
+    change.items.push_back(
+      {tremulantI, mo_TremulantTasks[tremulantI]->BuildWaveForm()});
+  }
+  return change;
+}
+
+void GOSoundOrganEngine::CommitTremulantWaveForms(
+  TremulantWaveFormChange &ioChange) {
+  // Only between StopEngine() and StartEngine()
+  assert(m_LifecycleState.load() == LifecycleState::BUILT);
+
+  for (TremulantWaveFormChange::Item &item : ioChange.items)
+    mo_TremulantTasks[item.tremulantIndex]->SwapWaveForm(item.oWaveForm);
 }
 
 void GOSoundOrganEngine::SetUsed(bool isUsed) {

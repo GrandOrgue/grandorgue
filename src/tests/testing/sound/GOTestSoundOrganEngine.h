@@ -112,6 +112,22 @@ private:
   void TestPrepareAndCommitSoundRoutingFor();
 
   /*
+   * BuildEngine() gives every Synth tremulant task its wave form and no form
+   * to a Wave one. PrepareTremulantWaveForms() builds the new forms from the
+   * current parameters without touching the installed ones;
+   * CommitTremulantWaveForms() under a suspend/resume installs them and leaves
+   * the replaced forms in the change. An empty change changes nothing.
+   */
+  void TestPrepareAndCommitTremulantWaveForms();
+
+  /*
+   * An engaged tremulant whose start ramp is over is committed a wave form of
+   * another period under a suspend/resume: it keeps the fraction of the loop
+   * it was at (the same phase) and goes on modulating the amplitude.
+   */
+  void TestTremulantKeepsPhaseAcrossCommit();
+
+  /*
    * Starts a real sine sample (GOSoundSineProviderTestImpl) and checks that
    * non-silent audio reaches the final planar output buffer after a few
    * periods - a content-level canary for the windchest-group merge

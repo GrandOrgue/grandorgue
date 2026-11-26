@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "model/GOEnclosure.h"
+#include "model/GOTremulant.h"
 #include "model/GOWindchest.h"
 #include "sound/GOSoundOrganEngine.h"
 #include "sound/buffer/GOSoundBufferPlanarMutable.h"
@@ -29,11 +30,14 @@
 #include "sound/processing/GOSoundProcessingChain.h"
 #include "sound/providers/GOSoundProvider.h"
 #include "sound/providers/GOSoundProviderSynthedTrem.h"
+#include "sound/tasks/GOSoundTremulantTask.h"
+#include "sound/tasks/GOSoundTremulantWaveForm.h"
 
 #include "GOBuffer.h"
 #include "GOMemoryPool.h"
 #include "GOOrganController.h"
 
+#include "../model/GOTestTremulantFixture.h"
 #include "GOTestScope.h"
 
 const std::string GOTestSoundOrganEngine::TEST_NAME = "GOTestSoundOrganEngine";
@@ -673,6 +677,153 @@ void GOTestSoundOrganEngine::TestPrepareAndCommitSoundRoutingFor() {
   StopAndDestroyEngine();
 }
 
+void GOTestSoundOrganEngine::TestPrepareAndCommitTremulantWaveForms() {
+  controller->AddTremulant(load_tremulant(*controller, "Synth", 100, 4, 4, 20));
+  controller->AddTremulant(load_tremulant(*controller, "Wave", 100, 4, 4, 20));
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(1, 0, 1);
+
+  GOAssert(engine.mo_TremulantTasks.size() == 2, "wrong number of tasks");
+
+  GOSoundTremulantTask &synthTask = *engine.mo_TremulantTasks[0];
+  GOSoundTremulantTask &waveTask = *engine.mo_TremulantTasks[1];
+
+  // 100 ms at SAMPLE_RATE
+  GOAssert(
+    synthTask.o_WaveForm && synthTask.o_WaveForm->GetNLoopFrames() == 9600,
+    "BuildEngine() must install the wave form of a Synth tremulant");
+  GOAssert(
+    !waveTask.o_WaveForm,
+    "BuildEngine() must not give a wave form to a Wave tremulant");
+
+  // The new form differs from the installed one
+  controller->GetTremulant(0)->ApplySynthParamChanges({.periodMs = 50});
+
+  GOSoundOrganEngine::TremulantWaveFormChange change
+    = engine.PrepareTremulantWaveForms({0, 1});
+
+  GOAssert(!change.IsEmpty(), "two items were expected");
+  GOAssert(change.items.size() == 2, "two items were expected");
+  GOAssert(change.items[0].tremulantIndex == 0, "wrong tremulant index");
+  GOAssert(
+    change.items[0].oWaveForm
+      && change.items[0].oWaveForm->GetNLoopFrames() == 4800,
+    "Prepare must build the new form from the current parameters");
+  GOAssert(change.items[1].tremulantIndex == 1, "wrong tremulant index");
+  GOAssert(!change.items[1].oWaveForm, "a Wave tremulant has no wave form");
+  GOAssert(
+    synthTask.o_WaveForm->GetNLoopFrames() == 9600,
+    "Prepare must not touch the installed form");
+
+  engine.StopEngine();
+  engine.CommitTremulantWaveForms(change);
+  engine.StartEngine();
+
+  GOAssert(
+    synthTask.o_WaveForm->GetNLoopFrames() == 4800,
+    "Commit must install the new form");
+  GOAssert(
+    change.items[0].oWaveForm
+      && change.items[0].oWaveForm->GetNLoopFrames() == 9600,
+    "Commit must leave the replaced form in the change");
+  GOAssert(!change.items[1].oWaveForm, "a Wave tremulant has still no form");
+
+  // The replaced forms are freed after the resume
+  change = {};
+
+  GOSoundOrganEngine::TremulantWaveFormChange emptyChange
+    = engine.PrepareTremulantWaveForms({});
+
+  GOAssert(emptyChange.IsEmpty(), "nothing was requested");
+  engine.StopEngine();
+  engine.CommitTremulantWaveForms(emptyChange);
+  engine.StartEngine();
+  GOAssert(
+    synthTask.o_WaveForm->GetNLoopFrames() == 4800,
+    "an empty commit must change nothing");
+
+  StopAndDestroyEngine();
+}
+
+void GOTestSoundOrganEngine::TestTremulantKeepsPhaseAcrossCommit() {
+  // 100 ms (9600 frames at SAMPLE_RATE), the ramps 10 ms (960 frames)
+  // The controller is shared with the other tests, which may have added
+  // tremulants before
+  const unsigned tremulantI = controller->AddTremulant(
+    load_tremulant(*controller, "Synth", 100, 100, 100, 20));
+
+  GOSoundOrganEngine &engine = BuildAndStartEngine(1, 0, 1);
+  GOSoundTremulantTask &task = *engine.mo_TremulantTasks[tremulantI];
+  GOTremulant &tremulant = *controller->GetTremulant(tremulantI);
+
+  tremulant.SetButtonState(true);
+  GOAssert(tremulant.IsEngaged(), "the tremulant must be engaged");
+
+  // Run until the start ramp is over and then some more, to be inside the loop
+  const unsigned nRoundsToRunBefore = 2
+      * task.o_WaveForm->GetRamp(true).GetNRampFrames()
+      / task.m_NFramesPerBuffer
+    + 3;
+
+  for (unsigned roundI = 0; roundI < nRoundsToRunBefore; ++roundI) {
+    task.NewRound();
+    task.EnsureDone();
+  }
+  GOAssert(
+    task.o_WaveForm->GetRamp(true).IsOverAt(task.m_RampFrameI),
+    "the start ramp must be over");
+
+  const unsigned nOldLoopFrames = task.o_WaveForm->GetNLoopFrames();
+  const double fractionBefore
+    = (double)task.m_position.GetIndex() / nOldLoopFrames;
+
+  GOAssert(fractionBefore > 0.0, "the cursor must have moved");
+
+  // Another period, so the loop length changes
+  tremulant.ApplySynthParamChanges({.periodMs = 50});
+
+  GOSoundOrganEngine::TremulantWaveFormChange change
+    = engine.PrepareTremulantWaveForms({tremulantI});
+
+  engine.StopEngine();
+  engine.CommitTremulantWaveForms(change);
+  engine.StartEngine();
+  change = {};
+
+  const unsigned nNewLoopFrames = task.o_WaveForm->GetNLoopFrames();
+
+  GOAssert(
+    nNewLoopFrames == nOldLoopFrames / 2,
+    std::format(
+      "the loop must be shorter: {} -> {}", nOldLoopFrames, nNewLoopFrames));
+  GOAssert(
+    std::abs(
+      (double)task.m_position.GetIndex() / nNewLoopFrames - fractionBefore)
+      <= 1.0 / nNewLoopFrames,
+    "the tremulant must keep the fraction of the loop it was at");
+
+  // Still modulated over a whole period after the commit
+  float minAmplitude = 1.0f;
+  float maxAmplitude = 1.0f;
+
+  for (unsigned roundI = 0,
+                nRounds = nNewLoopFrames / task.m_NFramesPerBuffer + 1;
+       roundI < nRounds;
+       ++roundI) {
+    task.NewRound();
+    task.EnsureDone();
+
+    const float amplitude = task.GetAmplitude();
+
+    minAmplitude = std::min(minAmplitude, amplitude);
+    maxAmplitude = std::max(maxAmplitude, amplitude);
+  }
+  GOAssert(
+    maxAmplitude > 1.1f && minAmplitude < 0.9f,
+    "the tremulant must still modulate the amplitude after the commit");
+  StopAndDestroyEngine();
+}
+
 void GOTestSoundOrganEngine::TestSamplerAudioReachesPlanarOutput() {
   controller->AddWindchest(std::make_unique<GOWindchest>(*controller));
 
@@ -960,6 +1111,8 @@ void GOTestSoundOrganEngine::run() {
   GO_RUN_TEST(TestAudioGroupRoutingChangeIsEmpty())
   GO_RUN_TEST(TestHasSoundRoutingFor())
   GO_RUN_TEST(TestPrepareAndCommitSoundRoutingFor())
+  GO_RUN_TEST(TestPrepareAndCommitTremulantWaveForms())
+  GO_RUN_TEST(TestTremulantKeepsPhaseAcrossCommit())
   GO_RUN_TEST(TestSamplerAudioReachesPlanarOutput())
   GO_RUN_TEST(TestChainReflectsWindchestEnclosures())
 }

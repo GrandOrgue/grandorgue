@@ -18,11 +18,9 @@
 #include "sound/GOSoundWindchestGroupTaskGrid.h"
 #include "sound/playing/GOSoundSamplerPlayer.h"
 #include "sound/tasks/GOSoundReleaseTask.h"
-#include "sound/tasks/GOSoundTremulantTask.h"
 #include "sound/tasks/GOSoundWindchestTask.h"
 
 #include "GOMemoryPool.h"
-#include "ptrvector.h"
 
 class GOSoundProcessingChain;
 
@@ -57,7 +55,6 @@ private:
   // player's own task lookup.
   GOSoundWindchestGroupTaskGrid m_UnusedGrid;
   std::vector<std::unique_ptr<GOSoundWindchestTask>> m_UnusedWindchestTasks;
-  ptr_vector<GOSoundTremulantTask> m_UnusedTremulantTasks;
   std::unique_ptr<GOSoundReleaseTask> m_UnusedReleaseTask;
 
   /** One distinct GOSoundWindchestTask per windchestIndex in

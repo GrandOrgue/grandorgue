@@ -13,7 +13,6 @@
 #include "model/GOWindchest.h"
 
 #include "GOSoundTaskBase.h"
-#include "ptrvector.h"
 
 class GOSchedulerThread;
 class GOSoundOrganEngine;
@@ -53,7 +52,7 @@ public:
 
   void CompleteRound() override {}
 
-  void Init(ptr_vector<GOSoundTremulantTask> &tremulantTasks);
+  void Init(std::vector<std::unique_ptr<GOSoundTremulantTask>> &tremulantTasks);
 
   float GetWindchestAmplitude() const {
     return p_windchest ? p_windchest->GetAmplitude() : 1;

@@ -57,7 +57,7 @@ std::unique_ptr<GOTremulant> load_tremulant_from_text(
   std::unique_ptr<GOTremulant> oTremulant
     = std::make_unique<GOTremulant>(model);
 
-  oTremulant->Load(cfg, TEST_TREMULANT_GROUP, 1);
+  oTremulant->Load(cfg, TEST_TREMULANT_GROUP);
   return oTremulant;
 }
 

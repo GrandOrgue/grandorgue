@@ -43,7 +43,7 @@ extern const wxString TEST_TREMULANT_GROUP;
  *   ending with a new line; the required DefaultToEngaged=N is appended to it
  * @param cmbText the content of the .cmb, may be empty
  * @return the loaded tremulant; its Load() is called with the group
- *   TEST_TREMULANT_GROUP and tremulantN 1
+ *   TEST_TREMULANT_GROUP
  */
 std::unique_ptr<GOTremulant> load_tremulant_from_text(
   GOOrganModel &model, const std::string &odfText, const std::string &cmbText);

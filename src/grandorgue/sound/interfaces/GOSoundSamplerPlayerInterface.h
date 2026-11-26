@@ -38,13 +38,6 @@ public:
     uint64_t *pStartTimeSamples = nullptr)
     = 0;
 
-  // ProxyDefault: nullptr
-  virtual GOSoundSampler *StartTremulantSample(
-    const GOSoundProvider *tremProvider,
-    unsigned tremulantN,
-    uint64_t prevEventTime)
-    = 0;
-
   // ProxyDefault: nothing
   virtual void UpdateVelocity(
     const GOSoundProvider *pipe, GOSoundSampler *handle, unsigned velocity)

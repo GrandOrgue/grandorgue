@@ -249,6 +249,7 @@ sound/tasks/GOSoundReleaseTask.cpp
 sound/tasks/GOSoundTaskBase.cpp
 sound/tasks/GOSoundTouchTask.cpp
 sound/tasks/GOSoundTremulantTask.cpp
+sound/tasks/GOSoundTremulantWaveForm.cpp
 sound/tasks/GOSoundWindchestGroupTask.cpp
 sound/tasks/GOSoundWindchestTask.cpp
 sound/GOSoundDevInfo.cpp

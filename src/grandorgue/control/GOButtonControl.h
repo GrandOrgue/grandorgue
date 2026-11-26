@@ -8,6 +8,8 @@
 #ifndef GOBUTTONCONTROL_H
 #define GOBUTTONCONTROL_H
 
+#include <atomic>
+
 #include <wx/string.h>
 
 #include "midi/objects/GOMidiObjectWithShortcut.h"
@@ -24,7 +26,9 @@ class GOButtonControl : public GOControl, public GOMidiObjectWithShortcut {
 protected:
   bool m_Pushbutton;
   bool m_Displayed;
-  bool m_Engaged;
+  // Written by the control thread, read by the sound threads (a tremulant
+  // task), so it is atomic
+  std::atomic_bool m_IsEngaged;
   bool m_DisplayInInvertedState;
   bool m_ReadOnly;
   bool m_IsPiston;
@@ -37,7 +41,7 @@ protected:
   void OnShortcutKeyReceived(
     GOMidiShortcutReceiver::MatchType matchType, int key) override;
 
-  void SendCurrentMidiValue() override { SendMidiValue(m_Engaged); }
+  void SendCurrentMidiValue() override { SendMidiValue(m_IsEngaged); }
   void SendEmptyMidiValue() override { SendMidiValue(false); }
 
 public:
@@ -57,7 +61,10 @@ public:
   void SetDisplayed(bool displayed) { m_Displayed = displayed; }
   bool IsReadOnly() const override { return m_ReadOnly; }
   bool IsPiston() const { return m_IsPiston; }
-  bool IsEngaged() const { return m_Engaged; }
+  /**
+   * Whether the button is engaged. Safe to call from any thread
+   */
+  bool IsEngaged() const { return m_IsEngaged.load(std::memory_order_relaxed); }
   bool DisplayInverted() const { return m_DisplayInInvertedState; }
   bool IsKeyboardInputUsed() const override {
     return GOMidiObjectWithShortcut::IsKeyboardInputUsed();

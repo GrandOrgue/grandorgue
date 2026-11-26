@@ -23,7 +23,7 @@ GOButtonControl::GOButtonControl(
     organModel, objectType, MIDI_SEND_BUTTON, midiType, KEY_RECV_BUTTON),
     m_Pushbutton(pushbutton),
     m_Displayed(false),
-    m_Engaged(false),
+    m_IsEngaged(false),
     m_DisplayInInvertedState(false),
     m_ReadOnly(false),
     m_IsPiston(isPiston) {}
@@ -62,7 +62,7 @@ void GOButtonControl::OnShortcutKeyReceived(
 void GOButtonControl::Push() {
   if (m_ReadOnly)
     return;
-  SetButtonState(m_Engaged ^ true);
+  SetButtonState(!m_IsEngaged);
 }
 
 void GOButtonControl::OnMidiReceived(
@@ -90,15 +90,15 @@ void GOButtonControl::OnMidiReceived(
 }
 
 void GOButtonControl::Display(bool onoff) {
-  if (m_Engaged == onoff)
+  if (m_IsEngaged == onoff)
     return;
-  m_Engaged = onoff;
+  m_IsEngaged = onoff;
   SendCurrentMidiValue();
   r_OrganModel.SendControlChanged(this);
 }
 
 wxString GOButtonControl::GetElementStatus() {
-  return m_Engaged ? _("ON") : _("OFF");
+  return m_IsEngaged ? _("ON") : _("OFF");
 }
 
 std::vector<wxString> GOButtonControl::GetElementActions() {
