@@ -8,6 +8,8 @@
 #ifndef GOPIPECONFIGNODE_H
 #define GOPIPECONFIGNODE_H
 
+#include <optional>
+
 #include <config/GOConfig.h>
 
 #include "GOPipeConfig.h"
@@ -21,11 +23,14 @@ class GOPipeConfigNode : private GOSaveableObject {
 private:
   GOOrganModel &r_OrganModel;
   const GOConfig &m_config;
+  // The midi note number of the pipe that owns this node. Empty if the node
+  // does not belong to a pipe (a rank, a windchest or the organ root),
+  // non-empty if it is the config node of a pipe
+  const std::optional<unsigned> m_MidiNoteNumber;
   GOPipeConfigNode *m_parent;
   GOPipeConfig m_PipeConfig;
   GOStatisticCallback *m_StatisticCallback;
   wxString m_Name;
-  int m_MidiNoteNumber;
 
   void Save(GOConfigWriter &cfg) override { m_PipeConfig.Save(cfg); }
 
@@ -57,11 +62,21 @@ private:
   }
 
 public:
+  /**
+   * Creates the node and adds it to the children of its parent
+   * @param parent the parent node, nullptr for the organ root
+   * @param organModel the organ model to register the node in
+   * @param callback the callback notified about the changes of the config
+   * @param statistic the callback providing the sample statistic, or nullptr
+   * @param midiNoteNumber the midi note number of the pipe that owns the node,
+   *   empty if the node does not belong to a pipe
+   */
   GOPipeConfigNode(
     GOPipeConfigNode *parent,
     GOOrganModel &organModel,
     GOPipeUpdateCallback *callback,
-    GOStatisticCallback *statistic);
+    GOStatisticCallback *statistic,
+    std::optional<unsigned> midiNoteNumber = std::nullopt);
 
   /**
    * Unregisters the saveable object registered by the constructor and removes
@@ -78,14 +93,11 @@ public:
   void SetName(const wxString &name) { m_Name = name; }
 
   /**
-   * The midi note number of the pipe that owns this node.
-   * @return the midi note number or -1 if the node does not belong to a pipe
-   *   (a rank, a windchest or the organ root)
+   * @return the midi note number of the pipe that owns this node, empty if
+   *   the node does not belong to a pipe (a rank, a windchest or the organ
+   *   root)
    */
-  int GetMidiNoteNumber() const { return m_MidiNoteNumber; }
-  void SetMidiNoteNumber(int midiNoteNumber) {
-    m_MidiNoteNumber = midiNoteNumber;
-  }
+  std::optional<unsigned> GetMidiNoteNumber() const { return m_MidiNoteNumber; }
 
   GOPipeConfig &GetPipeConfig() { return m_PipeConfig; }
 

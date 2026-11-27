@@ -8,6 +8,7 @@
 #include "GOPipeVoicing.h"
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <set>
 
@@ -15,159 +16,201 @@
 
 static const float MIN_GAIN_DB = -120.0f;
 static const float MAX_GAIN_DB = 40.0f;
+static const float MAX_TUNING_CENTS = 1800.0f;
+static const float MAX_TONE_BALANCE = 100.0f;
 
-float GOPipeVoicing::getOffsetOf(
-  const GOPipeConfig &config, Parameter parameter) {
-  float offset = 0.0f;
+void GOPipeVoicing::appendSubtreePipeNodes(
+  GOPipeConfigNode &subtreeRoot,
+  std::vector<GOPipeConfigNode *> &ioMpPipeNodes) {
+  if (subtreeRoot.GetMidiNoteNumber())
+    ioMpPipeNodes.push_back(&subtreeRoot);
+  for (unsigned n = subtreeRoot.GetChildCount(), i = 0; i < n; i++)
+    appendSubtreePipeNodes(*subtreeRoot.GetChild(i), ioMpPipeNodes);
+}
 
-  switch (parameter) {
-  case GAIN:
-    offset = config.GetGain() - config.GetDefaultGain();
+GOPipeVoicing::PipeSettings GOPipeVoicing::takePipeSettings(
+  const GOPipeConfig &pipeConfig) {
+  return {
+    pipeConfig.GetGain(),
+    pipeConfig.GetManualTuning(),
+    pipeConfig.GetAutoTuningCorrection(),
+    pipeConfig.GetToneBalanceValue()};
+}
+
+float GOPipeVoicing::takeSettingValue(
+  const GOPipeConfig &pipeConfig, ChangedSettingSelector selector) {
+  float value = 0.0f;
+
+  switch (selector) {
+  case SETTING_GAIN:
+    value = pipeConfig.GetGain();
     break;
-  case MANUAL_TUNING:
-    offset = config.GetManualTuning();
+  case SETTING_MANUAL_TUNING:
+    value = pipeConfig.GetManualTuning();
     break;
-  case AUTO_TUNING_CORRECTION:
-    offset = config.GetAutoTuningCorrection();
+  case SETTING_AUTO_TUNING_CORRECTION:
+    value = pipeConfig.GetAutoTuningCorrection();
     break;
-  case TONE_BALANCE:
-    offset = config.GetToneBalanceValue();
+  case SETTING_TONE_BALANCE:
+    value = pipeConfig.GetToneBalanceValue();
     break;
   }
-  return offset;
+  return value;
 }
 
-void GOPipeVoicing::setOffsetOf(
-  GOPipeConfig &config, Parameter parameter, float offset) {
-  if (getOffsetOf(config, parameter) != offset) {
-    switch (parameter) {
-    case GAIN:
-      config.SetGain(
-        std::clamp(config.GetDefaultGain() + offset, MIN_GAIN_DB, MAX_GAIN_DB));
-      break;
-    case MANUAL_TUNING:
-      config.SetManualTuning(offset);
-      break;
-    case AUTO_TUNING_CORRECTION:
-      config.SetAutoTuningCorrection(offset);
-      break;
-    case TONE_BALANCE:
-      config.SetToneBalanceValue(
-        (int8_t)std::clamp(std::lround(offset), -100l, 100l));
-      break;
-    }
+void GOPipeVoicing::applySettingValue(
+  ChangedSettingSelector selector, float value, GOPipeConfig &ioPipeConfig) {
+  switch (selector) {
+  case SETTING_GAIN: {
+    const float gain = std::clamp(value, MIN_GAIN_DB, MAX_GAIN_DB);
+
+    if (gain != ioPipeConfig.GetGain())
+      ioPipeConfig.SetGain(gain);
+    break;
+  }
+  case SETTING_MANUAL_TUNING: {
+    const float cents = std::clamp(value, -MAX_TUNING_CENTS, MAX_TUNING_CENTS);
+
+    if (cents != ioPipeConfig.GetManualTuning())
+      ioPipeConfig.SetManualTuning(cents);
+    break;
+  }
+  case SETTING_AUTO_TUNING_CORRECTION: {
+    const float cents = std::clamp(value, -MAX_TUNING_CENTS, MAX_TUNING_CENTS);
+
+    if (cents != ioPipeConfig.GetAutoTuningCorrection())
+      ioPipeConfig.SetAutoTuningCorrection(cents);
+    break;
+  }
+  case SETTING_TONE_BALANCE: {
+    const int8_t toneBalance = (int8_t)std::lround(
+      std::clamp(value, -MAX_TONE_BALANCE, MAX_TONE_BALANCE));
+
+    if (toneBalance != ioPipeConfig.GetToneBalanceValue())
+      ioPipeConfig.SetToneBalanceValue(toneBalance);
+    break;
+  }
   }
 }
 
-void GOPipeVoicing::CollectPipes(
-  GOPipeConfigNode &node, std::vector<GOPipeConfigNode *> &outPNodes) const {
-  if (node.GetMidiNoteNumber() >= 0)
-    outPNodes.push_back(&node);
-  for (unsigned nChilds = node.GetChildCount(), childI = 0; childI < nChilds;
-       childI++)
-    CollectPipes(*node.GetChild(childI), outPNodes);
+void GOPipeVoicing::applyPipeSettings(
+  const PipeSettings &settings, GOPipeConfig &ioPipeConfig) {
+  applySettingValue(SETTING_GAIN, settings.gain, ioPipeConfig);
+  applySettingValue(SETTING_MANUAL_TUNING, settings.manualTuning, ioPipeConfig);
+  applySettingValue(
+    SETTING_AUTO_TUNING_CORRECTION,
+    settings.autoTuningCorrection,
+    ioPipeConfig);
+  applySettingValue(SETTING_TONE_BALANCE, settings.toneBalance, ioPipeConfig);
 }
 
-void GOPipeVoicing::Select(const std::vector<GOPipeConfigNode *> &mpNodes) {
+void GOPipeVoicing::SetVoicedNodes(
+  const std::vector<GOPipeConfigNode *> &mpSubtreeRoots) {
   std::vector<GOPipeConfigNode *> mpPipeNodes;
-  std::set<GOPipeConfigNode *> mpSeen;
+  std::set<GOPipeConfigNode *> mpSeenPipeNodes;
 
-  m_Pipes.clear();
-  m_PipeIndicesByNote.clear();
-  for (GOPipeConfigNode *pNode : mpNodes)
-    if (pNode)
-      CollectPipes(*pNode, mpPipeNodes);
+  m_VoicedPipeRefs.clear();
+  m_VoicedPipeRefIndicesByMidiNote.clear();
+  for (GOPipeConfigNode *pSubtreeRoot : mpSubtreeRoots) {
+    assert(pSubtreeRoot);
+    appendSubtreePipeNodes(*pSubtreeRoot, mpPipeNodes);
+  }
   for (GOPipeConfigNode *pPipeNode : mpPipeNodes) {
-    if (mpSeen.insert(pPipeNode).second) {
-      const GOPipeConfig &config = pPipeNode->GetPipeConfig();
+    if (mpSeenPipeNodes.insert(pPipeNode).second) {
+      const unsigned midiNote = *pPipeNode->GetMidiNoteNumber();
 
-      m_PipeIndicesByNote[pPipeNode->GetMidiNoteNumber()].push_back(
-        m_Pipes.size());
-      m_Pipes.push_back(
-        {pPipeNode,
-         config.GetGain(),
-         config.GetManualTuning(),
-         config.GetAutoTuningCorrection(),
-         config.GetToneBalanceValue()});
+      m_VoicedPipeRefIndicesByMidiNote[midiNote].push_back(
+        m_VoicedPipeRefs.size());
+      m_VoicedPipeRefs.push_back(
+        {*pPipeNode, takePipeSettings(pPipeNode->GetPipeConfig())});
     }
   }
 }
 
-std::vector<int> GOPipeVoicing::GetNotes() const {
-  std::vector<int> notes;
-
-  for (const auto &entry : m_PipeIndicesByNote)
-    notes.push_back(entry.first);
-  return notes;
-}
-
-float GOPipeVoicing::GetOffset(Parameter parameter, int midiNoteNumber) const {
-  const auto it = m_PipeIndicesByNote.find(midiNoteNumber);
-
-  return it != m_PipeIndicesByNote.end()
-    ? getOffsetOf(m_Pipes[it->second.front()].pNode->GetPipeConfig(), parameter)
-    : 0.0f;
-}
-
-void GOPipeVoicing::SetOffset(
-  Parameter parameter, int midiNoteNumber, float offset) {
-  const auto it = m_PipeIndicesByNote.find(midiNoteNumber);
-
-  if (it != m_PipeIndicesByNote.end())
-    for (unsigned pipeI : it->second)
-      setOffsetOf(m_Pipes[pipeI].pNode->GetPipeConfig(), parameter, offset);
-}
-
-void GOPipeVoicing::SetAllOffsets(Parameter parameter, float offset) {
-  for (PipeEntry &entry : m_Pipes)
-    setOffsetOf(entry.pNode->GetPipeConfig(), parameter, offset);
-}
-
-void GOPipeVoicing::SetRamp(
-  Parameter parameter,
-  int firstNote,
-  int lastNote,
-  float firstOffset,
-  float lastOffset) {
-  const float noteSpan = (float)(lastNote - firstNote);
-
-  for (const auto &entry : m_PipeIndicesByNote) {
-    const int note = entry.first;
-
-    if (note >= firstNote && note <= lastNote) {
-      const float ratio = noteSpan > 0 ? (note - firstNote) / noteSpan : 0.0f;
-
-      SetOffset(
-        parameter, note, firstOffset + (lastOffset - firstOffset) * ratio);
-    }
-  }
-}
-
-bool GOPipeVoicing::IsModified() const {
+bool GOPipeVoicing::IsAnyVoicedPipeModified() const {
   bool isModified = false;
 
-  for (const PipeEntry &entry : m_Pipes) {
-    const GOPipeConfig &config = entry.pNode->GetPipeConfig();
-
-    isModified = isModified || config.GetGain() != entry.gain
-      || config.GetManualTuning() != entry.manualTuning
-      || config.GetAutoTuningCorrection() != entry.autoTuningCorrection
-      || config.GetToneBalanceValue() != entry.toneBalance;
-  }
+  for (const VoicedPipeRef &voicedPipeRef : m_VoicedPipeRefs)
+    isModified = isModified
+      || voicedPipeRef.savedSettings
+        != takePipeSettings(voicedPipeRef.pipeNode.GetPipeConfig());
   return isModified;
 }
 
-void GOPipeVoicing::Reset() {
-  for (PipeEntry &entry : m_Pipes) {
-    GOPipeConfig &config = entry.pNode->GetPipeConfig();
+std::vector<unsigned> GOPipeVoicing::GetVoicedMidiNotes() const {
+  std::vector<unsigned> midiNotes;
 
-    if (config.GetGain() != entry.gain)
-      config.SetGain(entry.gain);
-    if (config.GetManualTuning() != entry.manualTuning)
-      config.SetManualTuning(entry.manualTuning);
-    if (config.GetAutoTuningCorrection() != entry.autoTuningCorrection)
-      config.SetAutoTuningCorrection(entry.autoTuningCorrection);
-    if (config.GetToneBalanceValue() != entry.toneBalance)
-      config.SetToneBalanceValue((int8_t)entry.toneBalance);
+  for (const auto &entry : m_VoicedPipeRefIndicesByMidiNote)
+    midiNotes.push_back(entry.first);
+  return midiNotes;
+}
+
+std::optional<float> GOPipeVoicing::TakeSettingValueFromMidiNote(
+  unsigned midiNote, ChangedSettingSelector selector) const {
+  const auto it = m_VoicedPipeRefIndicesByMidiNote.find(midiNote);
+  std::optional<float> value;
+
+  assert(it != m_VoicedPipeRefIndicesByMidiNote.end());
+  if (it != m_VoicedPipeRefIndicesByMidiNote.end()) {
+    const std::vector<unsigned> &pipeRefIndices = it->second;
+    const float firstValue = takeSettingValue(
+      m_VoicedPipeRefs[pipeRefIndices.front()].pipeNode.GetPipeConfig(),
+      selector);
+    bool isSameForAllPipes = true;
+
+    for (unsigned pipeRefI : pipeRefIndices)
+      isSameForAllPipes = isSameForAllPipes
+        && takeSettingValue(
+             m_VoicedPipeRefs[pipeRefI].pipeNode.GetPipeConfig(), selector)
+          == firstValue;
+    if (isSameForAllPipes)
+      value = firstValue;
   }
+  return value;
+}
+
+void GOPipeVoicing::ApplySettingValueToMidiNote(
+  unsigned midiNote, ChangedSettingSelector selector, float value) {
+  const auto it = m_VoicedPipeRefIndicesByMidiNote.find(midiNote);
+
+  assert(it != m_VoicedPipeRefIndicesByMidiNote.end());
+  if (it != m_VoicedPipeRefIndicesByMidiNote.end())
+    for (unsigned pipeRefI : it->second)
+      applySettingValue(
+        selector, value, m_VoicedPipeRefs[pipeRefI].pipeNode.GetPipeConfig());
+}
+
+void GOPipeVoicing::ApplySettingValueToAllPipes(
+  ChangedSettingSelector selector, float value) {
+  for (const VoicedPipeRef &voicedPipeRef : m_VoicedPipeRefs)
+    applySettingValue(selector, value, voicedPipeRef.pipeNode.GetPipeConfig());
+}
+
+void GOPipeVoicing::ApplySettingRampToMidiNotes(
+  unsigned firstMidiNote,
+  unsigned lastMidiNote,
+  ChangedSettingSelector selector,
+  float firstValue,
+  float lastValue) {
+  assert(firstMidiNote <= lastMidiNote);
+
+  const float noteSpan = (float)(lastMidiNote - firstMidiNote);
+
+  for (const auto &entry : m_VoicedPipeRefIndicesByMidiNote) {
+    const unsigned midiNote = entry.first;
+
+    if (midiNote >= firstMidiNote && midiNote <= lastMidiNote) {
+      const float ratio
+        = noteSpan > 0.0f ? (float)(midiNote - firstMidiNote) / noteSpan : 0.0f;
+
+      ApplySettingValueToMidiNote(
+        midiNote, selector, firstValue + (lastValue - firstValue) * ratio);
+    }
+  }
+}
+
+void GOPipeVoicing::RevertVoicedPipeSettings() {
+  for (const VoicedPipeRef &voicedPipeRef : m_VoicedPipeRefs)
+    applyPipeSettings(
+      voicedPipeRef.savedSettings, voicedPipeRef.pipeNode.GetPipeConfig());
 }

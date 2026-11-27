@@ -13,28 +13,33 @@ class GOTestPipeVoicing : public GOCommonControllerTest {
 private:
   std::string name = "GOTestPipeVoicing";
 
-  /* A change is written to all pipes with the note at once, and an
-   * untouched pipe reads as 0 */
-  void TestOffsetsWriteThroughImmediately();
+  /* A change is written to all pipes with the note at once. An untouched
+   * pipe reads as it is stored, an inheriting tone balance reads as 0 */
+  void TestApplyWritesThroughImmediately();
 
-  /* The displayed value comes from the first selected pipe of the note */
-  void TestFirstPipeIsDisplayed();
+  /* The values that are already set are not applied again, so the sound is
+   * not notified */
+  void TestUnchangedValuesAreNotApplied();
 
-  /* Reset restores the values at Select() and IsModified follows */
-  void TestResetRestoresSelectedValues();
+  /* The value of a note is empty if the voiced pipes of the note differ */
+  void TestValueIsEmptyWhenPipesDiffer();
 
-  /* SetAllOffsets and SetRamp */
+  /* Revert restores the settings at SetVoicedNodes(), applying only the
+   * differing ones, and IsAnyVoicedPipeModified follows */
+  void TestRevertRestoresSavedSettings();
+
+  /* ApplySettingValueToAllPipes and ApplySettingRampToMidiNotes */
   void TestAllAndRamp();
 
   /* Values out of the range are clamped */
-  void TestOffsetsAreClamped();
+  void TestValuesAreClamped();
 
-  /* A pipe offset is added to the values set on the upper levels, which stay
+  /* A pipe value is added to the values set on the upper levels, which stay
    * untouched */
-  void TestOffsetsWorkOnTopOfUpperLevels();
+  void TestVoicingWorksOnTopOfUpperLevels();
 
-  /* A pipe reachable from two selected nodes is voiced once */
-  void TestPipeIsSelectedOnce();
+  /* A pipe reachable from several voiced subtrees is voiced once */
+  void TestPipeIsVoicedOnce();
 
 public:
   GOTestPipeVoicing() { name = "GOTestPipeVoicing"; }

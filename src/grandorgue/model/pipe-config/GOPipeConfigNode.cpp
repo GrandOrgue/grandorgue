@@ -17,14 +17,15 @@ GOPipeConfigNode::GOPipeConfigNode(
   GOPipeConfigNode *parent,
   GOOrganModel &organModel,
   GOPipeUpdateCallback *callback,
-  GOStatisticCallback *statistic)
+  GOStatisticCallback *statistic,
+  std::optional<unsigned> midiNoteNumber)
   : r_OrganModel(organModel),
     m_config(organModel.GetConfig()),
+    m_MidiNoteNumber(midiNoteNumber),
     m_parent(parent),
     m_PipeConfig(organModel, callback),
     m_StatisticCallback(statistic),
-    m_Name(),
-    m_MidiNoteNumber(-1) {
+    m_Name() {
   r_OrganModel.RegisterSaveableObject(this);
   if (m_parent)
     m_parent->AddChild(this);
