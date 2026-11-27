@@ -104,6 +104,16 @@ public:
    */
   static constexpr unsigned MAX_RATE = MAX_FRACTION_INCREMENT >> UPSAMPLE_BITS;
 
+  /**
+   * The smallest resampling rate (source frames per target frame) that
+   * rateToFractionIncrement() converts to a non-zero increment: half of
+   * MIN_FRACTION_INCREMENT units, because the conversion rounds half up. A
+   * slower rate would not move the position forward. A power of two, so it is
+   * exactly representable as float.
+   */
+  static constexpr float MIN_RATE
+    = 0.5f * MIN_FRACTION_INCREMENT / UPSAMPLE_FACTOR;
+
   enum InterpolationType {
     GO_LINEAR_INTERPOLATION = 0,
     GO_POLYPHASE_INTERPOLATION = 1,

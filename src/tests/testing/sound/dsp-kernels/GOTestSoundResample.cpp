@@ -622,6 +622,15 @@ void GOTestSoundResample::TestRateToFractionIncrement() {
     "the float just above the half unit must round to 1");
   GOAssert(
     GOSoundResample::rateToFractionIncrement(0.0f) == 0, "0 must give 0");
+  GOAssert(
+    GOSoundResample::rateToFractionIncrement(GOSoundResample::MIN_RATE)
+      == GOSoundResample::MIN_FRACTION_INCREMENT,
+    "MIN_RATE must give the smallest non-zero increment");
+  GOAssert(
+    GOSoundResample::rateToFractionIncrement(
+      std::nextafter(GOSoundResample::MIN_RATE, 0.0f))
+      == 0,
+    "the float just below MIN_RATE must give 0");
 
   // Large rates, where the float spacing of the sum would reach 1
   for (float rate : {1024.25f, 2000.3f, 100000.7f})
