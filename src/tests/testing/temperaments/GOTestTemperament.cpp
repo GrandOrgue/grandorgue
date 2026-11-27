@@ -22,7 +22,7 @@ const std::string GOTestTemperament::TEST_NAME = "GOTestTemperament";
 /* pipe note numbers of a rank may run up to 255 and beyond 127 */
 static const unsigned N_NOTES = 256;
 
-/* most of the 105 built-in cent temperaments differ from the equal one */
+/* most of the 104 built-in cent temperaments differ from the equal one */
 static const unsigned MIN_N_TEMPERAMENTS_WITH_OFFSETS = 100;
 
 void GOTestTemperament::TestOriginalHasNoOffset() {

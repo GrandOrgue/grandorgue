@@ -103,6 +103,10 @@ public:
    */
   float GetOffset(unsigned noteNumber) const override;
 
+  /**
+   * The master may change the tuning at any time, so the organ re-reads it
+   * periodically
+   */
   bool IsLive() const override { return true; }
 
   /**
