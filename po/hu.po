@@ -1360,452 +1360,452 @@ msgstr "Hiba a sáv dekódolásakor"
 msgid "Garbage detected in the MIDI file"
 msgstr "Hiba van a MIDI-állományban"
 
-#: src/core/temperaments/GOTemperamentList.cpp:114
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:114
 msgid "Original temperament"
 msgstr "Eredeti hangolás"
 
-#: src/core/temperaments/GOTemperamentList.cpp:116
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:116
 msgid "Equal temperament"
 msgstr "Kiegyenlített"
 
-#: src/core/temperaments/GOTemperamentList.cpp:131
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:131
 msgid "1/4 comma meantone (Aaron 1523)"
 msgstr "1/4 komma középhangú (Aaron 1523)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:146
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:146
 msgid "1/4 comma variants"
 msgstr "1/4 komma változatok"
 
-#: src/core/temperaments/GOTemperamentList.cpp:148
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:148
 msgid "1/4-comma meantone approximation"
 msgstr "1/4 komma középhangú közelítés"
 
-#: src/core/temperaments/GOTemperamentList.cpp:163
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:163
 msgid "1/4-comma equal beating fifths"
 msgstr "1/4 komma egyenlő kvintek"
 
-#: src/core/temperaments/GOTemperamentList.cpp:178
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:178
 msgid "Alexander Metcalf Fisher"
 msgstr "Alexander Metcalf Fisher"
 
-#: src/core/temperaments/GOTemperamentList.cpp:193
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:193
 msgid "Chaumont"
 msgstr "Chaumont"
 
-#: src/core/temperaments/GOTemperamentList.cpp:208
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:208
 msgid "Corrette (1753)"
 msgstr "Corrette (1753)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:223
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:223
 msgid "Couperin"
 msgstr "Couperin"
 
-#: src/core/temperaments/GOTemperamentList.cpp:238
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:238
 msgid "d'Alembert modified meantone (1726)"
 msgstr "d'Alembert módosított középhangú (1726)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:253
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:253
 msgid "Ferdinand Bossard (1743/44) Klosterkirche Muri"
 msgstr "Ferdinand Bossard (1743/44) Klosterkirche Muri"
 
-#: src/core/temperaments/GOTemperamentList.cpp:268
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:268
 msgid "Fisk-Vogel: Memorial Church at Stanford"
 msgstr "Fisk-Vogel: Memorial Church at Stanford"
 
-#: src/core/temperaments/GOTemperamentList.cpp:283
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:283
 msgid "Mersenne's Improved Meantone 1"
 msgstr "Mersenne fejlesztett középhangú 1"
 
-#: src/core/temperaments/GOTemperamentList.cpp:298
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:298
 msgid "Rameau bemols"
 msgstr "Rameau bemols"
 
-#: src/core/temperaments/GOTemperamentList.cpp:313
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:313
 msgid "Rameau dieses"
 msgstr "Rameau dieses"
 
-#: src/core/temperaments/GOTemperamentList.cpp:328
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:328
 msgid "Rameau's modified meantone temperament (1725)"
 msgstr "Rameau módosított középhangú hangolása (1725)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:343
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:343
 msgid "Rameau Nouveau Systeme (1726)"
 msgstr "Rameau Nouveau Systeme (1726)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:358
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:358
 msgid "Stade St. Cosmae"
 msgstr "Stade St. Cosmae"
 
-#: src/core/temperaments/GOTemperamentList.cpp:373
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:373
 msgid "1/5 comma"
 msgstr "1/5 komma"
 
-#: src/core/temperaments/GOTemperamentList.cpp:375
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:375
 msgid "1/5-comma meantone (Verheijen)"
 msgstr "1/5 komma középhangú (Verheijen)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:390
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:390
 msgid "Holden (John) 1770"
 msgstr "Holden (John) 1770"
 
-#: src/core/temperaments/GOTemperamentList.cpp:405
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:405
 msgid "Scheffer (1748) modified, Sweden"
 msgstr "Scheffer (1748) módosított, Svédország"
 
-#: src/core/temperaments/GOTemperamentList.cpp:420
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:420
 msgid "Keller (Gottfried) 1707"
 msgstr "Keller (Gottfried) 1707"
 
-#: src/core/temperaments/GOTemperamentList.cpp:435
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:435
 msgid "Schnitger organ St. Jakobi, Hamburg "
 msgstr "Schnitger orgona St. Jakobi, Hamburg "
 
-#: src/core/temperaments/GOTemperamentList.cpp:450
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:450
 msgid "1/6 comma"
 msgstr "1/6 komma"
 
-#: src/core/temperaments/GOTemperamentList.cpp:452
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:452
 msgid "1/6-comma meantone"
 msgstr "1/6 komma középhangú"
 
-#: src/core/temperaments/GOTemperamentList.cpp:467
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:467
 msgid "1/6-comma (bemols)"
 msgstr "1/6 komma (bemols)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:482
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:482
 msgid "1/6-comma (dieses)"
 msgstr "1/6 komma (dieses)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:497
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:497
 msgid "1/6-comma equal beating fifths"
 msgstr "1/6 komma egyenlő kvintek"
 
-#: src/core/temperaments/GOTemperamentList.cpp:512
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:512
 msgid "1/6-comma, wolf over 4 fifths"
 msgstr "1/6 komma, farkashangköz 4 kvinten"
 
-#: src/core/temperaments/GOTemperamentList.cpp:527
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:527
 msgid "Freytag Organ Bellingwolde 1798/2002"
 msgstr "Freytag Organ Bellingwolde 1798/2002"
 
-#: src/core/temperaments/GOTemperamentList.cpp:542
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:542
 msgid "G. Silbermann nr 2"
 msgstr "G. Silbermann nr 2"
 
-#: src/core/temperaments/GOTemperamentList.cpp:557
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:557
 msgid "Sauveur (Memoires 1701)"
 msgstr "Sauveur (Memoires 1701)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:572
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:572
 msgid "Various comma"
 msgstr "Vegyes kommák"
 
-#: src/core/temperaments/GOTemperamentList.cpp:574
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:574
 msgid "3/14-comma meantone (Giordano Riccati, 1762)"
 msgstr "3/14-komma középhangú (Giordano Riccati, 1762)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:589
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:589
 msgid "Lambert (1774) 1/7 comma"
 msgstr "Lambert (1774) 1/7-komma"
 
-#: src/core/temperaments/GOTemperamentList.cpp:604
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:604
 msgid "Variable meantone 1"
 msgstr "1. változó középhangú"
 
-#: src/core/temperaments/GOTemperamentList.cpp:619
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:619
 msgid "Variable meantone 2"
 msgstr "2. változó középhangú"
 
-#: src/core/temperaments/GOTemperamentList.cpp:634
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:634
 msgid "Variable meantone 3"
 msgstr "3. változó középhangú"
 
-#: src/core/temperaments/GOTemperamentList.cpp:649
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:649
 msgid "Variable meantone 4"
 msgstr "4. változó középhangú"
 
-#: src/core/temperaments/GOTemperamentList.cpp:664
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:664
 msgid "William Holder equal beating (1694)"
 msgstr "William Holder egyenlő hangközű (1694)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:679
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:679
 msgid "Zarlino (1558) 2/7-comma meantone"
 msgstr "Zarlino (1558) 2/7-komma középhangú"
 
-#: src/core/temperaments/GOTemperamentList.cpp:694
-#: src/core/temperaments/GOTemperamentList.cpp:696
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:694
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:696
 msgid "Pythagorean"
 msgstr "Püthagoraszi"
 
-#: src/core/temperaments/GOTemperamentList.cpp:711
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:711
 msgid "Boulliau (1373)/Mersenne 1636. "
 msgstr "Boulliau (1373)/Mersenne 1636. "
 
-#: src/core/temperaments/GOTemperamentList.cpp:726
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:726
 msgid "De Caus (1615)"
 msgstr "De Caus (1615)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:741
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:741
 msgid "Grammateus (1518)"
 msgstr "Grammateus (1518)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:756
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:756
 msgid "Henri Arnaut De Zwolle. (1436)."
 msgstr "Henri Arnaut De Zwolle. (1436)."
 
-#: src/core/temperaments/GOTemperamentList.cpp:771
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:771
 msgid "Sauveur 1702"
 msgstr "Sauveur 1702"
 
-#: src/core/temperaments/GOTemperamentList.cpp:786
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:786
 msgid "Other just"
 msgstr "Egyéb tiszta"
 
-#: src/core/temperaments/GOTemperamentList.cpp:788
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:788
 msgid "Pure Major"
 msgstr "Tiszta dúr hármas"
 
-#: src/core/temperaments/GOTemperamentList.cpp:803
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:803
 msgid "Pure Minor"
 msgstr "Tiszta moll hármas"
 
-#: src/core/temperaments/GOTemperamentList.cpp:818
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:818
 msgid "Smith's (Robert) Equal Harmony 1749"
 msgstr "Smith's (Robert) Equal Harmony 1749"
 
-#: src/core/temperaments/GOTemperamentList.cpp:833
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:833
 msgid "Well tempered"
 msgstr "Jóltemperált"
 
-#: src/core/temperaments/GOTemperamentList.cpp:835
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:835
 msgid "Bach (Bradley Lehman)"
 msgstr "Bach (Bradley Lehman)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:850
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:850
 msgid "Barca 1786"
 msgstr "Barca 1786"
 
-#: src/core/temperaments/GOTemperamentList.cpp:865
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:865
 msgid "Bethisy temperament ordinaire (1764)"
 msgstr "Bethisy temperament ordinaire (1764)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:880
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:880
 msgid "Freres Jullien Organ, France (1690)"
 msgstr "Freres Jullien orgona, Franciaország (1690)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:895
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:895
 msgid "Ganassi (Sylvestro) - 1543"
 msgstr "Ganassi (Sylvestro) - 1543"
 
-#: src/core/temperaments/GOTemperamentList.cpp:910
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:910
 msgid "Gottfried Silbermann nr 1"
 msgstr "Gottfried Silbermann nr 1"
 
-#: src/core/temperaments/GOTemperamentList.cpp:925
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:925
 msgid "Heun (Jan) 1805"
 msgstr "Heun (Jan) 1805"
 
-#: src/core/temperaments/GOTemperamentList.cpp:940
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:940
 msgid "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
 msgstr "Hinsz (1704 - 1785), Pelstergasthuiskerk Groningen"
 
-#: src/core/temperaments/GOTemperamentList.cpp:955
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:955
 msgid "Kellner's Bach tuning"
 msgstr "Kellner Bach-hangolása"
 
-#: src/core/temperaments/GOTemperamentList.cpp:970
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:970
 msgid "Kepler's choice system (1619)"
 msgstr "Kepler-féle rendszer (1619)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:985
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:985
 msgid "Kirnberger III"
 msgstr "Kirnberger III"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1000
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1000
 msgid "Koenig, Balthasar Organ Nederehe 1714"
 msgstr "Koenig, Balthasar orgona Nederehe 1714"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1015
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1015
 msgid "Mercadier's well-temperament"
 msgstr "Mercadier jóltemperament"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1030
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1030
 msgid "Malerbi's well-temperament nr 1 (1794)"
 msgstr "Malerbi jóltemperált nr 1 (1794)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1045
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1045
 msgid "Mark Lindley, Grosvenor Chapel, London"
 msgstr "Mark Lindley, Grosvenor Chapel, London"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1060
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1060
 msgid "Marpurg nr 1"
 msgstr "Marpurg nr 1"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1075
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1075
 msgid "Marpurg nr 2"
 msgstr "Marpurg nr 2"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1090
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1090
 msgid "Marpurg nr 3"
 msgstr "Marpurg nr 3"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1105
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1105
 msgid "Marpurg nr 4"
 msgstr "Marpurg nr 4"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1120
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1120
 msgid "Marpurg nr 5"
 msgstr "Marpurg nr 5"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1135
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1135
 msgid "Marpurg nr 7"
 msgstr "Marpurg nr 7"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1150
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1150
 msgid "Marpurg nr 8"
 msgstr "Marpurg nr 8"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1165
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1165
 msgid "Marpurg nr 9"
 msgstr "Marpurg nr 9"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1180
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1180
 msgid "Marpurg nr 11"
 msgstr "Marpurg nr 11"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1195
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1195
 msgid "Marpurg nr 12"
 msgstr "Marpurg nr 12"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1210
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1210
 msgid "Mod. Silbermann nr 2"
 msgstr "Mód. Silbermann nr 2"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1225
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1225
 msgid "Neidhardt I (1724)"
 msgstr "Neidhardt I (1724)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1240
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1240
 msgid "Neidhardt II (1724)"
 msgstr "Neidhardt II (1724)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1255
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1255
 msgid "Neidhardt III (1724)"
 msgstr "Neidhardt III (1724)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1270
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1270
 msgid "Norden"
 msgstr "Norden"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1285
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1285
 msgid "Prelleur (Peter) 1731"
 msgstr "Prelleur (Peter) 1731"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1300
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1300
 msgid "Rousseau's temperament (1768)"
 msgstr "Rousseau hangolása (1768)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1315
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1315
 msgid "Schlick (Arnolt), 1511"
 msgstr "Schlick (Arnolt), 1511"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1330
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1330
 msgid "Schlick: 1555"
 msgstr "Schlick: 1555"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1345
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1345
 msgid "Schlick's (1991)"
 msgstr "Schlick (1991)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1360
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1360
 msgid "Sorge, 1744 (A)"
 msgstr "Sorge, 1744 (A)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1375
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1375
 msgid "Sorge, 1744 (B)"
 msgstr "Sorge, 1744 (B)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1390
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1390
 msgid "Sorge, 1758"
 msgstr "Sorge, 1758"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1405
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1405
 msgid "Thomas/Philpott 1829/1881 organ, St. Jansklooster"
 msgstr "Thomas/Philpott 1829/1881 orgona, St. Jansklooster"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1420
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1420
 msgid "Valotti"
 msgstr "Valotti"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1435
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1435
 msgid "Wegscheider 20 note"
 msgstr "Wegscheider 20 hang"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1450
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1450
 msgid "Werckmeister III"
 msgstr "Werckmeister III"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1465
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1465
 msgid "Werckmeister 4 (1691)"
 msgstr "Werckmeister 4 (1691)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1480
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1480
 msgid "Werckmeister 5 (1691)"
 msgstr "Werckmeister 5 (1691)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1495
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1495
 msgid "Werckmeister 6"
 msgstr "Werckmeister 6"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1510
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1510
 msgid "Harpsichord/Piano/Monochord"
 msgstr "Csembaló/Zongora/Monochord"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1512
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1512
 msgid "Agricola's Monochord, Rudimenta musices (1539)"
 msgstr "Agricola's Monochord, Rudimenta musices (1539)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1527
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1527
 msgid "Bermudo (1555) "
 msgstr "Bermudo (1555) "
 
-#: src/core/temperaments/GOTemperamentList.cpp:1542
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1542
 msgid "d'Alembert's: John Sankey's Scarlatti"
 msgstr "d'Alembert's: John Sankey's Scarlatti"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1557
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1557
 msgid "Equal beating Victorian piano temperament"
 msgstr "Egyenlő közű viktoriánus zongorahangolás"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1572
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1572
 msgid "Hummel's quasi-equal temperament (1829)"
 msgstr "Hummel-féle kvázi-temperált (1829)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1587
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1587
 msgid "Mersenne spinet 1"
 msgstr "Mersenne spinet 1"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1602
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1602
 msgid "Mersenne spinet 2"
 msgstr "Mersenne spinet 2"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1617
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1617
 msgid "Ramos de Pareja 1482 - Monochord"
 msgstr "Ramos de Pareja 1482 - Monochord"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1632
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1632
 msgid "Sauveur harpsichord 1697"
 msgstr "Sauveur csembaló 1697"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1647
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1647
 msgid "Sorge Monochord (1756)"
 msgstr "Sorge Monochord (1756)"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1662
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1662
 msgid "Stevin (Simon), monochord 1585"
 msgstr "Stevin (Simon), monochord 1585"
 
-#: src/core/temperaments/GOTemperamentList.cpp:1677
+#: src/grandorgue/temperaments/GOTemperamentList.cpp:1677
 msgid "Victorian temperament 1885"
 msgstr "Viktoriánus hangolás 1885"
 

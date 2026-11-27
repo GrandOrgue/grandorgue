@@ -41,10 +41,6 @@ threading/GOMutex.cpp
 threading/GOMutexLocker.cpp
 threading/GOThread.cpp
 threading/threading_impl.cpp
-temperaments/GOTemperament.cpp
-temperaments/GOTemperamentCent.cpp
-temperaments/GOTemperamentList.cpp
-temperaments/GOTemperamentUser.cpp
 GOCompress.cpp
 GOCrashHandler.cpp
 GOHash.cpp
