@@ -26,7 +26,9 @@
 #include "model/GOSoundingPipe.h"
 #include "model/GOWindchest.h"
 #include "temperaments/GOTemperament.h"
+#if defined(GO_USE_MTS_ESP)
 #include "temperaments/GOTemperamentMtsEsp.h"
+#endif // GO_USE_MTS_ESP
 
 #include "GOBuffer.h"
 #include "GOOrgan.h"
@@ -56,7 +58,9 @@ void GOTestOrganController::run() {
   try {
     GO_RUN_TEST(TestOnStateLifecycleSending())
     GO_RUN_TEST(TestOrganCoreData())
+#if defined(GO_USE_MTS_ESP)
     GO_RUN_TEST(TestTemperamentFollower())
+#endif // GO_USE_MTS_ESP
   } catch (const wxString &e) {
     throw GOTestException(
       std::string("Unexpected wxString exception: ") + e.ToStdString());
@@ -220,6 +224,7 @@ void GOTestOrganController::TestOrganCoreData() {
     "A second ClearOrganCoreData() call should be a safe no-op");
 }
 
+#if defined(GO_USE_MTS_ESP)
 void GOTestOrganController::TestTemperamentFollower() {
   // a fake master whose tuning and connection the test changes
   std::array<double, 128> retunings;
@@ -333,3 +338,4 @@ void GOTestOrganController::TestTemperamentFollower() {
     !follower.IsFollowing(),
     "Clearing the organ core data should stop following");
 }
+#endif // GO_USE_MTS_ESP

@@ -26,7 +26,7 @@ You can download the source code archive from GitHub
     2. `RtMidi`: Download [the source archive](https://github.com/thestk/rtmidi/archive/refs/heads/master.zip) and extract the contents of the ``rtmidi-master`` subdirectory from the archive to the ``submodules/RtMidi`` subdirectory of GrandOrgue source tree.
     3. `PortAudio`: Download [the source archive](https://github.com/PortAudio/portaudio/archive/refs/heads/master.zip) and extract the contents of the ``portaudio-master`` subdirectory from the archive to the ``submodules/PortAudio`` subdirectory of GrandOrgue source tree.
     4. `ZitaConvolver`: Download [the source archive](https://salsa.debian.org/multimedia-team/zita-convolver/-/archive/master/zita-convolver-master.zip) and extract the contents of the ``zita-convolver-master`` subdirectory from the archive to the ``submodules/ZitaConvolver`` subdirectory of GrandOrgue source tree.
-    5. `MTS-ESP`: Download [the source archive](https://github.com/ODDSound/MTS-ESP/archive/refs/heads/main.zip) and extract the contents of the ``MTS-ESP-main`` subdirectory from the archive to the ``submodules/MTS-ESP`` subdirectory of GrandOrgue source tree.
+    5. `MTS-ESP`: Download [the source archive](https://github.com/ODDSound/MTS-ESP/archive/refs/heads/main.zip) and extract the contents of the ``MTS-ESP-main`` subdirectory from the archive to the ``submodules/MTS-ESP`` subdirectory of GrandOrgue source tree. It is not needed when building with ``-DGO_USE_MTS_ESP=OFF``, which leaves out the MTS-ESP temperament and the loading of the MTS-ESP library at start.
 
 ## Building for Linux on Linux
 1. Make sure that GrandOrgue source tree has been extracted to some subdirectory ``<GO source tree>``

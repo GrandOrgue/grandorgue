@@ -125,6 +125,7 @@ option(USE_INTERNAL_PORTAUDIO "Use builtin PortAudio sources" ON)
 option(USE_INTERNAL_ZITACONVOLVER "Use builtin Zita Convolver sources" ON)
 option(USE_INTERNAL_CPPTRACE      "Use builtin cpptrace sources" ON)
 option(GO_USE_JACK	      "Use native Jack output" ON)
+option(GO_USE_MTS_ESP         "Support the MTS-ESP temperament (the executable loads the MTS-ESP library at start)" ON)
 if (WIN32 OR APPLE)
    option(INSTALL_DEPEND      "Copy dependencies (wxWidgets libraries and Translations) on installation" ON)
 else ()
@@ -259,14 +260,17 @@ else()
 endif()
 
 # include the MTS-ESP client (ODDSound, 0BSD), compiled from its sources
-set(MTSESP_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/submodules/MTS-ESP/Client")
-if(NOT EXISTS "${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp")
-  message(
-    FATAL_ERROR
-    "${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp does not exist. "
-    "Possible the MTS-ESP submodule has not been updated. "
-    "Try to execute 'git submodule update --init --recursive' in the source directory"
-  )
+if(GO_USE_MTS_ESP)
+  set(MTSESP_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/submodules/MTS-ESP/Client")
+  if(NOT EXISTS "${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp")
+    message(
+      FATAL_ERROR
+      "${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp does not exist. "
+      "Possible the MTS-ESP submodule has not been updated. "
+      "Try to execute 'git submodule update --init --recursive' in the source directory, "
+      "or build without MTS-ESP with -DGO_USE_MTS_ESP=OFF"
+    )
+  endif()
 endif()
 
 # include cpptrace

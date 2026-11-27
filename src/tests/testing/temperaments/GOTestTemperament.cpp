@@ -13,7 +13,9 @@
 
 #include "temperaments/GOTemperament.h"
 #include "temperaments/GOTemperamentList.h"
+#if defined(GO_USE_MTS_ESP)
 #include "temperaments/GOTemperamentMtsEsp.h"
+#endif // GO_USE_MTS_ESP
 
 #include "GOTestScope.h"
 
@@ -107,6 +109,7 @@ void GOTestTemperament::TestCentOffsetsByPitchClass() {
     "from the table");
 }
 
+#if defined(GO_USE_MTS_ESP)
 void GOTestTemperament::TestMtsEspIsListed() {
   GOTemperamentList temperaments;
 
@@ -213,13 +216,16 @@ void GOTestTemperament::TestMtsEspShortenLongWords() {
     "Only a too long word should be shortened, to the maximal length, the "
     "spaces and backslashes kept");
 }
+#endif // GO_USE_MTS_ESP
 
 void GOTestTemperament::run() {
   GO_RUN_TEST(TestOriginalHasNoOffset())
   GO_RUN_TEST(TestCentOffsetsRepeatEveryOctave())
   GO_RUN_TEST(TestCentOffsetsByPitchClass())
+#if defined(GO_USE_MTS_ESP)
   GO_RUN_TEST(TestMtsEspIsListed())
   GO_RUN_TEST(TestMtsEspOffsetsByNoteNumber())
   GO_RUN_TEST(TestMtsEspStatus())
   GO_RUN_TEST(TestMtsEspShortenLongWords())
+#endif // GO_USE_MTS_ESP
 }

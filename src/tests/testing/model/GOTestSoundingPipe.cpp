@@ -11,7 +11,9 @@
 #include "model/GORank.h"
 #include "model/GOSoundingPipe.h"
 #include "temperaments/GOTemperamentCent.h"
+#if defined(GO_USE_MTS_ESP)
 #include "temperaments/GOTemperamentMtsEsp.h"
+#endif // GO_USE_MTS_ESP
 
 #include "GOTestScope.h"
 
@@ -38,6 +40,7 @@ void GOTestSoundingPipe::TestAudioGroup() {
     "have run first");
 }
 
+#if defined(GO_USE_MTS_ESP)
 void GOTestSoundingPipe::TestTemperamentByNoteNumber() {
   // a fake master: every note is retuned by its note number in cents
   const GOTemperamentMtsEsp temperament(
@@ -99,11 +102,14 @@ void GOTestSoundingPipe::TestAbsolutePitchTemperament() {
     "correction");
   organNode.GetPipeConfig().SetAutoTuningCorrection(0);
 }
+#endif // GO_USE_MTS_ESP
 
-void GOTestSoundingPipe::run(){GO_RUN_TEST(TestAudioGroup())
-                                 GO_RUN_TEST(TestTemperamentByNoteNumber())
-                                   GO_RUN_TEST(TestAbsolutePitchTemperament())}
-
-std::string GOTestSoundingPipe::GetName() {
-  return name;
+void GOTestSoundingPipe::run() {
+  GO_RUN_TEST(TestAudioGroup())
+#if defined(GO_USE_MTS_ESP)
+  GO_RUN_TEST(TestTemperamentByNoteNumber())
+  GO_RUN_TEST(TestAbsolutePitchTemperament())
+#endif // GO_USE_MTS_ESP
 }
+
+std::string GOTestSoundingPipe::GetName() { return name; }

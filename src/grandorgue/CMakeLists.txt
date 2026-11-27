@@ -32,7 +32,6 @@ include_directories(${CMAKE_BINARY_DIR}/src/core/go_defs.h ${CMAKE_CURRENT_SOURC
 include_directories(${RT_INCLUDE_DIRS})
 include_directories(${PORTAUDIO_INCLUDE_DIRS})
 include_directories(${ZITACONVOLVER_INCLUDE_DIRS})
-include_directories(${MTSESP_INCLUDE_DIRS})
 include_directories(${FFTW_INCLUDE_DIRS})
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include_directories(${JACK_INCLUDE_DIRS})
@@ -259,7 +258,6 @@ sound/GOSoundSystem.cpp
 temperaments/GOTemperament.cpp
 temperaments/GOTemperamentCent.cpp
 temperaments/GOTemperamentList.cpp
-temperaments/GOTemperamentMtsEsp.cpp
 temperaments/GOTemperamentUser.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp
@@ -278,14 +276,26 @@ if (USE_INTERNAL_ZITACONVOLVER)
   list(APPEND grandorgue_src ${CMAKE_SOURCE_DIR}/submodules/ZitaConvolver/source/zita-convolver.cc)
 endif()
 
-# the MTS-ESP client; it loads the MTS-ESP library at run time
-list(APPEND grandorgue_src ${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp)
+if (GO_USE_MTS_ESP)
+  list(
+    APPEND grandorgue_src
+    temperaments/GOTemperamentMtsEsp.cpp
+    ${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp
+  )
+endif()
 
 add_library(golib STATIC ${grandorgue_src})
 set(go_libs ${wxWidgets_LIBRARIES} ${YAML_CPP_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES} CURL::libcurl)
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR})
 target_include_directories(golib PUBLIC ${YAML_CPP_INCLUDE_DIRS})
-target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs} ${CMAKE_DL_LIBS})
+target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
+if (GO_USE_MTS_ESP)
+  # the MTS-ESP client loads the MTS-ESP library at run time. PUBLIC because
+  # the tests use the macro as well
+  target_compile_definitions(golib PUBLIC GO_USE_MTS_ESP)
+  target_include_directories(golib PUBLIC ${MTSESP_INCLUDE_DIRS})
+  target_link_libraries(golib ${CMAKE_DL_LIBS})
+endif()
 link_directories(${go_libdir})
 
 if (WIN32)

@@ -11,7 +11,9 @@
 
 #include "GOTemperament.h"
 #include "GOTemperamentCent.h"
+#if defined(GO_USE_MTS_ESP)
 #include "GOTemperamentMtsEsp.h"
+#endif
 #include "GOTemperamentUser.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
@@ -1691,5 +1693,7 @@ void GOTemperamentList::InitTemperaments() {
     -1));
   // follows the tuning of an MTS-ESP master; after the built-in temperaments,
   // before the user ones
+#if defined(GO_USE_MTS_ESP)
   m_Temperaments.push_back(new GOTemperamentMtsEsp());
+#endif
 }
