@@ -398,15 +398,19 @@ float GOSoundingPipe::GetAutoTuningPitchOffset() const {
 }
 
 float GOSoundingPipe::GetAbsoluteTuningPitchOffset() const {
-  const GOPipeConfig &pipeConfig = m_PipeConfigNode.GetPipeConfig();
-  const GOPipeConfig &rankConfig = m_Rank->GetPipeConfig().GetPipeConfig();
+  // the windchest node is the parent of the rank. Its effective corrections
+  // include the organ-wide ones
+  const GOPipeConfigNode *pWindchestNode = m_Rank->GetPipeConfig().GetParent();
+  float correction = m_PipeConfigNode.GetEffectivePitchCorrection()
+    + m_PipeConfigNode.GetEffectiveAutoTuningCorection();
 
   // the organ-wide and windchest corrections set the pitch of the whole organ
   // or division, which the temperament gives instead; the rank and pipe ones
   // correct the samples and voice the ranks (e.g. a celeste)
-  return GetSamplePitchOffset() + rankConfig.GetPitchCorrection()
-    + pipeConfig.GetPitchCorrection() + rankConfig.GetAutoTuningCorrection()
-    + pipeConfig.GetAutoTuningCorrection();
+  if (pWindchestNode)
+    correction -= pWindchestNode->GetEffectivePitchCorrection()
+      + pWindchestNode->GetEffectiveAutoTuningCorection();
+  return GetSamplePitchOffset() + correction;
 }
 
 void GOSoundingPipe::Validate() {
