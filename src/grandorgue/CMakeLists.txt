@@ -255,6 +255,10 @@ sound/GOSoundDevInfo.cpp
 sound/GOSoundOrganEngine.cpp
 sound/GOSoundWindchestGroupTaskGrid.cpp
 sound/GOSoundSystem.cpp
+temperaments/GOTemperament.cpp
+temperaments/GOTemperamentCent.cpp
+temperaments/GOTemperamentList.cpp
+temperaments/GOTemperamentUser.cpp
 updater/GOUpdateChecker.cpp
 yaml/GOSaveableToYaml.cpp
 yaml/GOYamlModel.cpp
