@@ -18,6 +18,16 @@ private:
    * need for PreparePlayback()/UpdateAudioGroup() to have run first. */
   void TestAudioGroup();
 
+  /* A temperament gets the pipe's full MIDI note number, so pipes of the same
+   * pitch class in different octaves may get different offsets; a pipe that
+   * is not retuned gets none. */
+  void TestTemperamentByNoteNumber();
+
+  /* Under a temperament of absolute pitch (MTS-ESP) the organ-wide pitch
+   * corrections do not apply, the rank ones do; other temperaments keep both.
+   */
+  void TestAbsolutePitchTemperament();
+
 public:
   GOTestSoundingPipe() { name = "GOTestSoundingPipe"; }
   virtual ~GOTestSoundingPipe();

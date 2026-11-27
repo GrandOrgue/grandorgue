@@ -268,6 +268,7 @@ GOEvent.cpp
 GOKeyConvert.cpp
 GOMetronome.cpp
 GOOrganController.cpp
+GOTemperamentFollower.cpp
 GOVirtualCouplerController.cpp
 )
 
@@ -275,11 +276,26 @@ if (USE_INTERNAL_ZITACONVOLVER)
   list(APPEND grandorgue_src ${CMAKE_SOURCE_DIR}/submodules/ZitaConvolver/source/zita-convolver.cc)
 endif()
 
+if (GO_USE_MTS_ESP)
+  list(
+    APPEND grandorgue_src
+    temperaments/GOTemperamentMtsEsp.cpp
+    ${MTSESP_INCLUDE_DIRS}/libMTSClient.cpp
+  )
+endif()
+
 add_library(golib STATIC ${grandorgue_src})
 set(go_libs ${wxWidgets_LIBRARIES} ${YAML_CPP_LIBRARIES} ${RT_LIBRARIES} ${PORTAUDIO_LIBRARIES} ${FFTW_LIBRARIES} ${ZITACONVOLVER_LIBRARIES} CURL::libcurl)
 set(go_libdir ${wxWidgets_LIBRARY_DIRS} ${RT_LIBDIR} ${PORTAUDIO_LIBDIR} ${FFTW_LIBDIR})
 target_include_directories(golib PUBLIC ${YAML_CPP_INCLUDE_DIRS})
 target_link_libraries(golib GrandOrgueImages GrandOrgueCore ${go_libs})
+if (GO_USE_MTS_ESP)
+  # the MTS-ESP client loads the MTS-ESP library at run time. PUBLIC because
+  # the tests use the macro as well
+  target_compile_definitions(golib PUBLIC GO_USE_MTS_ESP)
+  target_include_directories(golib PUBLIC ${MTSESP_INCLUDE_DIRS})
+  target_link_libraries(golib ${CMAKE_DL_LIBS})
+endif()
 link_directories(${go_libdir})
 
 if (WIN32)
