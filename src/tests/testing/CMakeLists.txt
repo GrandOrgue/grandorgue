@@ -12,6 +12,7 @@ set(go_tests
     model/GOTestEnclosure.cpp
     model/GOTestOrganModel.cpp
     model/GOTestPipeConfigTreeNode.cpp
+    model/GOTestPipeVoicing.cpp
     model/GOTestSoundingPipe.cpp
     model/GOTestSwitch.cpp
     model/GOTestTremulant.cpp

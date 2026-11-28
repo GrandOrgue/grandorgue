@@ -34,6 +34,7 @@
 #include "testing/model/GOTestEnclosure.h"
 #include "testing/model/GOTestOrganModel.h"
 #include "testing/model/GOTestPipeConfigTreeNode.h"
+#include "testing/model/GOTestPipeVoicing.h"
 #include "testing/model/GOTestSoundingPipe.h"
 #include "testing/model/GOTestSwitch.h"
 #include "testing/model/GOTestTremulant.h"
@@ -262,6 +263,7 @@ int main(int argc, char *argv[]) {
   GOTestEnclosure testEnclosure;
   GOTestOrganModel testOrganModel;
   GOTestPipeConfigTreeNode testPipeConfigTreeNode;
+  GOTestPipeVoicing testPipeVoicing;
   GOTestSoundingPipe testSoundingPipe;
   GOTestSwitch testSwitch;
   GOTestTremulant testTremulant;
