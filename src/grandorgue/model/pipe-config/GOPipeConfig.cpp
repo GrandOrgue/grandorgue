@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -8,6 +8,7 @@
 #include "GOPipeConfig.h"
 #include "config/GOConfigReader.h"
 #include "config/GOConfigWriter.h"
+#include "sound/dsp-kernels/GOSoundConversions.h"
 #include <algorithm>
 
 GOPipeConfig::GOPipeConfig(
@@ -61,29 +62,35 @@ void GOPipeConfig::LoadFromCmb(
     CMBSetting,
     group,
     prefix + wxT("UserGain"),
-    -120,
-    40,
+    GOSoundConversions::MIN_GAIN_DB,
+    GOSoundConversions::MAX_GAIN_DB,
     false,
     m_DefaultGain);
   // m_PitchTuning must be read before calling GOPipeConfig::ReadTuning
   float legacyTuning = cfg.ReadFloat(
-    CMBSetting, group, prefix + WX_TUNING, -1800, 1800, false, m_PitchTuning);
+    CMBSetting,
+    group,
+    prefix + WX_TUNING,
+    -MAX_TUNING_CENTS,
+    MAX_TUNING_CENTS,
+    false,
+    m_PitchTuning);
 
   // m_PitchTuning must be read before calling GOPipeConfig::ReadTuning
   m_ManualTuning = cfg.ReadFloat(
     CMBSetting,
     group,
     prefix + WX_MANUAL_TUNING,
-    -1800,
-    1800,
+    -MAX_TUNING_CENTS,
+    MAX_TUNING_CENTS,
     false,
     legacyTuning - m_PitchTuning);
   m_AutoTuningCorrection = cfg.ReadFloat(
     CMBSetting,
     group,
     prefix + WX_AUTO_TUNING_CORRECTION,
-    -1800,
-    1800,
+    -MAX_TUNING_CENTS,
+    MAX_TUNING_CENTS,
     false,
     0);
   m_Delay = (uint16_t)cfg.ReadInteger(
@@ -116,8 +123,8 @@ void GOPipeConfig::LoadFromCmb(
     CMBSetting,
     m_Group,
     m_NamePrefix + wxT("ToneBalance"),
-    -100,
-    100,
+    -MAX_TONE_BALANCE,
+    MAX_TONE_BALANCE,
     false,
     0);
 
@@ -148,11 +155,29 @@ void GOPipeConfig::Load(
   m_DefaultAmplitude = cfg.ReadFloat(
     ODFSetting, group, prefix + wxT("AmplitudeLevel"), 0, 1000, false, 100);
   m_DefaultGain = cfg.ReadFloat(
-    ODFSetting, group, prefix + wxT("Gain"), -120, 40, false, 0);
+    ODFSetting,
+    group,
+    prefix + wxT("Gain"),
+    GOSoundConversions::MIN_GAIN_DB,
+    GOSoundConversions::MAX_GAIN_DB,
+    false,
+    0);
   m_PitchTuning = cfg.ReadFloat(
-    ODFSetting, group, prefix + wxT("PitchTuning"), -1800, 1800, false, 0);
+    ODFSetting,
+    group,
+    prefix + wxT("PitchTuning"),
+    -MAX_TUNING_CENTS,
+    MAX_TUNING_CENTS,
+    false,
+    0);
   m_PitchCorrection = cfg.ReadFloat(
-    ODFSetting, group, prefix + wxT("PitchCorrection"), -1800, 1800, false, 0);
+    ODFSetting,
+    group,
+    prefix + wxT("PitchCorrection"),
+    -MAX_TUNING_CENTS,
+    MAX_TUNING_CENTS,
+    false,
+    0);
   m_DefaultDelay = cfg.ReadInteger(
     ODFSetting, group, prefix + wxT("TrackerDelay"), 0, 10000, false, 0);
   m_Percussive = cfg.ReadBooleanTriple(
@@ -189,14 +214,14 @@ void GOPipeConfig::Save(GOConfigWriter &cfg) {
 
 void GOPipeConfig::SetPitchMember(float cents, float &member) {
   SetSmallMember(
-    std::clamp(cents, -1800.0f, 1800.0f),
+    std::clamp(cents, -MAX_TUNING_CENTS, MAX_TUNING_CENTS),
     member,
     &GOPipeUpdateCallback::UpdateTuning);
 }
 
 void GOPipeConfig::SetToneBalanceValue(int8_t value) {
   SetSmallMember(
-    std::clamp(value, (int8_t)-100, (int8_t)100),
+    std::clamp(value, (int8_t)-MAX_TONE_BALANCE, MAX_TONE_BALANCE),
     m_ToneBalanceValue,
     &GOPipeUpdateCallback::UpdateToneBalance);
 }

@@ -7,6 +7,7 @@
 
 #include "GOOrganSettingsPipesTab.h"
 
+#include <cmath>
 #include <set>
 
 #include <wx/checkbox.h>
@@ -23,6 +24,7 @@
 
 #include "model/GOOrganModel.h"
 #include "model/pipe-config/GOPipeConfigNode.h"
+#include "sound/dsp-kernels/GOSoundConversions.h"
 
 #include "GOEvent.h"
 #include "GOSampleStatistic.h"
@@ -190,7 +192,8 @@ GOOrganSettingsPipesTab::GOOrganSettingsPipesTab(
     this, ID_EVENT_GAIN, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_Gain, wxGBPosition(1, 2), wxDefaultSpan, wxEXPAND);
   m_GainSpin = new wxSpinButton(this, ID_EVENT_GAIN_SPIN);
-  m_GainSpin->SetRange(-120, 40);
+  m_GainSpin->SetRange(
+    GOSoundConversions::MIN_GAIN_DB, GOSoundConversions::MAX_GAIN_DB);
   gb->Add(m_GainSpin, wxGBPosition(1, 3), wxDefaultSpan);
 
   gb->Add(
@@ -203,7 +206,8 @@ GOOrganSettingsPipesTab::GOOrganSettingsPipesTab(
     this, ID_EVENT_MANUAL_TUNING, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_ManualTuning, wxGBPosition(2, 2), wxDefaultSpan, wxEXPAND);
   m_ManualTuningSpin = new wxSpinButton(this, ID_EVENT_MANUAL_TUNING_SPIN);
-  m_ManualTuningSpin->SetRange(-1800, 1800);
+  m_ManualTuningSpin->SetRange(
+    -GOPipeConfig::MAX_TUNING_CENTS, GOPipeConfig::MAX_TUNING_CENTS);
   gb->Add(m_ManualTuningSpin, wxGBPosition(2, 3));
   gb->Add(
     new wxStaticText(this, wxID_ANY, _("AutoTuning Correction (Cent):")),
@@ -220,7 +224,8 @@ GOOrganSettingsPipesTab::GOOrganSettingsPipesTab(
   gb->Add(m_AutoTuningCorrection, wxGBPosition(3, 2), wxDefaultSpan, wxEXPAND);
   m_AutoTuningCorrectionSpin
     = new wxSpinButton(this, ID_EVENT_AUTO_TUNING_CORRECTION_SPIN);
-  m_AutoTuningCorrectionSpin->SetRange(-1800, 1800);
+  m_AutoTuningCorrectionSpin->SetRange(
+    -GOPipeConfig::MAX_TUNING_CENTS, GOPipeConfig::MAX_TUNING_CENTS);
   gb->Add(m_AutoTuningCorrectionSpin, wxGBPosition(3, 3));
 
   gb->Add(
@@ -259,7 +264,8 @@ GOOrganSettingsPipesTab::GOOrganSettingsPipesTab(
     this, ID_EVENT_TONE_BALANCE, wxEmptyString, wxDefaultPosition, EDIT_SIZE);
   gb->Add(m_ToneBalance, wxGBPosition(6, 2), wxDefaultSpan, wxEXPAND);
   m_ToneBalanceSpin = new wxSpinButton(this, ID_EVENT_TONE_BALANCE_SPIN);
-  m_ToneBalanceSpin->SetRange(-100, 100);
+  m_ToneBalanceSpin->SetRange(
+    -GOPipeConfig::MAX_TONE_BALANCE, GOPipeConfig::MAX_TONE_BALANCE);
   gb->Add(m_ToneBalanceSpin, wxGBPosition(6, 3), wxDefaultSpan);
 
   gb->Add(
@@ -1106,14 +1112,14 @@ void GOOrganSettingsPipesTab::ApplyChanges() {
 
   if (
     !m_Gain->GetValue().ToDouble(&gain)
-    && (m_Gain->IsModified() && (gain < -120 || gain > 40))) {
+    && (m_Gain->IsModified() && (gain < GOSoundConversions::MIN_GAIN_DB || gain > GOSoundConversions::MAX_GAIN_DB))) {
     GOMessageBox(_("Gain is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
   }
 
   if (
     !m_ManualTuning->GetValue().ToDouble(&manualTuning)
-    && (m_ManualTuning->IsModified() && (manualTuning < -1800 || manualTuning > 1800))) {
+    && (m_ManualTuning->IsModified() && std::abs(manualTuning) > GOPipeConfig::MAX_TUNING_CENTS)) {
     GOMessageBox(
       _("ManualTuning is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
     return;
@@ -1121,7 +1127,7 @@ void GOOrganSettingsPipesTab::ApplyChanges() {
 
   if (
     !m_AutoTuningCorrection->GetValue().ToDouble(&autoTuningCorrection)
-    && (m_AutoTuningCorrection->IsModified() && (autoTuningCorrection < -1800 || autoTuningCorrection > 1800))) {
+    && (m_AutoTuningCorrection->IsModified() && std::abs(autoTuningCorrection) > GOPipeConfig::MAX_TUNING_CENTS)) {
     GOMessageBox(
       _("AutoTuningCorrection is invalid"),
       _("Error"),
@@ -1151,7 +1157,7 @@ void GOOrganSettingsPipesTab::ApplyChanges() {
 
   if (
     !m_ToneBalance->GetValue().ToLong(&toneBalance)
-    && (m_ToneBalance->IsModified() && (toneBalance < -100 || toneBalance > 100))) {
+    && (m_ToneBalance->IsModified() && std::abs(toneBalance) > GOPipeConfig::MAX_TONE_BALANCE)) {
     GOMessageBox(
       _("ToneBalance value is invalid"), _("Error"), wxOK | wxICON_ERROR, this);
     return;

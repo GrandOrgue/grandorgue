@@ -7,6 +7,8 @@
 
 #include "GOSoundingPipe.h"
 
+#include <cmath>
+
 #include <wx/intl.h>
 #include <wx/log.h>
 
@@ -453,13 +455,14 @@ void GOSoundingPipe::Validate() {
     ? (GetAutoTuningPitchOffset() - GetManualTuningPitchOffset())
     : 0.0;
 
-  if (offset < -1800 || offset > 1800) {
+  if (std::abs(offset) > GOPipeConfig::MAX_TUNING_CENTS) {
     wxLogError(
       _("rank %s pipe %s: temperament would retune pipe by %f - more than "
-        "1800 cent"),
+        "%.0f cent"),
       m_Rank->GetName(),
       GetLoadTitle(),
-      offset);
+      offset,
+      GOPipeConfig::MAX_TUNING_CENTS);
     return;
   }
   if (offset < -600 || offset > 600) {

@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -21,6 +21,12 @@ class GOConfigWriter;
 class GOPipeConfigListener;
 
 class GOPipeConfig {
+public:
+  /** The tunings are limited to -MAX_TUNING_CENTS..MAX_TUNING_CENTS cents */
+  static constexpr float MAX_TUNING_CENTS = 1800.0f;
+  /** The tone balance is limited to -MAX_TONE_BALANCE..MAX_TONE_BALANCE */
+  static constexpr int8_t MAX_TONE_BALANCE = 100;
+
 private:
   GOPipeConfigListener &r_listener;
   GOPipeUpdateCallback *m_Callback;
