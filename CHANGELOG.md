@@ -1,3 +1,4 @@
+- Limited the MIDI note numbers of rank pipes to 0-255
 - Fixed the audio output gain of exactly +40 dB being muted instead of applied
 - Fixed distorted sound of pipes and reverb impulse responses loaded from 8-bit PCM wave files
 - Fixed stale panel graphics remaining in the margins after maximizing a panel window on Windows https://github.com/GrandOrgue/grandorgue/pull/2720

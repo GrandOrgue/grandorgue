@@ -8,6 +8,9 @@
 #ifndef GORANK_H
 #define GORANK_H
 
+#include <cstdint>
+#include <limits>
+
 #include "ptrvector.h"
 
 #include "midi/objects/GOMidiSendingObject.h"
@@ -36,7 +39,7 @@ private:
    * maximum last velocity of notes over all stops
    */
   std::vector<unsigned> m_MaxNoteVelocities;
-  unsigned m_FirstMidiNoteNumber;
+  uint8_t m_FirstMidiNoteNumber;
   unsigned m_WindchestN; // starts with 1
   unsigned m_HarmonicNumber;
   float m_MinVolume;
@@ -56,6 +59,9 @@ private:
   void PreparePlayback() override;
 
 public:
+  /** The maximum note number of a pipe; a note number is stored in 8 bits */
+  static constexpr int MAX_NOTE_NUMBER = std::numeric_limits<uint8_t>::max();
+
   GORank(GOOrganModel &organModel);
 
   using GOMidiObject::Init; // Avoiding a compilation warning
@@ -63,7 +69,7 @@ public:
     GOConfigReader &cfg,
     const wxString &group,
     const wxString &name,
-    unsigned firstMidiNoteNumber,
+    uint_fast8_t firstMidiNoteNumber,
     unsigned windchestN);
   /**
    * Loads Rank from odf/cmb

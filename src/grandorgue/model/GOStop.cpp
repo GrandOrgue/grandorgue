@@ -16,12 +16,12 @@
 
 GOStop::GOStop(
   GOOrganModel &organModel,
-  unsigned first_midi_note_number,
+  int firstMidiNoteNumber,
   GOMidiObjectContext *pContext)
   : GODrawstop(organModel, OBJECT_TYPE_STOP),
     m_RankInfo(0),
     m_KeyVelocities(0),
-    m_FirstMidiNoteNumber(first_midi_note_number),
+    m_FirstMidiNoteNumber(firstMidiNoteNumber),
     m_FirstAccessiblePipeLogicalKeyNumber(0),
     m_NumberOfAccessiblePipes(0) {
   SetContext(pContext);
@@ -95,9 +95,9 @@ void GOStop::Load(GOConfigReader &cfg, const wxString &group) {
     info.Rank->Load(
       cfg,
       group,
-      m_FirstMidiNoteNumber - info.FirstPipeNumber
-        + info.FirstAccessibleKeyNumber + m_FirstAccessiblePipeLogicalKeyNumber
-        - 1);
+      m_FirstMidiNoteNumber - (int)info.FirstPipeNumber
+        + (int)info.FirstAccessibleKeyNumber
+        + (int)m_FirstAccessiblePipeLogicalKeyNumber - 1);
     info.StopID = info.Rank->RegisterStop(this);
     m_RankInfo.push_back(info);
   }

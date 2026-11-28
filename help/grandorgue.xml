@@ -10368,7 +10368,7 @@ user in lists too, therefore it should be descriptive.
           <term>FirstMidiNoteNumber</term>
           <listitem>
             <para>
-(integer 0 - 256, if the rank is part of a stop section, the default
+(integer 0 - 255, if the rank is part of a stop section, the default
 value is derived from the associated manuals. Otherwise required) MIDI note
 number of the first pipe
      </para>
@@ -10378,7 +10378,8 @@ number of the first pipe
           <term>NumberOfLogicalPipes</term>
           <listitem>
             <para>
-(integer 1 - 192, required) Number of pipes in this rank
+(integer 1 - 192, required) Number of pipes in this rank.
+FirstMidiNoteNumber + NumberOfLogicalPipes - 1 must not exceed 255
      </para>
           </listitem>
         </varlistentry>

@@ -113,7 +113,7 @@ public:
     GOOrganModel *pOrganModel,
     GORank *rank,
     unsigned windchestN,
-    unsigned midi_key_number,
+    uint_fast8_t midiKeyNumber,
     unsigned harmonic_number,
     float min_volume,
     float max_volume,

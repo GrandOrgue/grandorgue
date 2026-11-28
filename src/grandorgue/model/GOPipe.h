@@ -8,6 +8,7 @@
 #ifndef GOPIPE_H
 #define GOPIPE_H
 
+#include <cstdint>
 #include <vector>
 
 #include <wx/string.h>
@@ -28,7 +29,7 @@ private:
 
 protected:
   GORank *m_Rank;
-  unsigned m_MidiKeyNumber;
+  uint8_t m_MidiKeyNumber;
 
   /**
    * Called when a user presses or releases the key.
@@ -41,7 +42,7 @@ protected:
 
 public:
   GOPipe(
-    GOEventHandlerList *handlerList, GORank *rank, unsigned midi_key_number);
+    GOEventHandlerList *handlerList, GORank *rank, uint_fast8_t midiKeyNumber);
   virtual ~GOPipe();
   virtual void Load(
     GOConfigReader &cfg, const wxString &group, const wxString &prefix)

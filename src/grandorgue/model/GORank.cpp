@@ -49,7 +49,7 @@ void GORank::Init(
   GOConfigReader &cfg,
   const wxString &group,
   const wxString &name,
-  unsigned firstMidiNoteNumber,
+  uint_fast8_t firstMidiNoteNumber,
   unsigned windchestN) {
   GOMidiSendingObject::Init(cfg, group, name);
 
@@ -81,12 +81,17 @@ void GORank::Load(
     group,
     wxT("FirstMidiNoteNumber"),
     0,
-    256,
+    MAX_NOTE_NUMBER,
     defaultFirstMidiNoteNumber < 0,
     std::max(defaultFirstMidiNoteNumber, 0));
 
-  unsigned number_of_logical_pipes
-    = cfg.ReadInteger(ODFSetting, group, wxT("NumberOfLogicalPipes"), 1, 192);
+  // the note number of the last pipe must not exceed MAX_NOTE_NUMBER
+  unsigned number_of_logical_pipes = cfg.ReadInteger(
+    ODFSetting,
+    group,
+    wxT("NumberOfLogicalPipes"),
+    1,
+    std::min(192, MAX_NOTE_NUMBER + 1 - (int)m_FirstMidiNoteNumber));
   m_PipeConfig.Load(cfg, group, wxEmptyString);
   m_WindchestN = cfg.ReadInteger(
     ODFSetting,
