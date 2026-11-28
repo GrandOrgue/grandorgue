@@ -21,12 +21,13 @@ private:
 
   /** With one audio group, createDownmixGains() must keep the pre-fix
    * behaviour: L = group0.left, R = group0.right (0.0f dB at those
-   * positions, GOAudioDeviceConfig::MUTE_VOLUME everywhere else). */
+   * positions, GOSoundConversions::MUTE_GAIN_DB everywhere else). */
   void TestDownmixGainsWithOneGroup();
 
   /** Regression test for the stereo-downmix scale-factor bug: with two or
    * more audio groups, the gains layout createDownmixGains() returns - once
-   * converted to linear via convertGainToScaleFactor() and run through a
+   * converted to linear via GOSoundConversions::gainToVolumeOrMute() and run
+   * through a
    * real GOSoundOutputTask - must match the row-major
    * [outChannelI][groupI * 2 + groupChannelI] indexing
    * GOSoundOutputTask::DoRun() actually reads (row stride nAudioGroups * 2),
@@ -37,7 +38,7 @@ private:
 
   /** createDefaultOutputConfigs() must reflect its documented per-group
    * layout: scaleFactors[0][i*2] = 0.0f (L), scaleFactors[1][i*2+1] = 0.0f
-   * (R), MUTE_VOLUME everywhere else - for both one and two audio groups. */
+   * (R), MUTE_GAIN_DB everywhere else - for both one and two audio groups. */
   void TestDefaultOutputConfigs();
 
   /** createDefaultOutputConfigs() must reuse the same group-selection

@@ -60,6 +60,7 @@
 #include "testing/sound/buffer/GOTestSoundTypedBufferLoopMonoManaged.h"
 #include "testing/sound/dsp-kernels/GOTestPerfSoundLinearFaderCore.h"
 #include "testing/sound/dsp-kernels/GOTestPerfSoundResample.h"
+#include "testing/sound/dsp-kernels/GOTestSoundConversions.h"
 #include "testing/sound/dsp-kernels/GOTestSoundLinearFaderCore.h"
 #include "testing/sound/dsp-kernels/GOTestSoundOnePoleFilter.h"
 #include "testing/sound/dsp-kernels/GOTestSoundResample.h"
@@ -295,6 +296,7 @@ int main(int argc, char *argv[]) {
   GOTestPerfSoundPlayingFader testPerfSoundPlayingFader;
   GOTestSoundSampler testSoundSampler;
   GOTestSoundStream testSoundStream;
+  GOTestSoundConversions testSoundConversions;
   GOTestSoundLinearFaderCore testSoundLinearFaderCore;
   GOTestPerfSoundLinearFaderCore testPerfSoundLinearFaderCore;
   GOTestSoundOnePoleFilter testSoundOnePoleFilter;

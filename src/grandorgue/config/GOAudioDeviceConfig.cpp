@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2025 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -27,8 +27,14 @@ GOAudioDeviceConfig::GOAudioDeviceConfig(
   std::vector<GroupOutput> &leftOutput = m_ChannelOutputs[0];
   std::vector<GroupOutput> &rightOutput = m_ChannelOutputs[1];
   for (const auto &groupName : audioGroups) {
-    leftOutput.emplace_back(groupName, DEFAULT_VOLUME, MUTE_VOLUME);
-    rightOutput.emplace_back(groupName, MUTE_VOLUME, DEFAULT_VOLUME);
+    leftOutput.emplace_back(
+      groupName,
+      GOSoundConversions::DEFAULT_GAIN_DB,
+      GOSoundConversions::MUTE_GAIN_DB);
+    rightOutput.emplace_back(
+      groupName,
+      GOSoundConversions::MUTE_GAIN_DB,
+      GOSoundConversions::DEFAULT_GAIN_DB);
   }
 }
 
@@ -62,13 +68,17 @@ void GOAudioDeviceConfig::Load(GOConfigReader &cfg, unsigned deviceN) {
       groups.emplace_back(
         cfg.ReadString(CMBSetting, WX_AUDIO_DEVICES, p2 + WX_NAME),
         (float)cfg.ReadFloat(
-          CMBSetting, WX_AUDIO_DEVICES, p2 + WX_LEFT, MUTE_VOLUME, MAX_VOLUME),
+          CMBSetting,
+          WX_AUDIO_DEVICES,
+          p2 + WX_LEFT,
+          GOSoundConversions::MUTE_GAIN_DB,
+          GOSoundConversions::MAX_GAIN_DB),
         (float)cfg.ReadFloat(
           CMBSetting,
           WX_AUDIO_DEVICES,
           p2 + WX_RIGHT,
-          MUTE_VOLUME,
-          MAX_VOLUME));
+          GOSoundConversions::MUTE_GAIN_DB,
+          GOSoundConversions::MAX_GAIN_DB));
     }
   }
 }

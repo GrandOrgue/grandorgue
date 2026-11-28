@@ -80,6 +80,13 @@ private:
 
   unsigned MsToSamples(unsigned ms) const { return m_SampleRate * ms / 1000; }
 
+  /**
+   * @param fromSamples the earlier time in samples
+   * @param toSamples the later time in samples
+   * @return the interval in milliseconds, limited to 0..UINT_MAX. A reversed
+   *   interval (toSamples < fromSamples) is 0: for example a sampler released
+   *   before its delay has elapsed has not been playing yet
+   */
   unsigned SamplesDiffToMs(uint64_t fromSamples, uint64_t toSamples) const;
 
   static constexpr int DETACHED_RELEASE_TASK_ID = 0;

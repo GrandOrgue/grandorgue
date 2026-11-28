@@ -209,6 +209,7 @@ model/GOWindchest.cpp
 modification/GOModificationProxy.cpp
 scheduler/GOScheduler.cpp
 scheduler/GOSchedulerThread.cpp
+sound/dsp-kernels/GOSoundConversions.cpp
 sound/dsp-kernels/GOSoundOnePoleFilter.cpp
 sound/dsp-kernels/GOSoundResample.cpp
 sound/effects/GOSoundReverbProcessor.cpp

@@ -12,6 +12,7 @@
 
 #include "config/GOConfig.h"
 #include "config/GOConfigReader.h"
+#include "sound/dsp-kernels/GOSoundConversions.h"
 #include "sound/playing/GOSoundSampler.h"
 #include "temperaments/GOTemperament.h"
 
@@ -382,8 +383,8 @@ float GOSoundingPipe::GetAutoTuningPitchOffset() const {
   // temperament offset. Take PitchCorrection into account. Also GUI tuning
   // adjustments are added and ODF adjustments removed leaving difference.
   if (!m_PipeConfigNode.GetEffectiveIgnorePitch() && m_SampleMidiKeyNumber) {
-    pitchAdjustment
-      = log(m_HarmonicNumber / 8.0) / log(2) * 1200 // harmonic correction
+    pitchAdjustment = GOSoundConversions::ratioToCents(
+                        m_HarmonicNumber / 8.0) // harmonic correction
       + ((int)m_MidiKeyNumber - m_SampleMidiKeyNumber) * 100 // note correction
       - m_SampleMidiPitchFraction; // fraction correction
   }
