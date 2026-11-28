@@ -13,12 +13,12 @@
 #include "GORank.h"
 
 GOPipe::GOPipe(
-  GOEventHandlerList *handlerList, GORank *rank, unsigned midi_key_number)
+  GOEventHandlerList *handlerList, GORank *rank, uint_fast8_t midiKeyNumber)
   : r_HandlerList(*handlerList),
     m_Velocity(0),
     m_Velocities(1),
     m_Rank(rank),
-    m_MidiKeyNumber(midi_key_number) {
+    m_MidiKeyNumber(midiKeyNumber) {
   r_HandlerList.RegisterLifecycleListener(this);
 }
 

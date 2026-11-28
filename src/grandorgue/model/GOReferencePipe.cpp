@@ -1,6 +1,6 @@
 /*
  * Copyright 2006 Milan Digital Audio LLC
- * Copyright 2009-2024 GrandOrgue contributors (see AUTHORS)
+ * Copyright 2009-2026 GrandOrgue contributors (see AUTHORS)
  * License GPL-2.0 or later
  * (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
  */
@@ -16,8 +16,8 @@
 #include "GOStop.h"
 
 GOReferencePipe::GOReferencePipe(
-  GOOrganModel *model, GORank *rank, unsigned midi_key_number)
-  : GOPipe(model, rank, midi_key_number),
+  GOOrganModel *model, GORank *rank, uint_fast8_t midiKeyNumber)
+  : GOPipe(model, rank, midiKeyNumber),
     GOReferencingObject(*model),
     m_model(model),
     m_Reference(NULL),
