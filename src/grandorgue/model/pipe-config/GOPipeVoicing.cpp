@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <ranges>
 #include <set>
 
 #include "GOPipeConfigNode.h"
@@ -22,7 +23,7 @@ static const float MAX_TONE_BALANCE = 100.0f;
 void GOPipeVoicing::appendSubtreePipeNodes(
   GOPipeConfigNode &subtreeRoot,
   std::vector<GOPipeConfigNode *> &ioMpPipeNodes) {
-  if (subtreeRoot.GetMidiNoteNumber())
+  if (subtreeRoot.GetMidiNoteNumber()) // a pipe node
     ioMpPipeNodes.push_back(&subtreeRoot);
   for (unsigned n = subtreeRoot.GetChildCount(), i = 0; i < n; i++)
     appendSubtreePipeNodes(*subtreeRoot.GetChild(i), ioMpPipeNodes);
@@ -52,7 +53,7 @@ float GOPipeVoicing::takeSettingValue(
     value = pipeConfig.GetAutoTuningCorrection();
     break;
   case SETTING_TONE_BALANCE:
-    value = pipeConfig.GetToneBalanceValue();
+    value = (float)pipeConfig.GetToneBalanceValue();
     break;
   }
   return value;
@@ -101,48 +102,52 @@ void GOPipeVoicing::applyPipeSettings(
     SETTING_AUTO_TUNING_CORRECTION,
     settings.autoTuningCorrection,
     ioPipeConfig);
-  applySettingValue(SETTING_TONE_BALANCE, settings.toneBalance, ioPipeConfig);
+  applySettingValue(
+    SETTING_TONE_BALANCE, (float)settings.toneBalance, ioPipeConfig);
 }
 
 void GOPipeVoicing::SetVoicedNodes(
   const std::vector<GOPipeConfigNode *> &mpSubtreeRoots) {
   std::vector<GOPipeConfigNode *> mpPipeNodes;
-  std::set<GOPipeConfigNode *> mpSeenPipeNodes;
 
   m_VoicedPipeRefs.clear();
   m_VoicedPipeRefIndicesByMidiNote.clear();
+
+  // Collect the pipe nodes of all subtrees, possibly with duplicates
   for (GOPipeConfigNode *pSubtreeRoot : mpSubtreeRoots) {
     assert(pSubtreeRoot);
     appendSubtreePipeNodes(*pSubtreeRoot, mpPipeNodes);
   }
-  for (GOPipeConfigNode *pPipeNode : mpPipeNodes) {
-    if (mpSeenPipeNodes.insert(pPipeNode).second) {
-      const unsigned midiNote = *pPipeNode->GetMidiNoteNumber();
 
-      m_VoicedPipeRefIndicesByMidiNote[midiNote].push_back(
-        m_VoicedPipeRefs.size());
-      m_VoicedPipeRefs.push_back(
-        {*pPipeNode, takePipeSettings(pPipeNode->GetPipeConfig())});
-    }
+  // Remove the duplicates
+  const std::set<GOPipeConfigNode *> mpDistinctPipeNodes(
+    mpPipeNodes.begin(), mpPipeNodes.end());
+
+  // Save the settings of each distinct pipe and index it by its midi note
+  for (GOPipeConfigNode *pPipeNode : mpDistinctPipeNodes) {
+    const unsigned midiNote = *pPipeNode->GetMidiNoteNumber();
+
+    // No other thread changes m_VoicedPipeRefs (see the class comment), so
+    // its current size is the index of the pipe ref pushed back below
+    m_VoicedPipeRefIndicesByMidiNote[midiNote].push_back(
+      m_VoicedPipeRefs.size());
+    m_VoicedPipeRefs.push_back(
+      {*pPipeNode, takePipeSettings(pPipeNode->GetPipeConfig())});
   }
 }
 
 bool GOPipeVoicing::IsAnyVoicedPipeModified() const {
-  bool isModified = false;
-
-  for (const VoicedPipeRef &voicedPipeRef : m_VoicedPipeRefs)
-    isModified = isModified
-      || voicedPipeRef.savedSettings
-        != takePipeSettings(voicedPipeRef.pipeNode.GetPipeConfig());
-  return isModified;
+  return std::ranges::any_of(
+    m_VoicedPipeRefs, [](const VoicedPipeRef &voicedPipeRef) {
+      return takePipeSettings(voicedPipeRef.pipeNode.GetPipeConfig())
+        != voicedPipeRef.savedSettings;
+    });
 }
 
 std::vector<unsigned> GOPipeVoicing::GetVoicedMidiNotes() const {
-  std::vector<unsigned> midiNotes;
+  const auto midiNotes = std::views::keys(m_VoicedPipeRefIndicesByMidiNote);
 
-  for (const auto &entry : m_VoicedPipeRefIndicesByMidiNote)
-    midiNotes.push_back(entry.first);
-  return midiNotes;
+  return std::vector<unsigned>(midiNotes.begin(), midiNotes.end());
 }
 
 std::optional<float> GOPipeVoicing::TakeSettingValueFromMidiNote(
@@ -150,19 +155,25 @@ std::optional<float> GOPipeVoicing::TakeSettingValueFromMidiNote(
   const auto it = m_VoicedPipeRefIndicesByMidiNote.find(midiNote);
   std::optional<float> value;
 
+  // The note must be one of GetVoicedMidiNotes() (see the cdoc)
   assert(it != m_VoicedPipeRefIndicesByMidiNote.end());
+
+  // Guards against a broken contract in a release build
   if (it != m_VoicedPipeRefIndicesByMidiNote.end()) {
+    // Never empty: SetVoicedNodes() adds a note together with its first pipe
     const std::vector<unsigned> &pipeRefIndices = it->second;
     const float firstValue = takeSettingValue(
       m_VoicedPipeRefs[pipeRefIndices.front()].pipeNode.GetPipeConfig(),
       selector);
-    bool isSameForAllPipes = true;
 
-    for (unsigned pipeRefI : pipeRefIndices)
-      isSameForAllPipes = isSameForAllPipes
-        && takeSettingValue(
-             m_VoicedPipeRefs[pipeRefI].pipeNode.GetPipeConfig(), selector)
+    // Compare the value of every pipe of the note with the first one
+    const bool isSameForAllPipes = std::ranges::all_of(
+      pipeRefIndices, [this, selector, firstValue](unsigned pipeRefI) {
+        return takeSettingValue(
+                 m_VoicedPipeRefs[pipeRefI].pipeNode.GetPipeConfig(), selector)
           == firstValue;
+      });
+
     if (isSameForAllPipes)
       value = firstValue;
   }
@@ -173,7 +184,10 @@ void GOPipeVoicing::ApplySettingValueToMidiNote(
   unsigned midiNote, ChangedSettingSelector selector, float value) {
   const auto it = m_VoicedPipeRefIndicesByMidiNote.find(midiNote);
 
+  // The note must be one of GetVoicedMidiNotes() (see the cdoc)
   assert(it != m_VoicedPipeRefIndicesByMidiNote.end());
+
+  // Guards against a broken contract in a release build
   if (it != m_VoicedPipeRefIndicesByMidiNote.end())
     for (unsigned pipeRefI : it->second)
       applySettingValue(
@@ -195,17 +209,20 @@ void GOPipeVoicing::ApplySettingRampToMidiNotes(
   assert(firstMidiNote <= lastMidiNote);
 
   const float noteSpan = (float)(lastMidiNote - firstMidiNote);
+  const float valueSpan = lastValue - firstValue;
+  const auto pipeRefIndicesByMidiNoteSubmap = std::ranges::subrange(
+    m_VoicedPipeRefIndicesByMidiNote.lower_bound(firstMidiNote),
+    m_VoicedPipeRefIndicesByMidiNote.upper_bound(lastMidiNote));
 
-  for (const auto &entry : m_VoicedPipeRefIndicesByMidiNote) {
-    const unsigned midiNote = entry.first;
+  // Only the voiced notes from firstMidiNote to lastMidiNote, both inclusive
+  for (const auto &[midiNote, pipeRefIndices] :
+       pipeRefIndicesByMidiNoteSubmap) {
+    // A single-note range has no span, its only note takes firstValue
+    const float newValue = noteSpan > 0.0f
+      ? firstValue + valueSpan * (float)(midiNote - firstMidiNote) / noteSpan
+      : firstValue;
 
-    if (midiNote >= firstMidiNote && midiNote <= lastMidiNote) {
-      const float ratio
-        = noteSpan > 0.0f ? (float)(midiNote - firstMidiNote) / noteSpan : 0.0f;
-
-      ApplySettingValueToMidiNote(
-        midiNote, selector, firstValue + (lastValue - firstValue) * ratio);
-    }
+    ApplySettingValueToMidiNote(midiNote, selector, newValue);
   }
 }
 

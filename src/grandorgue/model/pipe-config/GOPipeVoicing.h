@@ -32,6 +32,9 @@ class GOPipeConfigNode;
  *
  * The voicing keeps references to the voiced config nodes, so it must not
  * outlive them: its owner must destroy it before the organ is unloaded.
+ *
+ * The voicing is not thread-safe: all its methods must be called from the
+ * main thread, like the setters of GOPipeConfig that it calls.
  */
 class GOPipeVoicing {
 public:
@@ -69,8 +72,8 @@ private:
   };
 
   /**
-   * The references to all voiced pipes in the depth-first order of the
-   * subtrees passed to SetVoicedNodes(), each pipe once
+   * The references to all voiced pipes passed to SetVoicedNodes(), each pipe
+   * once, in no particular order
    */
   std::vector<VoicedPipeRef> m_VoicedPipeRefs;
   /**

@@ -84,6 +84,12 @@ public:
    */
   virtual ~GOPipeConfigNode();
 
+  /**
+   * @return the midi note number of the pipe that owns this node, empty if
+   *   the node does not belong to a pipe (a rank, a windchest or the organ
+   *   root)
+   */
+  std::optional<unsigned> GetMidiNoteNumber() const { return m_MidiNoteNumber; }
   GOPipeConfigNode *GetParent() const { return m_parent; }
   void SetParent(GOPipeConfigNode *parent);
   void Init(GOConfigReader &cfg, const wxString &group, const wxString &prefix);
@@ -91,13 +97,6 @@ public:
 
   const wxString &GetName() const { return m_Name; }
   void SetName(const wxString &name) { m_Name = name; }
-
-  /**
-   * @return the midi note number of the pipe that owns this node, empty if
-   *   the node does not belong to a pipe (a rank, a windchest or the organ
-   *   root)
-   */
-  std::optional<unsigned> GetMidiNoteNumber() const { return m_MidiNoteNumber; }
 
   GOPipeConfig &GetPipeConfig() { return m_PipeConfig; }
 
